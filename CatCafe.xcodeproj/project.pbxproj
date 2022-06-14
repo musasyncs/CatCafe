@@ -19,9 +19,14 @@
 		BA44774D28588F4B0045DDB8 /* MeetController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA44774C28588F4B0045DDB8 /* MeetController.swift */; };
 		BA44774F28588FE40045DDB8 /* CollectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA44774E28588FE40045DDB8 /* CollectionController.swift */; };
 		BA44775128588FFD0045DDB8 /* ProfileController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA44775028588FFD0045DDB8 /* ProfileController.swift */; };
+		BA4477542858A7A70045DDB8 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = BA4477532858A7A70045DDB8 /* GoogleService-Info.plist */; };
+		F3CA363722C8C7AF9DC7484D /* Pods_CatCafe.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91DB69D591917799CE505D79 /* Pods_CatCafe.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4E0E47A2693EFAE274521BB1 /* Pods-CatCafe.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CatCafe.debug.xcconfig"; path = "Target Support Files/Pods-CatCafe/Pods-CatCafe.debug.xcconfig"; sourceTree = "<group>"; };
+		8852A86100C2CA5E83D874BE /* Pods-CatCafe.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CatCafe.release.xcconfig"; path = "Target Support Files/Pods-CatCafe/Pods-CatCafe.release.xcconfig"; sourceTree = "<group>"; };
+		91DB69D591917799CE505D79 /* Pods_CatCafe.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CatCafe.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BA44772A28587ED30045DDB8 /* CatCafe.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CatCafe.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BA44772D28587ED30045DDB8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BA44772F28587ED30045DDB8 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -36,6 +41,7 @@
 		BA44774C28588F4B0045DDB8 /* MeetController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetController.swift; sourceTree = "<group>"; };
 		BA44774E28588FE40045DDB8 /* CollectionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionController.swift; sourceTree = "<group>"; };
 		BA44775028588FFD0045DDB8 /* ProfileController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileController.swift; sourceTree = "<group>"; };
+		BA4477532858A7A70045DDB8 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -43,17 +49,37 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F3CA363722C8C7AF9DC7484D /* Pods_CatCafe.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		35ECCE871A9DD78F4A1B448E /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				4E0E47A2693EFAE274521BB1 /* Pods-CatCafe.debug.xcconfig */,
+				8852A86100C2CA5E83D874BE /* Pods-CatCafe.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		6F1BF586B6062EF56D130786 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				91DB69D591917799CE505D79 /* Pods_CatCafe.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		BA44772128587ED30045DDB8 = {
 			isa = PBXGroup;
 			children = (
 				BA44772C28587ED30045DDB8 /* CatCafe */,
 				BA44772B28587ED30045DDB8 /* Products */,
+				35ECCE871A9DD78F4A1B448E /* Pods */,
+				6F1BF586B6062EF56D130786 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -68,6 +94,7 @@
 		BA44772C28587ED30045DDB8 /* CatCafe */ = {
 			isa = PBXGroup;
 			children = (
+				BA4477522858A77F0045DDB8 /* Extensions */,
 				BA44774428588C980045DDB8 /* Controller */,
 				BA44774328588C910045DDB8 /* ViewModel */,
 				BA44774228588C8C0045DDB8 /* View */,
@@ -78,6 +105,7 @@
 				BA44773628587ED60045DDB8 /* Assets.xcassets */,
 				BA44773328587ED30045DDB8 /* Main.storyboard */,
 				BA44773828587ED60045DDB8 /* LaunchScreen.storyboard */,
+				BA4477532858A7A70045DDB8 /* GoogleService-Info.plist */,
 				BA44773B28587ED60045DDB8 /* Info.plist */,
 			);
 			path = CatCafe;
@@ -125,6 +153,13 @@
 			path = Tabs;
 			sourceTree = "<group>";
 		};
+		BA4477522858A77F0045DDB8 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -132,9 +167,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = BA44773E28587ED60045DDB8 /* Build configuration list for PBXNativeTarget "CatCafe" */;
 			buildPhases = (
+				0A9A83D09B2BD252C1F13597 /* [CP] Check Pods Manifest.lock */,
 				BA44772628587ED30045DDB8 /* Sources */,
 				BA44772728587ED30045DDB8 /* Frameworks */,
 				BA44772828587ED30045DDB8 /* Resources */,
+				E3191DA17DA51059EA7203C8 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -184,12 +221,55 @@
 			buildActionMask = 2147483647;
 			files = (
 				BA44773A28587ED60045DDB8 /* LaunchScreen.storyboard in Resources */,
+				BA4477542858A7A70045DDB8 /* GoogleService-Info.plist in Resources */,
 				BA44773728587ED60045DDB8 /* Assets.xcassets in Resources */,
 				BA44773528587ED30045DDB8 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		0A9A83D09B2BD252C1F13597 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-CatCafe-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E3191DA17DA51059EA7203C8 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-CatCafe/Pods-CatCafe-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-CatCafe/Pods-CatCafe-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-CatCafe/Pods-CatCafe-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		BA44772628587ED30045DDB8 /* Sources */ = {
@@ -348,6 +428,7 @@
 		};
 		BA44773F28587ED60045DDB8 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4E0E47A2693EFAE274521BB1 /* Pods-CatCafe.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -376,6 +457,7 @@
 		};
 		BA44774028587ED60045DDB8 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8852A86100C2CA5E83D874BE /* Pods-CatCafe.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
