@@ -756,6 +756,7 @@ PODS:
     - Libuv-gRPC/Interface (= 0.0.10)
   - Libuv-gRPC/Interface (0.0.10)
   - lottie-ios (3.3.0)
+  - MJRefresh (3.7.5)
   - nanopb (2.30909.0):
     - nanopb/decode (= 2.30909.0)
     - nanopb/encode (= 2.30909.0)
@@ -782,6 +783,7 @@ DEPENDENCIES:
   - JGProgressHUD
   - Kingfisher
   - lottie-ios
+  - MJRefresh
   - SDWebImage
   - SwiftLint
   - YPImagePicker
@@ -815,6 +817,7 @@ SPEC REPOS:
     - leveldb-library
     - Libuv-gRPC
     - lottie-ios
+    - MJRefresh
     - nanopb
     - PromisesObjC
     - PryntTrimmerView
@@ -851,6 +854,7 @@ SPEC CHECKSUMS:
   leveldb-library: 50c7b45cbd7bf543c81a468fe557a16ae3db8729
   Libuv-gRPC: 55e51798e14ef436ad9bc45d12d43b77b49df378
   lottie-ios: 6ac74dcc09904798f59b18cb3075c089d76be9ae
+  MJRefresh: fdf5e979eb406a0341468932d1dfc8b7f9fce961
   nanopb: b552cce312b6c8484180ef47159bc0f65a1f0431
   PromisesObjC: 99b6f43f9e1044bd87a95a60beff28c2c44ddb72
   PryntTrimmerView: 6a43cc90df5d99addeabd33d4ba09b1365322130
@@ -859,6 +863,6 @@ SPEC CHECKSUMS:
   SwiftLint: f80f1be7fa96d30e0aa68e58d45d4ea1ccaac519
   YPImagePicker: f36043210c10b0783034eb1947d6e06e31c461e4
 
-PODFILE CHECKSUM: effcedb7b9c99c49c7f27e420343a667e471cb87
+PODFILE CHECKSUM: c48b0234a3d697c38d503677e8743231c1d5a586
 
 COCOAPODS: 1.11.2

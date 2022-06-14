@@ -14,6 +14,7 @@ target 'CatCafe' do
   pod 'Firebase/Crashlytics'
 
   pod 'IQKeyboardManagerSwift'
+  pod 'MJRefresh'
   pod 'Kingfisher'
   pod 'SDWebImage' 
   pod 'ActiveLabel' 
