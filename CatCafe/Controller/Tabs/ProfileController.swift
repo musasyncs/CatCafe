@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 private let cellIdentifier = "ProfileCell"
 private let headerIdentifier = "ProfileHeader"
@@ -30,12 +31,24 @@ class ProfileController: UICollectionViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        setup()
         setupCollectionView()
     }
     
     // MARK: - API
     
     // MARK: - Helpers
+    
+    func setup() {
+        navigationItem.rightBarButtonItem = UIBarButtonItem(
+            image: UIImage(systemName: "arrowshape.turn.up.left.fill")?
+                .withTintColor(.black)
+                .withRenderingMode(.alwaysOriginal),
+            style: .plain,
+            target: self,
+            action: #selector(handleLogout)
+        )
+    }
     
     func setupCollectionView() {
         collectionView.register(ProfileCell.self, forCellWithReuseIdentifier: cellIdentifier)
@@ -45,6 +58,23 @@ class ProfileController: UICollectionViewController {
         collectionView.backgroundColor = .white
     }
     
+    // MARK: - Action
+    
+    @objc func handleLogout() {
+        do {
+            try Auth.auth().signOut()
+            let controller = LoginController()
+            
+            controller.delegate = self.tabBarController as? MainTabController
+            
+            let nav = UINavigationController(rootViewController: controller)
+            nav.modalPresentationStyle = .fullScreen
+            self.present(nav, animated: true, completion: nil)
+        }
+        catch {
+            print("DEBUG: Failed to signout")
+        }
+    }
 }
 
 // MARK: - UICollectionViewDataSource
