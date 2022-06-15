@@ -39,6 +39,8 @@
 		BA4477822858D79D0045DDB8 /* CCConstant.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA4477812858D79D0045DDB8 /* CCConstant.swift */; };
 		BA4477842858D8960045DDB8 /* Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA4477832858D8960045DDB8 /* Factory.swift */; };
 		BA44778C285961A50045DDB8 /* FeedCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA44778B285961A50045DDB8 /* FeedCell.swift */; };
+		BA44778F28597DBA0045DDB8 /* ProfileCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA44778E28597DBA0045DDB8 /* ProfileCell.swift */; };
+		BA44779128597ED00045DDB8 /* ProfileHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA44779028597ED00045DDB8 /* ProfileHeader.swift */; };
 		F3CA363722C8C7AF9DC7484D /* Pods_CatCafe.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91DB69D591917799CE505D79 /* Pods_CatCafe.framework */; };
 /* End PBXBuildFile section */
 
@@ -80,6 +82,8 @@
 		BA4477812858D79D0045DDB8 /* CCConstant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CCConstant.swift; sourceTree = "<group>"; };
 		BA4477832858D8960045DDB8 /* Factory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Factory.swift; sourceTree = "<group>"; };
 		BA44778B285961A50045DDB8 /* FeedCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedCell.swift; sourceTree = "<group>"; };
+		BA44778E28597DBA0045DDB8 /* ProfileCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCell.swift; sourceTree = "<group>"; };
+		BA44779028597ED00045DDB8 /* ProfileHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileHeader.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -161,6 +165,7 @@
 			isa = PBXGroup;
 			children = (
 				BA44778A285961940045DDB8 /* Home */,
+				BA44778D28597DAF0045DDB8 /* Profile */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -263,6 +268,15 @@
 				BA44778B285961A50045DDB8 /* FeedCell.swift */,
 			);
 			path = Home;
+			sourceTree = "<group>";
+		};
+		BA44778D28597DAF0045DDB8 /* Profile */ = {
+			isa = PBXGroup;
+			children = (
+				BA44778E28597DBA0045DDB8 /* ProfileCell.swift */,
+				BA44779028597ED00045DDB8 /* ProfileHeader.swift */,
+			);
+			path = Profile;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -402,12 +416,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BA44779128597ED00045DDB8 /* ProfileHeader.swift in Sources */,
 				BA4477672858BDEE0045DDB8 /* MJRefreshWrapper.swift in Sources */,
 				BA44778C285961A50045DDB8 /* FeedCell.swift in Sources */,
 				BA4477602858BCCB0045DDB8 /* UIView+Extension.swift in Sources */,
 				BA4477692858BE090045DDB8 /* JGProgressHUDWrapper.swift in Sources */,
 				BA44774D28588F4B0045DDB8 /* MeetController.swift in Sources */,
 				BA44773228587ED30045DDB8 /* ViewController.swift in Sources */,
+				BA44778F28597DBA0045DDB8 /* ProfileCell.swift in Sources */,
 				BA44772E28587ED30045DDB8 /* AppDelegate.swift in Sources */,
 				BA4477712858CC120045DDB8 /* UIFont+Extension.swift in Sources */,
 				BA44774728588D150045DDB8 /* MainTabController.swift in Sources */,
