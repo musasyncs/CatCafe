@@ -6,13 +6,44 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 class MainTabController: UITabBarController {
         
+    private var user: User? {
+        didSet {
+            guard let user = user else {
+                return
+            }
+            
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        checkIfUserIsLoggedIn()
         configureViewController()
+    }
+    
+    // MARK: - API
+    
+    func checkIfUserIsLoggedIn() {
+        if Auth.auth().currentUser == nil {
+            DispatchQueue.main.async {
+                let controller = LoginController()
+                controller.delegate = self
+                let nav = UINavigationController(rootViewController: controller)
+                nav.modalPresentationStyle = .fullScreen
+                self.present(nav, animated: true, completion: nil)
+            }
+        }
+    }
+    
+    func fetchUser() {
+        UserService.fetchCurrentUser { user in
+            self.user = user
+            self.navigationItem.title = user .username
+        }
     }
     
     // MARK: - Helpers
@@ -66,5 +97,13 @@ class MainTabController: UITabBarController {
         nav.navigationBar.tintColor = .black
         return nav
         
+    }
+}
+
+// MARK: - AuthenticationDelegate
+extension MainTabController: AuthenticationDelegate {
+    func authenticationDidComplete() {
+        fetchUser()
+        self.dismiss(animated: true, completion: nil)
     }
 }
