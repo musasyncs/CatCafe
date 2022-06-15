@@ -18,7 +18,7 @@ target 'CatCafe' do
   pod 'Kingfisher'
   pod 'SDWebImage' 
   pod 'ActiveLabel' 
-  pod 'YPImagePicker'
   pod 'JGProgressHUD'
-  pod 'lottie-ios'  
+  pod 'lottie-ios'
+  pod 'YPImagePicker'
 end

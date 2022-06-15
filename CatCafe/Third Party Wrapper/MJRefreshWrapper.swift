@@ -68,5 +68,5 @@ extension UICollectionView {
     func resetNoMoreData() {
         mj_footer?.resetNoMoreData()
     }
+    
 }
-
