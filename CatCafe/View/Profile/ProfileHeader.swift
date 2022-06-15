@@ -16,7 +16,6 @@ class ProfileHeader: UICollectionReusableView {
     
     private let profileImageView: UIImageView = {
         let imageView = UIImageView()
-//        imageView.image = UIImage(named: "me")
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         imageView.backgroundColor = .lightGray
@@ -25,7 +24,6 @@ class ProfileHeader: UICollectionReusableView {
     
     private let nameLabel: UILabel = {
        let label = UILabel()
-//        label.text = "Chi-Wen"
         label.font = UIFont.boldSystemFont(ofSize: 14)
         label.textAlignment = .left
         return label
@@ -117,11 +115,8 @@ class ProfileHeader: UICollectionReusableView {
     func layout() {
         addSubview(profileImageView)
         addSubview(nameLabel)
-        addSubview(editProfileFollowButton)
         addSubview(stack)
-        addSubview(buttonStack)
-        addSubview(topDivider)
-        addSubview(bottomDivider)
+        addSubview(editProfileFollowButton)
         
         profileImageView.anchor(top: topAnchor, left: leftAnchor, paddingTop: 16, paddingLeft: 12)
         profileImageView.setDimensions(height: 80, width: 80)
@@ -129,24 +124,15 @@ class ProfileHeader: UICollectionReusableView {
         
         nameLabel.anchor(top: profileImageView.bottomAnchor, left: leftAnchor, paddingTop: 12, paddingLeft: 12)
         
-        editProfileFollowButton.anchor(top: nameLabel.bottomAnchor,
-                                       left: leftAnchor,
-                                       right: rightAnchor,
-                                       paddingTop: 16, paddingLeft: 24, paddingRight: 24)
-        
         stack.centerY(inView: profileImageView)
         stack.anchor(left: profileImageView.rightAnchor,
                      right: rightAnchor,
                      paddingLeft: 12, paddingRight: 12, height: 50)
         
-        buttonStack.anchor(left: leftAnchor, bottom: bottomAnchor, right: rightAnchor, height: 50)
-        
-        topDivider.anchor(top: buttonStack.topAnchor, left: leftAnchor, right: rightAnchor, height: 0.5)
-        
-        bottomDivider.anchor(top: buttonStack.bottomAnchor,
-                             left: leftAnchor,
-                             right: rightAnchor,
-                             height: 0.5)
+        editProfileFollowButton.anchor(left: leftAnchor,
+                                       bottom: bottomAnchor,
+                                       right: rightAnchor,
+                                       paddingLeft: 24, paddingBottom: 16, paddingRight: 24)
     }
     
     func attributedStatText(value: Int, label: String) -> NSAttributedString {

@@ -101,6 +101,7 @@ class MainTabController: UITabBarController {
 }
 
 // MARK: - AuthenticationDelegate
+
 extension MainTabController: AuthenticationDelegate {
     func authenticationDidComplete() {
         fetchUser()

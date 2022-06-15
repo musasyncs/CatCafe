@@ -70,8 +70,7 @@ class ProfileController: UICollectionViewController {
             let nav = UINavigationController(rootViewController: controller)
             nav.modalPresentationStyle = .fullScreen
             self.present(nav, animated: true, completion: nil)
-        }
-        catch {
+        } catch {
             print("DEBUG: Failed to signout")
         }
     }
