@@ -43,10 +43,11 @@ class MainTabController: UITabBarController {
             rootViewController: CollectionController()
         )
         
+        let flowLayout = UICollectionViewFlowLayout()
         let profile = templateNavigationController(
             unselectedImage: UIImage(named: "profile_unselected")!,
             selectedImage: UIImage(named: "profile_selected")!,
-            rootViewController: ProfileController()
+            rootViewController: ProfileController(collectionViewLayout: flowLayout)
         )
         
         viewControllers = [home, explore, meet, collection, profile]
@@ -58,10 +59,12 @@ class MainTabController: UITabBarController {
         selectedImage: UIImage,
         rootViewController: UIViewController
     ) -> UINavigationController {
+        
         let nav = UINavigationController(rootViewController: rootViewController)
         nav.tabBarItem.image = unselectedImage
         nav.tabBarItem.selectedImage = selectedImage
         nav.navigationBar.tintColor = .black
         return nav
+        
     }
 }
