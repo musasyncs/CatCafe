@@ -41,6 +41,10 @@
 		BA44778C285961A50045DDB8 /* FeedCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA44778B285961A50045DDB8 /* FeedCell.swift */; };
 		BA44778F28597DBA0045DDB8 /* ProfileCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA44778E28597DBA0045DDB8 /* ProfileCell.swift */; };
 		BA44779128597ED00045DDB8 /* ProfileHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA44779028597ED00045DDB8 /* ProfileHeader.swift */; };
+		BA4477942859CE2F0045DDB8 /* UserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA4477932859CE2F0045DDB8 /* UserCell.swift */; };
+		BA4477972859D0280045DDB8 /* UserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA4477962859D0280045DDB8 /* UserService.swift */; };
+		BA4477992859D0FD0045DDB8 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA4477982859D0FD0045DDB8 /* User.swift */; };
+		BA44779B2859D3950045DDB8 /* UserCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA44779A2859D3950045DDB8 /* UserCellViewModel.swift */; };
 		F3CA363722C8C7AF9DC7484D /* Pods_CatCafe.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91DB69D591917799CE505D79 /* Pods_CatCafe.framework */; };
 /* End PBXBuildFile section */
 
@@ -84,6 +88,10 @@
 		BA44778B285961A50045DDB8 /* FeedCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedCell.swift; sourceTree = "<group>"; };
 		BA44778E28597DBA0045DDB8 /* ProfileCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCell.swift; sourceTree = "<group>"; };
 		BA44779028597ED00045DDB8 /* ProfileHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileHeader.swift; sourceTree = "<group>"; };
+		BA4477932859CE2F0045DDB8 /* UserCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCell.swift; sourceTree = "<group>"; };
+		BA4477962859D0280045DDB8 /* UserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserService.swift; sourceTree = "<group>"; };
+		BA4477982859D0FD0045DDB8 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		BA44779A2859D3950045DDB8 /* UserCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCellViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -142,6 +150,7 @@
 				BA44774328588C910045DDB8 /* ViewModel */,
 				BA44774228588C8C0045DDB8 /* View */,
 				BA44774128588C810045DDB8 /* Model */,
+				BA4477952859D0100045DDB8 /* API */,
 				BA44772D28587ED30045DDB8 /* AppDelegate.swift */,
 				BA44772F28587ED30045DDB8 /* SceneDelegate.swift */,
 				BA44773128587ED30045DDB8 /* ViewController.swift */,
@@ -157,6 +166,7 @@
 		BA44774128588C810045DDB8 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				BA4477982859D0FD0045DDB8 /* User.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -165,6 +175,7 @@
 			isa = PBXGroup;
 			children = (
 				BA44778A285961940045DDB8 /* Home */,
+				BA4477922859CE200045DDB8 /* Explore */,
 				BA44778D28597DAF0045DDB8 /* Profile */,
 			);
 			path = View;
@@ -173,6 +184,7 @@
 		BA44774328588C910045DDB8 /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
+				BA44779A2859D3950045DDB8 /* UserCellViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -277,6 +289,22 @@
 				BA44779028597ED00045DDB8 /* ProfileHeader.swift */,
 			);
 			path = Profile;
+			sourceTree = "<group>";
+		};
+		BA4477922859CE200045DDB8 /* Explore */ = {
+			isa = PBXGroup;
+			children = (
+				BA4477932859CE2F0045DDB8 /* UserCell.swift */,
+			);
+			path = Explore;
+			sourceTree = "<group>";
+		};
+		BA4477952859D0100045DDB8 /* API */ = {
+			isa = PBXGroup;
+			children = (
+				BA4477962859D0280045DDB8 /* UserService.swift */,
+			);
+			path = API;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -420,6 +448,7 @@
 				BA4477672858BDEE0045DDB8 /* MJRefreshWrapper.swift in Sources */,
 				BA44778C285961A50045DDB8 /* FeedCell.swift in Sources */,
 				BA4477602858BCCB0045DDB8 /* UIView+Extension.swift in Sources */,
+				BA4477992859D0FD0045DDB8 /* User.swift in Sources */,
 				BA4477692858BE090045DDB8 /* JGProgressHUDWrapper.swift in Sources */,
 				BA44774D28588F4B0045DDB8 /* MeetController.swift in Sources */,
 				BA44773228587ED30045DDB8 /* ViewController.swift in Sources */,
@@ -432,6 +461,7 @@
 				BA4477802858D6680045DDB8 /* NSLocalizedString+Extension.swift in Sources */,
 				BA4477822858D79D0045DDB8 /* CCConstant.swift in Sources */,
 				BA4477622858BCE70045DDB8 /* UIButton+Extension.swift in Sources */,
+				BA4477942859CE2F0045DDB8 /* UserCell.swift in Sources */,
 				BA44773028587ED30045DDB8 /* SceneDelegate.swift in Sources */,
 				BA44777E2858D61B0045DDB8 /* String+Extension.swift in Sources */,
 				BA44775128588FFD0045DDB8 /* ProfileController.swift in Sources */,
@@ -441,7 +471,9 @@
 				BA4477842858D8960045DDB8 /* Factory.swift in Sources */,
 				BA4477782858D05F0045DDB8 /* UIScreen+Extension.swift in Sources */,
 				BA44777C2858D3E10045DDB8 /* UILabel+Extension.swift in Sources */,
+				BA4477972859D0280045DDB8 /* UserService.swift in Sources */,
 				BA44775E2858BCB80045DDB8 /* UIViewController+Extension.swift in Sources */,
+				BA44779B2859D3950045DDB8 /* UserCellViewModel.swift in Sources */,
 				BA44777A2858D1F70045DDB8 /* identifiers.swift in Sources */,
 				BA44774B28588ECA0045DDB8 /* ExploreController.swift in Sources */,
 			);
