@@ -53,7 +53,11 @@ class MainTabController: UITabBarController {
         tabBar.tintColor = .black
     }
     
-    func templateNavigationController(unselectedImage: UIImage, selectedImage: UIImage, rootViewController: UIViewController) -> UINavigationController {
+    func templateNavigationController(
+        unselectedImage: UIImage,
+        selectedImage: UIImage,
+        rootViewController: UIViewController
+    ) -> UINavigationController {
         let nav = UINavigationController(rootViewController: rootViewController)
         nav.tabBarItem.image = unselectedImage
         nav.tabBarItem.selectedImage = selectedImage
