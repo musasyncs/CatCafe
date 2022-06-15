@@ -74,6 +74,11 @@ extension ExploreController {
         return cell
     }
     
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let controller = ProfileController(user: users[indexPath.row])
+        navigationController?.pushViewController(controller, animated: true)
+    }
+    
 }
 
 // MARK: - UISearchResultsUpdating
@@ -85,7 +90,6 @@ extension ExploreController: UISearchResultsUpdating {
         filteredUsers = users.filter({
             $0.username.contains(searchText) || $0.fullname.contains(searchText)
         })
-        print(filteredUsers)
         self.tableView.reloadData()
     }
 }

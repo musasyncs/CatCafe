@@ -62,6 +62,7 @@ class UserCell: UITableViewCell {
     }
     
     // MARK: - Helpers
+    
     func configure() {
         guard let viewModel = viewModel else { return }
         profileImageView.sd_setImage(with: viewModel.profileImageUrl)
