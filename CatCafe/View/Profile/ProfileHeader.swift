@@ -8,10 +8,24 @@
 import UIKit
 import SDWebImage
 
+protocol ProfileHeaderDelegate: AnyObject {
+    func header(_ profileHeader: ProfileHeader, didTapActionButtonFor user: User)
+}
+
 class ProfileHeader: UICollectionReusableView {
     
+    weak var delegate: ProfileHeaderDelegate?
+    
     var viewModel: ProfileHeaderViewModel? {
-        didSet { configure() }
+        didSet {
+            guard let viewModel = viewModel else { return }
+            nameLabel.text = viewModel.fullname
+            profileImageView.sd_setImage(with: viewModel.profileImageUrl)
+            
+            editProfileFollowButton.setTitle(viewModel.followButtonText, for: .normal)
+            editProfileFollowButton.backgroundColor = viewModel.followButtonBackgroundColor
+            editProfileFollowButton.setTitleColor(viewModel.followButtonTextColor, for: .normal )
+        }
     }
     
     private let profileImageView: UIImageView = {
@@ -31,7 +45,7 @@ class ProfileHeader: UICollectionReusableView {
     
     private lazy var editProfileFollowButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Edit Profile", for: .normal)
+        button.setTitle("Loading...", for: .normal)
         button.layer.cornerRadius = 3
         button.layer.borderColor = UIColor.lightGray.cgColor
         button.layer.borderWidth = 0.5
@@ -147,21 +161,10 @@ class ProfileHeader: UICollectionReusableView {
         return attributedText
     }
     
-    func configure() {
-        guard let viewModel = viewModel else {
-            return
-        }
-        nameLabel.text = viewModel.fullname
-        profileImageView.sd_setImage(with: viewModel.profileImageUrl)
-        
-        editProfileFollowButton.setTitle(viewModel.followButtonText, for: .normal)
-        editProfileFollowButton.backgroundColor = viewModel.followButtonBackgroundColor
-        editProfileFollowButton.setTitleColor(viewModel.followButtonTextColor, for: .normal )
-    }
-        
     // MARK: - Action
     
     @objc func handleEditProfileFollowTapped() {
-        
+        guard let viewModel = viewModel else { return }
+        delegate?.header(self, didTapActionButtonFor: viewModel.user)
     }
 }

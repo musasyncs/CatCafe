@@ -33,9 +33,17 @@ class ProfileController: UICollectionViewController {
         view.backgroundColor = .white
         setup()
         setupCollectionView()
+        checkIfUserIsFollowed()
     }
     
     // MARK: - API
+    
+    func checkIfUserIsFollowed() {
+        UserService.checkIfUserIsFollowed(uid: user.uid) { isFollowed in
+            self.user.isFollowed = isFollowed
+            self.collectionView.reloadData()
+        }
+    }
     
     // MARK: - Helpers
     
@@ -108,6 +116,7 @@ extension ProfileController {
             for: indexPath
         ) as? ProfileHeader else { return UICollectionReusableView() }
         
+        header.delegate = self
         header.viewModel = ProfileHeaderViewModel(user: user)
         
         return header
@@ -154,5 +163,29 @@ extension ProfileController: UICollectionViewDelegateFlowLayout {
         referenceSizeForHeaderInSection section: Int
     ) -> CGSize {
         return CGSize(width: view.frame.width, height: 240)
+    }
+}
+
+// MARK: - ProfileHeaderDelegate
+
+extension ProfileController: ProfileHeaderDelegate {
+
+    func header(_ profileHeader: ProfileHeader, didTapActionButtonFor user: User) {
+        if user.isCurrentUser {
+            // Show edit profile
+            
+        } else if user.isFollowed {
+            // Handle unfollow user
+            UserService.unfollow(uid: user.uid) { _ in
+                self.user.isFollowed = false
+                self.collectionView.reloadData()
+            }
+        } else {
+            // Handle follow user
+            UserService.follow(uid: user.uid) { _ in
+                self.user.isFollowed = true
+                self.collectionView.reloadData()
+            }
+        }
     }
 }

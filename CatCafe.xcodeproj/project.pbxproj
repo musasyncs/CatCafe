@@ -160,17 +160,17 @@
 		BA44772C28587ED30045DDB8 /* CatCafe */ = {
 			isa = PBXGroup;
 			children = (
+				BA44772D28587ED30045DDB8 /* AppDelegate.swift */,
+				BA44772F28587ED30045DDB8 /* SceneDelegate.swift */,
+				BA44773628587ED60045DDB8 /* Assets.xcassets */,
+				BA44773828587ED60045DDB8 /* LaunchScreen.storyboard */,
+				BA7BB6F6285A083D00465DEC /* Utils */,
 				BA44774128588C810045DDB8 /* API */,
 				BA44774228588C8C0045DDB8 /* View */,
 				BA44774328588C910045DDB8 /* ViewModel */,
 				BA44774428588C980045DDB8 /* Controller */,
-				BA7BB6F6285A083D00465DEC /* Utils */,
-				BA44772D28587ED30045DDB8 /* AppDelegate.swift */,
-				BA44772F28587ED30045DDB8 /* SceneDelegate.swift */,
 				BA44773128587ED30045DDB8 /* ViewController.swift */,
-				BA44773628587ED60045DDB8 /* Assets.xcassets */,
 				BA44773328587ED30045DDB8 /* Main.storyboard */,
-				BA44773828587ED60045DDB8 /* LaunchScreen.storyboard */,
 				BA4477532858A7A70045DDB8 /* GoogleService-Info.plist */,
 				BA44773B28587ED60045DDB8 /* Info.plist */,
 			);
