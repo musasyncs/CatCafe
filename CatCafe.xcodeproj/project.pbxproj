@@ -52,6 +52,7 @@
 		BA7BB6F02859F56300465DEC /* JGProgressHUDWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA7BB6ED2859F56300465DEC /* JGProgressHUDWrapper.swift */; };
 		BA7BB6F12859F56300465DEC /* MJRefreshWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA7BB6EE2859F56300465DEC /* MJRefreshWrapper.swift */; };
 		BA7BB6F22859F56300465DEC /* KingFisherWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA7BB6EF2859F56300465DEC /* KingFisherWrapper.swift */; };
+		BA7BB6F42859FAE500465DEC /* ProfileHeaderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA7BB6F32859FAE500465DEC /* ProfileHeaderViewModel.swift */; };
 		F3CA363722C8C7AF9DC7484D /* Pods_CatCafe.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91DB69D591917799CE505D79 /* Pods_CatCafe.framework */; };
 /* End PBXBuildFile section */
 
@@ -106,6 +107,7 @@
 		BA7BB6ED2859F56300465DEC /* JGProgressHUDWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JGProgressHUDWrapper.swift; sourceTree = "<group>"; };
 		BA7BB6EE2859F56300465DEC /* MJRefreshWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MJRefreshWrapper.swift; sourceTree = "<group>"; };
 		BA7BB6EF2859F56300465DEC /* KingFisherWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KingFisherWrapper.swift; sourceTree = "<group>"; };
+		BA7BB6F32859FAE500465DEC /* ProfileHeaderViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileHeaderViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -200,6 +202,7 @@
 			children = (
 				BA4477A32859DF1C0045DDB8 /* RegistrationViewModel.swift */,
 				BA44779A2859D3950045DDB8 /* UserCellViewModel.swift */,
+				BA7BB6F32859FAE500465DEC /* ProfileHeaderViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -507,6 +510,7 @@
 				BA7BB6E32859E2BB00465DEC /* NSLocalizedString+Extension.swift in Sources */,
 				BA7BB6DB2859E2BB00465DEC /* UILabel+Extension.swift in Sources */,
 				BA7BB6EB2859F50800465DEC /* Factory.swift in Sources */,
+				BA7BB6F42859FAE500465DEC /* ProfileHeaderViewModel.swift in Sources */,
 				BA7BB6F02859F56300465DEC /* JGProgressHUDWrapper.swift in Sources */,
 				BA7BB6DF2859E2BB00465DEC /* UIViewController+Extension.swift in Sources */,
 				BA7BB6E12859E2BB00465DEC /* UIScreen+Extension.swift in Sources */,

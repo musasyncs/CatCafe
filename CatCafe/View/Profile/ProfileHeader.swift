@@ -10,9 +10,13 @@ import SDWebImage
 
 class ProfileHeader: UICollectionReusableView {
     
+    var viewModel: ProfileHeaderViewModel? {
+        didSet { configure() }
+    }
+    
     private let profileImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "me")
+//        imageView.image = UIImage(named: "me")
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         imageView.backgroundColor = .lightGray
@@ -21,7 +25,7 @@ class ProfileHeader: UICollectionReusableView {
     
     private let nameLabel: UILabel = {
        let label = UILabel()
-        label.text = "Chi-Wen"
+//        label.text = "Chi-Wen"
         label.font = UIFont.boldSystemFont(ofSize: 14)
         label.textAlignment = .left
         return label
@@ -155,6 +159,14 @@ class ProfileHeader: UICollectionReusableView {
             attributes: [.font: UIFont.systemFont(ofSize: 14),
                          .foregroundColor: UIColor.lightGray]))
         return attributedText
+    }
+    
+    func configure() {
+        guard let viewModel = viewModel else {
+            return
+        }
+        nameLabel.text = viewModel.fullname
+        profileImageView.sd_setImage(with: viewModel.profileImageUrl)
     }
         
     // MARK: - Action

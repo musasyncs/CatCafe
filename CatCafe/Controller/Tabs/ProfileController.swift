@@ -12,11 +12,24 @@ private let headerIdentifier = "ProfileHeader"
 
 class ProfileController: UICollectionViewController {
     
+    private var user: User
+    
+    // MARK: - Initializer
+    
+    init(user: User) {
+        self.user = user
+        super.init(collectionViewLayout: UICollectionViewFlowLayout())
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     // MARK: - Life Cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemPink
+        view.backgroundColor = .white
         setupCollectionView()
     }
     
@@ -65,7 +78,9 @@ extension ProfileController {
             withReuseIdentifier: headerIdentifier,
             for: indexPath
         ) as? ProfileHeader else { return UICollectionReusableView() }
-                
+        
+        header.viewModel = ProfileHeaderViewModel(user: user)
+        
         return header
     }
     

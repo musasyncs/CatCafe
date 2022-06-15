@@ -15,14 +15,14 @@ class MainTabController: UITabBarController {
             guard let user = user else {
                 return
             }
-            
+            configureViewController(withUser: user)
         }
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         checkIfUserIsLoggedIn()
-        configureViewController()
+        fetchUser()
     }
     
     // MARK: - API
@@ -48,7 +48,7 @@ class MainTabController: UITabBarController {
     
     // MARK: - Helpers
     
-    func configureViewController() {
+    func configureViewController(withUser user: User) {
         let layout = UICollectionViewFlowLayout()
         let home = templateNavigationController(
             unselectedImage: UIImage(named: "home_unselected")!,
@@ -74,11 +74,11 @@ class MainTabController: UITabBarController {
             rootViewController: CollectionController()
         )
         
-        let flowLayout = UICollectionViewFlowLayout()
+        let profileController = ProfileController(user: user)
         let profile = templateNavigationController(
             unselectedImage: UIImage(named: "profile_unselected")!,
             selectedImage: UIImage(named: "profile_selected")!,
-            rootViewController: ProfileController(collectionViewLayout: flowLayout)
+            rootViewController: profileController
         )
         
         viewControllers = [home, explore, meet, collection, profile]
