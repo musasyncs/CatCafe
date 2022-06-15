@@ -153,6 +153,10 @@ class ProfileHeader: UICollectionReusableView {
         }
         nameLabel.text = viewModel.fullname
         profileImageView.sd_setImage(with: viewModel.profileImageUrl)
+        
+        editProfileFollowButton.setTitle(viewModel.followButtonText, for: .normal)
+        editProfileFollowButton.backgroundColor = viewModel.followButtonBackgroundColor
+        editProfileFollowButton.setTitleColor(viewModel.followButtonTextColor, for: .normal )
     }
         
     // MARK: - Action

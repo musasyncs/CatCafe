@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 struct ProfileHeaderViewModel {
     let user: User
@@ -18,6 +19,21 @@ struct ProfileHeaderViewModel {
         return URL(string: user.profileImageUrl)
     }
     
+    var followButtonText: String {
+        if user.isCurrentUser {
+            return "Edit Profile"
+        }
+        return user.isFollowed ? "Following" : "Follow"
+    }
+    
+    var followButtonTextColor: UIColor {
+        return user.isCurrentUser ? .black : .white
+    }
+    
+    var followButtonBackgroundColor: UIColor {
+        return user.isCurrentUser ? .white : .systemBlue
+    }
+
     init(user: User) {
         self.user = user
     }
