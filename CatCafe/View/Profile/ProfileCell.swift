@@ -10,11 +10,11 @@ import UIKit
 class ProfileCell: UICollectionViewCell {
     
     private let postImageView: UIImageView = {
-       let iv = UIImageView()
-        iv.image = UIImage(named: "cutecat")
-        iv.contentMode = .scaleAspectFill
-        iv.clipsToBounds = true
-        return iv
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: "cutecat")
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
+        return imageView
     }()
     
     override init(frame: CGRect) {
