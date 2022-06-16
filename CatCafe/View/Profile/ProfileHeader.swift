@@ -8,10 +8,28 @@
 import UIKit
 import SDWebImage
 
+protocol ProfileHeaderDelegate: AnyObject {
+    func header(_ profileHeader: ProfileHeader, didTapActionButtonFor user: User)
+}
+
 class ProfileHeader: UICollectionReusableView {
     
+    weak var delegate: ProfileHeaderDelegate?
+    
     var viewModel: ProfileHeaderViewModel? {
-        didSet { configure() }
+        didSet {
+            guard let viewModel = viewModel else { return }
+            nameLabel.text = viewModel.fullname
+            profileImageView.sd_setImage(with: viewModel.profileImageUrl)
+            
+            editProfileFollowButton.setTitle(viewModel.followButtonText, for: .normal)
+            editProfileFollowButton.backgroundColor = viewModel.followButtonBackgroundColor
+            editProfileFollowButton.setTitleColor(viewModel.followButtonTextColor, for: .normal )
+            
+            postsLabel.attributedText = viewModel.numberOfPostsAttrString
+            followersLabel.attributedText = viewModel.numberOfFollowersAttrString
+            followingLabel.attributedText = viewModel.numberOfFollowingAttrString
+        }
     }
     
     private let profileImageView: UIImageView = {
@@ -31,7 +49,7 @@ class ProfileHeader: UICollectionReusableView {
     
     private lazy var editProfileFollowButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Edit Profile", for: .normal)
+        button.setTitle("Loading...", for: .normal)
         button.layer.cornerRadius = 3
         button.layer.borderColor = UIColor.lightGray.cgColor
         button.layer.borderWidth = 0.5
@@ -45,7 +63,6 @@ class ProfileHeader: UICollectionReusableView {
        let label = UILabel()
         label.numberOfLines = 0
         label.textAlignment = .center
-        label.attributedText = attributedStatText(value: 5, label: "posts")
         return label
     }()
     
@@ -53,7 +70,6 @@ class ProfileHeader: UICollectionReusableView {
        let label = UILabel()
         label.numberOfLines = 0
         label.textAlignment = .center
-        label.attributedText = attributedStatText(value: 2, label: "followers")
         return label
     }()
     
@@ -61,7 +77,6 @@ class ProfileHeader: UICollectionReusableView {
        let label = UILabel()
         label.numberOfLines = 0
         label.textAlignment = .center
-        label.attributedText = attributedStatText(value: 1, label: "following")
         return label
     }()
     
@@ -135,29 +150,10 @@ class ProfileHeader: UICollectionReusableView {
                                        paddingLeft: 24, paddingBottom: 16, paddingRight: 24)
     }
     
-    func attributedStatText(value: Int, label: String) -> NSAttributedString {
-        let attributedText = NSMutableAttributedString(
-            string: "\(value)\n",
-            attributes: [.font: UIFont.systemFont(ofSize: 14)])
-        
-        attributedText.append(NSAttributedString(
-            string: label,
-            attributes: [.font: UIFont.systemFont(ofSize: 14),
-                         .foregroundColor: UIColor.lightGray]))
-        return attributedText
-    }
-    
-    func configure() {
-        guard let viewModel = viewModel else {
-            return
-        }
-        nameLabel.text = viewModel.fullname
-        profileImageView.sd_setImage(with: viewModel.profileImageUrl)
-    }
-        
     // MARK: - Action
     
     @objc func handleEditProfileFollowTapped() {
-        
+        guard let viewModel = viewModel else { return }
+        delegate?.header(self, didTapActionButtonFor: viewModel.user)
     }
 }

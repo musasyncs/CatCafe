@@ -6,14 +6,17 @@
 //
 
 import Firebase
+import CoreMedia
+
+typealias FirestoreCompletion = (Error?) -> Void
 
 struct UserService {
     
     static func fetchCurrentUser(completion: @escaping(User) -> Void) {
         
-        guard let uid = Auth.auth().currentUser?.uid else { return }
+        guard let currentUid = Auth.auth().currentUser?.uid else { return }
         
-        CCConstant.COLLECTION_USERS.document(uid).getDocument { snapshot, error in
+        CCConstant.COLLECTION_USERS.document(currentUid).getDocument { snapshot, _ in
             guard let dic = snapshot?.data() else { return }
             let user = User(dic: dic)
             completion(user)
@@ -22,8 +25,7 @@ struct UserService {
     
     static func fetchUsers(completion: @escaping([User]) -> Void) {
         
-        CCConstant.COLLECTION_USERS.getDocuments { snapshot, error in
-            
+        CCConstant.COLLECTION_USERS.getDocuments { snapshot, _ in
             guard let snapshot = snapshot else { return }
             let users = snapshot.documents.map({
                 User(dic: $0.data())
@@ -32,4 +34,66 @@ struct UserService {
             completion(users)
         }
     }
+    
+    static func follow(uid: String, completion: @escaping(FirestoreCompletion)) {
+        
+        guard let currentUid = Auth.auth().currentUser?.uid else { return }
+        
+        CCConstant.COLLECTION_FOLLOWING
+            .document(currentUid)
+            .collection("user-following")
+            .document(uid)
+            .setData([:]
+            ) { _ in
+                CCConstant.COLLECTION_FOLLOWERS
+                    .document(uid)
+                    .collection("user-followers")
+                    .document(currentUid)
+                    .setData([:], completion: completion)
+            }
+    }
+    
+    static func unfollow(uid: String, completion: @escaping(FirestoreCompletion)) {
+        
+        guard let currentUid = Auth.auth().currentUser?.uid else { return }
+        
+        CCConstant.COLLECTION_FOLLOWING
+            .document(currentUid)
+            .collection("user-following")
+            .document(uid)
+            .delete { _ in
+                CCConstant.COLLECTION_FOLLOWERS
+                    .document(uid)
+                    .collection("user-followers")
+                    .document(currentUid)
+                    .delete(completion: completion)
+            }
+    }
+    
+    static func checkIfUserIsFollowed(uid: String, completion: @escaping(Bool) -> Void) {
+        
+        guard let currentUid = Auth.auth().currentUser?.uid else { return }
+        
+        CCConstant.COLLECTION_FOLLOWING
+            .document(currentUid)
+            .collection("user-following")
+            .document(uid)
+            .getDocument { snapshot, _ in
+                guard let isFollowed = snapshot?.exists else { return }
+                completion(isFollowed)
+            }
+    }
+    
+    static func fetchUserStats(uid: String, completion: @escaping(UserStats) -> Void) {
+        CCConstant.COLLECTION_FOLLOWERS.document(uid).collection("user-followers").getDocuments { snapshot, _ in
+            let followers = snapshot?.documents.count ?? 0
+            
+            CCConstant.COLLECTION_FOLLOWING.document(uid).collection("user-following").getDocuments { snapshot, _ in
+                let following = snapshot?.documents.count ?? 0
+                
+                completion(UserStats(followers: followers, following: following))
+            }
+        }
+    }
+
 }
