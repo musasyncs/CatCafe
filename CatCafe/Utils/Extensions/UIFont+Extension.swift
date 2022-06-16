@@ -33,4 +33,3 @@ extension UIFont {
 private enum CCFontName: String {
     case regular = "NotoSansCJKtc-Regular"
 }
-

@@ -41,7 +41,10 @@ struct RegistrationViewModel: AuthenticationViewModel {
     var username: String?
     
     var formIsValid: Bool {
-        return email?.isEmpty == false && password?.isEmpty == false && fullname?.isEmpty == false && username?.isEmpty == false
+        return email?.isEmpty == false
+        && password?.isEmpty == false
+        && fullname?.isEmpty == false
+        && username?.isEmpty == false
     }
     
     var buttonBackgroundColor: UIColor {

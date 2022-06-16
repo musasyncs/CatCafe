@@ -16,7 +16,11 @@ class CustomTextField: UITextField {
         keyboardAppearance = .dark
         keyboardType = .emailAddress
         backgroundColor = UIColor(white: 1, alpha: 0.1)
-        attributedPlaceholder = NSAttributedString(string: placeholder, attributes: [.foregroundColor: UIColor(white: 1, alpha: 0.7)])
+        
+        attributedPlaceholder = NSAttributedString(
+            string: placeholder,
+            attributes: [.foregroundColor: UIColor(white: 1, alpha: 0.7)]
+        )
         
         let spacer = UIView()
         spacer.setDimensions(height: 50, width: 12)

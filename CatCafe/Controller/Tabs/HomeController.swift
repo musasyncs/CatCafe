@@ -12,12 +12,34 @@ private let reuseIdentifier = "cell"
 
 class HomeController: UICollectionViewController {
     
+    // MARK: - Life Cycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupRightNavItems()
         setupCollectionView()
     }
     
     // MARK: - Helpers
+    
+    private func setupRightNavItems() {
+        
+        let chatButton = UIButton(type: .system)
+        chatButton.setImage(UIImage(named: "send2")?.withRenderingMode(.alwaysOriginal), for: .normal)
+        chatButton.frame = CGRect(x: 0, y: 0, width: 34, height: 34)
+        
+        let notificationButton = UIButton(type: .system)
+        notificationButton.setImage(UIImage(named: "like_unselected")?.withRenderingMode(.alwaysOriginal), for: .normal)
+        notificationButton.frame = CGRect(x: 0, y: 0, width: 34, height: 34)
+        
+        let postButton = UIButton(type: .system)
+        postButton.setImage(UIImage(named: "plus_unselected")?.withRenderingMode(.alwaysOriginal), for: .normal)
+        postButton.frame = CGRect(x: 0, y: 0, width: 34, height: 34)
+        
+        navigationItem.rightBarButtonItems = [UIBarButtonItem(customView: chatButton),
+                                              UIBarButtonItem(customView: notificationButton),
+                                              UIBarButtonItem(customView: postButton)]
+    }
     
     func setupCollectionView() {
         collectionView.register(FeedCell.self, forCellWithReuseIdentifier: reuseIdentifier)

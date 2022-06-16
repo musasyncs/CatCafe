@@ -10,6 +10,11 @@ import UIKit
 extension UILabel {
 
     var characterSpacing: CGFloat {
+        get {
+            // swiftlint:disable force_cast
+            return attributedText?.value(forKey: NSAttributedString.Key.kern.rawValue) as! CGFloat
+            // swiftlint:enable force_cast
+        }
         set {
             if let labelText = text, labelText.count > 0 {
                 let attributedString = NSMutableAttributedString(attributedString: attributedText!)
@@ -20,12 +25,6 @@ extension UILabel {
                 )
                 attributedText = attributedString
             }
-        }
-
-        get {
-            // swiftlint:disable force_cast
-            return attributedText?.value(forKey: NSAttributedString.Key.kern.rawValue) as! CGFloat
-            // swiftlint:enable force_cast
         }
     }
 }
