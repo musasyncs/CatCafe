@@ -45,8 +45,32 @@ struct ProfileHeaderViewModel {
             return .systemBlue
         }
     }
+    
+    var numberOfFollowersAttrString: NSAttributedString {
+        return attributedStatText(value: user.stats.followers, label: "followers")
+    }
+    
+    var numberOfFollowingAttrString: NSAttributedString {
+        return attributedStatText(value: user.stats.following, label: "following")
+    }
+    
+    var numberOfPostsAttrString: NSAttributedString {
+        return attributedStatText(value: 5, label: "posts")
+    }
 
     init(user: User) {
         self.user = user
+    }
+    
+    func attributedStatText(value: Int, label: String) -> NSAttributedString {
+        let attributedText = NSMutableAttributedString(
+            string: "\(value)\n",
+            attributes: [.font: UIFont.systemFont(ofSize: 14)])
+        
+        attributedText.append(NSAttributedString(
+            string: label,
+            attributes: [.font: UIFont.systemFont(ofSize: 14),
+                         .foregroundColor: UIColor.lightGray]))
+        return attributedText
     }
 }
