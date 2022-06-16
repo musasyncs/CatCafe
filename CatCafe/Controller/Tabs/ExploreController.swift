@@ -7,8 +7,6 @@
 
 import UIKit
 
-private let reuseIdentifier = "UserCell"
-
 class ExploreController: UITableViewController {
     
     private var users = [User]()
@@ -19,6 +17,8 @@ class ExploreController: UITableViewController {
     }
     
     private let searchController = UISearchController(searchResultsController: nil)
+    
+    // MARK: - Life Cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -42,7 +42,7 @@ class ExploreController: UITableViewController {
     // MARK: - Helpers
     
     func setupTableView() {
-        tableView.register(UserCell.self, forCellReuseIdentifier: reuseIdentifier)
+        tableView.register(UserCell.self, forCellReuseIdentifier: UserCell.identifier)
         tableView.rowHeight = 64
     }
     
@@ -65,7 +65,7 @@ extension ExploreController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as? UserCell
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: UserCell.identifier, for: indexPath) as? UserCell
         else { return UITableViewCell() }
         
         let user = inSearchMode ? filteredUsers[indexPath.row] : users[indexPath.row]

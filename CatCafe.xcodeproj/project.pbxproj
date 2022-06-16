@@ -53,6 +53,12 @@
 		BA7BB71C285A083D00465DEC /* MJRefreshWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA7BB70A285A083D00465DEC /* MJRefreshWrapper.swift */; };
 		BA7BB71D285A083D00465DEC /* KingFisherWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA7BB70B285A083D00465DEC /* KingFisherWrapper.swift */; };
 		BA7BB71E285A083D00465DEC /* Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA7BB70C285A083D00465DEC /* Factory.swift */; };
+		BA7BB723285AD90400465DEC /* DropDownCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA7BB722285AD90400465DEC /* DropDownCell.swift */; };
+		BA7BB725285AE4D000465DEC /* PostSelectController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA7BB724285AE4D000465DEC /* PostSelectController.swift */; };
+		BA7BB729285AE9F700465DEC /* UIViewControllerAnimatedTransitioning.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA7BB728285AE9F700465DEC /* UIViewControllerAnimatedTransitioning.swift */; };
+		BA7BB72F285AEAEA00465DEC /* TopTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA7BB72E285AEAEA00465DEC /* TopTableViewCell.swift */; };
+		BA7BB731285B0E6E00465DEC /* ControlSectionHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA7BB730285B0E6E00465DEC /* ControlSectionHeader.swift */; };
+		BA7BB733285B181700465DEC /* PhotoWallTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA7BB732285B181700465DEC /* PhotoWallTableViewCell.swift */; };
 		F3CA363722C8C7AF9DC7484D /* Pods_CatCafe.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91DB69D591917799CE505D79 /* Pods_CatCafe.framework */; };
 /* End PBXBuildFile section */
 
@@ -108,6 +114,12 @@
 		BA7BB70A285A083D00465DEC /* MJRefreshWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MJRefreshWrapper.swift; sourceTree = "<group>"; };
 		BA7BB70B285A083D00465DEC /* KingFisherWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KingFisherWrapper.swift; sourceTree = "<group>"; };
 		BA7BB70C285A083D00465DEC /* Factory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Factory.swift; sourceTree = "<group>"; };
+		BA7BB722285AD90400465DEC /* DropDownCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropDownCell.swift; sourceTree = "<group>"; };
+		BA7BB724285AE4D000465DEC /* PostSelectController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostSelectController.swift; sourceTree = "<group>"; };
+		BA7BB728285AE9F700465DEC /* UIViewControllerAnimatedTransitioning.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewControllerAnimatedTransitioning.swift; sourceTree = "<group>"; };
+		BA7BB72E285AEAEA00465DEC /* TopTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopTableViewCell.swift; sourceTree = "<group>"; };
+		BA7BB730285B0E6E00465DEC /* ControlSectionHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlSectionHeader.swift; sourceTree = "<group>"; };
+		BA7BB732285B181700465DEC /* PhotoWallTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoWallTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -193,6 +205,7 @@
 				BA44778A285961940045DDB8 /* Home */,
 				BA4477922859CE200045DDB8 /* Explore */,
 				BA44778D28597DAF0045DDB8 /* Profile */,
+				BA7BB72B285AEA7E00465DEC /* PostSelect */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -213,6 +226,7 @@
 				BA44779C2859DE370045DDB8 /* Auth */,
 				BA44779D2859DE420045DDB8 /* Base */,
 				BA44774528588CA90045DDB8 /* Tabs */,
+				BA7BB726285AE68D00465DEC /* Post */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -233,6 +247,7 @@
 			isa = PBXGroup;
 			children = (
 				BA44778B285961A50045DDB8 /* FeedCell.swift */,
+				BA7BB722285AD90400465DEC /* DropDownCell.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -301,11 +316,12 @@
 		BA7BB6F6285A083D00465DEC /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				BA7BB727285AE9DF00465DEC /* Custom Animation */,
 				BA7BB6F7285A083D00465DEC /* Constants */,
 				BA7BB6F9285A083D00465DEC /* Extensions */,
 				BA7BB705285A083D00465DEC /* Font */,
 				BA7BB708285A083D00465DEC /* Third Party Wrapper */,
-				BA7BB70C285A083D00465DEC /* Factory.swift */,
+				BA7BB72A285AEA6E00465DEC /* Factory */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -353,6 +369,40 @@
 				BA7BB70B285A083D00465DEC /* KingFisherWrapper.swift */,
 			);
 			path = "Third Party Wrapper";
+			sourceTree = "<group>";
+		};
+		BA7BB726285AE68D00465DEC /* Post */ = {
+			isa = PBXGroup;
+			children = (
+				BA7BB724285AE4D000465DEC /* PostSelectController.swift */,
+			);
+			path = Post;
+			sourceTree = "<group>";
+		};
+		BA7BB727285AE9DF00465DEC /* Custom Animation */ = {
+			isa = PBXGroup;
+			children = (
+				BA7BB728285AE9F700465DEC /* UIViewControllerAnimatedTransitioning.swift */,
+			);
+			path = "Custom Animation";
+			sourceTree = "<group>";
+		};
+		BA7BB72A285AEA6E00465DEC /* Factory */ = {
+			isa = PBXGroup;
+			children = (
+				BA7BB70C285A083D00465DEC /* Factory.swift */,
+			);
+			path = Factory;
+			sourceTree = "<group>";
+		};
+		BA7BB72B285AEA7E00465DEC /* PostSelect */ = {
+			isa = PBXGroup;
+			children = (
+				BA7BB72E285AEAEA00465DEC /* TopTableViewCell.swift */,
+				BA7BB730285B0E6E00465DEC /* ControlSectionHeader.swift */,
+				BA7BB732285B181700465DEC /* PhotoWallTableViewCell.swift */,
+			);
+			path = PostSelect;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -493,6 +543,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				BA7BB714285A083D00465DEC /* UIViewController+Extension.swift in Sources */,
+				BA7BB729285AE9F700465DEC /* UIViewControllerAnimatedTransitioning.swift in Sources */,
 				BA7BB715285A083D00465DEC /* String+Extension.swift in Sources */,
 				BA44779128597ED00045DDB8 /* ProfileHeader.swift in Sources */,
 				BA7BB6F42859FAE500465DEC /* ProfileHeaderViewModel.swift in Sources */,
@@ -501,11 +552,14 @@
 				BA7BB70F285A083D00465DEC /* UIColor+Extension.swift in Sources */,
 				BA7BB713285A083D00465DEC /* UIImage+Extension.swift in Sources */,
 				BA7BB71C285A083D00465DEC /* MJRefreshWrapper.swift in Sources */,
+				BA7BB723285AD90400465DEC /* DropDownCell.swift in Sources */,
 				BA4477A82859E0AD0045DDB8 /* AuthService.swift in Sources */,
 				BA4477992859D0FD0045DDB8 /* User.swift in Sources */,
+				BA7BB733285B181700465DEC /* PhotoWallTableViewCell.swift in Sources */,
 				BA44774D28588F4B0045DDB8 /* MeetController.swift in Sources */,
 				BA44773228587ED30045DDB8 /* ViewController.swift in Sources */,
 				BA7BB70D285A083D00465DEC /* CCConstant.swift in Sources */,
+				BA7BB731285B0E6E00465DEC /* ControlSectionHeader.swift in Sources */,
 				BA4477A22859DEEF0045DDB8 /* CustomTextField.swift in Sources */,
 				BA7BB718285A083D00465DEC /* NSLocalizedString+Extension.swift in Sources */,
 				BA7BB717285A083D00465DEC /* identifiers.swift in Sources */,
@@ -526,8 +580,10 @@
 				BA44775128588FFD0045DDB8 /* ProfileController.swift in Sources */,
 				BA44774F28588FE40045DDB8 /* CollectionController.swift in Sources */,
 				BA44774928588E720045DDB8 /* HomeController.swift in Sources */,
+				BA7BB725285AE4D000465DEC /* PostSelectController.swift in Sources */,
 				BA4477972859D0280045DDB8 /* UserService.swift in Sources */,
 				BA4477AA2859E0DB0045DDB8 /* AuthCredentials.swift in Sources */,
+				BA7BB72F285AEAEA00465DEC /* TopTableViewCell.swift in Sources */,
 				BA7BB710285A083D00465DEC /* UILabel+Extension.swift in Sources */,
 				BA44779F2859DE6C0045DDB8 /* RegistrationController.swift in Sources */,
 				BA44779B2859D3950045DDB8 /* UserCellViewModel.swift in Sources */,

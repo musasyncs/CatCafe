@@ -8,9 +8,6 @@
 import UIKit
 import FirebaseAuth
 
-private let cellIdentifier = "ProfileCell"
-private let headerIdentifier = "ProfileHeader"
-
 class ProfileController: UICollectionViewController {
     
     private var user: User
@@ -67,10 +64,10 @@ class ProfileController: UICollectionViewController {
     }
     
     func setupCollectionView() {
-        collectionView.register(ProfileCell.self, forCellWithReuseIdentifier: cellIdentifier)
+        collectionView.register(ProfileCell.self, forCellWithReuseIdentifier: ProfileCell.identifier)
         collectionView.register(ProfileHeader.self,
                                 forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
-                                withReuseIdentifier: headerIdentifier)
+                                withReuseIdentifier: ProfileHeader.identifier)
         collectionView.backgroundColor = .white
     }
     
@@ -105,7 +102,7 @@ extension ProfileController {
     ) -> UICollectionViewCell {
         
         guard let cell = collectionView.dequeueReusableCell(
-            withReuseIdentifier: cellIdentifier,
+            withReuseIdentifier: ProfileCell.identifier,
             for: indexPath) as? ProfileCell
         else { return UICollectionViewCell() }
         
@@ -120,7 +117,7 @@ extension ProfileController {
         
         guard let header = collectionView.dequeueReusableSupplementaryView(
             ofKind: kind,
-            withReuseIdentifier: headerIdentifier,
+            withReuseIdentifier: ProfileHeader.identifier,
             for: indexPath
         ) as? ProfileHeader else { return UICollectionReusableView() }
         
