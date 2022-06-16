@@ -8,9 +8,10 @@
 import UIKit
 import FirebaseAuth
 
-private let reuseIdentifier = "dropDownCell"
-
 class HomeController: UICollectionViewController {
+        
+    var presentTransition: UIViewControllerAnimatedTransitioning?
+    var dismissTransition: UIViewControllerAnimatedTransitioning?
     
     let chatButton = UIButton(type: .system)
     let notiButton = UIButton(type: .system)
@@ -49,12 +50,12 @@ class HomeController: UICollectionViewController {
     }
     
     func setupCollectionView() {
-        collectionView.register(FeedCell.self, forCellWithReuseIdentifier: reuseIdentifier)
+        collectionView.register(FeedCell.self, forCellWithReuseIdentifier: FeedCell.identifier)
         collectionView.backgroundColor = .white
     }
     
     func setupDropDownMenu() {
-        dropTableView.register(DropDownCell.self, forCellReuseIdentifier: reuseIdentifier)
+        dropTableView.register(DropDownCell.self, forCellReuseIdentifier: DropDownCell.identifier)
         dropTableView.delegate = self
         dropTableView.dataSource = self
     
@@ -103,7 +104,7 @@ extension HomeController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(
-            withIdentifier: reuseIdentifier,
+            withIdentifier: DropDownCell.identifier,
             for: indexPath
         ) as? DropDownCell else { return UITableViewCell() }
                 
@@ -112,12 +113,27 @@ extension HomeController: UITableViewDelegate, UITableViewDataSource {
         } else {
             cell.titleLabel.text = "限時動態"
         }
-
+        
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-
+        if indexPath.row == 0 {
+            
+            presentTransition = CustomAnimationPresentor()
+            dismissTransition = CustomAnimationDismisser()
+            
+            let navController = UINavigationController(rootViewController: PostSelectController())
+            navController.modalPresentationStyle = .custom
+            navController.transitioningDelegate = self
+            
+            present(navController, animated: true, completion: { [weak self] in
+                self?.presentTransition = nil
+            })
+            
+        } else {
+            
+        }
     }
 }
 
@@ -134,7 +150,7 @@ extension HomeController {
         cellForItemAt indexPath: IndexPath
     ) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(
-            withReuseIdentifier: reuseIdentifier,
+            withReuseIdentifier: FeedCell.identifier,
             for: indexPath) as? FeedCell
         else { return UICollectionViewCell() }
         return cell
@@ -155,5 +171,20 @@ extension HomeController: UICollectionViewDelegateFlowLayout {
         height += 50
         height += 60
         return CGSize(width: view.frame.width, height: height)
+    }
+}
+
+// MARK: - UIViewControllerTransitioningDelegate
+
+extension HomeController: UIViewControllerTransitioningDelegate {
+    
+    func animationController(forPresented presented: UIViewController,
+                             presenting: UIViewController,
+                             source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        return presentTransition
+    }
+
+    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        return dismissTransition
     }
 }

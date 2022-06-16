@@ -22,7 +22,7 @@ class ProfileCell: UICollectionViewCell {
         
         backgroundColor = .lightGray
         addSubview(postImageView)
-        postImageView.fillSuperview()
+        postImageView.fillSuperView()
     }
     
     required init?(coder: NSCoder) {

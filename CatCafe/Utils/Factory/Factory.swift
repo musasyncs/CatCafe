@@ -46,15 +46,20 @@ func makeAttriTitleButton(text: String, font: UIFont, fgColor: UIColor, kern: Do
 
 func makeIconButton(imagename: String,
                     imageColor: UIColor,
+                    imageWidth: Int,
+                    imageHeight: Int,
                     borderWith: CGFloat? = nil,
-                    borderColor: UIColor? = nil) -> UIButton {
+                    borderColor: UIColor? = nil,
+                    backgroundColor: UIColor? = nil) -> UIButton {
     let button = UIButton()
     button.translatesAutoresizingMaskIntoConstraints = false
     
-    let image = UIImage(named: imagename)?.withTintColor(imageColor).resize(to: .init(width: 24, height: 24))
+    let image = UIImage(named: imagename)?
+        .withTintColor(imageColor)
+        .resize(to: .init(width: imageWidth, height: imageHeight))
     button.setImage(image, for: .normal)
     
-    button.backgroundColor = .white
+    button.backgroundColor = backgroundColor
     
     if let borderWith = borderWith {
         button.layer.borderWidth = borderWith
