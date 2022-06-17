@@ -9,9 +9,7 @@ import UIKit
 import Firebase
 
 class PostEditController: UIViewController {
-    
-//    static let updateFeedNotificationName = Notification.Name(rawValue: "UpdateFeed")
-
+        
     var selectedImage: UIImage? {
         didSet {
             self.postImageView.image = selectedImage
@@ -47,7 +45,7 @@ class PostEditController: UIViewController {
                     .withRenderingMode(.alwaysOriginal),
                 style: .plain,
                 target: self,
-                action: #selector(handleShare)
+                action: #selector(handleImagePost)
             )
         }
     }
@@ -119,6 +117,14 @@ class PostEditController: UIViewController {
         setupContainerView()
         setupAddPlaceButton()
         setupStackView()
+        
+        fetchProfilePic()
+    }
+    
+    // MARK: - API
+    
+    func fetchProfilePic() {
+        
     }
     
     // MARK: - Helpers
@@ -227,10 +233,30 @@ class PostEditController: UIViewController {
         present(navController, animated: true)
     }
     
-    @objc func handleShare() {
-
+    @objc private func handleImagePost() {
+        guard let selectedImage = selectedImage else { return }
+        guard let caption = captionTextView.text else { return }
+        guard let selectedCafe = selectedCafe else { return }
+        
+        navigationItem.rightBarButtonItem?.isEnabled = false
+        
+        PostService.uploadImagePost(caption: caption,
+                                    postImage: selectedImage,
+                                    cafeId: selectedCafe.id,
+                                    cafeName: selectedCafe.title) { error in
+            if let error = error {
+                print("DEBUG: Failed to upload post with error \(error.localizedDescription)")
+                
+                self.navigationItem.rightBarButtonItem?.isEnabled = true
+                
+                return
+            }
+            
+            self.dismiss(animated: true) {
+                NotificationCenter.default.post(name: CCConstant.NotificationName.updateFeed, object: nil)
+            }
+        }
     }
-
 }
 
 // MARK: - UITextViewDelegate

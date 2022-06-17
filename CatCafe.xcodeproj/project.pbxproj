@@ -203,6 +203,7 @@
 		BA44774128588C810045DDB8 /* API */ = {
 			isa = PBXGroup;
 			children = (
+				BA7BB6E62859E31500465DEC /* ImageUplader.swift */,
 				BA4477A62859E0940045DDB8 /* Auth */,
 				BA4477A52859E0870045DDB8 /* User */,
 				BADF1F63285C4E32004CF329 /* Cafe */,
@@ -323,7 +324,6 @@
 			children = (
 				BA4477A92859E0DB0045DDB8 /* AuthCredentials.swift */,
 				BA4477A72859E0AD0045DDB8 /* AuthService.swift */,
-				BA7BB6E62859E31500465DEC /* ImageUplader.swift */,
 			);
 			name = Auth;
 			sourceTree = "<group>";
