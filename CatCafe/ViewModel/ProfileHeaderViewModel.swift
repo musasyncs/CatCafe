@@ -5,7 +5,6 @@
 //  Created by Ewen on 2022/6/15.
 //
 
-import Foundation
 import UIKit
 
 struct ProfileHeaderViewModel {
@@ -65,11 +64,11 @@ struct ProfileHeaderViewModel {
     func attributedStatText(value: Int, label: String) -> NSAttributedString {
         let attributedText = NSMutableAttributedString(
             string: "\(value)\n",
-            attributes: [.font: UIFont.systemFont(ofSize: 14)])
+            attributes: [.font: UIFont.notoRegular(size: 14) as Any])
         
         attributedText.append(NSAttributedString(
             string: label,
-            attributes: [.font: UIFont.systemFont(ofSize: 14),
+            attributes: [.font: UIFont.notoRegular(size: 14) as Any,
                          .foregroundColor: UIColor.lightGray]))
         return attributedText
     }

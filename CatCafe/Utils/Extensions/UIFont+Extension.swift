@@ -17,19 +17,18 @@ extension UIFont {
 }
 
 extension UIFont {
-    static func notoMedium(size: CGFloat) -> UIFont? {
-        var descriptor = UIFontDescriptor(name: CCFontName.regular.rawValue, size: size)
-        descriptor = descriptor.addingAttributes(
-            [UIFontDescriptor.AttributeName.traits: [UIFontDescriptor.TraitKey.weight: UIFont.Weight.medium]]
-        )
-        return UIFont(descriptor: descriptor, size: size)
-    }
-
     static func notoRegular(size: CGFloat) -> UIFont? {
-        return UIFont(name: CCFontName.regular.rawValue, size: size)
+        let descriptor = UIFontDescriptor(name: CCFontName.regular.rawValue, size: size)
+        return UIFont(descriptor: descriptor, size: size)        
+    }
+    
+    static func notoMedium(size: CGFloat) -> UIFont? {
+        let descriptor = UIFontDescriptor(name: CCFontName.medium.rawValue, size: size)
+        return UIFont(descriptor: descriptor, size: size)
     }
 
 }
 private enum CCFontName: String {
     case regular = "NotoSansCJKtc-Regular"
+    case medium = "NotoSansCJKtc-Medium"
 }

@@ -8,7 +8,8 @@
 import FirebaseStorage
 
 struct ImageUplader {
-    static func uploadImage(image: UIImage, completion: @escaping(String) -> Void) {
+    
+    static func uploadProfileImage(image: UIImage, completion: @escaping(String) -> Void) {
         guard let imageData = image.jpegData(compressionQuality: 0.75) else { return }
         let filename = UUID().uuidString
         let ref = Storage.storage().reference(withPath: "/profile_images/\(filename)")
@@ -18,9 +19,36 @@ struct ImageUplader {
                 print("DEBUG: Failed to upload image \(error.localizedDescription)")
                 return
             }
-            ref.downloadURL { url, _ in
-                guard let imageUrl = url?.absoluteString else { return }
-                completion(imageUrl)
+            ref.downloadURL { url, error in
+                if let error = error {
+                    print("DEBUG: Failed to fetch downloadUrl: \(error.localizedDescription)")
+                    return
+                }
+                guard let imageUrlString = url?.absoluteString else { return }
+                print("DEBUG: Successfully uploaded profile image:", imageUrlString)
+                completion(imageUrlString)
+            }
+        }
+    }
+    
+    static func uploadPostImage(image: UIImage, completion: @escaping(String) -> Void) {
+        guard let imageData = image.jpegData(compressionQuality: 0.95) else { return }
+        let filename = UUID().uuidString
+        let ref = Storage.storage().reference(withPath: "/post_images/\(filename)")
+        
+        ref.putData(imageData, metadata: nil) { _, error in
+            if let error = error {
+                print("DEBUG: Failed to upload image \(error.localizedDescription)")
+                return
+            }
+            ref.downloadURL { url, error in
+                if let error = error {
+                    print("DEBUG: Failed to fetch downloadUrl: \(error.localizedDescription)")
+                    return
+                }
+                guard let imageUrlString = url?.absoluteString else { return }
+                print("DEBUG: Successfully uploaded post image:", imageUrlString)
+                completion(imageUrlString)
             }
         }
     }

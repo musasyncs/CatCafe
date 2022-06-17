@@ -79,7 +79,7 @@ extension LoginController {
         passwordTextField.isSecureTextEntry = true
         loginButton.setTitle("Log In", for: .normal)
         loginButton.layer.cornerRadius = 5
-        loginButton.titleLabel?.font = .boldSystemFont(ofSize: 20)
+        loginButton.titleLabel?.font = .notoMedium(size: 20)
         forgotPasswordButton.attributedTitle(firstPart: "Forgot your password?  ", secondPart: "Get help signing in.")
         dontHaveAccountButton.attributedTitle(firstPart: "Don't have an account?  ", secondPart: "Sign Up")
     }

@@ -763,15 +763,10 @@ PODS:
   - nanopb/decode (2.30909.0)
   - nanopb/encode (2.30909.0)
   - PromisesObjC (2.1.0)
-  - PryntTrimmerView (4.0.2)
   - SDWebImage (5.12.5):
     - SDWebImage/Core (= 5.12.5)
   - SDWebImage/Core (5.12.5)
-  - SteviaLayout (4.7.3)
   - SwiftLint (0.47.1)
-  - YPImagePicker (5.2.1):
-    - PryntTrimmerView (= 4.0.2)
-    - SteviaLayout (= 4.7.3)
 
 DEPENDENCIES:
   - ActiveLabel
@@ -786,7 +781,6 @@ DEPENDENCIES:
   - MJRefresh
   - SDWebImage
   - SwiftLint
-  - YPImagePicker
 
 SPEC REPOS:
   trunk:
@@ -820,11 +814,8 @@ SPEC REPOS:
     - MJRefresh
     - nanopb
     - PromisesObjC
-    - PryntTrimmerView
     - SDWebImage
-    - SteviaLayout
     - SwiftLint
-    - YPImagePicker
 
 SPEC CHECKSUMS:
   abseil: ebe5b5529fb05d93a8bdb7951607be08b7fa71bc
@@ -857,12 +848,9 @@ SPEC CHECKSUMS:
   MJRefresh: fdf5e979eb406a0341468932d1dfc8b7f9fce961
   nanopb: b552cce312b6c8484180ef47159bc0f65a1f0431
   PromisesObjC: 99b6f43f9e1044bd87a95a60beff28c2c44ddb72
-  PryntTrimmerView: 6a43cc90df5d99addeabd33d4ba09b1365322130
   SDWebImage: 0905f1b7760fc8ac4198cae0036600d67478751e
-  SteviaLayout: c2ecdcff57d44e38fd2f65e54ad52aeae28ca0c4
   SwiftLint: f80f1be7fa96d30e0aa68e58d45d4ea1ccaac519
-  YPImagePicker: f36043210c10b0783034eb1947d6e06e31c461e4
 
-PODFILE CHECKSUM: dd732d2da8a723343fab12a88974e928dcfa7657
+PODFILE CHECKSUM: e230f631720375942bbe3b33fa6da7eb7a77b5d3
 
 COCOAPODS: 1.11.2

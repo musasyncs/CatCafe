@@ -143,9 +143,9 @@ class PostSelectController: UIViewController {
     }
 
     @objc private func handleNext() {
-//        let postEditController = PostEditController()
-//        postEditController.selectedImage = header?.photoImageView.image
-//        navigationController?.pushViewController(postEditController, animated: true)
+        let postEditController = PostEditController()
+        postEditController.selectedImage = self.selectedImage
+        navigationController?.pushViewController(postEditController, animated: false)
     }
 
 }

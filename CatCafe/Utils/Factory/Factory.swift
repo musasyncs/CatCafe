@@ -7,6 +7,45 @@
 
 import UIKit
 
+// MARK: - UITextView
+
+class InputTextView: UITextView {
+    
+    var placeholderText: String? {
+        didSet {
+            placeholderLabel.text = placeholderText
+        }
+    }
+    
+    private let placeholderLabel: UILabel = {
+       let label = UILabel()
+        label.font = UIFont.notoMedium(size: 12)
+        label.textColor = .lightGray
+        return label
+    }()
+    
+    override init(frame: CGRect, textContainer: NSTextContainer?) {
+        super.init(frame: frame, textContainer: textContainer)
+        
+        addSubview(placeholderLabel)
+        placeholderLabel.anchor(top: topAnchor, left: leftAnchor, paddingTop: 8, paddingLeft: 7)
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleTextDidChange),
+            name: UITextView.textDidChangeNotification, object: nil
+        )
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    @objc func handleTextDidChange() {
+        placeholderLabel.isHidden = !text.isEmpty
+    }
+}
+
 // MARK: - UILabel
 
 func makeLabel(withTitle title: String) -> UILabel {
@@ -17,7 +56,6 @@ func makeLabel(withTitle title: String) -> UILabel {
     label.textColor = .black
     label.numberOfLines = 0
     label.adjustsFontSizeToFitWidth = true
-
     return label
 }
 

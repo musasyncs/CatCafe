@@ -16,7 +16,7 @@ class DropDownCell: UITableViewCell {
         
         backgroundColor = UIColor.rgb(hex: "FAFAFA")
         selectionStyle = .none
-        titleLabel.font = UIFont.systemFont(ofSize: 12)
+        titleLabel.font = .notoRegular(size: 12)
         titleLabel.textAlignment = .left
         titleLabel.textColor = .black
         

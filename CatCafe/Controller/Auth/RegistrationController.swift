@@ -55,7 +55,7 @@ class RegistrationController: UIViewController {
         passwordTextField.isSecureTextEntry = true
         signUpButton.setTitle("Sign Up", for: .normal)
         signUpButton.layer.cornerRadius = 5
-        signUpButton.titleLabel?.font = .boldSystemFont(ofSize: 20)
+        signUpButton.titleLabel?.font = .notoMedium(size: 20)
         signUpButton.backgroundColor = .systemPurple.withAlphaComponent(0.5)
         alreadyHaveAccountButton.attributedTitle(firstPart: "Already have an account?  ", secondPart: "Log In")
     }

@@ -29,6 +29,8 @@ class HomeController: UICollectionViewController {
         setupRightNavItems()
         setupCollectionView()
         setupDropDownMenu()
+        
+        setupUpdateFeedObserver()
     }
     
     // MARK: - Helpers
@@ -52,6 +54,7 @@ class HomeController: UICollectionViewController {
     func setupCollectionView() {
         collectionView.register(FeedCell.self, forCellWithReuseIdentifier: FeedCell.identifier)
         collectionView.backgroundColor = .white
+        collectionView.showsVerticalScrollIndicator = false
     }
     
     func setupDropDownMenu() {
@@ -69,6 +72,15 @@ class HomeController: UICollectionViewController {
         dropTableView.anchor(top: view.safeAreaLayoutGuide.topAnchor,
                                  right: view.rightAnchor, paddingRight: 20,
                                  width: 110, height: 80)
+    }
+    
+    func setupUpdateFeedObserver() {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleRefresh),
+            name: CCConstant.NotificationName.updateFeed,
+            object: nil
+        )
     }
     
     // MARK: - Actions
@@ -90,6 +102,10 @@ class HomeController: UICollectionViewController {
         } else {
             dropTableView.deleteRows(at: indexPaths, with: .fade)
         }
+    }
+    
+    @objc func handleRefresh() {
+        print("DEBUG: update home")
     }
     
 }
@@ -119,6 +135,8 @@ extension HomeController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.row == 0 {
+            
+            handleDropDownMenu()
             
             presentTransition = CustomAnimationPresentor()
             dismissTransition = CustomAnimationDismisser()

@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		BA44772E28587ED30045DDB8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA44772D28587ED30045DDB8 /* AppDelegate.swift */; };
 		BA44773028587ED30045DDB8 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA44772F28587ED30045DDB8 /* SceneDelegate.swift */; };
-		BA44773228587ED30045DDB8 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA44773128587ED30045DDB8 /* ViewController.swift */; };
+		BA44773228587ED30045DDB8 /* SelectCafeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA44773128587ED30045DDB8 /* SelectCafeController.swift */; };
 		BA44773528587ED30045DDB8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BA44773328587ED30045DDB8 /* Main.storyboard */; };
 		BA44773728587ED60045DDB8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BA44773628587ED60045DDB8 /* Assets.xcassets */; };
 		BA44773A28587ED60045DDB8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BA44773828587ED60045DDB8 /* LaunchScreen.storyboard */; };
@@ -59,6 +59,12 @@
 		BA7BB72F285AEAEA00465DEC /* TopTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA7BB72E285AEAEA00465DEC /* TopTableViewCell.swift */; };
 		BA7BB731285B0E6E00465DEC /* ControlSectionHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA7BB730285B0E6E00465DEC /* ControlSectionHeader.swift */; };
 		BA7BB733285B181700465DEC /* PhotoWallTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA7BB732285B181700465DEC /* PhotoWallTableViewCell.swift */; };
+		BADF1F60285B3607004CF329 /* PostEditController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BADF1F5F285B3607004CF329 /* PostEditController.swift */; };
+		BADF1F62285C4E2E004CF329 /* CafeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BADF1F61285C4E2E004CF329 /* CafeService.swift */; };
+		BADF1F65285C4F78004CF329 /* Cafe.swift in Sources */ = {isa = PBXBuildFile; fileRef = BADF1F64285C4F78004CF329 /* Cafe.swift */; };
+		BADF1F68285C528C004CF329 /* PlaceCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BADF1F67285C528C004CF329 /* PlaceCell.swift */; };
+		BADF1F6A285C5353004CF329 /* PlaceCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BADF1F69285C5353004CF329 /* PlaceCellViewModel.swift */; };
+		BADF1F6D285C84DA004CF329 /* PostService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BADF1F6C285C84DA004CF329 /* PostService.swift */; };
 		F3CA363722C8C7AF9DC7484D /* Pods_CatCafe.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91DB69D591917799CE505D79 /* Pods_CatCafe.framework */; };
 /* End PBXBuildFile section */
 
@@ -69,7 +75,7 @@
 		BA44772A28587ED30045DDB8 /* CatCafe.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CatCafe.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BA44772D28587ED30045DDB8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BA44772F28587ED30045DDB8 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		BA44773128587ED30045DDB8 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		BA44773128587ED30045DDB8 /* SelectCafeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectCafeController.swift; sourceTree = "<group>"; };
 		BA44773428587ED30045DDB8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		BA44773628587ED60045DDB8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		BA44773928587ED60045DDB8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -120,6 +126,12 @@
 		BA7BB72E285AEAEA00465DEC /* TopTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopTableViewCell.swift; sourceTree = "<group>"; };
 		BA7BB730285B0E6E00465DEC /* ControlSectionHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlSectionHeader.swift; sourceTree = "<group>"; };
 		BA7BB732285B181700465DEC /* PhotoWallTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoWallTableViewCell.swift; sourceTree = "<group>"; };
+		BADF1F5F285B3607004CF329 /* PostEditController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostEditController.swift; sourceTree = "<group>"; };
+		BADF1F61285C4E2E004CF329 /* CafeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CafeService.swift; sourceTree = "<group>"; };
+		BADF1F64285C4F78004CF329 /* Cafe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cafe.swift; sourceTree = "<group>"; };
+		BADF1F67285C528C004CF329 /* PlaceCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceCell.swift; sourceTree = "<group>"; };
+		BADF1F69285C5353004CF329 /* PlaceCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceCellViewModel.swift; sourceTree = "<group>"; };
+		BADF1F6C285C84DA004CF329 /* PostService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -181,7 +193,6 @@
 				BA44774228588C8C0045DDB8 /* View */,
 				BA44774328588C910045DDB8 /* ViewModel */,
 				BA44774428588C980045DDB8 /* Controller */,
-				BA44773128587ED30045DDB8 /* ViewController.swift */,
 				BA44773328587ED30045DDB8 /* Main.storyboard */,
 				BA4477532858A7A70045DDB8 /* GoogleService-Info.plist */,
 				BA44773B28587ED60045DDB8 /* Info.plist */,
@@ -192,8 +203,11 @@
 		BA44774128588C810045DDB8 /* API */ = {
 			isa = PBXGroup;
 			children = (
+				BA7BB6E62859E31500465DEC /* ImageUplader.swift */,
 				BA4477A62859E0940045DDB8 /* Auth */,
 				BA4477A52859E0870045DDB8 /* User */,
+				BADF1F63285C4E32004CF329 /* Cafe */,
+				BADF1F6B285C84CD004CF329 /* Post */,
 			);
 			path = API;
 			sourceTree = "<group>";
@@ -206,6 +220,7 @@
 				BA4477922859CE200045DDB8 /* Explore */,
 				BA44778D28597DAF0045DDB8 /* Profile */,
 				BA7BB72B285AEA7E00465DEC /* PostSelect */,
+				BADF1F66285C5241004CF329 /* SelectCafe */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -216,6 +231,7 @@
 				BA4477A32859DF1C0045DDB8 /* RegistrationViewModel.swift */,
 				BA44779A2859D3950045DDB8 /* UserCellViewModel.swift */,
 				BA7BB6F32859FAE500465DEC /* ProfileHeaderViewModel.swift */,
+				BADF1F69285C5353004CF329 /* PlaceCellViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -308,7 +324,6 @@
 			children = (
 				BA4477A92859E0DB0045DDB8 /* AuthCredentials.swift */,
 				BA4477A72859E0AD0045DDB8 /* AuthService.swift */,
-				BA7BB6E62859E31500465DEC /* ImageUplader.swift */,
 			);
 			name = Auth;
 			sourceTree = "<group>";
@@ -337,15 +352,15 @@
 		BA7BB6F9285A083D00465DEC /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				BA7BB700285A083D00465DEC /* UIViewController+Extension.swift */,
+				BA7BB702285A083D00465DEC /* UIScreen+Extension.swift */,
 				BA7BB6FA285A083D00465DEC /* UIFont+Extension.swift */,
 				BA7BB6FB285A083D00465DEC /* UIColor+Extension.swift */,
 				BA7BB6FC285A083D00465DEC /* UILabel+Extension.swift */,
 				BA7BB6FD285A083D00465DEC /* UIButton+Extension.swift */,
 				BA7BB6FE285A083D00465DEC /* UIView+Extension.swift */,
 				BA7BB6FF285A083D00465DEC /* UIImage+Extension.swift */,
-				BA7BB700285A083D00465DEC /* UIViewController+Extension.swift */,
 				BA7BB701285A083D00465DEC /* String+Extension.swift */,
-				BA7BB702285A083D00465DEC /* UIScreen+Extension.swift */,
 				BA7BB703285A083D00465DEC /* identifiers.swift */,
 				BA7BB704285A083D00465DEC /* NSLocalizedString+Extension.swift */,
 			);
@@ -375,6 +390,8 @@
 			isa = PBXGroup;
 			children = (
 				BA7BB724285AE4D000465DEC /* PostSelectController.swift */,
+				BADF1F5F285B3607004CF329 /* PostEditController.swift */,
+				BA44773128587ED30045DDB8 /* SelectCafeController.swift */,
 			);
 			path = Post;
 			sourceTree = "<group>";
@@ -403,6 +420,31 @@
 				BA7BB732285B181700465DEC /* PhotoWallTableViewCell.swift */,
 			);
 			path = PostSelect;
+			sourceTree = "<group>";
+		};
+		BADF1F63285C4E32004CF329 /* Cafe */ = {
+			isa = PBXGroup;
+			children = (
+				BADF1F61285C4E2E004CF329 /* CafeService.swift */,
+				BADF1F64285C4F78004CF329 /* Cafe.swift */,
+			);
+			path = Cafe;
+			sourceTree = "<group>";
+		};
+		BADF1F66285C5241004CF329 /* SelectCafe */ = {
+			isa = PBXGroup;
+			children = (
+				BADF1F67285C528C004CF329 /* PlaceCell.swift */,
+			);
+			path = SelectCafe;
+			sourceTree = "<group>";
+		};
+		BADF1F6B285C84CD004CF329 /* Post */ = {
+			isa = PBXGroup;
+			children = (
+				BADF1F6C285C84DA004CF329 /* PostService.swift */,
+			);
+			path = Post;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -543,6 +585,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				BA7BB714285A083D00465DEC /* UIViewController+Extension.swift in Sources */,
+				BADF1F68285C528C004CF329 /* PlaceCell.swift in Sources */,
 				BA7BB729285AE9F700465DEC /* UIViewControllerAnimatedTransitioning.swift in Sources */,
 				BA7BB715285A083D00465DEC /* String+Extension.swift in Sources */,
 				BA44779128597ED00045DDB8 /* ProfileHeader.swift in Sources */,
@@ -553,14 +596,18 @@
 				BA7BB713285A083D00465DEC /* UIImage+Extension.swift in Sources */,
 				BA7BB71C285A083D00465DEC /* MJRefreshWrapper.swift in Sources */,
 				BA7BB723285AD90400465DEC /* DropDownCell.swift in Sources */,
+				BADF1F60285B3607004CF329 /* PostEditController.swift in Sources */,
+				BADF1F62285C4E2E004CF329 /* CafeService.swift in Sources */,
+				BADF1F65285C4F78004CF329 /* Cafe.swift in Sources */,
 				BA4477A82859E0AD0045DDB8 /* AuthService.swift in Sources */,
 				BA4477992859D0FD0045DDB8 /* User.swift in Sources */,
 				BA7BB733285B181700465DEC /* PhotoWallTableViewCell.swift in Sources */,
 				BA44774D28588F4B0045DDB8 /* MeetController.swift in Sources */,
-				BA44773228587ED30045DDB8 /* ViewController.swift in Sources */,
+				BA44773228587ED30045DDB8 /* SelectCafeController.swift in Sources */,
 				BA7BB70D285A083D00465DEC /* CCConstant.swift in Sources */,
 				BA7BB731285B0E6E00465DEC /* ControlSectionHeader.swift in Sources */,
 				BA4477A22859DEEF0045DDB8 /* CustomTextField.swift in Sources */,
+				BADF1F6D285C84DA004CF329 /* PostService.swift in Sources */,
 				BA7BB718285A083D00465DEC /* NSLocalizedString+Extension.swift in Sources */,
 				BA7BB717285A083D00465DEC /* identifiers.swift in Sources */,
 				BA7BB711285A083D00465DEC /* UIButton+Extension.swift in Sources */,
@@ -577,6 +624,7 @@
 				BA4477942859CE2F0045DDB8 /* UserCell.swift in Sources */,
 				BA7BB716285A083D00465DEC /* UIScreen+Extension.swift in Sources */,
 				BA44773028587ED30045DDB8 /* SceneDelegate.swift in Sources */,
+				BADF1F6A285C5353004CF329 /* PlaceCellViewModel.swift in Sources */,
 				BA44775128588FFD0045DDB8 /* ProfileController.swift in Sources */,
 				BA44774F28588FE40045DDB8 /* CollectionController.swift in Sources */,
 				BA44774928588E720045DDB8 /* HomeController.swift in Sources */,
