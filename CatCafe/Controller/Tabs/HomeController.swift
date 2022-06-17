@@ -28,13 +28,13 @@ class HomeController: UICollectionViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupUpdateFeedObserver()
-        
         setupRightNavItems()
         setupCollectionView()
         setupDropDownMenu()
         
-        fetchPosts()
+        setupUpdateFeedObserver()
+        
+        collectionView.beginHeaderRefreshing()
     }
     
     // MARK: - API
@@ -42,6 +42,7 @@ class HomeController: UICollectionViewController {
     func fetchPosts() {
         PostService.fetchPosts { posts in
             self.posts = posts
+            self.collectionView.endHeaderRefreshing()
             self.collectionView.reloadData()
         }
     }
@@ -68,6 +69,11 @@ class HomeController: UICollectionViewController {
         collectionView.register(FeedCell.self, forCellWithReuseIdentifier: FeedCell.identifier)
         collectionView.backgroundColor = .white
         collectionView.showsVerticalScrollIndicator = false
+        
+        // setup pull to refresh
+        collectionView.addRefreshHeader(refreshingBlock: { [weak self] in
+            self?.fetchPosts()
+        })
     }
     
     func setupDropDownMenu() {
@@ -185,7 +191,12 @@ extension HomeController {
             withReuseIdentifier: FeedCell.identifier,
             for: indexPath) as? FeedCell
         else { return UICollectionViewCell() }
-        cell.viewModel = PostViewModel(post: posts[indexPath.row])
+        
+        let viewModel = PostViewModel(post: posts[indexPath.row])
+
+        viewModel.fetchUserDataByOwnerUid {
+            cell.viewModel = viewModel
+        }
         return cell
     }
 }

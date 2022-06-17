@@ -12,8 +12,12 @@ class FeedCell: UICollectionViewCell {
     var viewModel: PostViewModel? {
         didSet {
             guard let viewModel = viewModel else { return }
+            profileImageView.sd_setImage(with: viewModel.ownerImageUrl)
+            usernameButton.setTitle(viewModel.ownerUsername, for: .normal)
+            
             captionLabel.text = viewModel.caption
             postImageView.sd_setImage(with: viewModel.mediaUrl)
+            likesLabel.text = viewModel.likesLabelText
         }
     }
     
@@ -42,7 +46,7 @@ class FeedCell: UICollectionViewCell {
     // MARK: - Helpers
     func setup() {
 //        profileImageView.image = UIImage(named: "me")
-        usernameButton.setTitle("ccw1130", for: .normal)
+//        usernameButton.setTitle("ccw1130", for: .normal)
         usernameButton.addTarget(self, action: #selector(didTapUsername), for: .touchUpInside)
         postImageView.image = UIImage(named: "shin")
         likeButton.setImage(UIImage(named: "like_unselected"), for: .normal)
@@ -58,6 +62,7 @@ class FeedCell: UICollectionViewCell {
         profileImageView.contentMode = .scaleAspectFill
         profileImageView.clipsToBounds = true
         profileImageView.isUserInteractionEnabled = true
+        profileImageView.backgroundColor = .lightGray
         usernameButton.setTitleColor(.black, for: .normal)
         usernameButton.titleLabel?.font = .notoMedium(size: 13)
         postImageView.contentMode = .scaleAspectFill

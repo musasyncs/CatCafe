@@ -430,8 +430,8 @@
 		BADF1F63285C4E32004CF329 /* Cafe */ = {
 			isa = PBXGroup;
 			children = (
-				BADF1F61285C4E2E004CF329 /* CafeService.swift */,
 				BADF1F64285C4F78004CF329 /* Cafe.swift */,
+				BADF1F61285C4E2E004CF329 /* CafeService.swift */,
 			);
 			path = Cafe;
 			sourceTree = "<group>";

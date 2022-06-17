@@ -14,7 +14,7 @@ struct Post {
     let likes: Int
     let mediaType: Int
     let mediaUrlString: String
-    let ownerUid: String
+    var ownerUid: String
     let timestamp: Timestamp
     
     var postId: String
@@ -31,4 +31,5 @@ struct Post {
         
         self.postId = postId
     }
+    
 }
