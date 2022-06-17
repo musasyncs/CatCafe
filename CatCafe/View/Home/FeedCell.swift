@@ -9,6 +9,14 @@ import UIKit
 
 class FeedCell: UICollectionViewCell {
     
+    var viewModel: PostViewModel? {
+        didSet {
+            guard let viewModel = viewModel else { return }
+            captionLabel.text = viewModel.caption
+            postImageView.sd_setImage(with: viewModel.mediaUrl)
+        }
+    }
+    
     private let profileImageView = UIImageView()
     private lazy var usernameButton = UIButton(type: .system)
     private let postImageView = UIImageView()
@@ -33,7 +41,7 @@ class FeedCell: UICollectionViewCell {
     
     // MARK: - Helpers
     func setup() {
-        profileImageView.image = UIImage(named: "me")
+//        profileImageView.image = UIImage(named: "me")
         usernameButton.setTitle("ccw1130", for: .normal)
         usernameButton.addTarget(self, action: #selector(didTapUsername), for: .touchUpInside)
         postImageView.image = UIImage(named: "shin")

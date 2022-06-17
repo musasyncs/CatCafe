@@ -33,4 +33,13 @@ struct PostService {
             CCConstant.COLLECTION_POSTS.addDocument(data: dic, completion: completion)
         }
     }
+    
+    static func fetchPosts(completion: @escaping(([Post]) -> Void)) {
+        CCConstant.COLLECTION_POSTS.getDocuments { snapshot, error in
+            guard let documents = snapshot?.documents else { return }
+            
+            let posts = documents.map { Post(postId: $0.documentID, dic: $0.data()) }
+            completion(posts)
+        }
+    }
 }

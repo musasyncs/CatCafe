@@ -9,9 +9,9 @@ import UIKit
 
 final class TopTableHeaderView: UIView {
     
-    var selectedImage: UIImage? {
+    var image: UIImage? {
         didSet {
-            photoImageView.image = selectedImage
+            photoImageView.image = image
         }
     }
     

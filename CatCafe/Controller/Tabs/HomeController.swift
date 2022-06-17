@@ -9,6 +9,8 @@ import UIKit
 import FirebaseAuth
 
 class HomeController: UICollectionViewController {
+    
+    var posts = [Post]()
         
     var presentTransition: UIViewControllerAnimatedTransitioning?
     var dismissTransition: UIViewControllerAnimatedTransitioning?
@@ -26,11 +28,22 @@ class HomeController: UICollectionViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupUpdateFeedObserver()
+        
         setupRightNavItems()
         setupCollectionView()
         setupDropDownMenu()
         
-        setupUpdateFeedObserver()
+        fetchPosts()
+    }
+    
+    // MARK: - API
+    
+    func fetchPosts() {
+        PostService.fetchPosts { posts in
+            self.posts = posts
+            self.collectionView.reloadData()
+        }
     }
     
     // MARK: - Helpers
@@ -105,7 +118,8 @@ class HomeController: UICollectionViewController {
     }
     
     @objc func handleRefresh() {
-        print("DEBUG: update home")
+        posts.removeAll()
+        fetchPosts()
     }
     
 }
@@ -160,7 +174,7 @@ extension HomeController: UITableViewDelegate, UITableViewDataSource {
 extension HomeController {
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 5
+        return posts.count
     }
     
     override func collectionView(
@@ -171,6 +185,7 @@ extension HomeController {
             withReuseIdentifier: FeedCell.identifier,
             for: indexPath) as? FeedCell
         else { return UICollectionViewCell() }
+        cell.viewModel = PostViewModel(post: posts[indexPath.row])
         return cell
     }
 }

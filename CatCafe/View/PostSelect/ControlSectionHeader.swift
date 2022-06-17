@@ -25,12 +25,7 @@ final class ControlSectionHeader: UITableViewHeaderFooterView {
     
     override init(reuseIdentifier: String?) {
         super.init(reuseIdentifier: reuseIdentifier)
-        
-        let bgView = UIView()
-        bgView.backgroundColor = .white
-        backgroundView = bgView
-        
-        backgroundColor = .white
+
         cameraButton.layer.cornerRadius = 30 / 2
 
         addSubview(galleryButton)
