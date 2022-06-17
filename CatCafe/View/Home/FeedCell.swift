@@ -51,7 +51,7 @@ class FeedCell: UICollectionViewCell {
         profileImageView.clipsToBounds = true
         profileImageView.isUserInteractionEnabled = true
         usernameButton.setTitleColor(.black, for: .normal)
-        usernameButton.titleLabel?.font = .boldSystemFont(ofSize: 13)
+        usernameButton.titleLabel?.font = .notoMedium(size: 13)
         postImageView.contentMode = .scaleAspectFill
         postImageView.clipsToBounds = true
         postImageView.isUserInteractionEnabled = true
@@ -60,9 +60,9 @@ class FeedCell: UICollectionViewCell {
         shareButton.tintColor = .black
         stackView.axis = .horizontal
         stackView.distribution = .fillEqually
-        likesLabel.font = .boldSystemFont(ofSize: 13)
-        captionLabel.font = .systemFont(ofSize: 14)
-        postTimeLabel.font = .boldSystemFont(ofSize: 12)
+        likesLabel.font = .notoMedium(size: 13)
+        captionLabel.font = .notoRegular(size: 14)
+        postTimeLabel.font = .notoMedium(size: 12)
         postTimeLabel.textColor = .lightGray
     }
     

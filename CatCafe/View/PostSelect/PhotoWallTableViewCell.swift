@@ -53,7 +53,8 @@ class PhotoWallTableViewCell: UITableViewCell {
     
     override func systemLayoutSizeFitting(
         _ targetSize: CGSize,
-        withHorizontalFittingPriority horizontalFittingPriority: UILayoutPriority, verticalFittingPriority: UILayoutPriority
+        withHorizontalFittingPriority horizontalFittingPriority: UILayoutPriority,
+        verticalFittingPriority: UILayoutPriority
     ) -> CGSize {
         self.contentView.frame = self.bounds
         self.contentView.layoutIfNeeded()

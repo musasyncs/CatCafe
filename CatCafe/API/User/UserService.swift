@@ -6,14 +6,12 @@
 //
 
 import Firebase
-import CoreMedia
 
 typealias FirestoreCompletion = (Error?) -> Void
 
 struct UserService {
     
     static func fetchCurrentUser(completion: @escaping(User) -> Void) {
-        
         guard let currentUid = Auth.auth().currentUser?.uid else { return }
         
         CCConstant.COLLECTION_USERS.document(currentUid).getDocument { snapshot, _ in
@@ -24,19 +22,16 @@ struct UserService {
     }
     
     static func fetchUsers(completion: @escaping([User]) -> Void) {
-        
         CCConstant.COLLECTION_USERS.getDocuments { snapshot, _ in
             guard let snapshot = snapshot else { return }
             let users = snapshot.documents.map({
                 User(dic: $0.data())
             })
-            
             completion(users)
         }
     }
     
     static func follow(uid: String, completion: @escaping(FirestoreCompletion)) {
-        
         guard let currentUid = Auth.auth().currentUser?.uid else { return }
         
         CCConstant.COLLECTION_FOLLOWING
@@ -54,7 +49,6 @@ struct UserService {
     }
     
     static func unfollow(uid: String, completion: @escaping(FirestoreCompletion)) {
-        
         guard let currentUid = Auth.auth().currentUser?.uid else { return }
         
         CCConstant.COLLECTION_FOLLOWING
@@ -71,7 +65,6 @@ struct UserService {
     }
     
     static func checkIfUserIsFollowed(uid: String, completion: @escaping(Bool) -> Void) {
-        
         guard let currentUid = Auth.auth().currentUser?.uid else { return }
         
         CCConstant.COLLECTION_FOLLOWING

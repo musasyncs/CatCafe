@@ -19,8 +19,8 @@ struct ImageUplader {
                 return
             }
             ref.downloadURL { url, _ in
-                guard let imageUrl = url?.absoluteString else { return }
-                completion(imageUrl)
+                guard let imageUrlString = url?.absoluteString else { return }
+                completion(imageUrlString)
             }
         }
     }

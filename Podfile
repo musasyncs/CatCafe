@@ -20,5 +20,4 @@ target 'CatCafe' do
   pod 'ActiveLabel' 
   pod 'JGProgressHUD'
   pod 'lottie-ios'
-  pod 'YPImagePicker'
 end

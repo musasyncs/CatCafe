@@ -7,11 +7,14 @@
 
 import UIKit
 
-class UserCell: UITableViewCell {
+final class UserCell: UITableViewCell {
     
     var viewModel: UserCellViewModel? {
         didSet {
-            configure()
+            guard let viewModel = viewModel else { return }
+            profileImageView.sd_setImage(with: viewModel.profileImageUrl)
+            usernameLabel.text = viewModel.username
+            fullnameLabel.text = viewModel.fullname
         }
     }
         
@@ -26,14 +29,14 @@ class UserCell: UITableViewCell {
     
     private let usernameLabel: UILabel = {
        let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 14)
+        label.font = .notoMedium(size: 14)
         label.text = "riho123"
         return label
     }()
     
     private let fullnameLabel: UILabel = {
        let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 12)
+        label.font = .notoMedium(size: 12)
         label.text = "Riho Yoshioka"
         label.textColor = .lightGray
         return label
@@ -59,15 +62,6 @@ class UserCell: UITableViewCell {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-    
-    // MARK: - Helpers
-    
-    func configure() {
-        guard let viewModel = viewModel else { return }
-        profileImageView.sd_setImage(with: viewModel.profileImageUrl)
-        usernameLabel.text = viewModel.username
-        fullnameLabel.text = viewModel.fullname
     }
     
 }

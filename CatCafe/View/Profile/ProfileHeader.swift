@@ -42,7 +42,7 @@ class ProfileHeader: UICollectionReusableView {
     
     private let nameLabel: UILabel = {
        let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 14)
+        label.font = .notoMedium(size: 14)
         label.textAlignment = .left
         return label
     }()
@@ -53,7 +53,7 @@ class ProfileHeader: UICollectionReusableView {
         button.layer.cornerRadius = 3
         button.layer.borderColor = UIColor.lightGray.cgColor
         button.layer.borderWidth = 0.5
-        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
+        button.titleLabel?.font = .notoMedium(size: 14)
         button.setTitleColor(.black, for: .normal)
         button.addTarget(self, action: #selector(handleEditProfileFollowTapped), for: .touchUpInside)
         return button
