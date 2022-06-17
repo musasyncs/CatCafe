@@ -12,9 +12,9 @@ enum HUDType {
     case failure(String)
 }
 
-class LKProgressHUD {
+class CCProgressHUD {
 
-    static let shared = LKProgressHUD()
+    static let shared = CCProgressHUD()
 
     private init() { }
 

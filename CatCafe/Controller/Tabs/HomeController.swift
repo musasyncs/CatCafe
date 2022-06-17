@@ -54,6 +54,7 @@ class HomeController: UICollectionViewController {
     func setupCollectionView() {
         collectionView.register(FeedCell.self, forCellWithReuseIdentifier: FeedCell.identifier)
         collectionView.backgroundColor = .white
+        collectionView.showsVerticalScrollIndicator = false
     }
     
     func setupDropDownMenu() {
