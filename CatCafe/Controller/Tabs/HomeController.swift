@@ -15,8 +15,7 @@ class HomeController: UICollectionViewController {
             collectionView.reloadData()
         }
     }
-    var post: Post?
-        
+
     var presentTransition: UIViewControllerAnimatedTransitioning?
     var dismissTransition: UIViewControllerAnimatedTransitioning?
     
@@ -44,13 +43,7 @@ class HomeController: UICollectionViewController {
     // MARK: - API
     
     func fetchPosts() {
-        guard post == nil else {
-            collectionView.refreshControl?.endRefreshing()
-            collectionView.reloadData()
-            return
-        }
-        
-        PostService.fetchPosts { posts in
+        PostService.fetchFeedPosts { posts in
             self.posts = posts
             self.checkIfCurrentUserLikedPosts()
             self.collectionView.refreshControl?.endRefreshing()
@@ -101,7 +94,7 @@ class HomeController: UICollectionViewController {
         dropTableView.delegate = self
         dropTableView.dataSource = self
     
-        dropTableView.separatorStyle = .singleLine
+        dropTableView.separatorStyle = .none
         dropTableView.isScrollEnabled = false
         dropTableView.rowHeight = 40
         dropTableView.backgroundColor = .clear
@@ -191,7 +184,7 @@ extension HomeController: FeedCellDelegate {
 extension HomeController {
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return post == nil ? posts.count : 1
+        return posts.count
     }
     
     override func collectionView(
@@ -205,22 +198,12 @@ extension HomeController {
         else { return UICollectionViewCell() }
         
         cell.delegate = self
-
-        if let post = post {
-            cell.viewModel = PostViewModel(post: post)
-            
-            UserService.fetchUserBy(uid: post.ownerUid) { user in
-                cell.viewModel?.ownerUsername = user.username
-                cell.viewModel?.ownerImageUrl = URL(string: user.profileImageUrl)
-            }
-            
-        } else {
-            cell.viewModel = PostViewModel(post: posts[indexPath.item])
-            
-            UserService.fetchUserBy(uid: posts[indexPath.item].ownerUid) { user in
-                cell.viewModel?.ownerUsername = user.username
-                cell.viewModel?.ownerImageUrl = URL(string: user.profileImageUrl)
-            }
+        
+        cell.viewModel = PostViewModel(post: posts[indexPath.item])
+        
+        UserService.fetchUserBy(uid: posts[indexPath.item].ownerUid) { user in
+            cell.viewModel?.ownerUsername = user.username
+            cell.viewModel?.ownerImageUrl = URL(string: user.profileImageUrl)
         }
         
         return cell
