@@ -9,6 +9,13 @@ import UIKit
 
 class ProfileCell: UICollectionViewCell {
     
+    var viewModel: PostViewModel? {
+        didSet {
+            guard let viewModel = viewModel else { return }
+            postImageView.sd_setImage(with: viewModel.mediaUrl)
+        }
+    }
+    
     private let postImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(named: "cutecat")

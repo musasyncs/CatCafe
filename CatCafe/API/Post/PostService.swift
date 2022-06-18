@@ -10,6 +10,8 @@ import Firebase
 
 struct PostService {
     
+    // MARK: - Upload image post
+    
     static func uploadImagePost(
         caption: String,
         postImage: UIImage,
@@ -34,6 +36,8 @@ struct PostService {
         }
     }
     
+    // MARK: - Fetch all posts
+    
     static func fetchPosts(completion: @escaping(([Post]) -> Void)) {
         CCConstant.COLLECTION_POSTS
             .order(by: "timestamp", descending: true)
@@ -41,6 +45,24 @@ struct PostService {
             guard let documents = snapshot?.documents else { return }
             
             let posts = documents.map { Post(postId: $0.documentID, dic: $0.data()) }
+            completion(posts)
+        }
+    }
+    
+    // MARK: - Fetch posts by uid
+    
+    static func fetchPosts(forUser uid: String, completion: @escaping(([Post]) -> Void)) {
+        let query = CCConstant.COLLECTION_POSTS
+            .whereField("ownerUid", isEqualTo: uid)
+        
+        query.getDocuments { snapshot, _ in
+            guard let documents = snapshot?.documents else { return }
+            var posts = documents.map { Post(postId: $0.documentID, dic: $0.data()) }
+            
+            posts.sort { (post1, post2) -> Bool in
+                return post1.timestamp.seconds > post2.timestamp.seconds
+            }
+            
             completion(posts)
         }
     }

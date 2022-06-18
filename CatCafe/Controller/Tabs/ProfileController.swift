@@ -11,6 +11,7 @@ import FirebaseAuth
 class ProfileController: UICollectionViewController {
     
     private var user: User
+    private var posts = [Post]()
     
     // MARK: - Initializer
     
@@ -28,10 +29,15 @@ class ProfileController: UICollectionViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        setup()
+        setupBarButtonItem()
         setupCollectionView()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         checkIfUserIsFollowed()
         fetchUserStats()
+        fetchUserPosts()
     }
     
     // MARK: - API
@@ -50,9 +56,16 @@ class ProfileController: UICollectionViewController {
         }
     }
     
+    func fetchUserPosts() {
+        PostService.fetchPosts(forUser: user.uid) { posts in
+            self.posts = posts
+            self.collectionView.reloadData()
+        }
+    }
+    
     // MARK: - Helpers
     
-    func setup() {
+    func setupBarButtonItem() {
         navigationItem.rightBarButtonItem = UIBarButtonItem(
             image: UIImage(systemName: "arrowshape.turn.up.left.fill")?
                 .withTintColor(.black)
@@ -90,10 +103,10 @@ class ProfileController: UICollectionViewController {
 }
 
 // MARK: - UICollectionViewDataSource
+
 extension ProfileController {
-    
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 9
+        return posts.count
     }
     
     override func collectionView(
@@ -105,7 +118,7 @@ extension ProfileController {
             withReuseIdentifier: ProfileCell.identifier,
             for: indexPath) as? ProfileCell
         else { return UICollectionViewCell() }
-        
+        cell.viewModel = PostViewModel(post: posts[indexPath.item])
         return cell
     }
     
@@ -130,13 +143,21 @@ extension ProfileController {
 }
 
 // MARK: - UICollectionViewDelegate
+
 extension ProfileController {
-    
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        let flowLayout = UICollectionViewFlowLayout()
+        flowLayout.scrollDirection = .vertical
+        let controller = HomeController(collectionViewLayout: flowLayout)
+        controller.post = posts[indexPath.item]
+        navigationController?.pushViewController(controller, animated: true)
+    }
 }
 
 // MARK: - UICollectionViewFlowLayout
+
 extension ProfileController: UICollectionViewDelegateFlowLayout {
-    
     func collectionView(
         _ collectionView: UICollectionView,
         layout collectionViewLayout: UICollectionViewLayout,

@@ -98,7 +98,11 @@ struct UserService {
             CCConstant.COLLECTION_FOLLOWING.document(uid).collection("user-following").getDocuments { snapshot, _ in
                 let following = snapshot?.documents.count ?? 0
                 
-                completion(UserStats(followers: followers, following: following))
+                CCConstant.COLLECTION_POSTS.whereField("ownerUid", isEqualTo: uid)
+                    .getDocuments { snapshot, _ in
+                        let posts = snapshot?.documents.count ?? 0
+                        completion(UserStats(followers: followers, following: following, postCounts: posts))
+                    }
             }
         }
     }
