@@ -13,6 +13,12 @@ class PostSelectController: UIViewController {
     var images = [UIImage]()
     var assets = [PHAsset]()
     
+    var image: UIImage? {
+        didSet {
+            topHeaderView.image = image
+        }
+    }
+    
     var selectedImage: UIImage? {
         didSet {
             DispatchQueue.main.async {
@@ -23,15 +29,15 @@ class PostSelectController: UIViewController {
                     let imageManager = PHImageManager.default()
                     let selectedAsset = self.assets[index]
                     
-                    imageManager.requestImage(for: selectedAsset,
-                                                 targetSize: CGSize(width: 600, height: 600),
-                                                 contentMode: .default,
-                                                 options: nil
+                    imageManager.requestImage(
+                        for: selectedAsset,
+                           targetSize: CGSize(width: 600, height: 600),
+                           contentMode: .aspectFill,
+                           options: nil
                     ) { (image, _) in
-                        self.topHeaderView.photoImageView.image = image
+                        self.image = image
                     }
                 }
-                
             }
         }
     }
@@ -144,7 +150,7 @@ class PostSelectController: UIViewController {
 
     @objc private func handleNext() {
         let postEditController = PostEditController()
-        postEditController.selectedImage = self.selectedImage
+        postEditController.image = self.image
         navigationController?.pushViewController(postEditController, animated: false)
     }
 

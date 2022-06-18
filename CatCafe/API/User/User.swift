@@ -29,11 +29,12 @@ struct User {
         self.username = dic["username"] as? String ?? ""
         self.uid = dic["uid"] as? String ?? ""
         
-        self.stats = UserStats(followers: 0, following: 0)
+        self.stats = UserStats(followers: 0, following: 0, postCounts: 0)
     }
 }
 
 struct UserStats {
     let followers: Int
     let following: Int
+    let postCounts: Int
 }

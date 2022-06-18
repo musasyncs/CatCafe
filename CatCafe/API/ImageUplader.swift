@@ -11,7 +11,7 @@ struct ImageUplader {
     
     static func uploadProfileImage(image: UIImage, completion: @escaping(String) -> Void) {
         guard let imageData = image.jpegData(compressionQuality: 0.75) else { return }
-        let filename = UUID().uuidString
+        let filename = UUID().uuidString + ".jpg"
         let ref = Storage.storage().reference(withPath: "/profile_images/\(filename)")
         
         ref.putData(imageData, metadata: nil) { _, error in
@@ -32,8 +32,8 @@ struct ImageUplader {
     }
     
     static func uploadPostImage(image: UIImage, completion: @escaping(String) -> Void) {
-        guard let imageData = image.jpegData(compressionQuality: 0.95) else { return }
-        let filename = UUID().uuidString
+        guard let imageData = image.jpegData(compressionQuality: 0.8) else { return }
+        let filename = UUID().uuidString + ".jpg"
         let ref = Storage.storage().reference(withPath: "/post_images/\(filename)")
         
         ref.putData(imageData, metadata: nil) { _, error in

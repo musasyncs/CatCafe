@@ -65,6 +65,8 @@
 		BADF1F68285C528C004CF329 /* PlaceCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BADF1F67285C528C004CF329 /* PlaceCell.swift */; };
 		BADF1F6A285C5353004CF329 /* PlaceCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BADF1F69285C5353004CF329 /* PlaceCellViewModel.swift */; };
 		BADF1F6D285C84DA004CF329 /* PostService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BADF1F6C285C84DA004CF329 /* PostService.swift */; };
+		BADF1F6F285CB504004CF329 /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = BADF1F6E285CB504004CF329 /* Post.swift */; };
+		BADF1F71285CBB99004CF329 /* PostViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BADF1F70285CBB99004CF329 /* PostViewModel.swift */; };
 		F3CA363722C8C7AF9DC7484D /* Pods_CatCafe.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91DB69D591917799CE505D79 /* Pods_CatCafe.framework */; };
 /* End PBXBuildFile section */
 
@@ -132,6 +134,8 @@
 		BADF1F67285C528C004CF329 /* PlaceCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceCell.swift; sourceTree = "<group>"; };
 		BADF1F69285C5353004CF329 /* PlaceCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceCellViewModel.swift; sourceTree = "<group>"; };
 		BADF1F6C285C84DA004CF329 /* PostService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostService.swift; sourceTree = "<group>"; };
+		BADF1F6E285CB504004CF329 /* Post.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
+		BADF1F70285CBB99004CF329 /* PostViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -232,6 +236,7 @@
 				BA44779A2859D3950045DDB8 /* UserCellViewModel.swift */,
 				BA7BB6F32859FAE500465DEC /* ProfileHeaderViewModel.swift */,
 				BADF1F69285C5353004CF329 /* PlaceCellViewModel.swift */,
+				BADF1F70285CBB99004CF329 /* PostViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -425,8 +430,8 @@
 		BADF1F63285C4E32004CF329 /* Cafe */ = {
 			isa = PBXGroup;
 			children = (
-				BADF1F61285C4E2E004CF329 /* CafeService.swift */,
 				BADF1F64285C4F78004CF329 /* Cafe.swift */,
+				BADF1F61285C4E2E004CF329 /* CafeService.swift */,
 			);
 			path = Cafe;
 			sourceTree = "<group>";
@@ -442,6 +447,7 @@
 		BADF1F6B285C84CD004CF329 /* Post */ = {
 			isa = PBXGroup;
 			children = (
+				BADF1F6E285CB504004CF329 /* Post.swift */,
 				BADF1F6C285C84DA004CF329 /* PostService.swift */,
 			);
 			path = Post;
@@ -610,6 +616,7 @@
 				BADF1F6D285C84DA004CF329 /* PostService.swift in Sources */,
 				BA7BB718285A083D00465DEC /* NSLocalizedString+Extension.swift in Sources */,
 				BA7BB717285A083D00465DEC /* identifiers.swift in Sources */,
+				BADF1F6F285CB504004CF329 /* Post.swift in Sources */,
 				BA7BB711285A083D00465DEC /* UIButton+Extension.swift in Sources */,
 				BA7BB71D285A083D00465DEC /* KingFisherWrapper.swift in Sources */,
 				BA44778F28597DBA0045DDB8 /* ProfileCell.swift in Sources */,
@@ -625,6 +632,7 @@
 				BA7BB716285A083D00465DEC /* UIScreen+Extension.swift in Sources */,
 				BA44773028587ED30045DDB8 /* SceneDelegate.swift in Sources */,
 				BADF1F6A285C5353004CF329 /* PlaceCellViewModel.swift in Sources */,
+				BADF1F71285CBB99004CF329 /* PostViewModel.swift in Sources */,
 				BA44775128588FFD0045DDB8 /* ProfileController.swift in Sources */,
 				BA44774F28588FE40045DDB8 /* CollectionController.swift in Sources */,
 				BA44774928588E720045DDB8 /* HomeController.swift in Sources */,

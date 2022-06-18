@@ -9,6 +9,9 @@ import UIKit
 import FirebaseAuth
 
 class HomeController: UICollectionViewController {
+    
+    var posts = [Post]()
+    var post: Post?
         
     var presentTransition: UIViewControllerAnimatedTransitioning?
     var dismissTransition: UIViewControllerAnimatedTransitioning?
@@ -31,6 +34,23 @@ class HomeController: UICollectionViewController {
         setupDropDownMenu()
         
         setupUpdateFeedObserver()
+        fetchPosts()
+    }
+    
+    // MARK: - API
+    
+    func fetchPosts() {
+        guard post == nil else {
+            collectionView.refreshControl?.endRefreshing()
+            collectionView.reloadData()
+            return
+        }
+        
+        PostService.fetchPosts { posts in
+            self.posts = posts
+            self.collectionView.refreshControl?.endRefreshing()
+            self.collectionView.reloadData()
+        }
     }
     
     // MARK: - Helpers
@@ -55,6 +75,11 @@ class HomeController: UICollectionViewController {
         collectionView.register(FeedCell.self, forCellWithReuseIdentifier: FeedCell.identifier)
         collectionView.backgroundColor = .white
         collectionView.showsVerticalScrollIndicator = false
+        
+        // setup pull to refresh
+        let refresher = UIRefreshControl()
+        refresher.addTarget(self, action: #selector(handleRefresh), for: .valueChanged)
+        collectionView.refreshControl = refresher
     }
     
     func setupDropDownMenu() {
@@ -105,9 +130,76 @@ class HomeController: UICollectionViewController {
     }
     
     @objc func handleRefresh() {
-        print("DEBUG: update home")
+        posts.removeAll()
+        fetchPosts()
     }
     
+}
+
+// MARK: - UICollectionViewDataSource / UICollectionViewDelegate
+
+extension HomeController {
+    
+    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return post == nil ? posts.count : 1
+    }
+    
+    override func collectionView(
+        _ collectionView: UICollectionView,
+        cellForItemAt indexPath: IndexPath
+    ) -> UICollectionViewCell {
+        
+        guard let cell = collectionView.dequeueReusableCell(
+            withReuseIdentifier: FeedCell.identifier,
+            for: indexPath) as? FeedCell
+        else { return UICollectionViewCell() }
+        
+        let viewModel: PostViewModel?
+        
+        if let post = post {
+            viewModel = PostViewModel(post: post)
+        } else {
+            viewModel = PostViewModel(post: posts[indexPath.item])
+        }
+        
+        viewModel?.fetchUserDataByOwnerUid {
+            cell.viewModel = viewModel
+        }
+        
+        return cell
+    }
+}
+
+// MARK: - UICollectionViewDelegateFlowLayout
+
+extension HomeController: UICollectionViewDelegateFlowLayout {
+    
+    func collectionView(
+        _ collectionView: UICollectionView,
+        layout collectionViewLayout: UICollectionViewLayout,
+        sizeForItemAt indexPath: IndexPath
+    ) -> CGSize {
+        let width = view.frame.width
+        var height = width + 8 + 40 + 8
+        height += 50
+        height += 60
+        return CGSize(width: width, height: height)
+    }
+}
+
+// MARK: - UIViewControllerTransitioningDelegate
+
+extension HomeController: UIViewControllerTransitioningDelegate {
+    
+    func animationController(forPresented presented: UIViewController,
+                             presenting: UIViewController,
+                             source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        return presentTransition
+    }
+
+    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        return dismissTransition
+    }
 }
 
 // MARK: - UITableViewDelegate, UITableViewDataSource - Drop down menu
@@ -152,57 +244,5 @@ extension HomeController: UITableViewDelegate, UITableViewDataSource {
         } else {
             
         }
-    }
-}
-
-// MARK: - UICollectionViewDataSource
-
-extension HomeController {
-    
-    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 5
-    }
-    
-    override func collectionView(
-        _ collectionView: UICollectionView,
-        cellForItemAt indexPath: IndexPath
-    ) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(
-            withReuseIdentifier: FeedCell.identifier,
-            for: indexPath) as? FeedCell
-        else { return UICollectionViewCell() }
-        return cell
-    }
-}
-
-// MARK: - UICollectionViewDelegateFlowLayout
-
-extension HomeController: UICollectionViewDelegateFlowLayout {
-    
-    func collectionView(
-        _ collectionView: UICollectionView,
-        layout collectionViewLayout: UICollectionViewLayout,
-        sizeForItemAt indexPath: IndexPath
-    ) -> CGSize {
-        let width = view.frame.width
-        var height = width + 8 + 40 + 8
-        height += 50
-        height += 60
-        return CGSize(width: view.frame.width, height: height)
-    }
-}
-
-// MARK: - UIViewControllerTransitioningDelegate
-
-extension HomeController: UIViewControllerTransitioningDelegate {
-    
-    func animationController(forPresented presented: UIViewController,
-                             presenting: UIViewController,
-                             source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        return presentTransition
-    }
-
-    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        return dismissTransition
     }
 }

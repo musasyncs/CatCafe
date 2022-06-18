@@ -10,9 +10,9 @@ import Firebase
 
 class PostEditController: UIViewController {
         
-    var selectedImage: UIImage? {
+    var image: UIImage? {
         didSet {
-            self.postImageView.image = selectedImage
+            self.postImageView.image = image
         }
     }
     
@@ -124,7 +124,9 @@ class PostEditController: UIViewController {
     // MARK: - API
     
     func fetchProfilePic() {
-        
+        UserService.fetchCurrentUser { user in
+            self.profileImageView.sd_setImage(with: URL(string: user.profileImageUrl))
+        }
     }
     
     // MARK: - Helpers
@@ -234,7 +236,7 @@ class PostEditController: UIViewController {
     }
     
     @objc private func handleImagePost() {
-        guard let selectedImage = selectedImage else { return }
+        guard let selectedImage = image else { return }
         guard let caption = captionTextView.text else { return }
         guard let selectedCafe = selectedCafe else { return }
         
