@@ -19,7 +19,6 @@ final class PlaceCell: UITableViewCell {
     
     private let titleLabel = UILabel()
     private let subtitleLabel = UILabel()
-
     lazy var stack = UIStackView(arrangedSubviews: [titleLabel, subtitleLabel])
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {

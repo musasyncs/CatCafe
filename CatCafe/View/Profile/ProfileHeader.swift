@@ -12,7 +12,7 @@ protocol ProfileHeaderDelegate: AnyObject {
     func header(_ profileHeader: ProfileHeader, didTapActionButtonFor user: User)
 }
 
-class ProfileHeader: UICollectionReusableView {
+final class ProfileHeader: UICollectionReusableView {
     
     weak var delegate: ProfileHeaderDelegate?
     

@@ -9,7 +9,7 @@ import Foundation
 
 class PostViewModel {
     
-    private let post: Post
+    let post: Post
     
     var ownerImageUrl: URL?
     var ownerUsername: String?
@@ -37,6 +37,8 @@ class PostViewModel {
     init(post: Post) {
         self.post = post
     }
+    
+    // MARK: - API
     
     func fetchUserDataByOwnerUid(completion: @escaping (() -> Void)) {
         UserService.fetchUserBy(uid: post.ownerUid) { [weak self] user in

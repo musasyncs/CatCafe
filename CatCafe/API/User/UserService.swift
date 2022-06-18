@@ -21,17 +21,7 @@ struct UserService {
         }
     }
         
-    // MARK: - Fetch current user / all users
-    
-    static func fetchCurrentUser(completion: @escaping(User) -> Void) {
-        guard let currentUid = Auth.auth().currentUser?.uid else { return }
-        
-        CCConstant.COLLECTION_USERS.document(currentUid).getDocument { snapshot, _ in
-            guard let dic = snapshot?.data() else { return }
-            let user = User(dic: dic)
-            completion(user)
-        }
-    }
+    // MARK: - Fetch all users
     
     static func fetchUsers(completion: @escaping([User]) -> Void) {
         CCConstant.COLLECTION_USERS.getDocuments { snapshot, _ in

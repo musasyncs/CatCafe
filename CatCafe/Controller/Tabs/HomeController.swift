@@ -154,6 +154,8 @@ extension HomeController {
             for: indexPath) as? FeedCell
         else { return UICollectionViewCell() }
         
+        cell.delegate = self
+        
         let viewModel: PostViewModel?
         
         if let post = post {
@@ -165,7 +167,7 @@ extension HomeController {
         viewModel?.fetchUserDataByOwnerUid {
             cell.viewModel = viewModel
         }
-        
+
         return cell
     }
 }
@@ -245,4 +247,14 @@ extension HomeController: UITableViewDelegate, UITableViewDataSource {
             
         }
     }
+}
+
+// MARK: - FeedCellDelegate
+
+extension HomeController: FeedCellDelegate {
+    func cell(_ cell: FeedCell, showCommentsFor post: Post) {
+        let controller = CommentController(post: post)
+        navigationController?.pushViewController(controller, animated: true)
+    }
+    
 }

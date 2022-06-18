@@ -64,10 +64,11 @@ class PostEditController: UIViewController {
     lazy var captionTextView: InputTextView = {
         let textView = InputTextView()
         textView.placeholderText = "請輸入文字"
-        textView.font = UIFont.notoRegular(size: 13)
+        textView.font = .systemFont(ofSize: 13, weight: .regular)
         textView.showsVerticalScrollIndicator = false
         textView.isScrollEnabled = false
         textView.delegate = self
+        textView.placeholderShouldCenter = false
         return textView
     }()
     
@@ -81,7 +82,7 @@ class PostEditController: UIViewController {
     let characterCountLabel: UILabel = {
         let label = UILabel()
         label.textColor = .lightGray
-        label.font = .notoRegular(size: 8)
+        label.font = .systemFont(ofSize: 8, weight: .regular)
         label.text = "0/1000"
         label.textAlignment = .center
         return label
@@ -95,14 +96,17 @@ class PostEditController: UIViewController {
     
     let tableView = UITableView()
     
-    let addPlaceButton = makeAttriTitleButton(text: "選擇咖啡廳",
-                                              font: .notoRegular(size: 13)!,
-                                              fgColor: .black,
-                                              kern: 1)
+    let addPlaceButton = makeAttriTitleButton(
+        text: "選擇咖啡廳",
+        font: .systemFont(ofSize: 13, weight: .regular),
+        fgColor: .black,
+        kern: 1
+    )
     
     let iconButton = makeIconButton(imagename: "location",
-                                         imageColor: .systemBlue,
-                                         imageWidth: 18, imageHeight: 18)
+                                    imageColor: .systemBlue,
+                                    imageWidth: 18,
+                                    imageHeight: 18)
     let titleLabel = UILabel()
     let subtitleLabel = UILabel()
     lazy var vertiStack = UIStackView(arrangedSubviews: [titleLabel, subtitleLabel])
@@ -124,9 +128,11 @@ class PostEditController: UIViewController {
     // MARK: - API
     
     func fetchProfilePic() {
-        UserService.fetchCurrentUser { user in
+        guard let currentUid = Auth.auth().currentUser?.uid else { return }
+        
+        UserService.fetchUserBy(uid: currentUid, completion: { user in
             self.profileImageView.sd_setImage(with: URL(string: user.profileImageUrl))
-        }
+        })
     }
     
     // MARK: - Helpers

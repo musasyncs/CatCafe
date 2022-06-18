@@ -17,16 +17,14 @@ extension UIFont {
 }
 
 extension UIFont {
-    static func notoRegular(size: CGFloat) -> UIFont? {
-        let descriptor = UIFontDescriptor(name: CCFontName.regular.rawValue, size: size)
-        return UIFont(descriptor: descriptor, size: size)        
+    static func notoRegular(size: CGFloat) -> UIFont {
+        return UIFont(name: CCFontName.regular.rawValue, size: size) ?? .systemFont(ofSize: size)
     }
     
-    static func notoMedium(size: CGFloat) -> UIFont? {
-        let descriptor = UIFontDescriptor(name: CCFontName.medium.rawValue, size: size)
-        return UIFont(descriptor: descriptor, size: size)
+    static func notoMedium(size: CGFloat) -> UIFont {
+        return UIFont(name: CCFontName.medium.rawValue, size: size) ?? .systemFont(ofSize: size)
     }
-
+    
 }
 private enum CCFontName: String {
     case regular = "NotoSansCJKtc-Regular"

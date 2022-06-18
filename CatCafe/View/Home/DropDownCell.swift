@@ -7,7 +7,7 @@
 
 import UIKit
 
-class DropDownCell: UITableViewCell {
+final class DropDownCell: UITableViewCell {
     
     let titleLabel = UILabel()
     
@@ -16,7 +16,7 @@ class DropDownCell: UITableViewCell {
         
         backgroundColor = UIColor.rgb(hex: "FAFAFA")
         selectionStyle = .none
-        titleLabel.font = .notoRegular(size: 12)
+        titleLabel.font = .systemFont(ofSize: 12, weight: .regular)
         titleLabel.textAlignment = .left
         titleLabel.textColor = .black
         
