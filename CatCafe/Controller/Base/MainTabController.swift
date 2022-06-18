@@ -22,7 +22,7 @@ class MainTabController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
         checkIfUserIsLoggedIn()
-        fetchUser()
+        fetchCurrentUser()
     }
     
     // MARK: - API
@@ -39,11 +39,13 @@ class MainTabController: UITabBarController {
         }
     }
     
-    func fetchUser() {
-        UserService.fetchCurrentUser { user in
+    func fetchCurrentUser() {
+        guard let currentUid = Auth.auth().currentUser?.uid else { return }
+        
+        UserService.fetchUserBy(uid: currentUid, completion: { user in
             self.user = user
-            self.navigationItem.title = user .username
-        }
+            self.navigationItem.title = user.username
+        })
     }
     
     // MARK: - Helpers
@@ -104,7 +106,7 @@ class MainTabController: UITabBarController {
 
 extension MainTabController: AuthenticationDelegate {
     func authenticationDidComplete() {
-        fetchUser()
+        fetchCurrentUser()
         self.dismiss(animated: true, completion: nil)
     }
 }

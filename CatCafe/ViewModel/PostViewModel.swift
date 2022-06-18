@@ -38,6 +38,8 @@ class PostViewModel {
         self.post = post
     }
     
+    // MARK: - API
+    
     func fetchUserDataByOwnerUid(completion: @escaping (() -> Void)) {
         UserService.fetchUserBy(uid: post.ownerUid) { [weak self] user in
             self?.ownerUsername = user.username

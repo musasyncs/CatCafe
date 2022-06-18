@@ -128,9 +128,11 @@ class PostEditController: UIViewController {
     // MARK: - API
     
     func fetchProfilePic() {
-        UserService.fetchCurrentUser { user in
+        guard let currentUid = Auth.auth().currentUser?.uid else { return }
+        
+        UserService.fetchUserBy(uid: currentUid, completion: { user in
             self.profileImageView.sd_setImage(with: URL(string: user.profileImageUrl))
-        }
+        })
     }
     
     // MARK: - Helpers

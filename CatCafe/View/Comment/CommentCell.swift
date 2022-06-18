@@ -9,6 +9,14 @@ import UIKit
 
 final class CommentCell: UICollectionViewCell {
     
+    var viewModel: CommentViewModel? {
+        didSet {
+            guard let viewModel = viewModel else { return }
+            profileImageView.sd_setImage(with: viewModel.profileImageUrl)
+            commentLabel.attributedText = viewModel.makeCommentLabelText()
+        }
+    }
+    
     private let profileImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
@@ -20,17 +28,7 @@ final class CommentCell: UICollectionViewCell {
     
     private let commentLabel: UILabel = {
         let label = UILabel()
-        let attrString = NSMutableAttributedString(
-            string: "吉岡里凡 ",
-            attributes: [
-                .font: UIFont.systemFont(ofSize: 14, weight: .medium)
-            ])
-        attrString.append(NSAttributedString(
-            string: "我是哈哈哈",
-            attributes: [
-                .font: UIFont.systemFont(ofSize: 14, weight: .regular)
-            ]))
-        label.attributedText = attrString
+        label.numberOfLines = 0
         return label
     }()
     
@@ -44,6 +42,7 @@ final class CommentCell: UICollectionViewCell {
         commentLabel.centerY(inView: profileImageView,
                              leftAnchor: profileImageView.rightAnchor,
                              paddingLeft: 8)
+        commentLabel.anchor(right: rightAnchor, paddingRight: 8)
     }
     
     required init?(coder: NSCoder) {

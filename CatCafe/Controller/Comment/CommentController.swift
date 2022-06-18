@@ -11,6 +11,7 @@ import UIKit
 class CommentController: UICollectionViewController {
     
     private let post: Post
+    private var comments = [Comment]()
     
     private lazy var commentInputView: CommentInputAccessoryView = {
         let frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 50)
@@ -41,6 +42,7 @@ class CommentController: UICollectionViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupCollectionView()
+        fetchComments()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -51,6 +53,15 @@ class CommentController: UICollectionViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         tabBarController?.tabBar.isHidden = false
+    }
+    
+    // MARK: - API
+    
+    func fetchComments() {
+        CommentService.fetchComments(forPost: post.postId) { comments in
+            self.comments = comments
+            self.collectionView.reloadData()
+        }
     }
     
     // MARK: - Helpers
@@ -67,16 +78,33 @@ class CommentController: UICollectionViewController {
 
 extension CommentController {
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 5
+        return comments.count
     }
     
     override func collectionView(
         _ collectionView: UICollectionView,
         cellForItemAt indexPath: IndexPath
     ) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CommentCell.identifier, for: indexPath)
+        guard let cell = collectionView.dequeueReusableCell(
+            withReuseIdentifier: CommentCell.identifier,
+            for: indexPath) as? CommentCell
+        else { return UICollectionViewCell() }
+        
+        let viewModel = CommentViewModel(comment: comments[indexPath.item])
+        
+        viewModel.fetchUserDataByUid {
+            cell.viewModel = viewModel
+        }
         
         return cell
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let uid = comments[indexPath.item].uid
+        UserService.fetchUserBy(uid: uid) { user in
+            let controller = ProfileController(user: user)
+            self.navigationController?.pushViewController(controller, animated: true)
+        }
     }
 }
 
@@ -88,7 +116,9 @@ extension CommentController: UICollectionViewDelegateFlowLayout {
         layout collectionViewLayout: UICollectionViewLayout,
         sizeForItemAt indexPath: IndexPath
     ) -> CGSize {
-        return CGSize(width: view.frame.width, height: 80)
+        let viewModel = CommentViewModel(comment: comments[indexPath.item])
+        let height = viewModel.size(forWidth: view.frame.width).height + 32
+        return CGSize(width: view.frame.width, height: height)
     }
     
 }
