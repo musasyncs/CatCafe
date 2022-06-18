@@ -69,6 +69,7 @@
 		BADF1F71285CBB99004CF329 /* PostViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BADF1F70285CBB99004CF329 /* PostViewModel.swift */; };
 		BADF1F73285D6D64004CF329 /* CommentController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BADF1F72285D6D64004CF329 /* CommentController.swift */; };
 		BADF1F77285D7D1A004CF329 /* CommentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BADF1F76285D7D1A004CF329 /* CommentCell.swift */; };
+		BADF1F79285D8CDC004CF329 /* CommentInputAccessoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BADF1F78285D8CDC004CF329 /* CommentInputAccessoryView.swift */; };
 		F3CA363722C8C7AF9DC7484D /* Pods_CatCafe.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91DB69D591917799CE505D79 /* Pods_CatCafe.framework */; };
 /* End PBXBuildFile section */
 
@@ -140,6 +141,7 @@
 		BADF1F70285CBB99004CF329 /* PostViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostViewModel.swift; sourceTree = "<group>"; };
 		BADF1F72285D6D64004CF329 /* CommentController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentController.swift; sourceTree = "<group>"; };
 		BADF1F76285D7D1A004CF329 /* CommentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentCell.swift; sourceTree = "<group>"; };
+		BADF1F78285D8CDC004CF329 /* CommentInputAccessoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentInputAccessoryView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -471,6 +473,7 @@
 			isa = PBXGroup;
 			children = (
 				BADF1F76285D7D1A004CF329 /* CommentCell.swift */,
+				BADF1F78285D8CDC004CF329 /* CommentInputAccessoryView.swift */,
 			);
 			path = Comment;
 			sourceTree = "<group>";
@@ -643,6 +646,7 @@
 				BA7BB711285A083D00465DEC /* UIButton+Extension.swift in Sources */,
 				BA7BB71D285A083D00465DEC /* KingFisherWrapper.swift in Sources */,
 				BA44778F28597DBA0045DDB8 /* ProfileCell.swift in Sources */,
+				BADF1F79285D8CDC004CF329 /* CommentInputAccessoryView.swift in Sources */,
 				BA7BB70E285A083D00465DEC /* UIFont+Extension.swift in Sources */,
 				BA4477A42859DF1C0045DDB8 /* RegistrationViewModel.swift in Sources */,
 				BA44772E28587ED30045DDB8 /* AppDelegate.swift in Sources */,

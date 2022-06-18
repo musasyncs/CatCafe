@@ -17,6 +17,17 @@ class InputTextView: UITextView {
         }
     }
     
+    var placeholderShouldCenter = true {
+        didSet {
+            if placeholderShouldCenter {
+                placeholderLabel.anchor(left: leftAnchor, right: rightAnchor, paddingLeft: 8)
+                placeholderLabel.centerY(inView: self)
+            } else {
+                placeholderLabel.anchor(top: topAnchor, left: leftAnchor, paddingTop: 8, paddingLeft: 7)
+            }
+        }
+    }
+    
     private let placeholderLabel: UILabel = {
        let label = UILabel()
         label.font = UIFont.notoMedium(size: 12)
@@ -28,8 +39,7 @@ class InputTextView: UITextView {
         super.init(frame: frame, textContainer: textContainer)
         
         addSubview(placeholderLabel)
-        placeholderLabel.anchor(top: topAnchor, left: leftAnchor, paddingTop: 8, paddingLeft: 7)
-        
+    
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(handleTextDidChange),

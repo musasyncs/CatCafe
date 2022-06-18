@@ -68,6 +68,7 @@ class PostEditController: UIViewController {
         textView.showsVerticalScrollIndicator = false
         textView.isScrollEnabled = false
         textView.delegate = self
+        textView.placeholderShouldCenter = false
         return textView
     }()
     
@@ -104,7 +105,8 @@ class PostEditController: UIViewController {
     
     let iconButton = makeIconButton(imagename: "location",
                                     imageColor: .systemBlue,
-                                         imageWidth: 18, imageHeight: 18)
+                                    imageWidth: 18,
+                                    imageHeight: 18)
     let titleLabel = UILabel()
     let subtitleLabel = UILabel()
     lazy var vertiStack = UIStackView(arrangedSubviews: [titleLabel, subtitleLabel])
