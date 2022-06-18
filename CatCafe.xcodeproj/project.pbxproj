@@ -67,6 +67,8 @@
 		BADF1F6D285C84DA004CF329 /* PostService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BADF1F6C285C84DA004CF329 /* PostService.swift */; };
 		BADF1F6F285CB504004CF329 /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = BADF1F6E285CB504004CF329 /* Post.swift */; };
 		BADF1F71285CBB99004CF329 /* PostViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BADF1F70285CBB99004CF329 /* PostViewModel.swift */; };
+		BADF1F73285D6D64004CF329 /* CommentController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BADF1F72285D6D64004CF329 /* CommentController.swift */; };
+		BADF1F77285D7D1A004CF329 /* CommentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BADF1F76285D7D1A004CF329 /* CommentCell.swift */; };
 		F3CA363722C8C7AF9DC7484D /* Pods_CatCafe.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91DB69D591917799CE505D79 /* Pods_CatCafe.framework */; };
 /* End PBXBuildFile section */
 
@@ -136,6 +138,8 @@
 		BADF1F6C285C84DA004CF329 /* PostService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostService.swift; sourceTree = "<group>"; };
 		BADF1F6E285CB504004CF329 /* Post.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
 		BADF1F70285CBB99004CF329 /* PostViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostViewModel.swift; sourceTree = "<group>"; };
+		BADF1F72285D6D64004CF329 /* CommentController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentController.swift; sourceTree = "<group>"; };
+		BADF1F76285D7D1A004CF329 /* CommentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -190,7 +194,6 @@
 			children = (
 				BA44772D28587ED30045DDB8 /* AppDelegate.swift */,
 				BA44772F28587ED30045DDB8 /* SceneDelegate.swift */,
-				BA44773628587ED60045DDB8 /* Assets.xcassets */,
 				BA44773828587ED60045DDB8 /* LaunchScreen.storyboard */,
 				BA7BB6F6285A083D00465DEC /* Utils */,
 				BA44774128588C810045DDB8 /* API */,
@@ -225,6 +228,7 @@
 				BA44778D28597DAF0045DDB8 /* Profile */,
 				BA7BB72B285AEA7E00465DEC /* PostSelect */,
 				BADF1F66285C5241004CF329 /* SelectCafe */,
+				BADF1F75285D7CC0004CF329 /* Comment */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -248,6 +252,7 @@
 				BA44779D2859DE420045DDB8 /* Base */,
 				BA44774528588CA90045DDB8 /* Tabs */,
 				BA7BB726285AE68D00465DEC /* Post */,
+				BADF1F74285D7C21004CF329 /* Comment */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -336,6 +341,7 @@
 		BA7BB6F6285A083D00465DEC /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				BA44773628587ED60045DDB8 /* Assets.xcassets */,
 				BA7BB727285AE9DF00465DEC /* Custom Animation */,
 				BA7BB6F7285A083D00465DEC /* Constants */,
 				BA7BB6F9285A083D00465DEC /* Extensions */,
@@ -451,6 +457,22 @@
 				BADF1F6C285C84DA004CF329 /* PostService.swift */,
 			);
 			path = Post;
+			sourceTree = "<group>";
+		};
+		BADF1F74285D7C21004CF329 /* Comment */ = {
+			isa = PBXGroup;
+			children = (
+				BADF1F72285D6D64004CF329 /* CommentController.swift */,
+			);
+			path = Comment;
+			sourceTree = "<group>";
+		};
+		BADF1F75285D7CC0004CF329 /* Comment */ = {
+			isa = PBXGroup;
+			children = (
+				BADF1F76285D7D1A004CF329 /* CommentCell.swift */,
+			);
+			path = Comment;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -591,6 +613,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				BA7BB714285A083D00465DEC /* UIViewController+Extension.swift in Sources */,
+				BADF1F73285D6D64004CF329 /* CommentController.swift in Sources */,
 				BADF1F68285C528C004CF329 /* PlaceCell.swift in Sources */,
 				BA7BB729285AE9F700465DEC /* UIViewControllerAnimatedTransitioning.swift in Sources */,
 				BA7BB715285A083D00465DEC /* String+Extension.swift in Sources */,
@@ -644,6 +667,7 @@
 				BA44779F2859DE6C0045DDB8 /* RegistrationController.swift in Sources */,
 				BA44779B2859D3950045DDB8 /* UserCellViewModel.swift in Sources */,
 				BA44774B28588ECA0045DDB8 /* ExploreController.swift in Sources */,
+				BADF1F77285D7D1A004CF329 /* CommentCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

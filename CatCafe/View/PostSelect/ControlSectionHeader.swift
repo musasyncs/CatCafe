@@ -9,10 +9,12 @@ import UIKit
 
 final class ControlSectionHeader: UITableViewHeaderFooterView {
     
-    lazy var galleryButton = makeAttriTitleButton(text: "圖庫",
-                                                  font: .notoRegular(size: 17)!,
-                                                  fgColor: .black,
-                                                  kern: 1)
+    lazy var galleryButton = makeAttriTitleButton(
+        text: "圖庫",
+        font: .systemFont(ofSize: 17, weight: .regular),
+        fgColor: .black,
+        kern: 1
+    )
     lazy var cameraButton = makeIconButton(
         imagename: "camera",
         imageColor: .white,

@@ -7,7 +7,13 @@
 
 import UIKit
 
-class FeedCell: UICollectionViewCell {
+protocol FeedCellDelegate: AnyObject {
+    func cell(_ cell: FeedCell, showCommentsFor post: Post)
+}
+
+final class FeedCell: UICollectionViewCell {
+    
+    weak var delegate: FeedCellDelegate?
     
     var viewModel: PostViewModel? {
         didSet {
@@ -51,6 +57,7 @@ class FeedCell: UICollectionViewCell {
         postImageView.image = UIImage(named: "shin")
         likeButton.setImage(UIImage(named: "like_unselected"), for: .normal)
         commentButton.setImage(UIImage(named: "comment"), for: .normal)
+        commentButton.addTarget(self, action: #selector(didTapComments), for: .touchUpInside)
         shareButton.setImage(UIImage(named: "send2"), for: .normal)
         likesLabel.text = "1 like"
         captionLabel.text = "Some test caption for now.."
@@ -73,9 +80,9 @@ class FeedCell: UICollectionViewCell {
         shareButton.tintColor = .black
         stackView.axis = .horizontal
         stackView.distribution = .fillEqually
-        likesLabel.font = .notoMedium(size: 13)
-        captionLabel.font = .notoRegular(size: 14)
-        postTimeLabel.font = .notoMedium(size: 12)
+        likesLabel.font = .systemFont(ofSize: 13, weight: .medium)
+        captionLabel.font = .systemFont(ofSize: 14, weight: .regular)
+        postTimeLabel.font = .systemFont(ofSize: 12, weight: .medium)
         postTimeLabel.textColor = .lightGray
     }
     
@@ -103,6 +110,11 @@ class FeedCell: UICollectionViewCell {
     // MARK: - Action
     @objc func didTapUsername() {
         print("DEBUG: Did tap username")
+    }
+    
+    @objc func didTapComments() {
+        guard let viewModel = viewModel else { return }
+        delegate?.cell(self, showCommentsFor: viewModel.post)
     }
     
 }

@@ -11,7 +11,7 @@ protocol PhotoWallTableViewCellDelegate: AnyObject {
     func didTapItem(_ cell: PhotoWallTableViewCell, with selectedImage: UIImage)
 }
 
-class PhotoWallTableViewCell: UITableViewCell {
+final class PhotoWallTableViewCell: UITableViewCell {
     
     weak var delegate: PhotoWallTableViewCellDelegate?
     
