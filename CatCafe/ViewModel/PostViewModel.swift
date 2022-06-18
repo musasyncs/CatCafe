@@ -6,10 +6,11 @@
 //
 
 import Foundation
+import UIKit
 
-class PostViewModel {
+struct PostViewModel {
     
-    let post: Post
+    var post: Post
     
     var ownerImageUrl: URL?
     var ownerUsername: String?
@@ -25,27 +26,23 @@ class PostViewModel {
     var likes: Int {
         return post.likes
     }
-    
     var likesLabelText: String {
-        if post.likes == 0 {
-            return "成為第一個說讚的人"
+        if post.likes < 2 {
+            return "\(post.likes) like"
         } else {
-            return "\(post.likes) 個喜歡"
+            return "\(post.likes) likes"
         }
+    }
+    var likeButtonImage: UIImage? {
+        let imageName = post.isLiked ? "like_selected" : "like_unselected"
+        return UIImage(named: imageName)
+    }
+    var likeButtonTintColor: UIColor {
+        return post.isLiked ? .systemRed : .black
     }
     
     init(post: Post) {
         self.post = post
-    }
-    
-    // MARK: - API
-    
-    func fetchUserDataByOwnerUid(completion: @escaping (() -> Void)) {
-        UserService.fetchUserBy(uid: post.ownerUid) { [weak self] user in
-            self?.ownerUsername = user.username
-            self?.ownerImageUrl = URL(string: user.profileImageUrl)
-            completion()
-        }
     }
     
 }

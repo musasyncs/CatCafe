@@ -10,7 +10,11 @@ import FirebaseAuth
 
 class HomeController: UICollectionViewController {
     
-    var posts = [Post]()
+    var posts = [Post]() {
+        didSet {
+            collectionView.reloadData()
+        }
+    }
     var post: Post?
         
     var presentTransition: UIViewControllerAnimatedTransitioning?
@@ -48,8 +52,18 @@ class HomeController: UICollectionViewController {
         
         PostService.fetchPosts { posts in
             self.posts = posts
+            self.checkIfCurrentUserLikedPosts()
             self.collectionView.refreshControl?.endRefreshing()
-            self.collectionView.reloadData()
+        }
+    }
+    
+    func checkIfCurrentUserLikedPosts() {
+        self.posts.forEach { post in
+            PostService.checkIfCurrentUserLikedPost(post: post) { isLiked in
+                if let index = self.posts.firstIndex(where: { $0.postId == post.postId }) {
+                    self.posts[index].isLiked = isLiked
+                }
+            }
         }
     }
     
@@ -136,6 +150,42 @@ class HomeController: UICollectionViewController {
     
 }
 
+// MARK: - FeedCellDelegate
+
+extension HomeController: FeedCellDelegate {
+    
+    func cell(_ cell: FeedCell, wantsToShowProfileFor uid: String) {
+        UserService.fetchUserBy(uid: uid) { user in
+            let controller = ProfileController(user: user)
+            self.navigationController?.pushViewController(controller, animated: true)
+        }
+    }
+    
+    func cell(_ cell: FeedCell, showCommentsFor post: Post) {
+        let controller = CommentController(post: post)
+        navigationController?.pushViewController(controller, animated: true)
+    }
+    
+    func cell(_ cell: FeedCell, didLike post: Post) {
+        cell.viewModel?.post.isLiked.toggle()
+        
+        if post.isLiked {
+            PostService.unlikePost(post: post) { _ in
+                cell.likeButton.setImage(UIImage(named: "like_unselected"), for: .normal)
+                cell.likeButton.tintColor = .black
+                cell.viewModel?.post.likes = post.likes - 1
+            }
+        } else {
+            PostService.likePost(post: post) { _ in
+                cell.likeButton.setImage(UIImage(named: "like_selected"), for: .normal)
+                cell.likeButton.tintColor = .systemRed
+                cell.viewModel?.post.likes = post.likes + 1
+            }
+        }
+    }
+    
+}
+
 // MARK: - UICollectionViewDataSource / UICollectionViewDelegate
 
 extension HomeController {
@@ -155,19 +205,24 @@ extension HomeController {
         else { return UICollectionViewCell() }
         
         cell.delegate = self
-        
-        let viewModel: PostViewModel?
-        
-        if let post = post {
-            viewModel = PostViewModel(post: post)
-        } else {
-            viewModel = PostViewModel(post: posts[indexPath.item])
-        }
-        
-        viewModel?.fetchUserDataByOwnerUid {
-            cell.viewModel = viewModel
-        }
 
+        if let post = post {
+            cell.viewModel = PostViewModel(post: post)
+            
+            UserService.fetchUserBy(uid: post.ownerUid) { user in
+                cell.viewModel?.ownerUsername = user.username
+                cell.viewModel?.ownerImageUrl = URL(string: user.profileImageUrl)
+            }
+            
+        } else {
+            cell.viewModel = PostViewModel(post: posts[indexPath.item])
+            
+            UserService.fetchUserBy(uid: posts[indexPath.item].ownerUid) { user in
+                cell.viewModel?.ownerUsername = user.username
+                cell.viewModel?.ownerImageUrl = URL(string: user.profileImageUrl)
+            }
+        }
+        
         return cell
     }
 }
@@ -247,14 +302,4 @@ extension HomeController: UITableViewDelegate, UITableViewDataSource {
             
         }
     }
-}
-
-// MARK: - FeedCellDelegate
-
-extension HomeController: FeedCellDelegate {
-    func cell(_ cell: FeedCell, showCommentsFor post: Post) {
-        let controller = CommentController(post: post)
-        navigationController?.pushViewController(controller, animated: true)
-    }
-    
 }
