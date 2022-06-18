@@ -10,9 +10,12 @@ import UIKit
 
 class CommentController: UICollectionViewController {
     
+    private let post: Post
+    
     private lazy var commentInputView: CommentInputAccessoryView = {
         let frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 50)
         let inputView = CommentInputAccessoryView(frame: frame)
+        inputView.delegate = self
         return inputView
     }()
     
@@ -25,6 +28,15 @@ class CommentController: UICollectionViewController {
     }
     
     // MARK: - Life Cycle
+    
+    init(post: Post) {
+        self.post = post
+        super.init(collectionViewLayout: UICollectionViewFlowLayout())
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -79,4 +91,34 @@ extension CommentController: UICollectionViewDelegateFlowLayout {
         return CGSize(width: view.frame.width, height: 80)
     }
     
+}
+
+// MARK: - CommentInputAccessoryViewDelegate
+
+extension CommentController: CommentInputAccessoryViewDelegate {
+    func inputView(_ inputView: CommentInputAccessoryView, wantsToUploadComment comment: String) {
+        
+        // 拿目前user
+        guard let tabBarController = tabBarController as? MainTabController else { return }
+        guard let user = tabBarController.user else { return }
+        
+        showLoader(true)
+        
+        CommentService.uploadComment(
+            postId: post.postId,
+            user: user,
+            commentType: 0,
+            mediaUrlString: "",
+            comment: comment
+        ) { error in
+            self.showLoader(false)
+            
+            if let error = error {
+                print("DEBUG: Failed to upload comment with error \(error.localizedDescription)")
+                return
+            }
+
+            inputView.clearCommentTextView()
+        }
+    }
 }

@@ -253,9 +253,7 @@ extension HomeController: UITableViewDelegate, UITableViewDataSource {
 
 extension HomeController: FeedCellDelegate {
     func cell(_ cell: FeedCell, showCommentsFor post: Post) {
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .vertical
-        let controller = CommentController(collectionViewLayout: layout)
+        let controller = CommentController(post: post)
         navigationController?.pushViewController(controller, animated: true)
     }
     
