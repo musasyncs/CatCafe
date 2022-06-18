@@ -15,8 +15,12 @@ class HomeController: UICollectionViewController {
             collectionView.reloadData()
         }
     }
-    var post: Post?
-        
+    var post: Post? {
+        didSet {
+            collectionView.reloadData()
+        }
+    }
+
     var presentTransition: UIViewControllerAnimatedTransitioning?
     var dismissTransition: UIViewControllerAnimatedTransitioning?
     
@@ -45,12 +49,11 @@ class HomeController: UICollectionViewController {
     
     func fetchPosts() {
         guard post == nil else {
-            collectionView.refreshControl?.endRefreshing()
-            collectionView.reloadData()
+            checkIfCurrentUserLikedPosts()
             return
         }
         
-        PostService.fetchPosts { posts in
+        PostService.fetchFeedPosts { posts in
             self.posts = posts
             self.checkIfCurrentUserLikedPosts()
             self.collectionView.refreshControl?.endRefreshing()
@@ -58,10 +61,16 @@ class HomeController: UICollectionViewController {
     }
     
     func checkIfCurrentUserLikedPosts() {
-        self.posts.forEach { post in
+        if let post = post {
             PostService.checkIfCurrentUserLikedPost(post: post) { isLiked in
-                if let index = self.posts.firstIndex(where: { $0.postId == post.postId }) {
-                    self.posts[index].isLiked = isLiked
+                self.post?.isLiked = isLiked
+            }
+        } else {
+            self.posts.forEach { post in
+                PostService.checkIfCurrentUserLikedPost(post: post) { isLiked in
+                    if let index = self.posts.firstIndex(where: { $0.postId == post.postId }) {
+                        self.posts[index].isLiked = isLiked
+                    }
                 }
             }
         }
@@ -101,7 +110,7 @@ class HomeController: UICollectionViewController {
         dropTableView.delegate = self
         dropTableView.dataSource = self
     
-        dropTableView.separatorStyle = .singleLine
+        dropTableView.separatorStyle = .none
         dropTableView.isScrollEnabled = false
         dropTableView.rowHeight = 40
         dropTableView.backgroundColor = .clear

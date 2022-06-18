@@ -32,11 +32,12 @@ struct PostService {
                 "cafeId": cafeId,
                 "cafeName": cafeName
             ]
-            CCConstant.COLLECTION_POSTS.addDocument(data: dic, completion: completion)
+            let docRef = CCConstant.COLLECTION_POSTS.addDocument(data: dic, completion: completion)
+            self.updateFeedAfterPost(postId: docRef.documentID)
         }
     }
     
-    // MARK: - Fetch all posts / Fetch posts by uid
+    // MARK: - Fetch all posts / Fetch posts by uid / Fetch post with post id / Fetch feed posts
     
     static func fetchPosts(completion: @escaping(([Post]) -> Void)) {
         CCConstant.COLLECTION_POSTS.order(by: "timestamp", descending: true).getDocuments { snapshot, _ in
@@ -59,6 +60,32 @@ struct PostService {
             }
             
             completion(posts)
+        }
+    }
+    
+    static func fetchPost(withPostId postId: String, completion: @escaping(Post) -> Void) {
+        CCConstant.COLLECTION_POSTS.document(postId).getDocument { snapshot, _ in
+            guard let snapshot = snapshot else { return }
+            guard let data = snapshot.data() else { return }
+            let post = Post(postId: snapshot.documentID, dic: data)
+            completion(post)
+        }
+    }
+    
+    static func fetchFeedPosts(completion: @escaping([Post]) -> Void) {
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        
+        CCConstant.COLLECTION_USERS.document(uid).collection("user-feed").getDocuments { snapshot, _ in
+            
+            var posts = [Post]()
+            snapshot?.documents.forEach({ document in
+                fetchPost(withPostId: document.documentID) { post in
+                    posts.append(post)
+                    completion(posts)
+                }
+            })
+            
+            completion([Post]())
         }
     }
     
@@ -96,6 +123,45 @@ struct PostService {
             .collection("user-likes").document(post.postId).getDocument { snapshot, _ in
                 guard let isLiked = snapshot?.exists else { return }
                 completion(isLiked)
+            }
+    }
+    
+    // MARK: - Update feed after following or unfollowing / Update followers's feed after current user post
+    
+    static func updateUserFeedAfterFollowing(user: User, didFollow: Bool) {
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        
+        let query = CCConstant.COLLECTION_POSTS.whereField("ownerUid", isEqualTo: user.uid)
+        query.getDocuments { snapshot, _ in
+            guard let documents = snapshot?.documents else { return }
+            let docIds = documents.map({ $0.documentID })
+            
+            docIds.forEach { id in
+                if didFollow {
+                    CCConstant.COLLECTION_USERS.document(uid).collection("user-feed").document(id).setData([:])
+                } else {
+                    CCConstant.COLLECTION_USERS.document(uid).collection("user-feed").document(id).delete()
+                }
+            }
+            
+        }
+    }
+    
+    private static func updateFeedAfterPost(postId: String) {
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        
+        CCConstant.COLLECTION_FOLLOWERS.document(uid)
+            .collection("user-followers").getDocuments { snapshot, _ in
+                guard let documents = snapshot?.documents else { return }
+                
+                // 給追蹤者
+                documents.forEach { snapshot in
+                    CCConstant.COLLECTION_USERS.document(snapshot.documentID)
+                        .collection("user-feed").document(postId).setData([:])
+                }
+                
+                // 給自己
+                CCConstant.COLLECTION_USERS.document(uid).collection("user-feed").document(postId).setData([:])
             }
     }
     
