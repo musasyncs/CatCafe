@@ -32,7 +32,8 @@ struct PostService {
                 "cafeId": cafeId,
                 "cafeName": cafeName
             ]
-            CCConstant.COLLECTION_POSTS.addDocument(data: dic, completion: completion)
+            let docRef = CCConstant.COLLECTION_POSTS.addDocument(data: dic, completion: completion)
+            self.updateFeedAfterPost(postId: docRef.documentID)
         }
     }
     
@@ -125,7 +126,7 @@ struct PostService {
             }
     }
     
-    // MARK: - Update feed after following or unfollowing
+    // MARK: - Update feed after following or unfollowing / Update followers's feed after current user post
     
     static func updateUserFeedAfterFollowing(user: User, didFollow: Bool) {
         guard let uid = Auth.auth().currentUser?.uid else { return }
@@ -144,6 +145,24 @@ struct PostService {
             }
             
         }
+    }
+    
+    private static func updateFeedAfterPost(postId: String) {
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        
+        CCConstant.COLLECTION_FOLLOWERS.document(uid)
+            .collection("user-followers").getDocuments { snapshot, _ in
+                guard let documents = snapshot?.documents else { return }
+                
+                // 給追蹤者
+                documents.forEach { snapshot in
+                    CCConstant.COLLECTION_USERS.document(snapshot.documentID)
+                        .collection("user-feed").document(postId).setData([:])
+                }
+                
+                // 給自己
+                CCConstant.COLLECTION_USERS.document(uid).collection("user-feed").document(postId).setData([:])
+            }
     }
     
 }

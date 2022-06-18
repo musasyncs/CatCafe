@@ -142,6 +142,19 @@ extension ProfileController {
     
 }
 
+// MARK: - UICollectionViewDelegate
+
+extension ProfileController {
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        let flowLayout = UICollectionViewFlowLayout()
+        flowLayout.scrollDirection = .vertical
+        let controller = HomeController(collectionViewLayout: flowLayout)
+        controller.post = posts[indexPath.item]
+        navigationController?.pushViewController(controller, animated: true)
+    }
+}
+
 // MARK: - UICollectionViewFlowLayout
 
 extension ProfileController: UICollectionViewDelegateFlowLayout {
@@ -194,7 +207,7 @@ extension ProfileController: ProfileHeaderDelegate {
                 self.collectionView.reloadData()
             }
             
-            PostService.updateUserFeedAfterFollowing(user: user, didFollow: false)
+            PostService.updateUserFeedAfterFollowing(user: user, didFollow: true)
             
         } else {
             // Handle follow user

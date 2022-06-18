@@ -15,6 +15,11 @@ class HomeController: UICollectionViewController {
             collectionView.reloadData()
         }
     }
+    var post: Post? {
+        didSet {
+            collectionView.reloadData()
+        }
+    }
 
     var presentTransition: UIViewControllerAnimatedTransitioning?
     var dismissTransition: UIViewControllerAnimatedTransitioning?
@@ -43,6 +48,11 @@ class HomeController: UICollectionViewController {
     // MARK: - API
     
     func fetchPosts() {
+        guard post == nil else {
+            checkIfCurrentUserLikedPosts()
+            return
+        }
+        
         PostService.fetchFeedPosts { posts in
             self.posts = posts
             self.checkIfCurrentUserLikedPosts()
@@ -51,10 +61,16 @@ class HomeController: UICollectionViewController {
     }
     
     func checkIfCurrentUserLikedPosts() {
-        self.posts.forEach { post in
+        if let post = post {
             PostService.checkIfCurrentUserLikedPost(post: post) { isLiked in
-                if let index = self.posts.firstIndex(where: { $0.postId == post.postId }) {
-                    self.posts[index].isLiked = isLiked
+                self.post?.isLiked = isLiked
+            }
+        } else {
+            self.posts.forEach { post in
+                PostService.checkIfCurrentUserLikedPost(post: post) { isLiked in
+                    if let index = self.posts.firstIndex(where: { $0.postId == post.postId }) {
+                        self.posts[index].isLiked = isLiked
+                    }
                 }
             }
         }
@@ -184,7 +200,7 @@ extension HomeController: FeedCellDelegate {
 extension HomeController {
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return posts.count
+        return post == nil ? posts.count : 1
     }
     
     override func collectionView(
@@ -198,12 +214,22 @@ extension HomeController {
         else { return UICollectionViewCell() }
         
         cell.delegate = self
-        
-        cell.viewModel = PostViewModel(post: posts[indexPath.item])
-        
-        UserService.fetchUserBy(uid: posts[indexPath.item].ownerUid) { user in
-            cell.viewModel?.ownerUsername = user.username
-            cell.viewModel?.ownerImageUrl = URL(string: user.profileImageUrl)
+
+        if let post = post {
+            cell.viewModel = PostViewModel(post: post)
+            
+            UserService.fetchUserBy(uid: post.ownerUid) { user in
+                cell.viewModel?.ownerUsername = user.username
+                cell.viewModel?.ownerImageUrl = URL(string: user.profileImageUrl)
+            }
+            
+        } else {
+            cell.viewModel = PostViewModel(post: posts[indexPath.item])
+            
+            UserService.fetchUserBy(uid: posts[indexPath.item].ownerUid) { user in
+                cell.viewModel?.ownerUsername = user.username
+                cell.viewModel?.ownerImageUrl = URL(string: user.profileImageUrl)
+            }
         }
         
         return cell
