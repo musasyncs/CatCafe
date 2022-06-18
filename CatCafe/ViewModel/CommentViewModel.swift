@@ -7,7 +7,7 @@
 
 import UIKit
 
-class CommentViewModel {
+struct CommentViewModel {
     
     private let comment: Comment
     
@@ -34,17 +34,7 @@ class CommentViewModel {
     init(comment: Comment) {
         self.comment = comment
     }
-    
-    // MARK: - API
-    
-    func fetchUserDataByUid(completion: @escaping (() -> Void)) {
-        UserService.fetchUserBy(uid: comment.uid) { [weak self] user in
-            self?.username = user.username
-            self?.profileImageUrl = URL(string: user.profileImageUrl)
-            completion()
-        }
-    }
-    
+
     // MARK: - Helpers
     
     func size(forWidth width: CGFloat) -> CGSize {

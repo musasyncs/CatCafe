@@ -90,10 +90,12 @@ extension CommentController {
             for: indexPath) as? CommentCell
         else { return UICollectionViewCell() }
         
-        let viewModel = CommentViewModel(comment: comments[indexPath.item])
+        let comment = comments[indexPath.item]
+        cell.viewModel = CommentViewModel(comment: comment)
         
-        viewModel.fetchUserDataByUid {
-            cell.viewModel = viewModel
+        UserService.fetchUserBy(uid: comment.uid) { user in
+            cell.viewModel?.username = user.username
+            cell.viewModel?.profileImageUrl = URL(string: user.profileImageUrl)
         }
         
         return cell

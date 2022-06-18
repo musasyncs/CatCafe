@@ -11,13 +11,15 @@ struct Post {
     let cafeId: String
     let cafeName: String
     let caption: String
-    let likes: Int
+    var likes: Int
     let mediaType: Int
     let mediaUrlString: String
     var ownerUid: String
     let timestamp: Timestamp
     
     var postId: String
+    
+    var isLiked = false
         
     init(postId: String, dic: [String: Any]) {
         self.cafeId = dic["cafeId"] as? String ?? ""

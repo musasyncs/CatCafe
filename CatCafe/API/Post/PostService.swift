@@ -36,12 +36,10 @@ struct PostService {
         }
     }
     
-    // MARK: - Fetch all posts
+    // MARK: - Fetch all posts / Fetch posts by uid
     
     static func fetchPosts(completion: @escaping(([Post]) -> Void)) {
-        CCConstant.COLLECTION_POSTS
-            .order(by: "timestamp", descending: true)
-            .getDocuments { snapshot, _ in
+        CCConstant.COLLECTION_POSTS.order(by: "timestamp", descending: true).getDocuments { snapshot, _ in
             guard let documents = snapshot?.documents else { return }
             
             let posts = documents.map { Post(postId: $0.documentID, dic: $0.data()) }
@@ -49,11 +47,8 @@ struct PostService {
         }
     }
     
-    // MARK: - Fetch posts by uid
-    
     static func fetchPosts(forUser uid: String, completion: @escaping(([Post]) -> Void)) {
-        let query = CCConstant.COLLECTION_POSTS
-            .whereField("ownerUid", isEqualTo: uid)
+        let query = CCConstant.COLLECTION_POSTS.whereField("ownerUid", isEqualTo: uid)
         
         query.getDocuments { snapshot, _ in
             guard let documents = snapshot?.documents else { return }
@@ -66,4 +61,42 @@ struct PostService {
             completion(posts)
         }
     }
+    
+    // MARK: - Like a post / UnLike a post / Check if a user like a post
+    
+    static func likePost(post: Post, completion: @escaping(FirestoreCompletion)) {
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        
+        CCConstant.COLLECTION_POSTS.document(post.postId).updateData(["likes": post.likes + 1])
+        
+        CCConstant.COLLECTION_POSTS.document(post.postId)
+            .collection("post-likes").document(uid).setData([:]) { _ in
+                CCConstant.COLLECTION_USERS.document(uid)
+                    .collection("user-likes").document(post.postId).setData([:], completion: completion)
+        }
+    }
+    
+    static func unlikePost(post: Post, completion: @escaping(FirestoreCompletion)) {
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        guard post.likes > 0 else { return }
+        
+        CCConstant.COLLECTION_POSTS.document(post.postId).updateData(["likes": post.likes - 1])
+        
+        CCConstant.COLLECTION_POSTS.document(post.postId)
+            .collection("post-likes").document(uid).delete { _ in
+                CCConstant.COLLECTION_USERS.document(uid)
+                    .collection("user-likes").document(post.postId).delete(completion: completion)
+            }
+    }
+    
+    static func checkIfCurrentUserLikedPost(post: Post, completion: @escaping(Bool) -> Void) {
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        
+        CCConstant.COLLECTION_USERS.document(uid)
+            .collection("user-likes").document(post.postId).getDocument { snapshot, _ in
+                guard let isLiked = snapshot?.exists else { return }
+                completion(isLiked)
+            }
+    }
+    
 }

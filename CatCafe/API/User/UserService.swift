@@ -11,7 +11,7 @@ typealias FirestoreCompletion = (Error?) -> Void
 
 struct UserService {
     
-    // MARK: - Fetch user by uid
+    // MARK: - Fetch user by uid / Fetch all users
     
     static func fetchUserBy(uid: String, completion: @escaping(User) -> Void) {
         CCConstant.COLLECTION_USERS.document(uid).getDocument { snapshot, _ in
@@ -20,8 +20,6 @@ struct UserService {
             completion(user)
         }
     }
-        
-    // MARK: - Fetch all users
     
     static func fetchUsers(completion: @escaping([User]) -> Void) {
         CCConstant.COLLECTION_USERS.getDocuments { snapshot, _ in
@@ -33,7 +31,7 @@ struct UserService {
         }
     }
     
-    // MARK: - For follow / unfollow
+    // MARK: - Follow / Unfollow User / Check if a user is followed
     
     static func follow(uid: String, completion: @escaping(FirestoreCompletion)) {
         guard let currentUid = Auth.auth().currentUser?.uid else { return }
