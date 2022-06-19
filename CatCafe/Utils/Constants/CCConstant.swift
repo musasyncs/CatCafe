@@ -10,6 +10,11 @@ import Firebase
 // swiftlint:disable identifier_name
 struct CCConstant {
     
+    struct LocalStorageKey {
+        static let userIdKey = "userIdKey"
+        static let hasLogedIn = "hasLogedIn"
+    }
+    
     struct NotificationName {
         static let updateFeed = NSNotification.Name("updateFeed")
     }

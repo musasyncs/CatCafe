@@ -94,17 +94,24 @@ class ProfileController: UICollectionViewController {
     // MARK: - Action
     
     @objc func handleLogout() {
-        do {
-            try Auth.auth().signOut()
-            let controller = LoginController()
+        
+        let result = AuthService.logoutUser()
+        switch result {
+        case .success:
             
+            // Clear uid / hasLogedIn = false
+            LocalStorage.shared.clearUid()
+            LocalStorage.shared.hasLogedIn = false
+
+            let controller = LoginController()
             controller.delegate = self.tabBarController as? MainTabController
             
             let nav = UINavigationController(rootViewController: controller)
             nav.modalPresentationStyle = .fullScreen
             self.present(nav, animated: true, completion: nil)
-        } catch {
-            print("DEBUG: Failed to signout")
+            
+        case .failure(let error):
+            print("DEBUG: Failed to signout with error: \(error.localizedDescription)")
         }
     }
     
@@ -229,6 +236,15 @@ extension ProfileController: ProfileHeaderDelegate {
                 self.collectionView.reloadData()
             }
             
+            // 發follow通知給對方
+            guard let tab = tabBarController as? MainTabController else { return }
+            guard let currentUser = tab.user else { return }
+            
+            NotificationService.uploadNotification(toUid: user.uid,
+                                                   notiType: .follow,
+                                                   fromUser: currentUser)
+            
+            // 資料庫user-feed更新
             PostService.updateUserFeedAfterFollowing(user: user, didFollow: true)
         }
     }

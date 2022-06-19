@@ -105,12 +105,33 @@ class RegistrationController: UIViewController {
             username: username,
             profileImage: profileImage
         )
-        AuthService.registerUser(withCredial: credentials) { error in
-            if let error = error {
-                print("DEBUG: Failed to register user \(error.localizedDescription)")
-                return
+        
+        AuthService.registerUser(withCredial: credentials) { [weak self] result in
+            guard let self = self else { return }
+            
+            switch result {
+            case .success(let authUser):
+                ImageUplader.uploadProfileImage(image: credentials.profileImage) { imageUrlString in
+                    UserService.createUserProfile(
+                        userId: authUser.uid,
+                        profileImageUrlString: imageUrlString,
+                        credentials: credentials
+                    ) { error in
+                        if let error = error {
+                            print("DEBUG: Failed to create user profile with error: \(error.localizedDescription)")
+                            return
+                        }
+                        
+                        // Save uid; hasLogedIn = true
+                        LocalStorage.shared.saveUid(authUser.uid)
+                        LocalStorage.shared.hasLogedIn = true
+                        
+                        self.delegate?.authenticationDidComplete()
+                    }
+                }
+            case .failure(let error):
+                print("DEBUG: Failed to create authUser with error: \(error.localizedDescription)")
             }
-            self.delegate?.authenticationDidComplete()
         }
     }
     

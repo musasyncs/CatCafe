@@ -19,7 +19,7 @@ struct PostService {
         cafeName: String,
         completion: @escaping(FirestoreCompletion)
     ) {
-        guard let uid = Auth.auth().currentUser?.uid else { return }
+        guard let uid = LocalStorage.shared.getUid() else { return }
         
         ImageUplader.uploadPostImage(image: postImage) { imageUrlString in
             let dic: [String: Any] = [
@@ -73,7 +73,7 @@ struct PostService {
     }
     
     static func fetchFeedPosts(completion: @escaping([Post]) -> Void) {
-        guard let uid = Auth.auth().currentUser?.uid else { return }
+        guard let uid = LocalStorage.shared.getUid() else { return }
         
         CCConstant.COLLECTION_USERS.document(uid).collection("user-feed").getDocuments { snapshot, _ in
             
@@ -92,7 +92,7 @@ struct PostService {
     // MARK: - Like a post / UnLike a post / Check if a user like a post
     
     static func likePost(post: Post, completion: @escaping(FirestoreCompletion)) {
-        guard let uid = Auth.auth().currentUser?.uid else { return }
+        guard let uid = LocalStorage.shared.getUid() else { return }
         
         CCConstant.COLLECTION_POSTS.document(post.postId).updateData(["likes": post.likes + 1])
         
@@ -104,7 +104,7 @@ struct PostService {
     }
     
     static func unlikePost(post: Post, completion: @escaping(FirestoreCompletion)) {
-        guard let uid = Auth.auth().currentUser?.uid else { return }
+        guard let uid = LocalStorage.shared.getUid() else { return }
         guard post.likes > 0 else { return }
         
         CCConstant.COLLECTION_POSTS.document(post.postId).updateData(["likes": post.likes - 1])
@@ -117,7 +117,7 @@ struct PostService {
     }
     
     static func checkIfCurrentUserLikedPost(post: Post, completion: @escaping(Bool) -> Void) {
-        guard let uid = Auth.auth().currentUser?.uid else { return }
+        guard let uid = LocalStorage.shared.getUid() else { return }
         
         CCConstant.COLLECTION_USERS.document(uid)
             .collection("user-likes").document(post.postId).getDocument { snapshot, _ in
@@ -129,7 +129,7 @@ struct PostService {
     // MARK: - Update feed after following or unfollowing / Update followers's feed after current user post
     
     static func updateUserFeedAfterFollowing(user: User, didFollow: Bool) {
-        guard let uid = Auth.auth().currentUser?.uid else { return }
+        guard let uid = LocalStorage.shared.getUid() else { return }
         
         let query = CCConstant.COLLECTION_POSTS.whereField("ownerUid", isEqualTo: user.uid)
         query.getDocuments { snapshot, _ in
@@ -148,7 +148,7 @@ struct PostService {
     }
     
     private static func updateFeedAfterPost(postId: String) {
-        guard let uid = Auth.auth().currentUser?.uid else { return }
+        guard let uid = LocalStorage.shared.getUid() else { return }
         
         CCConstant.COLLECTION_FOLLOWERS.document(uid)
             .collection("user-followers").getDocuments { snapshot, _ in

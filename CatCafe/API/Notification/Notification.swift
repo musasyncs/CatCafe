@@ -25,7 +25,7 @@ struct Notification {
     let notiId: String
     let notiType: NotitficationType
     let fromUid: String
-    let postId: String?
+    let postId: String
     let timestamp: Timestamp
     
     init(dic: [String: Any]) {

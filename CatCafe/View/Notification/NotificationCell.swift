@@ -35,7 +35,6 @@ final class NotificationCell: UITableViewCell {
     
     lazy var postImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.backgroundColor = .lightGray
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         

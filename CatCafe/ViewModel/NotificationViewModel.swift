@@ -42,10 +42,10 @@ struct NotificationViewModel {
         switch notification.notiType {
         case .like:
             return mediaUrl
-        case .comment:
-            return mediaUrl
         case .follow:
             return nil
+        case .comment:
+            return mediaUrl
         }
     }
     

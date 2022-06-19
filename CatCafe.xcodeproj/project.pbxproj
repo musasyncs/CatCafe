@@ -78,6 +78,7 @@
 		BADF1F8B285EC02C004CF329 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BADF1F8A285EC02C004CF329 /* NotificationService.swift */; };
 		BADF1F8D285ECCCD004CF329 /* NotificationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BADF1F8C285ECCCD004CF329 /* NotificationViewModel.swift */; };
 		BADF1F90285ED0B6004CF329 /* NotificationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BADF1F8F285ED0B6004CF329 /* NotificationCell.swift */; };
+		BADF1F93285F1849004CF329 /* LocalStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = BADF1F92285F1849004CF329 /* LocalStorage.swift */; };
 		F3CA363722C8C7AF9DC7484D /* Pods_CatCafe.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91DB69D591917799CE505D79 /* Pods_CatCafe.framework */; };
 /* End PBXBuildFile section */
 
@@ -158,6 +159,7 @@
 		BADF1F8A285EC02C004CF329 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		BADF1F8C285ECCCD004CF329 /* NotificationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationViewModel.swift; sourceTree = "<group>"; };
 		BADF1F8F285ED0B6004CF329 /* NotificationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationCell.swift; sourceTree = "<group>"; };
+		BADF1F92285F1849004CF329 /* LocalStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalStorage.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -213,6 +215,7 @@
 				BA44772D28587ED30045DDB8 /* AppDelegate.swift */,
 				BA44772F28587ED30045DDB8 /* SceneDelegate.swift */,
 				BA44773828587ED60045DDB8 /* LaunchScreen.storyboard */,
+				BADF1F91285F16C2004CF329 /* LocalStorage */,
 				BA7BB6F6285A083D00465DEC /* Utils */,
 				BA44774128588C810045DDB8 /* API */,
 				BA44774228588C8C0045DDB8 /* View */,
@@ -534,6 +537,14 @@
 			path = Notification;
 			sourceTree = "<group>";
 		};
+		BADF1F91285F16C2004CF329 /* LocalStorage */ = {
+			isa = PBXGroup;
+			children = (
+				BADF1F92285F1849004CF329 /* LocalStorage.swift */,
+			);
+			path = LocalStorage;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -704,6 +715,7 @@
 				BA7BB711285A083D00465DEC /* UIButton+Extension.swift in Sources */,
 				BA7BB71D285A083D00465DEC /* KingFisherWrapper.swift in Sources */,
 				BA44778F28597DBA0045DDB8 /* ProfileCell.swift in Sources */,
+				BADF1F93285F1849004CF329 /* LocalStorage.swift in Sources */,
 				BADF1F7C285DB5A0004CF329 /* CommentService.swift in Sources */,
 				BADF1F79285D8CDC004CF329 /* CommentInputAccessoryView.swift in Sources */,
 				BA7BB70E285A083D00465DEC /* UIFont+Extension.swift in Sources */,

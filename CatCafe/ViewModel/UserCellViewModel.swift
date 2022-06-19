@@ -12,7 +12,7 @@ struct UserCellViewModel {
     private let user: User
     
     var profileImageUrl: URL? {
-        return URL(string: user.profileImageUrl)
+        return URL(string: user.profileImageUrlString)
     }
     
     var username: String {

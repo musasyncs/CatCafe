@@ -11,6 +11,23 @@ typealias FirestoreCompletion = (Error?) -> Void
 
 struct UserService {
     
+    static func createUserProfile(
+        userId: String,
+        profileImageUrlString: String,
+        credentials: AuthCredentials,
+        completion: @escaping(FirestoreCompletion)
+    ) {
+        let dic: [String: Any] = [
+            "email": credentials.email,
+            "fullname": credentials.fullname,
+            "profileImageUrlString": profileImageUrlString,
+            "uid": userId,
+            "username": credentials.username
+        ]
+        
+        CCConstant.COLLECTION_USERS.document(userId).setData(dic, completion: completion)
+    }
+    
     // MARK: - Fetch user by uid / Fetch all users
     
     static func fetchUserBy(uid: String, completion: @escaping(User) -> Void) {
@@ -34,7 +51,7 @@ struct UserService {
     // MARK: - Follow / Unfollow User / Check if a user is followed
     
     static func follow(uid: String, completion: @escaping(FirestoreCompletion)) {
-        guard let currentUid = Auth.auth().currentUser?.uid else { return }
+        guard let currentUid = LocalStorage.shared.getUid() else { return }
         
         CCConstant.COLLECTION_FOLLOWING
             .document(currentUid)
@@ -51,7 +68,7 @@ struct UserService {
     }
     
     static func unfollow(uid: String, completion: @escaping(FirestoreCompletion)) {
-        guard let currentUid = Auth.auth().currentUser?.uid else { return }
+        guard let currentUid = LocalStorage.shared.getUid() else { return }
         
         CCConstant.COLLECTION_FOLLOWING
             .document(currentUid)
@@ -67,7 +84,7 @@ struct UserService {
     }
     
     static func checkIfUserIsFollowed(uid: String, completion: @escaping(Bool) -> Void) {
-        guard let currentUid = Auth.auth().currentUser?.uid else { return }
+        guard let currentUid = LocalStorage.shared.getUid() else { return }
         
         CCConstant.COLLECTION_FOLLOWING
             .document(currentUid)

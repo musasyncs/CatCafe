@@ -84,19 +84,21 @@ extension NotificationController {
         
         // profileImageUrl, username
         UserService.fetchUserBy(uid: notification.fromUid) { user in
-            cell.viewModel?.profileImageUrl = URL(string: user.profileImageUrl)
+            cell.viewModel?.profileImageUrl = URL(string: user.profileImageUrlString)
             cell.viewModel?.username  = user.username
         }
         
         // mediaUrl
-        if let postId = notification.postId {
-            PostService.fetchPost(withPostId: postId) { post in
+        if notification.postId.isEmpty {
+            // is followed
+            cell.viewModel?.mediaUrl = nil
+        } else {
+            // is liked or commented
+            PostService.fetchPost(withPostId: notification.postId) { post in
                 cell.viewModel?.mediaUrl = URL(string: post.mediaUrlString)
             }
-        } else {
-            cell.viewModel?.mediaUrl = nil
         }
-        
+
         return cell
     }
 }

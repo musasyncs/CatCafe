@@ -34,15 +34,24 @@ class LoginController: UIViewController {
     // MARK: - Action
     
     @objc func handleLogin() {
-        guard let email = emailTextField.text else { return }
-        guard let password = passwordTextField.text else { return }
-        
-        AuthService.logUserIn(withEmail: email, password: password) { _, error in
-            if let error = error {
+        guard let email = emailTextField.text, !email.isEmpty,
+              let password = passwordTextField.text, !password.isEmpty else {
+                  print("DEBUG: email 和 password 不可為空")
+                  return
+              }
+        AuthService.loginUser(withEmail: email, password: password) { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case .success(let authUser):
+                
+                // Save uid; hasLogedIn = true
+                LocalStorage.shared.saveUid(authUser.uid)
+                LocalStorage.shared.hasLogedIn = true
+                
+                self.delegate?.authenticationDidComplete()
+            case .failure(let error):
                 print("DEBUG: Failed to log user in \(error.localizedDescription)")
-                return
             }
-            self.delegate?.authenticationDidComplete()
         }
     }
     

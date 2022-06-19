@@ -95,7 +95,7 @@ extension CommentController {
         
         UserService.fetchUserBy(uid: comment.uid) { user in
             cell.viewModel?.username = user.username
-            cell.viewModel?.profileImageUrl = URL(string: user.profileImageUrl)
+            cell.viewModel?.profileImageUrl = URL(string: user.profileImageUrlString)
         }
         
         return cell

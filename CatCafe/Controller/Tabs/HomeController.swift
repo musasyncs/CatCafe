@@ -181,7 +181,7 @@ extension HomeController: FeedCellDelegate {
     
     func cell(_ cell: FeedCell, didLike post: Post) {
         guard let tab = tabBarController as? MainTabController else { return }
-        guard let user = tab.user else { return }
+        guard let currentUser = tab.user else { return }
         
         cell.viewModel?.post.isLiked.toggle()
         
@@ -197,10 +197,10 @@ extension HomeController: FeedCellDelegate {
                 cell.likeButton.tintColor = .systemRed
                 cell.viewModel?.post.likes = post.likes + 1
                 
-                // 發通知給對方
+                // 發like通知給對方
                 NotificationService.uploadNotification(toUid: post.ownerUid,
                                                        notiType: .like,
-                                                       fromUser: user,
+                                                       fromUser: currentUser,
                                                        post: post)
             }
         }
@@ -233,7 +233,7 @@ extension HomeController {
             
             UserService.fetchUserBy(uid: post.ownerUid) { user in
                 cell.viewModel?.ownerUsername = user.username
-                cell.viewModel?.ownerImageUrl = URL(string: user.profileImageUrl)
+                cell.viewModel?.ownerImageUrl = URL(string: user.profileImageUrlString)
             }
             
         } else {
@@ -241,7 +241,7 @@ extension HomeController {
             
             UserService.fetchUserBy(uid: posts[indexPath.item].ownerUid) { user in
                 cell.viewModel?.ownerUsername = user.username
-                cell.viewModel?.ownerImageUrl = URL(string: user.profileImageUrl)
+                cell.viewModel?.ownerImageUrl = URL(string: user.profileImageUrlString)
             }
         }
         

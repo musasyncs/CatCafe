@@ -29,13 +29,15 @@ struct NotificationService {
         
         if let post = post {
             dic["postId"] = post.postId
+        } else {
+            dic["postId"] = ""
         }
         
         docRef.setData(dic)
     }
     
     static func fetchNotifications(completion: @escaping([Notification]) -> Void) {
-        guard let currentUid = Auth.auth().currentUser?.uid else { return }
+        guard let currentUid = LocalStorage.shared.getUid() else { return }
         
         CCConstant.COLLECTION_NOTIFICATIONS.document(currentUid)
             .collection("user-notifications").getDocuments { snapshot, _ in

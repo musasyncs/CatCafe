@@ -15,7 +15,7 @@ struct ProfileHeaderViewModel {
     }
     
     var profileImageUrl: URL? {
-        return URL(string: user.profileImageUrl)
+        return URL(string: user.profileImageUrlString)
     }
     
     var followButtonText: String {
