@@ -138,7 +138,10 @@ class HomeController: UICollectionViewController {
     }
     
     @objc func gotoNotificationPage() {
-        
+        let controller = NotificationController(style: .plain)
+        let navController = UINavigationController(rootViewController: controller)
+        navController.modalPresentationStyle = .fullScreen
+        present(navController, animated: false)
     }
     
     @objc func handleDropDownMenu() {

@@ -52,6 +52,7 @@ class ProfileController: UICollectionViewController {
     func fetchUserStats() {
         UserService.fetchUserStats(uid: user.uid) { stats in
             self.user.stats = stats
+            self.collectionView.refreshControl?.endRefreshing()
             self.collectionView.reloadData()
         }
     }
@@ -59,6 +60,7 @@ class ProfileController: UICollectionViewController {
     func fetchUserPosts() {
         PostService.fetchPosts(forUser: user.uid) { posts in
             self.posts = posts
+            self.collectionView.refreshControl?.endRefreshing()
             self.collectionView.reloadData()
         }
     }
@@ -82,6 +84,11 @@ class ProfileController: UICollectionViewController {
                                 forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
                                 withReuseIdentifier: ProfileHeader.identifier)
         collectionView.backgroundColor = .white
+        
+        // setup pull to refresh
+        let refresher = UIRefreshControl()
+        refresher.addTarget(self, action: #selector(handleRefresh), for: .valueChanged)
+        collectionView.refreshControl = refresher
     }
     
     // MARK: - Action
@@ -99,6 +106,12 @@ class ProfileController: UICollectionViewController {
         } catch {
             print("DEBUG: Failed to signout")
         }
+    }
+    
+    @objc func handleRefresh() {
+        posts.removeAll()
+        fetchUserPosts()
+        fetchUserStats()
     }
 }
 

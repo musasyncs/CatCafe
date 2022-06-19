@@ -73,6 +73,7 @@
 		BADF1F7C285DB5A0004CF329 /* CommentService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BADF1F7B285DB5A0004CF329 /* CommentService.swift */; };
 		BADF1F7E285DC535004CF329 /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = BADF1F7D285DC535004CF329 /* Comment.swift */; };
 		BADF1F80285DCAA1004CF329 /* CommentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BADF1F7F285DCAA1004CF329 /* CommentViewModel.swift */; };
+		BADF1F86285E788A004CF329 /* NotificationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BADF1F85285E788A004CF329 /* NotificationController.swift */; };
 		F3CA363722C8C7AF9DC7484D /* Pods_CatCafe.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91DB69D591917799CE505D79 /* Pods_CatCafe.framework */; };
 /* End PBXBuildFile section */
 
@@ -148,6 +149,7 @@
 		BADF1F7B285DB5A0004CF329 /* CommentService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentService.swift; sourceTree = "<group>"; };
 		BADF1F7D285DC535004CF329 /* Comment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Comment.swift; sourceTree = "<group>"; };
 		BADF1F7F285DCAA1004CF329 /* CommentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentViewModel.swift; sourceTree = "<group>"; };
+		BADF1F85285E788A004CF329 /* NotificationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -263,6 +265,7 @@
 				BA44774528588CA90045DDB8 /* Tabs */,
 				BA7BB726285AE68D00465DEC /* Post */,
 				BADF1F74285D7C21004CF329 /* Comment */,
+				BADF1F84285E786F004CF329 /* Notification */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -495,6 +498,14 @@
 			path = Comment;
 			sourceTree = "<group>";
 		};
+		BADF1F84285E786F004CF329 /* Notification */ = {
+			isa = PBXGroup;
+			children = (
+				BADF1F85285E788A004CF329 /* NotificationController.swift */,
+			);
+			path = Notification;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -649,6 +660,7 @@
 				BADF1F62285C4E2E004CF329 /* CafeService.swift in Sources */,
 				BADF1F65285C4F78004CF329 /* Cafe.swift in Sources */,
 				BA4477A82859E0AD0045DDB8 /* AuthService.swift in Sources */,
+				BADF1F86285E788A004CF329 /* NotificationController.swift in Sources */,
 				BADF1F7E285DC535004CF329 /* Comment.swift in Sources */,
 				BA4477992859D0FD0045DDB8 /* User.swift in Sources */,
 				BA7BB733285B181700465DEC /* PhotoWallTableViewCell.swift in Sources */,
