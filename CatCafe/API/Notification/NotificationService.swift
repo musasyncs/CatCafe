@@ -39,11 +39,13 @@ struct NotificationService {
     static func fetchNotifications(completion: @escaping([Notification]) -> Void) {
         guard let currentUid = LocalStorage.shared.getUid() else { return }
         
-        CCConstant.COLLECTION_NOTIFICATIONS.document(currentUid)
-            .collection("user-notifications").getDocuments { snapshot, _ in
-                guard let snapshots = snapshot?.documents else { return }
-                let notifications = snapshots.map({ Notification(dic: $0.data()) })
-                completion(notifications)
-            }
+        let query = CCConstant.COLLECTION_NOTIFICATIONS.document(currentUid)
+            .collection("user-notifications").order(by: "timestamp", descending: true)
+        
+        query.getDocuments { snapshot, _ in
+            guard let snapshots = snapshot?.documents else { return }
+            let notifications = snapshots.map({ Notification(dic: $0.data()) })
+            completion(notifications)
+        }
     }
 }

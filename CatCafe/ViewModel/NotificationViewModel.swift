@@ -30,7 +30,7 @@ struct NotificationViewModel {
             ))
         attributedText.append(
             NSAttributedString(
-                string: "  2m",
+                string: "  \(timestampText ?? "")",
                 attributes: [
                     .font: UIFont.notoRegular(size: 10),
                     .foregroundColor: UIColor.lightGray]
@@ -63,6 +63,14 @@ struct NotificationViewModel {
     
     var followButtonTextColor: UIColor {
         return notification.userIsFollowed ? .black : .white
+    }
+    
+    var timestampText: String? {
+        let formatter = DateComponentsFormatter()
+        formatter.allowedUnits = [.second, .minute, .hour, .day, .weekOfMonth]
+        formatter.maximumUnitCount = 1
+        formatter.unitsStyle = .abbreviated
+        return formatter.string(from: notification.timestamp.dateValue(), to: Date())
     }
     
     init(notification: Notification) {

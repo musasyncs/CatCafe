@@ -29,6 +29,7 @@ final class FeedCell: UICollectionViewCell {
             likesLabel.text = viewModel.likesLabelText
             
             captionLabel.text = viewModel.caption
+            postTimeLabel.text = viewModel.timestampText
         }
     }
     
@@ -63,8 +64,6 @@ final class FeedCell: UICollectionViewCell {
         let recognizer = UITapGestureRecognizer(target: self, action: #selector(showUserProfile))
         profileImageView.isUserInteractionEnabled = true
         profileImageView.addGestureRecognizer(recognizer)
-        
-        postTimeLabel.text = "2 days ago"
     }
     
     func setupUI() {
