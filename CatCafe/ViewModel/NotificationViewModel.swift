@@ -21,18 +21,18 @@ struct NotificationViewModel {
         
         let attributedText = NSMutableAttributedString(
             string: username,
-            attributes: [.font: UIFont.notoMedium(size: 14)]
+            attributes: [.font: UIFont.notoMedium(size: 12)]
         )
         attributedText.append(
             NSAttributedString(
                 string: message,
-                attributes: [.font: UIFont.notoRegular(size: 14)]
+                attributes: [.font: UIFont.notoRegular(size: 12)]
             ))
         attributedText.append(
             NSAttributedString(
                 string: "  2m",
                 attributes: [
-                    .font: UIFont.notoRegular(size: 12),
+                    .font: UIFont.notoRegular(size: 10),
                     .foregroundColor: UIColor.lightGray]
             ))
         return attributedText
@@ -51,5 +51,9 @@ struct NotificationViewModel {
     
     init(notification: Notification) {
         self.notification = notification
+    }
+    
+    var shouldHidePostImage: Bool {
+        return self.notification.notiType == .follow
     }
 }

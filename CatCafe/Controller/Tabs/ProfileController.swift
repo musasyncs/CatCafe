@@ -236,7 +236,7 @@ extension ProfileController: ProfileHeaderDelegate {
                 self.collectionView.reloadData()
             }
             
-            // 發follow通知給對方
+            // 通知被follow的人
             guard let tab = tabBarController as? MainTabController else { return }
             guard let currentUser = tab.user else { return }
             
