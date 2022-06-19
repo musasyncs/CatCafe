@@ -12,19 +12,19 @@ struct NotificationService {
     static func uploadNotification(
         toUid uid: String,
         notiType: NotitficationType,
+        fromUser: User,
         post: Post? = nil
     ) {
-        guard let currentUid = Auth.auth().currentUser?.uid else { return }
-        guard uid != currentUid else { return } // 不要通知自己東西
+        guard fromUser.uid != uid else { return }
         
         let docRef = CCConstant.COLLECTION_NOTIFICATIONS.document(uid)
             .collection("user-notifications").document()
         
         var dic: [String: Any] = [
             "notiId": docRef.documentID,
-            "timestamp": Timestamp(date: Date()),
-            "uid": currentUid,
-            "notiType": notiType.rawValue
+            "notiType": notiType.rawValue,
+            "fromUid": fromUser.uid,
+            "timestamp": Timestamp(date: Date())
         ]
         
         if let post = post {
@@ -34,7 +34,14 @@ struct NotificationService {
         docRef.setData(dic)
     }
     
-    static func fetchNotifications() {
+    static func fetchNotifications(completion: @escaping([Notification]) -> Void) {
+        guard let currentUid = Auth.auth().currentUser?.uid else { return }
         
+        CCConstant.COLLECTION_NOTIFICATIONS.document(currentUid)
+            .collection("user-notifications").getDocuments { snapshot, _ in
+                guard let snapshots = snapshot?.documents else { return }
+                let notifications = snapshots.map({ Notification(dic: $0.data()) })
+                completion(notifications)
+            }
     }
 }

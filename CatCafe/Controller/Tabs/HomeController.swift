@@ -50,6 +50,7 @@ class HomeController: UICollectionViewController {
     func fetchPosts() {
         guard post == nil else {
             checkIfCurrentUserLikedPosts()
+            self.collectionView.refreshControl?.endRefreshing()
             return
         }
         
@@ -179,6 +180,9 @@ extension HomeController: FeedCellDelegate {
     }
     
     func cell(_ cell: FeedCell, didLike post: Post) {
+        guard let tab = tabBarController as? MainTabController else { return }
+        guard let user = tab.user else { return }
+        
         cell.viewModel?.post.isLiked.toggle()
         
         if post.isLiked {
@@ -193,7 +197,11 @@ extension HomeController: FeedCellDelegate {
                 cell.likeButton.tintColor = .systemRed
                 cell.viewModel?.post.likes = post.likes + 1
                 
-                NotificationService.uploadNotification(toUid: post.ownerUid, notiType: .like, post: post)
+                // 發通知給對方
+                NotificationService.uploadNotification(toUid: post.ownerUid,
+                                                       notiType: .like,
+                                                       fromUser: user,
+                                                       post: post)
             }
         }
     }

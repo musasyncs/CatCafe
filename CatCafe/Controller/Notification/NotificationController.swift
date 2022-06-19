@@ -9,12 +9,32 @@ import UIKit
 
 class NotificationController: UITableViewController {
     
+    private var notifications = [Notification]() {
+        didSet {
+            tableView.reloadData()
+        }
+    }
+    
+    // MARK: - Life Cycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        
         setupBarButtonItem()
         setupTableView()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        fetchnotifications()
+    }
+    
+    // MARK: - API
+    
+    func fetchnotifications() {
+        NotificationService.fetchNotifications { notifications in
+            self.notifications = notifications
+        }
     }
     
     // MARK: - Helpers
@@ -50,7 +70,7 @@ class NotificationController: UITableViewController {
 extension NotificationController {
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10
+        return notifications.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -58,88 +78,25 @@ extension NotificationController {
             withIdentifier: NotificationCell.identifier,
             for: indexPath) as? NotificationCell
         else { return UITableViewCell() }
+        
+        let notification = notifications[indexPath.row]
+        cell.viewModel = NotificationViewModel(notification: notification)
+        
+        // profileImageUrl, username
+        UserService.fetchUserBy(uid: notification.fromUid) { user in
+            cell.viewModel?.profileImageUrl = URL(string: user.profileImageUrl)
+            cell.viewModel?.username  = user.username
+        }
+        
+        // mediaUrl
+        if let postId = notification.postId {
+            PostService.fetchPost(withPostId: postId) { post in
+                cell.viewModel?.mediaUrl = URL(string: post.mediaUrlString)
+            }
+        } else {
+            cell.viewModel?.mediaUrl = nil
+        }
+        
         return cell
     }
-}
-
-final class NotificationCell: UITableViewCell {
-    
-    lazy var  profileImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.backgroundColor = .lightGray
-        imageView.contentMode = .scaleAspectFill
-        imageView.clipsToBounds = true
-        imageView.layer.cornerRadius = 48 / 2
-        return imageView
-    }()
-    
-    lazy var infoLabel: UILabel = {
-       let label = UILabel()
-        label.font = .notoMedium(size: 14)
-        label.text = "riho123"
-        return label
-    }()
-    
-    lazy var postImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.backgroundColor = .lightGray
-        imageView.contentMode = .scaleAspectFill
-        imageView.clipsToBounds = true
-        
-        let recognizer = UITapGestureRecognizer(target: self, action: #selector(handlePostTapped))
-        imageView.isUserInteractionEnabled = true
-        imageView.addGestureRecognizer(recognizer)
-        
-        return imageView
-    }()
-    
-    lazy var followButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("Loading...", for: .normal)
-        button.layer.cornerRadius = 3
-        button.layer.borderColor = UIColor.lightGray.cgColor
-        button.layer.borderWidth = 0.5
-        button.titleLabel?.font = .notoMedium(size: 14)
-        button.setTitleColor(.black, for: .normal)
-        button.addTarget(self, action: #selector(handleFollowTapped), for: .touchUpInside)
-        return button
-    }()
-    
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-    
-        backgroundColor = .white
-        selectionStyle = .none
-        followButton.isHidden = true
-        
-        addSubview(profileImageView)
-        addSubview(infoLabel)
-        addSubview(followButton)
-        addSubview(postImageView)
-        
-        profileImageView.setDimensions(height: 48, width: 48)
-        profileImageView.centerY(inView: self, leftAnchor: leftAnchor, paddingLeft: 12)
-        infoLabel.centerY(inView: profileImageView,
-                          leftAnchor: profileImageView.rightAnchor,
-                          paddingLeft: 8)
-        followButton.centerY(inView: self)
-        followButton.anchor(right: rightAnchor, paddingRight: 12, width: 100, height: 32)
-        postImageView.centerY(inView: self)
-        postImageView.anchor(right: rightAnchor, paddingRight: 12, width: 40, height: 40)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    // MARK: - Action
-    
-    @objc func handlePostTapped() {
-        
-    }
-    
-    @objc func handleFollowTapped() {
-        
-    }
-    
 }

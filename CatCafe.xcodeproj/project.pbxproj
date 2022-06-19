@@ -76,6 +76,8 @@
 		BADF1F86285E788A004CF329 /* NotificationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BADF1F85285E788A004CF329 /* NotificationController.swift */; };
 		BADF1F89285EB90F004CF329 /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = BADF1F88285EB90F004CF329 /* Notification.swift */; };
 		BADF1F8B285EC02C004CF329 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BADF1F8A285EC02C004CF329 /* NotificationService.swift */; };
+		BADF1F8D285ECCCD004CF329 /* NotificationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BADF1F8C285ECCCD004CF329 /* NotificationViewModel.swift */; };
+		BADF1F90285ED0B6004CF329 /* NotificationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BADF1F8F285ED0B6004CF329 /* NotificationCell.swift */; };
 		F3CA363722C8C7AF9DC7484D /* Pods_CatCafe.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91DB69D591917799CE505D79 /* Pods_CatCafe.framework */; };
 /* End PBXBuildFile section */
 
@@ -154,6 +156,8 @@
 		BADF1F85285E788A004CF329 /* NotificationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationController.swift; sourceTree = "<group>"; };
 		BADF1F88285EB90F004CF329 /* Notification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notification.swift; sourceTree = "<group>"; };
 		BADF1F8A285EC02C004CF329 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
+		BADF1F8C285ECCCD004CF329 /* NotificationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationViewModel.swift; sourceTree = "<group>"; };
+		BADF1F8F285ED0B6004CF329 /* NotificationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -245,6 +249,7 @@
 				BA7BB72B285AEA7E00465DEC /* PostSelect */,
 				BADF1F66285C5241004CF329 /* SelectCafe */,
 				BADF1F75285D7CC0004CF329 /* Comment */,
+				BADF1F8E285ED0A7004CF329 /* Notification */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -258,6 +263,7 @@
 				BADF1F69285C5353004CF329 /* PlaceCellViewModel.swift */,
 				BADF1F70285CBB99004CF329 /* PostViewModel.swift */,
 				BADF1F7F285DCAA1004CF329 /* CommentViewModel.swift */,
+				BADF1F8C285ECCCD004CF329 /* NotificationViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -520,6 +526,14 @@
 			path = Notification;
 			sourceTree = "<group>";
 		};
+		BADF1F8E285ED0A7004CF329 /* Notification */ = {
+			isa = PBXGroup;
+			children = (
+				BADF1F8F285ED0B6004CF329 /* NotificationCell.swift */,
+			);
+			path = Notification;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -698,7 +712,9 @@
 				BA7BB6E92859E74C00465DEC /* LoginController.swift in Sources */,
 				BA7BB71E285A083D00465DEC /* Factory.swift in Sources */,
 				BA44774728588D150045DDB8 /* MainTabController.swift in Sources */,
+				BADF1F8D285ECCCD004CF329 /* NotificationViewModel.swift in Sources */,
 				BA7BB6E72859E31500465DEC /* ImageUplader.swift in Sources */,
+				BADF1F90285ED0B6004CF329 /* NotificationCell.swift in Sources */,
 				BA7BB712285A083D00465DEC /* UIView+Extension.swift in Sources */,
 				BA4477942859CE2F0045DDB8 /* UserCell.swift in Sources */,
 				BA7BB716285A083D00465DEC /* UIScreen+Extension.swift in Sources */,
