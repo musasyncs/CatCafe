@@ -11,17 +11,13 @@ import Firebase
 struct CCConstant {
     
     struct NotificationName {
-        static let updateFeed = Notification.Name("updateFeed")
+        static let updateFeed = NSNotification.Name("updateFeed")
     }
-    
-    // User
+
     static let COLLECTION_USERS = Firestore.firestore().collection("users")
     static let COLLECTION_FOLLOWERS = Firestore.firestore().collection("followers")
     static let COLLECTION_FOLLOWING = Firestore.firestore().collection("following")
-    
-    // Cafe
     static let COLLECTION_CAFES = Firestore.firestore().collection("cafes")
-    
-    // Post
     static let COLLECTION_POSTS = Firestore.firestore().collection("posts")
+    static let COLLECTION_NOTIFICATIONS = Firestore.firestore().collection("notifications")
 }
