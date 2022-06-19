@@ -166,12 +166,11 @@ extension ProfileController {
 
 extension ProfileController {
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        
-        let flowLayout = UICollectionViewFlowLayout()
-        flowLayout.scrollDirection = .vertical
-        let controller = HomeController(collectionViewLayout: flowLayout)
-        controller.post = posts[indexPath.item]
-        navigationController?.pushViewController(controller, animated: true)
+//        let flowLayout = UICollectionViewFlowLayout()
+//        flowLayout.scrollDirection = .vertical
+//        let controller = HomeController(collectionViewLayout: flowLayout)
+//        controller.post = posts[indexPath.item]
+//        navigationController?.pushViewController(controller, animated: true)
     }
 }
 

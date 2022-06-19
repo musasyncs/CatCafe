@@ -15,6 +15,8 @@ class NotificationController: UITableViewController {
         }
     }
     
+    private let refresher = UIRefreshControl()
+    
     // MARK: - Life Cycle
     
     override func viewDidLoad() {
@@ -34,6 +36,19 @@ class NotificationController: UITableViewController {
     func fetchnotifications() {
         NotificationService.fetchNotifications { notifications in
             self.notifications = notifications
+            self.checkIfUserIsFollowed()
+        }
+    }
+    
+    func checkIfUserIsFollowed() {
+        notifications.forEach { notification in
+            guard notification.notiType == .follow else { return }
+            
+            UserService.checkIfUserIsFollowed(uid: notification.fromUid) { userIsFollowed in
+                if let index = self.notifications.firstIndex(where: { $0.notiId == notification.notiId }) {
+                    self.notifications[index].userIsFollowed = userIsFollowed
+                }
+            }
         }
     }
     
@@ -52,18 +67,26 @@ class NotificationController: UITableViewController {
     
     func setupTableView() {
         view.backgroundColor = .white
-        navigationItem.title = "Notifications"
         tableView.showsVerticalScrollIndicator = false
         
         tableView.register(NotificationCell.self, forCellReuseIdentifier: NotificationCell.identifier)
         tableView.rowHeight = 80
         tableView.separatorStyle = .none
+        
+        refresher.addTarget(self, action: #selector(handleRefresh), for: .valueChanged)
+        tableView.refreshControl = refresher
     }
     
     // MARK: - Actions
     
-    @objc private func didTapClose() {
+    @objc func didTapClose() {
         dismiss(animated: false, completion: nil)
+    }
+    
+    @objc func handleRefresh() {
+        notifications.removeAll()
+        fetchnotifications()
+        refresher.endRefreshing()
     }
 }
 
@@ -98,7 +121,52 @@ extension NotificationController {
                 cell.viewModel?.mediaUrl = URL(string: post.mediaUrlString)
             }
         }
-
+        
+        cell.delegate = self
         return cell
     }
+    
+}
+
+// MARK: - NotificationCellDelegate
+
+extension NotificationController: NotificationCellDelegate {
+    
+    func cell(_ cell: NotificationCell, wantsToViewProfile uid: String) {
+        showLoader(true)
+        UserService.fetchUserBy(uid: uid) { user in
+            self.showLoader(false)
+            let controller = ProfileController(user: user)
+            self.navigationController?.pushViewController(controller, animated: true)
+        }
+    }
+    
+    func cell(_ cell: NotificationCell, wantsToViewPost postId: String) {
+        showLoader(true)
+        PostService.fetchPost(withPostId: postId) { post in
+            self.showLoader(false)
+            let flowLayout = UICollectionViewFlowLayout()
+            flowLayout.scrollDirection = .vertical
+            let controller = HomeController(collectionViewLayout: flowLayout)
+            controller.post = post
+            self.navigationController?.pushViewController(controller, animated: true)
+        }
+    }
+    
+    func cell(_ cell: NotificationCell, wantsToFollow uid: String) {
+        showLoader(true)
+        UserService.follow(uid: uid) { _ in
+            self.showLoader(false)
+            cell.viewModel?.notification.userIsFollowed.toggle()
+        }
+    }
+    
+    func cell(_ cell: NotificationCell, wantsToUnfollow uid: String) {
+        showLoader(true)
+        UserService.unfollow(uid: uid) { _ in
+            self.showLoader(false)
+            cell.viewModel?.notification.userIsFollowed.toggle()
+        }
+    }
+    
 }

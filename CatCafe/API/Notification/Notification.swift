@@ -28,6 +28,8 @@ struct Notification {
     let postId: String
     let timestamp: Timestamp
     
+    var userIsFollowed = false
+    
     init(dic: [String: Any]) {
         self.notiId = dic["notiId"] as? String ?? ""
         self.notiType = NotitficationType(rawValue: dic["notiType"] as? Int ?? 0) ?? .like

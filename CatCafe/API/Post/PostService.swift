@@ -66,8 +66,8 @@ struct PostService {
     static func fetchPost(withPostId postId: String, completion: @escaping(Post) -> Void) {
         CCConstant.COLLECTION_POSTS.document(postId).getDocument { snapshot, _ in
             guard let snapshot = snapshot else { return }
-            guard let data = snapshot.data() else { return }
-            let post = Post(postId: snapshot.documentID, dic: data)
+            guard let dic = snapshot.data() else { return }
+            let post = Post(postId: snapshot.documentID, dic: dic)
             completion(post)
         }
     }
