@@ -29,7 +29,7 @@ class PostEditController: UIViewController {
             titleLabel.attributedText = titleAttrText
             
             let subtitleAttrText = NSAttributedString(
-                string: selectedCafe.title,
+                string: selectedCafe.address,
                 attributes: [
                     .foregroundColor: UIColor.systemGray3,
                     .font: UIFont.notoMedium(size: 11) as Any

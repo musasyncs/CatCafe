@@ -7,16 +7,27 @@
 
 import UIKit
 
-class ExploreController: UITableViewController {
+class ExploreController: UIViewController {
     
+    private var posts = [Post]()
     private var users = [User]()
     private var filteredUsers = [User]()
     
     private var inSearchMode: Bool {
         return searchController.isActive && !searchController.searchBar.text!.isEmpty
     }
-    
     private let searchController = UISearchController(searchResultsController: nil)
+    
+    private let tableView = UITableView()
+    private lazy var collectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.dataSource = self
+        collectionView.delegate = self
+        collectionView.register(ProfileCell.self, forCellWithReuseIdentifier: ProfileCell.identifier)
+        collectionView.backgroundColor = .white
+        return collectionView
+    }()
     
     // MARK: - Life Cycle
     
@@ -24,10 +35,11 @@ class ExploreController: UITableViewController {
         super.viewDidLoad()
         
         view.backgroundColor = .white
-        setupTableView()
+        configureUI()
         configureSearchController()
         
         fetchUsers()
+        fetchPosts()
     }
     
     // MARK: - API
@@ -39,11 +51,26 @@ class ExploreController: UITableViewController {
         }
     }
     
+    func fetchPosts() {
+        PostService.fetchPosts { posts in
+            self.posts = posts
+            self.collectionView.reloadData()
+        }
+    }
+    
     // MARK: - Helpers
     
-    func setupTableView() {
+    func configureUI() {
+        tableView.dataSource = self
+        tableView.delegate = self
         tableView.register(UserCell.self, forCellReuseIdentifier: UserCell.identifier)
         tableView.rowHeight = 64
+        tableView.isHidden = true
+        view.addSubview(tableView)
+        tableView.fillSuperView()
+        
+        view.addSubview(collectionView)
+        collectionView.fillSuperView()
     }
     
     func configureSearchController() {
@@ -51,6 +78,7 @@ class ExploreController: UITableViewController {
         searchController.obscuresBackgroundDuringPresentation = false
         searchController.hidesNavigationBarDuringPresentation = false
         searchController.searchBar.placeholder = "Search"
+        searchController.searchBar.delegate = self
         navigationItem.searchController = searchController
         definesPresentationContext = false
     }
@@ -58,13 +86,13 @@ class ExploreController: UITableViewController {
 
 // MARK: - UITableViewDataSource / UITableViewDelegate
 
-extension ExploreController {
+extension ExploreController: UITableViewDataSource, UITableViewDelegate {
     
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return inSearchMode ? filteredUsers.count : users.count
     }
     
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: UserCell.identifier, for: indexPath) as? UserCell
         else { return UITableViewCell() }
         
@@ -74,7 +102,8 @@ extension ExploreController {
         return cell
     }
     
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
         let controller = ProfileController(user: users[indexPath.row])
         navigationController?.pushViewController(controller, animated: true)
     }
@@ -92,4 +121,76 @@ extension ExploreController: UISearchResultsUpdating {
         })
         self.tableView.reloadData()
     }
+}
+
+// MARK: - UISearchBarDelegate
+
+extension ExploreController: UISearchBarDelegate {
+    
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        searchBar.showsCancelButton = true
+        collectionView.isHidden = true
+        tableView.isHidden = false
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.endEditing(true)
+        searchBar.showsCancelButton = false
+        searchBar.text = nil
+        collectionView.isHidden = false
+        tableView.isHidden = true
+    }
+}
+
+// MARK: - UICollectionViewDataSource / UICollectionViewDelegate
+
+extension ExploreController: UICollectionViewDataSource, UICollectionViewDelegate {
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return posts.count
+    }
+    
+    func collectionView(
+        _ collectionView: UICollectionView,
+        cellForItemAt indexPath: IndexPath
+    ) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(
+            withReuseIdentifier: ProfileCell.identifier,
+            for: indexPath) as? ProfileCell else {
+                return UICollectionViewCell()
+            }
+        cell.viewModel = PostViewModel(post: posts[indexPath.item])
+        return cell
+    }
+    
+}
+
+// MARK: - UICollectionViewFlowLayout
+
+extension ExploreController: UICollectionViewDelegateFlowLayout {
+    func collectionView(
+        _ collectionView: UICollectionView,
+        layout collectionViewLayout: UICollectionViewLayout,
+        minimumInteritemSpacingForSectionAt section: Int
+    ) -> CGFloat {
+        return 1
+    }
+    
+    func collectionView(
+        _ collectionView: UICollectionView,
+        layout collectionViewLayout: UICollectionViewLayout,
+        minimumLineSpacingForSectionAt section: Int
+    ) -> CGFloat {
+        return 1
+    }
+    
+    func collectionView(
+        _ collectionView: UICollectionView,
+        layout collectionViewLayout: UICollectionViewLayout,
+        sizeForItemAt indexPath: IndexPath
+    ) -> CGSize {
+        let width =  (view.frame.width - 2) / 3
+        return CGSize(width: width, height: width)
+    }
+
 }

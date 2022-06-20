@@ -11,6 +11,7 @@ struct CommentService {
     
     // MARK: - Upload comment(pure text)
     
+    // swiftlint:disable:next function_parameter_count
     static func uploadComment(
         postId: String,
         user: User,
@@ -35,8 +36,9 @@ struct CommentService {
     
     // MARK: - Fetch all comments for a post
     
-    static func fetchComments(forPost postId: String,
-                              completion: @escaping ([Comment]) -> Void
+    static func fetchComments(
+        forPost postId: String,
+        completion: @escaping ([Comment]) -> Void
     ) {
         var comments = [Comment]()
         

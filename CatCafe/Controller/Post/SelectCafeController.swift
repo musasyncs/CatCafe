@@ -55,6 +55,7 @@ class SelectCafeController: UITableViewController {
         searchController.obscuresBackgroundDuringPresentation = false
         searchController.hidesNavigationBarDuringPresentation = false
         searchController.searchBar.placeholder = "Search"
+        searchController.searchBar.delegate = self
         navigationItem.searchController = searchController
         definesPresentationContext = false
     }
@@ -83,6 +84,8 @@ extension SelectCafeController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let cafe = inSearchMode ? filteredCafes[indexPath.row] : cafes[indexPath.row]
         delegate?.didSelectCafe(cafe)
+        
+        searchController.isActive = false
         dismiss(animated: true)
     }
     
@@ -99,4 +102,14 @@ extension SelectCafeController: UISearchResultsUpdating {
         })
         self.tableView.reloadData()
     }
+}
+
+// MARK: - UISearchBarDelegate
+
+extension SelectCafeController: UISearchBarDelegate {
+    
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        searchBar.showsCancelButton = false
+    }
+    
 }
