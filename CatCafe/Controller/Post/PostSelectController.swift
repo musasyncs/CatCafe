@@ -185,6 +185,7 @@ extension PostSelectController: UITableViewDataSource, UITableViewDelegate {
         guard let controlHeader = tableView.dequeueReusableHeaderFooterView(
             withIdentifier: ControlSectionHeader.identifier) as? ControlSectionHeader
         else { return UIView() }
+        controlHeader.delegate = self
         return controlHeader
     }
     
@@ -201,4 +202,18 @@ extension PostSelectController: PhotoWallTableViewCellDelegate {
         self.selectedImage = selectedImage
     }
     
+}
+
+// MARK: - ControlSectionHeaderDelegate
+
+extension PostSelectController: ControlSectionHeaderDelegate {
+    
+    func didTapGallery(_ header: ControlSectionHeader) {
+        print("DEBUG: didTapGallery")
+    }
+    
+    func didTapCamera(_ header: ControlSectionHeader) {
+        present(PostCameraController(), animated: true)
+    }
+
 }

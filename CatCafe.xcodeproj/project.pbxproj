@@ -79,6 +79,8 @@
 		BADF1F8D285ECCCD004CF329 /* NotificationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BADF1F8C285ECCCD004CF329 /* NotificationViewModel.swift */; };
 		BADF1F90285ED0B6004CF329 /* NotificationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BADF1F8F285ED0B6004CF329 /* NotificationCell.swift */; };
 		BADF1F93285F1849004CF329 /* LocalStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = BADF1F92285F1849004CF329 /* LocalStorage.swift */; };
+		BAF9BD1C28608C93000F9EEA /* PostCameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF9BD1B28608C93000F9EEA /* PostCameraController.swift */; };
+		BAF9BD2028608D72000F9EEA /* PreviewPhotoContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF9BD1F28608D72000F9EEA /* PreviewPhotoContainerView.swift */; };
 		F3CA363722C8C7AF9DC7484D /* Pods_CatCafe.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91DB69D591917799CE505D79 /* Pods_CatCafe.framework */; };
 /* End PBXBuildFile section */
 
@@ -160,6 +162,8 @@
 		BADF1F8C285ECCCD004CF329 /* NotificationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationViewModel.swift; sourceTree = "<group>"; };
 		BADF1F8F285ED0B6004CF329 /* NotificationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationCell.swift; sourceTree = "<group>"; };
 		BADF1F92285F1849004CF329 /* LocalStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalStorage.swift; sourceTree = "<group>"; };
+		BAF9BD1B28608C93000F9EEA /* PostCameraController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostCameraController.swift; sourceTree = "<group>"; };
+		BAF9BD1F28608D72000F9EEA /* PreviewPhotoContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewPhotoContainerView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -251,6 +255,7 @@
 				BA44778D28597DAF0045DDB8 /* Profile */,
 				BA7BB72B285AEA7E00465DEC /* PostSelect */,
 				BADF1F66285C5241004CF329 /* SelectCafe */,
+				BAF9BD1E28608D5B000F9EEA /* PostCamera */,
 				BADF1F75285D7CC0004CF329 /* Comment */,
 				BADF1F8E285ED0A7004CF329 /* Notification */,
 			);
@@ -430,6 +435,7 @@
 				BA7BB724285AE4D000465DEC /* PostSelectController.swift */,
 				BADF1F5F285B3607004CF329 /* PostEditController.swift */,
 				BA44773128587ED30045DDB8 /* SelectCafeController.swift */,
+				BAF9BD1B28608C93000F9EEA /* PostCameraController.swift */,
 			);
 			path = Post;
 			sourceTree = "<group>";
@@ -543,6 +549,14 @@
 				BADF1F92285F1849004CF329 /* LocalStorage.swift */,
 			);
 			path = LocalStorage;
+			sourceTree = "<group>";
+		};
+		BAF9BD1E28608D5B000F9EEA /* PostCamera */ = {
+			isa = PBXGroup;
+			children = (
+				BAF9BD1F28608D72000F9EEA /* PreviewPhotoContainerView.swift */,
+			);
+			path = PostCamera;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -718,6 +732,7 @@
 				BADF1F93285F1849004CF329 /* LocalStorage.swift in Sources */,
 				BADF1F7C285DB5A0004CF329 /* CommentService.swift in Sources */,
 				BADF1F79285D8CDC004CF329 /* CommentInputAccessoryView.swift in Sources */,
+				BAF9BD2028608D72000F9EEA /* PreviewPhotoContainerView.swift in Sources */,
 				BA7BB70E285A083D00465DEC /* UIFont+Extension.swift in Sources */,
 				BA4477A42859DF1C0045DDB8 /* RegistrationViewModel.swift in Sources */,
 				BA44772E28587ED30045DDB8 /* AppDelegate.swift in Sources */,
@@ -731,6 +746,7 @@
 				BA4477942859CE2F0045DDB8 /* UserCell.swift in Sources */,
 				BA7BB716285A083D00465DEC /* UIScreen+Extension.swift in Sources */,
 				BA44773028587ED30045DDB8 /* SceneDelegate.swift in Sources */,
+				BAF9BD1C28608C93000F9EEA /* PostCameraController.swift in Sources */,
 				BADF1F6A285C5353004CF329 /* PlaceCellViewModel.swift in Sources */,
 				BADF1F71285CBB99004CF329 /* PostViewModel.swift in Sources */,
 				BA44775128588FFD0045DDB8 /* ProfileController.swift in Sources */,

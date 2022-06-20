@@ -7,7 +7,14 @@
 
 import UIKit
 
+protocol ControlSectionHeaderDelegate: AnyObject {
+    func didTapGallery(_ header: ControlSectionHeader)
+    func didTapCamera(_ header: ControlSectionHeader)
+}
+
 final class ControlSectionHeader: UITableViewHeaderFooterView {
+    
+    weak var delegate: ControlSectionHeaderDelegate?
     
     lazy var galleryButton = makeAttriTitleButton(
         text: "圖庫",
@@ -28,6 +35,8 @@ final class ControlSectionHeader: UITableViewHeaderFooterView {
     override init(reuseIdentifier: String?) {
         super.init(reuseIdentifier: reuseIdentifier)
 
+        galleryButton.addTarget(self, action: #selector(handleGallery), for: .touchUpInside)
+        cameraButton.addTarget(self, action: #selector(handleCamera), for: .touchUpInside)
         cameraButton.layer.cornerRadius = 30 / 2
 
         addSubview(galleryButton)
@@ -39,6 +48,16 @@ final class ControlSectionHeader: UITableViewHeaderFooterView {
     }
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: - Action
+    
+    @objc func handleGallery() {
+        delegate?.didTapGallery(self)
+    }
+    
+    @objc func handleCamera() {
+        delegate?.didTapCamera(self)
     }
     
 }

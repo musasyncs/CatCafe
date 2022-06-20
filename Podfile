@@ -17,7 +17,6 @@ target 'CatCafe' do
   pod 'MJRefresh'
   pod 'Kingfisher'
   pod 'SDWebImage' 
-  pod 'ActiveLabel' 
   pod 'JGProgressHUD'
   pod 'lottie-ios'
 end
