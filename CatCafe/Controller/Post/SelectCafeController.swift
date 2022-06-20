@@ -55,6 +55,7 @@ class SelectCafeController: UITableViewController {
         searchController.obscuresBackgroundDuringPresentation = false
         searchController.hidesNavigationBarDuringPresentation = false
         searchController.searchBar.placeholder = "Search"
+        searchController.searchBar.delegate = self
         navigationItem.searchController = searchController
         definesPresentationContext = false
     }
@@ -101,4 +102,14 @@ extension SelectCafeController: UISearchResultsUpdating {
         })
         self.tableView.reloadData()
     }
+}
+
+// MARK: - UISearchBarDelegate
+
+extension SelectCafeController: UISearchBarDelegate {
+    
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        searchBar.showsCancelButton = false
+    }
+    
 }
