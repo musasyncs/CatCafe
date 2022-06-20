@@ -50,6 +50,7 @@ class HomeController: UICollectionViewController {
     func fetchPosts() {
         guard post == nil else {
             checkIfCurrentUserLikedPosts()
+            self.collectionView.refreshControl?.endRefreshing()
             return
         }
         
@@ -138,7 +139,10 @@ class HomeController: UICollectionViewController {
     }
     
     @objc func gotoNotificationPage() {
-        
+        let controller = NotificationController(style: .plain)
+        let navController = UINavigationController(rootViewController: controller)
+        navController.modalPresentationStyle = .fullScreen
+        present(navController, animated: false)
     }
     
     @objc func handleDropDownMenu() {
@@ -176,6 +180,9 @@ extension HomeController: FeedCellDelegate {
     }
     
     func cell(_ cell: FeedCell, didLike post: Post) {
+        guard let tab = tabBarController as? MainTabController else { return }
+        guard let currentUser = tab.user else { return }
+        
         cell.viewModel?.post.isLiked.toggle()
         
         if post.isLiked {
@@ -189,6 +196,12 @@ extension HomeController: FeedCellDelegate {
                 cell.likeButton.setImage(UIImage(named: "like_selected"), for: .normal)
                 cell.likeButton.tintColor = .systemRed
                 cell.viewModel?.post.likes = post.likes + 1
+                
+                // 發like通知給對方
+                NotificationService.uploadNotification(toUid: post.ownerUid,
+                                                       notiType: .like,
+                                                       fromUser: currentUser,
+                                                       post: post)
             }
         }
     }
@@ -220,7 +233,7 @@ extension HomeController {
             
             UserService.fetchUserBy(uid: post.ownerUid) { user in
                 cell.viewModel?.ownerUsername = user.username
-                cell.viewModel?.ownerImageUrl = URL(string: user.profileImageUrl)
+                cell.viewModel?.ownerImageUrl = URL(string: user.profileImageUrlString)
             }
             
         } else {
@@ -228,7 +241,7 @@ extension HomeController {
             
             UserService.fetchUserBy(uid: posts[indexPath.item].ownerUid) { user in
                 cell.viewModel?.ownerUsername = user.username
-                cell.viewModel?.ownerImageUrl = URL(string: user.profileImageUrl)
+                cell.viewModel?.ownerImageUrl = URL(string: user.profileImageUrlString)
             }
         }
         

@@ -109,7 +109,7 @@ final class ProfileHeader: UICollectionReusableView {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        setupUI()
+        configureUI()
         layout()
     }
     
@@ -119,7 +119,7 @@ final class ProfileHeader: UICollectionReusableView {
     
     // MARK: - Helpers
     
-    func setupUI() {
+    func configureUI() {
         backgroundColor = .white
         stack.distribution = .fillEqually
         topDivider.backgroundColor = .lightGray

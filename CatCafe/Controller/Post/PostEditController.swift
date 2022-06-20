@@ -23,7 +23,7 @@ class PostEditController: UIViewController {
             let titleAttrText = NSAttributedString(
                 string: selectedCafe.title,
                 attributes: [
-                    .foregroundColor: UIColor.systemBlue,
+                    .foregroundColor: UIColor.systemBrown,
                     .font: UIFont.notoMedium(size: 13) as Any
                 ])
             titleLabel.attributedText = titleAttrText
@@ -41,7 +41,7 @@ class PostEditController: UIViewController {
             navigationItem.rightBarButtonItem = UIBarButtonItem(
                 image: UIImage(named: "check")?
                     .resize(to: .init(width: 24, height: 24))?
-                    .withTintColor(.systemBlue)
+                    .withTintColor(.systemBrown)
                     .withRenderingMode(.alwaysOriginal),
                 style: .plain,
                 target: self,
@@ -54,7 +54,6 @@ class PostEditController: UIViewController {
     
     let profileImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.backgroundColor = .systemRed
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 36 / 2
@@ -104,7 +103,7 @@ class PostEditController: UIViewController {
     )
     
     let iconButton = makeIconButton(imagename: "location",
-                                    imageColor: .systemBlue,
+                                    imageColor: .systemBrown,
                                     imageWidth: 18,
                                     imageHeight: 18)
     let titleLabel = UILabel()
@@ -128,10 +127,10 @@ class PostEditController: UIViewController {
     // MARK: - API
     
     func fetchProfilePic() {
-        guard let currentUid = Auth.auth().currentUser?.uid else { return }
+        guard let currentUid = LocalStorage.shared.getUid() else { return }
         
         UserService.fetchUserBy(uid: currentUid, completion: { user in
-            self.profileImageView.sd_setImage(with: URL(string: user.profileImageUrl))
+            self.profileImageView.sd_setImage(with: URL(string: user.profileImageUrlString))
         })
     }
     

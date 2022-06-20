@@ -52,6 +52,7 @@ class ProfileController: UICollectionViewController {
     func fetchUserStats() {
         UserService.fetchUserStats(uid: user.uid) { stats in
             self.user.stats = stats
+            self.collectionView.refreshControl?.endRefreshing()
             self.collectionView.reloadData()
         }
     }
@@ -59,6 +60,7 @@ class ProfileController: UICollectionViewController {
     func fetchUserPosts() {
         PostService.fetchPosts(forUser: user.uid) { posts in
             self.posts = posts
+            self.collectionView.refreshControl?.endRefreshing()
             self.collectionView.reloadData()
         }
     }
@@ -67,8 +69,8 @@ class ProfileController: UICollectionViewController {
     
     func setupBarButtonItem() {
         navigationItem.rightBarButtonItem = UIBarButtonItem(
-            image: UIImage(systemName: "arrowshape.turn.up.left.fill")?
-                .withTintColor(.black)
+            image: UIImage(systemName: "arrow.uturn.up")?
+                .withTintColor(.systemBrown)
                 .withRenderingMode(.alwaysOriginal),
             style: .plain,
             target: self,
@@ -82,23 +84,41 @@ class ProfileController: UICollectionViewController {
                                 forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
                                 withReuseIdentifier: ProfileHeader.identifier)
         collectionView.backgroundColor = .white
+        
+        // setup pull to refresh
+        let refresher = UIRefreshControl()
+        refresher.addTarget(self, action: #selector(handleRefresh), for: .valueChanged)
+        collectionView.refreshControl = refresher
     }
     
     // MARK: - Action
     
     @objc func handleLogout() {
-        do {
-            try Auth.auth().signOut()
-            let controller = LoginController()
+        
+        let result = AuthService.logoutUser()
+        switch result {
+        case .success:
             
+            // Clear uid / hasLogedIn = false
+            LocalStorage.shared.clearUid()
+            LocalStorage.shared.hasLogedIn = false
+
+            let controller = LoginController()
             controller.delegate = self.tabBarController as? MainTabController
             
             let nav = UINavigationController(rootViewController: controller)
             nav.modalPresentationStyle = .fullScreen
             self.present(nav, animated: true, completion: nil)
-        } catch {
-            print("DEBUG: Failed to signout")
+            
+        case .failure(let error):
+            print("DEBUG: Failed to signout with error: \(error.localizedDescription)")
         }
+    }
+    
+    @objc func handleRefresh() {
+        posts.removeAll()
+        fetchUserPosts()
+        fetchUserStats()
     }
 }
 
@@ -146,12 +166,11 @@ extension ProfileController {
 
 extension ProfileController {
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        
-        let flowLayout = UICollectionViewFlowLayout()
-        flowLayout.scrollDirection = .vertical
-        let controller = HomeController(collectionViewLayout: flowLayout)
-        controller.post = posts[indexPath.item]
-        navigationController?.pushViewController(controller, animated: true)
+//        let flowLayout = UICollectionViewFlowLayout()
+//        flowLayout.scrollDirection = .vertical
+//        let controller = HomeController(collectionViewLayout: flowLayout)
+//        controller.post = posts[indexPath.item]
+//        navigationController?.pushViewController(controller, animated: true)
     }
 }
 
@@ -216,6 +235,15 @@ extension ProfileController: ProfileHeaderDelegate {
                 self.collectionView.reloadData()
             }
             
+            // 通知被follow的人
+            guard let tab = tabBarController as? MainTabController else { return }
+            guard let currentUser = tab.user else { return }
+            
+            NotificationService.uploadNotification(toUid: user.uid,
+                                                   notiType: .follow,
+                                                   fromUser: currentUser)
+            
+            // 資料庫user-feed更新
             PostService.updateUserFeedAfterFollowing(user: user, didFollow: true)
         }
     }

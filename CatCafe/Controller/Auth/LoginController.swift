@@ -18,7 +18,12 @@ class LoginController: UIViewController {
     private lazy var loginButton = UIButton(type: .system)
     private let forgotPasswordButton = UIButton(type: .system)
     private lazy var stackView = UIStackView(
-        arrangedSubviews: [emailTextField, passwordTextField, loginButton, forgotPasswordButton]
+        arrangedSubviews: [
+            emailTextField,
+            passwordTextField,
+            loginButton,
+            forgotPasswordButton
+        ]
     )
     
     private lazy var dontHaveAccountButton = UIButton(type: .system)
@@ -34,15 +39,24 @@ class LoginController: UIViewController {
     // MARK: - Action
     
     @objc func handleLogin() {
-        guard let email = emailTextField.text else { return }
-        guard let password = passwordTextField.text else { return }
-        
-        AuthService.logUserIn(withEmail: email, password: password) { _, error in
-            if let error = error {
+        guard let email = emailTextField.text, !email.isEmpty,
+              let password = passwordTextField.text, !password.isEmpty else {
+                  print("DEBUG: email 和 password 不可為空")
+                  return
+              }
+        AuthService.loginUser(withEmail: email, password: password) { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case .success(let authUser):
+                
+                // Save uid; hasLogedIn = true
+                LocalStorage.shared.saveUid(authUser.uid)
+                LocalStorage.shared.hasLogedIn = true
+                
+                self.delegate?.authenticationDidComplete()
+            case .failure(let error):
                 print("DEBUG: Failed to log user in \(error.localizedDescription)")
-                return
             }
-            self.delegate?.authenticationDidComplete()
         }
     }
     
@@ -63,6 +77,7 @@ class LoginController: UIViewController {
 }
 
 extension LoginController {
+    
     func setup() {
         loginButton.addTarget(self, action: #selector(handleLogin), for: .touchUpInside)
         dontHaveAccountButton.addTarget(self, action: #selector(handleShowSignUp), for: .touchUpInside)
@@ -72,14 +87,13 @@ extension LoginController {
     func style() {
         navigationController?.navigationBar.isHidden = true
         navigationController?.navigationBar.barStyle = .black
-        configureGradientLayer()
         stackView.axis = .vertical
         stackView.spacing = 20
         emailTextField.keyboardType = .emailAddress
         passwordTextField.isSecureTextEntry = true
         loginButton.setTitle("Log In", for: .normal)
         loginButton.layer.cornerRadius = 5
-        loginButton.titleLabel?.font = .notoMedium(size: 20)
+        loginButton.titleLabel?.font = .notoMedium(size: 15)
         forgotPasswordButton.attributedTitle(firstPart: "Forgot your password?  ", secondPart: "Get help signing in.")
         dontHaveAccountButton.attributedTitle(firstPart: "Don't have an account?  ", secondPart: "Sign Up")
     }
@@ -88,15 +102,11 @@ extension LoginController {
         view.addSubview(stackView)
         view.addSubview(dontHaveAccountButton)
 
-        stackView.anchor(
-            top: view.topAnchor,
-            left: view.leftAnchor,
-            right: view.rightAnchor,
-            paddingTop: 112, paddingLeft: 32, paddingRight: 32
-        )
-        emailTextField.setHeight(50)
-        passwordTextField.setHeight(50)
-        loginButton.setHeight(50)
+        stackView.centerX(inView: view)
+        stackView.centerY(inView: view)
+        emailTextField.setHeight(36)
+        passwordTextField.setHeight(36)
+        loginButton.setHeight(36)
         dontHaveAccountButton.centerX(inView: view)
         dontHaveAccountButton.anchor(bottom: view.safeAreaLayoutGuide.bottomAnchor)
     }

@@ -95,7 +95,7 @@ extension CommentController {
         
         UserService.fetchUserBy(uid: comment.uid) { user in
             cell.viewModel?.username = user.username
-            cell.viewModel?.profileImageUrl = URL(string: user.profileImageUrl)
+            cell.viewModel?.profileImageUrl = URL(string: user.profileImageUrlString)
         }
         
         return cell
@@ -132,25 +132,34 @@ extension CommentController: CommentInputAccessoryViewDelegate {
         
         // 拿目前user
         guard let tabBarController = tabBarController as? MainTabController else { return }
-        guard let user = tabBarController.user else { return }
+        guard let currentUser = tabBarController.user else { return }
         
         showLoader(true)
         
         CommentService.uploadComment(
             postId: post.postId,
-            user: user,
+            user: currentUser,
             commentType: 0,
             mediaUrlString: "",
             comment: comment
         ) { error in
+            
             self.showLoader(false)
             
             if let error = error {
                 print("DEBUG: Failed to upload comment with error \(error.localizedDescription)")
                 return
             }
-
+            
             inputView.clearCommentTextView()
+            
+            // 通知被留言的人
+            NotificationService.uploadNotification(
+                toUid: self.post.ownerUid,
+                notiType: .comment,
+                fromUser: currentUser,
+                post: self.post
+            )
         }
     }
 }

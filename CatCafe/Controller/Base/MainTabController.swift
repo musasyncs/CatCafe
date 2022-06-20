@@ -28,7 +28,7 @@ class MainTabController: UITabBarController {
     // MARK: - API
     
     func checkIfUserIsLoggedIn() {
-        if Auth.auth().currentUser == nil {
+        if LocalStorage.shared.hasLogedIn == false {
             DispatchQueue.main.async {
                 let controller = LoginController()
                 controller.delegate = self
@@ -40,8 +40,7 @@ class MainTabController: UITabBarController {
     }
     
     func fetchCurrentUser() {
-        guard let currentUid = Auth.auth().currentUser?.uid else { return }
-        
+        guard let currentUid = LocalStorage.shared.getUid() else { return }        
         UserService.fetchUserBy(uid: currentUid, completion: { user in
             self.user = user
             self.navigationItem.title = user.username

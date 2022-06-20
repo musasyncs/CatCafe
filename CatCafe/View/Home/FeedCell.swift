@@ -22,6 +22,7 @@ final class FeedCell: UICollectionViewCell {
             guard let viewModel = viewModel else { return }
             profileImageView.sd_setImage(with: viewModel.ownerImageUrl)
             usernameButton.setTitle(viewModel.ownerUsername, for: .normal)
+            locationButton.setTitle(viewModel.locationText, for: .normal)
             postImageView.sd_setImage(with: viewModel.mediaUrl)
             
             likeButton.tintColor = viewModel.likeButtonTintColor
@@ -29,16 +30,18 @@ final class FeedCell: UICollectionViewCell {
             likesLabel.text = viewModel.likesLabelText
             
             captionLabel.text = viewModel.caption
+            postTimeLabel.text = viewModel.timestampText
         }
     }
     
     private let profileImageView = UIImageView()
     private lazy var usernameButton = UIButton(type: .system)
+    private lazy var locationButton = UIButton(type: .system)
+    private lazy var infoStackView = UIStackView(arrangedSubviews: [usernameButton, locationButton])
     private let postImageView = UIImageView()
     lazy var likeButton = UIButton(type: .system)
     lazy var commentButton = UIButton(type: .system)
-    lazy var shareButton = UIButton(type: .system)
-    private lazy var stackView = UIStackView(arrangedSubviews: [likeButton, commentButton, shareButton])
+    private lazy var controlStackView = UIStackView(arrangedSubviews: [likeButton, commentButton])
     private let likesLabel = UILabel()
     private let captionLabel = UILabel()
     private let postTimeLabel = UILabel()
@@ -46,7 +49,7 @@ final class FeedCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         setup()
-        setupUI()
+        configureUI()
         layout()
     }
     
@@ -55,6 +58,7 @@ final class FeedCell: UICollectionViewCell {
     }
     
     // MARK: - Helpers
+    
     func setup() {
         usernameButton.addTarget(self, action: #selector(showUserProfile), for: .touchUpInside)
         commentButton.addTarget(self, action: #selector(didTapComments), for: .touchUpInside)
@@ -63,29 +67,37 @@ final class FeedCell: UICollectionViewCell {
         let recognizer = UITapGestureRecognizer(target: self, action: #selector(showUserProfile))
         profileImageView.isUserInteractionEnabled = true
         profileImageView.addGestureRecognizer(recognizer)
-        
-        postTimeLabel.text = "2 days ago"
     }
     
-    func setupUI() {
+    func configureUI() {
         backgroundColor = .white
+        
         profileImageView.contentMode = .scaleAspectFill
         profileImageView.clipsToBounds = true
         profileImageView.isUserInteractionEnabled = true
         profileImageView.backgroundColor = .lightGray
+        
         usernameButton.setTitleColor(.black, for: .normal)
         usernameButton.titleLabel?.font = .notoMedium(size: 13)
+        locationButton.setTitleColor(.systemBrown, for: .normal)
+        locationButton.titleLabel?.font = .notoMedium(size: 11)
+        infoStackView.axis = .vertical
+        infoStackView.distribution = .fillEqually
+        infoStackView.spacing = 4
+        infoStackView.alignment = .leading
+        
         postImageView.contentMode = .scaleAspectFill
         postImageView.clipsToBounds = true
         postImageView.isUserInteractionEnabled = true
+        
         likeButton.setImage(UIImage(named: "like_unselected"), for: .normal)
         likeButton.tintColor = .black
         commentButton.setImage(UIImage(named: "comment"), for: .normal)
         commentButton.tintColor = .black
-        shareButton.setImage(UIImage(named: "send2"), for: .normal)
-        shareButton.tintColor = .black
-        stackView.axis = .horizontal
-        stackView.distribution = .fillEqually
+        controlStackView.axis = .horizontal
+        controlStackView.spacing = 16
+        controlStackView.distribution = .fillEqually
+        
         likesLabel.font = .systemFont(ofSize: 13, weight: .medium)
         captionLabel.font = .systemFont(ofSize: 14, weight: .regular)
         postTimeLabel.font = .systemFont(ofSize: 12, weight: .medium)
@@ -94,9 +106,9 @@ final class FeedCell: UICollectionViewCell {
     
     func layout() {
         addSubview(profileImageView)
-        addSubview(usernameButton)
+        addSubview(infoStackView)
         addSubview(postImageView)
-        addSubview(stackView)
+        addSubview(controlStackView)
         addSubview(likesLabel)
         addSubview(captionLabel)
         addSubview(postTimeLabel)
@@ -104,11 +116,16 @@ final class FeedCell: UICollectionViewCell {
         profileImageView.anchor(top: topAnchor, left: leftAnchor, paddingTop: 12, paddingLeft: 12)
         profileImageView.setDimensions(height: 40, width: 40)
         profileImageView.layer.cornerRadius = 40 / 2
-        usernameButton.centerY(inView: profileImageView, leftAnchor: profileImageView.rightAnchor, paddingLeft: 8)
+        
+        infoStackView.anchor(left: profileImageView.rightAnchor, paddingLeft: 8)
+        infoStackView.centerY(inView: profileImageView)
+        usernameButton.setHeight(16)
+        locationButton.setHeight(16)
+        
         postImageView.anchor(top: profileImageView.bottomAnchor, left: leftAnchor, right: rightAnchor, paddingTop: 8)
         postImageView.heightAnchor.constraint(equalTo: widthAnchor, multiplier: 1).isActive = true
-        stackView.anchor(top: postImageView.bottomAnchor, width: 120, height: 50)
-        likesLabel.anchor(top: stackView.bottomAnchor, left: leftAnchor, paddingTop: 0, paddingLeft: 8)
+        controlStackView.anchor(top: postImageView.bottomAnchor, left: leftAnchor, paddingLeft: 8, height: 50)
+        likesLabel.anchor(top: controlStackView.bottomAnchor, left: leftAnchor, paddingTop: 0, paddingLeft: 8)
         captionLabel.anchor(top: likesLabel.bottomAnchor, left: leftAnchor, paddingTop: 8, paddingLeft: 8)
         postTimeLabel.anchor(top: captionLabel.bottomAnchor, left: leftAnchor, paddingTop: 8, paddingLeft: 8)
     }

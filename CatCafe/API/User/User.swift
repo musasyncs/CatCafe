@@ -11,20 +11,20 @@ import Firebase
 struct User {
     let email: String
     let fullname: String
-    let profileImageUrl: String
+    let profileImageUrlString: String
     let username: String
     let uid: String
     
     var isFollowed = false
     var stats: UserStats!
     var isCurrentUser: Bool {
-        return Auth.auth().currentUser?.uid == uid
+        return LocalStorage.shared.getUid() == uid
     }
     
     init(dic: [String: Any]) {
         self.email = dic["email"] as? String ?? ""
         self.fullname = dic["fullname"] as? String ?? ""
-        self.profileImageUrl = dic["profileImageUrl"] as? String ?? ""
+        self.profileImageUrlString = dic["profileImageUrlString"] as? String ?? ""
         self.username = dic["username"] as? String ?? ""
         self.uid = dic["uid"] as? String ?? ""
         
