@@ -65,7 +65,7 @@ class PreviewPhotoContainerView: UIView {
         
         library.performChanges({
             PHAssetChangeRequest.creationRequestForAsset(from: previewImage)
-        }, completionHandler: { success, error in
+        }, completionHandler: { _, error in
             if let error = error {
                 print("Failed to save image to photo library:", error)
                 return
@@ -95,7 +95,7 @@ class PreviewPhotoContainerView: UIView {
                                animations: {
                     savedLabel.layer.transform = CATransform3DMakeScale(1, 1, 1)
                     
-                }, completion: { completed in
+                }, completion: { _ in
                     print("Completed animation")
 
                     UIView.animate(withDuration: 0.5,

@@ -213,7 +213,9 @@ extension PostSelectController: ControlSectionHeaderDelegate {
     }
     
     func didTapCamera(_ header: ControlSectionHeader) {
-        present(PostCameraController(), animated: true)
+        let controller = PostCameraController()
+        controller.modalPresentationStyle = .fullScreen
+        present(controller, animated: false)
     }
 
 }
