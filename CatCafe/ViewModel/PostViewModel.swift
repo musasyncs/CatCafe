@@ -15,6 +15,10 @@ struct PostViewModel {
     var ownerImageUrl: URL?
     var ownerUsername: String?
     
+    var locationText: String? {
+        return post.cafeName
+    }
+    
     var mediaUrl: URL? {
         return URL(string: post.mediaUrlString)
     }

@@ -41,7 +41,7 @@ struct ProfileHeaderViewModel {
         } else if user.isFollowed {
             return .white
         } else {
-            return .systemBlue
+            return .systemBrown
         }
     }
     

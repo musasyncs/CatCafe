@@ -69,8 +69,8 @@ class ProfileController: UICollectionViewController {
     
     func setupBarButtonItem() {
         navigationItem.rightBarButtonItem = UIBarButtonItem(
-            image: UIImage(systemName: "arrowshape.turn.up.left.fill")?
-                .withTintColor(.black)
+            image: UIImage(systemName: "arrow.uturn.up")?
+                .withTintColor(.systemBrown)
                 .withRenderingMode(.alwaysOriginal),
             style: .plain,
             target: self,

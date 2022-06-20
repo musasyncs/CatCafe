@@ -58,7 +58,7 @@ struct NotificationViewModel {
     }
     
     var followButtonBackgroundColor: UIColor {
-        return notification.userIsFollowed ? .white : .systemBlue
+        return notification.userIsFollowed ? .white : .systemBrown
     }
     
     var followButtonTextColor: UIColor {

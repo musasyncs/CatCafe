@@ -12,14 +12,14 @@ final class CustomTextField: UITextField {
     init(placeholder: String) {
         super.init(frame: .zero)
         borderStyle = .none
-        textColor = .white
-        keyboardAppearance = .dark
+        textColor = .black
+        keyboardAppearance = .light
         keyboardType = .emailAddress
-        backgroundColor = UIColor(white: 1, alpha: 0.1)
+        backgroundColor = UIColor.systemGray6
         
         attributedPlaceholder = NSAttributedString(
             string: placeholder,
-            attributes: [.foregroundColor: UIColor(white: 1, alpha: 0.7)]
+            attributes: [.foregroundColor: UIColor.lightGray]
         )
         
         let spacer = UIView()

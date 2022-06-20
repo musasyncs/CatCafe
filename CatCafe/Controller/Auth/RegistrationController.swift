@@ -32,61 +32,11 @@ class RegistrationController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
-        setupUI()
-        configureNotificationObservers()
+        style()
         layout()
+        configureNotificationObservers()
         
         updateForm()
-    }
-    
-    func setup() {
-        signUpButton.addTarget(self, action: #selector(handleSignUp), for: .touchUpInside)
-        plusPhotoButton.addTarget(self, action: #selector(handleProfilePhotoSelect), for: .touchUpInside)
-        alreadyHaveAccountButton.addTarget(self, action: #selector(handleShowLogin), for: .touchUpInside)
-    }
-    
-    func setupUI() {
-        configureGradientLayer()
-        plusPhotoButton.setImage(UIImage(named: "plus_photo"), for: .normal)
-        plusPhotoButton.tintColor = .white
-        stackView.axis = .vertical
-        stackView.spacing = 20
-        emailTextField.keyboardType = .emailAddress
-        passwordTextField.isSecureTextEntry = true
-        signUpButton.setTitle("Sign Up", for: .normal)
-        signUpButton.layer.cornerRadius = 5
-        signUpButton.titleLabel?.font = .notoMedium(size: 20)
-        signUpButton.backgroundColor = .systemPurple.withAlphaComponent(0.5)
-        alreadyHaveAccountButton.attributedTitle(firstPart: "Already have an account?  ", secondPart: "Log In")
-    }
-    
-    func layout() {
-        view.addSubview(plusPhotoButton)
-        view.addSubview(stackView)
-        view.addSubview(alreadyHaveAccountButton)
-        plusPhotoButton.centerX(inView: view)
-        plusPhotoButton.setDimensions(height: 140, width: 140)
-        plusPhotoButton.anchor(top: view.safeAreaLayoutGuide.topAnchor, paddingTop: 32)
-        stackView.anchor(
-            top: plusPhotoButton.bottomAnchor,
-            left: view.leftAnchor,
-            right: view.rightAnchor,
-            paddingTop: 32, paddingLeft: 32, paddingRight: 32
-        )
-        emailTextField.setHeight(50)
-        passwordTextField.setHeight(50)
-        fullnameTextField.setHeight(50)
-        usernameTextField.setHeight(50)
-        signUpButton.setHeight(50)
-        alreadyHaveAccountButton.centerX(inView: view)
-        alreadyHaveAccountButton.anchor(bottom: view.safeAreaLayoutGuide.bottomAnchor)
-    }
-    
-    func configureNotificationObservers() {
-        emailTextField.addTarget(self, action: #selector(textDidChange), for: .editingChanged)
-        passwordTextField.addTarget(self, action: #selector(textDidChange), for: .editingChanged)
-        fullnameTextField.addTarget(self, action: #selector(textDidChange), for: .editingChanged)
-        usernameTextField.addTarget(self, action: #selector(textDidChange), for: .editingChanged)
     }
     
     // MARK: - Action
@@ -159,6 +109,58 @@ class RegistrationController: UIViewController {
         present(picker, animated: true)
     }
     
+}
+
+extension RegistrationController {
+    
+    func setup() {
+        signUpButton.addTarget(self, action: #selector(handleSignUp), for: .touchUpInside)
+        plusPhotoButton.addTarget(self, action: #selector(handleProfilePhotoSelect), for: .touchUpInside)
+        alreadyHaveAccountButton.addTarget(self, action: #selector(handleShowLogin), for: .touchUpInside)
+    }
+    
+    func style() {
+        plusPhotoButton.setImage(UIImage(named: "plus_photo"), for: .normal)
+        plusPhotoButton.tintColor = .lightGray
+        stackView.axis = .vertical
+        stackView.spacing = 20
+        emailTextField.keyboardType = .emailAddress
+        passwordTextField.isSecureTextEntry = true
+        signUpButton.setTitle("Sign Up", for: .normal)
+        signUpButton.layer.cornerRadius = 5
+        signUpButton.titleLabel?.font = .notoMedium(size: 15)
+        signUpButton.backgroundColor = .systemPurple.withAlphaComponent(0.5)
+        alreadyHaveAccountButton.attributedTitle(firstPart: "Already have an account?  ", secondPart: "Log In")
+    }
+    
+    func layout() {
+        view.addSubview(plusPhotoButton)
+        view.addSubview(stackView)
+        view.addSubview(alreadyHaveAccountButton)
+        plusPhotoButton.centerX(inView: view)
+        plusPhotoButton.setDimensions(height: 140, width: 140)
+        plusPhotoButton.anchor(top: view.safeAreaLayoutGuide.topAnchor, paddingTop: 32)
+        stackView.anchor(
+            top: plusPhotoButton.bottomAnchor,
+            left: view.leftAnchor,
+            right: view.rightAnchor,
+            paddingTop: 48, paddingLeft: 48, paddingRight: 48
+        )
+        emailTextField.setHeight(36)
+        passwordTextField.setHeight(36)
+        fullnameTextField.setHeight(36)
+        usernameTextField.setHeight(36)
+        signUpButton.setHeight(36)
+        alreadyHaveAccountButton.centerX(inView: view)
+        alreadyHaveAccountButton.anchor(bottom: view.safeAreaLayoutGuide.bottomAnchor)
+    }
+    
+    func configureNotificationObservers() {
+        emailTextField.addTarget(self, action: #selector(textDidChange), for: .editingChanged)
+        passwordTextField.addTarget(self, action: #selector(textDidChange), for: .editingChanged)
+        fullnameTextField.addTarget(self, action: #selector(textDidChange), for: .editingChanged)
+        usernameTextField.addTarget(self, action: #selector(textDidChange), for: .editingChanged)
+    }
 }
 
 // MARK: - FormViewModel
