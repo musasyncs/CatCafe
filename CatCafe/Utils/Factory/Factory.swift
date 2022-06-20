@@ -123,3 +123,30 @@ func makeTabButton(imageName: String, unselectedImageName: String) -> UIButton {
     button.imageView?.contentMode = .scaleAspectFit
     return button
 }
+
+class BorderButton: UIButton {
+    
+    init(text: String) {
+        super.init(frame: .zero)
+        backgroundColor = UIColor.systemBrown
+        titleLabel?.adjustsFontSizeToFitWidth = true
+        titleLabel?.minimumScaleFactor = 0.6
+        layer.cornerRadius = 6
+        
+        // iOS15淘汰
+        contentEdgeInsets = UIEdgeInsets(top: 6, left: 6, bottom: 6, right: 6)
+        
+        let attributedText = NSMutableAttributedString(
+            string: text,
+            attributes: [
+                .font: UIFont.notoMedium(size: 12),
+                .foregroundColor: UIColor.white,
+                .kern: 1
+            ])
+        setAttributedTitle(attributedText, for: .normal)
+    }
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+}
