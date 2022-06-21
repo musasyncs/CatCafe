@@ -13,9 +13,21 @@ class MeetController: UIViewController {
                                                      style: .plain,
                                                      target: self,
                                                      action: #selector(arrangeMeetTapped))
-    lazy var allButton = BorderButton(text: "全部")
-    lazy var myArrangedButton = BorderButton(text: "我發起的")
-    lazy var myAttendButton = BorderButton(text: "我報名的")
+    lazy var allButton = makeTitleButton(withText: "全部",
+                                         font: .notoRegular(size: 11),
+                                         insets: UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5),
+                                         borderWidth: 1,
+                                         borderColor: .systemBrown)
+    lazy var myArrangedButton = makeTitleButton(withText: "我發起的",
+                                                font: .notoRegular(size: 11),
+                                                insets: UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5),
+                                                borderWidth: 1,
+                                                borderColor: .systemBrown)
+    lazy var myAttendButton = makeTitleButton(withText: "我報名的",
+                                              font: .notoRegular(size: 11),
+                                              insets: UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5),
+                                              borderWidth: 1,
+                                              borderColor: .systemBrown)
     lazy var stackView = UIStackView(arrangedSubviews: [allButton, myArrangedButton, myAttendButton])
     
     private lazy var collectionView: UICollectionView = {
@@ -65,7 +77,7 @@ class MeetController: UIViewController {
     // MARK: - Action
     
     @objc func arrangeMeetTapped() {
-        let controller = UploadMeetController()
+        let controller = UploadMeetPicController()
         let navController = UINavigationController(rootViewController: controller)
         navController.modalPresentationStyle = .fullScreen
         present(navController, animated: true)

@@ -8,7 +8,7 @@
 import UIKit
 import Photos
 
-class UploadMeetController: UIViewController {
+class UploadMeetPicController: UIViewController {
         
     var selectedImage: UIImage? {
         didSet {
@@ -24,6 +24,9 @@ class UploadMeetController: UIViewController {
         let view = MeetPicView()
         view.backgroundColor = .white
         view.clipsToBounds = true
+        view.layer.cornerRadius = 16
+        view.layer.borderWidth = 2
+        view.layer.borderColor = UIColor.black.cgColor
         
         let recognizer = UITapGestureRecognizer(target: self, action: #selector(selectMeetImage))
         view.isUserInteractionEnabled = true
@@ -35,13 +38,11 @@ class UploadMeetController: UIViewController {
         super.viewDidLoad()
         
         // style
+        view.backgroundColor = .white
         titleLabel.text = "設定封面"
         titleLabel.font = .notoMedium(size: 15)
         subtitleLabel.text = "請上傳一張照片作為封面"
         subtitleLabel.font = .notoRegular(size: 13)
-        meetPicView.layer.cornerRadius = 16
-        meetPicView.layer.borderWidth = 2
-        meetPicView.layer.borderColor = UIColor.black.cgColor
         setupNavigationButtons()
         
         // layout
@@ -132,7 +133,7 @@ class UploadMeetController: UIViewController {
 }
 
 // MARK: - UIImagePickerControllerDelegate, UINavigationControllerDelegate
-extension UploadMeetController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+extension UploadMeetPicController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         picker.dismiss(animated: true, completion: nil)
@@ -140,7 +141,7 @@ extension UploadMeetController: UIImagePickerControllerDelegate, UINavigationCon
     
     func imagePickerController(
         _ picker: UIImagePickerController,
-        didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]
+        didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]
     ) {
         let selectedImage = info[UIImagePickerController.InfoKey.editedImage] as? UIImage
         self.selectedImage = selectedImage

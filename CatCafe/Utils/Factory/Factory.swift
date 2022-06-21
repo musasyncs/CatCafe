@@ -7,6 +7,44 @@
 
 import UIKit
 
+// MARK: - Custom Text Fields
+
+class MeetArrangeTextField: UITextField {
+    
+    override func textRect(forBounds bounds: CGRect) -> CGRect {
+        return bounds.inset(by: UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8))
+    }
+    
+    override func editingRect(forBounds bounds: CGRect) -> CGRect {
+        return bounds.inset(by: UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8))
+    }
+    
+    init(placeholder: String) {
+        super.init(frame: .zero)
+        
+        textColor = .black
+        font = .notoRegular(size: 11)
+        
+        attributedPlaceholder = NSAttributedString(
+            string: placeholder,
+            attributes: [
+                NSAttributedString.Key.foregroundColor: UIColor.systemBrown,
+                NSAttributedString.Key.font: UIFont.notoRegular(size: 11)
+            ]
+        )
+        
+        // Add Under Line
+        let underline = UIView()
+        addSubview(underline)
+        underline.anchor(left: leftAnchor, bottom: bottomAnchor, right: rightAnchor, height: 0.5)
+        underline.backgroundColor = .black
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
 // MARK: - UITextView
 
 class InputTextView: UITextView {
@@ -29,7 +67,7 @@ class InputTextView: UITextView {
     }
     
     let placeholderLabel: UILabel = {
-       let label = UILabel()
+        let label = UILabel()
         label.font = UIFont.notoMedium(size: 12)
         label.textColor = .lightGray
         return label
@@ -39,7 +77,7 @@ class InputTextView: UITextView {
         super.init(frame: frame, textContainer: textContainer)
         
         addSubview(placeholderLabel)
-    
+        
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(handleTextDidChange),
@@ -81,24 +119,14 @@ func makeStackView(axis: NSLayoutConstraint.Axis) -> UIStackView {
 
 // MARK: - Buttons
 
-func makeAttriTitleButton(text: String, font: UIFont, fgColor: UIColor, kern: Double) -> UIButton {
-    let button = UIButton(type: .custom)
-    let attributedText = NSMutableAttributedString(string: text, attributes: [
-        .font: font,
-        .foregroundColor: fgColor,
-        .kern: kern
-    ])
-    button.setAttributedTitle(attributedText, for: .normal)
-    return button
-}
-
 func makeIconButton(imagename: String,
                     imageColor: UIColor,
                     imageWidth: Int,
                     imageHeight: Int,
-                    borderWith: CGFloat? = nil,
-                    borderColor: UIColor? = nil,
-                    backgroundColor: UIColor? = nil) -> UIButton {
+                    backgroundColor: UIColor = .white,
+                    cornerRadius: CGFloat = 0,
+                    borderWith: CGFloat = 0,
+                    borderColor: UIColor = .clear) -> UIButton {
     let button = UIButton()
     button.translatesAutoresizingMaskIntoConstraints = false
     
@@ -108,11 +136,39 @@ func makeIconButton(imagename: String,
     button.setImage(image, for: .normal)
     
     button.backgroundColor = backgroundColor
+    button.layer.cornerRadius = cornerRadius
+    button.layer.borderWidth = borderWith
+    button.layer.borderColor = borderColor.cgColor
+    return button
+}
+
+func makeTitleButton(withText text: String,
+                     font: UIFont,
+                     kern: Double = 1,
+                     foregroundColor: UIColor = .black,
+                     backgroundColor: UIColor = .white,
+                     insets: UIEdgeInsets = .zero,
+                     cornerRadius: CGFloat = 0,
+                     borderWidth: CGFloat = 0,
+                     borderColor: UIColor = .clear) -> UIButton {
+    let button = UIButton()
+    button.translatesAutoresizingMaskIntoConstraints = false
     
-    if let borderWith = borderWith {
-        button.layer.borderWidth = borderWith
-    }
-    button.layer.borderColor = borderColor?.cgColor
+    let attributedText = NSMutableAttributedString(
+        string: text,
+        attributes: [
+            .font: font,
+            .foregroundColor: foregroundColor,
+            .kern: kern
+        ])
+    button.setAttributedTitle(attributedText, for: .normal)
+    button.titleLabel?.adjustsFontSizeToFitWidth = true
+    
+    button.contentEdgeInsets = insets
+    button.layer.cornerRadius = cornerRadius
+    button.layer.borderWidth = borderWidth
+    button.layer.borderColor = borderColor.cgColor
+    button.backgroundColor = backgroundColor
     return button
 }
 
@@ -122,31 +178,4 @@ func makeTabButton(imageName: String, unselectedImageName: String) -> UIButton {
     button.setImage(UIImage(named: unselectedImageName), for: .normal)
     button.imageView?.contentMode = .scaleAspectFit
     return button
-}
-
-class BorderButton: UIButton {
-    
-    init(text: String) {
-        super.init(frame: .zero)
-        backgroundColor = UIColor.systemBrown
-        titleLabel?.adjustsFontSizeToFitWidth = true
-        titleLabel?.minimumScaleFactor = 0.6
-        layer.cornerRadius = 6
-        
-        // iOS15淘汰
-        contentEdgeInsets = UIEdgeInsets(top: 6, left: 6, bottom: 6, right: 6)
-        
-        let attributedText = NSMutableAttributedString(
-            string: text,
-            attributes: [
-                .font: UIFont.notoMedium(size: 12),
-                .foregroundColor: UIColor.white,
-                .kern: 1
-            ])
-        setAttributedTitle(attributedText, for: .normal)
-    }
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
 }

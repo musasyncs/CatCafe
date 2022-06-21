@@ -95,12 +95,8 @@ class PostEditController: UIViewController {
     
     let tableView = UITableView()
     
-    let addPlaceButton = makeAttriTitleButton(
-        text: "選擇咖啡廳",
-        font: .systemFont(ofSize: 13, weight: .regular),
-        fgColor: .black,
-        kern: 1
-    )
+    let addPlaceButton = makeTitleButton(withText: "選擇咖啡廳",
+                                         font: .systemFont(ofSize: 13, weight: .regular))
     
     let iconButton = makeIconButton(imagename: "location",
                                     imageColor: .systemBrown,
