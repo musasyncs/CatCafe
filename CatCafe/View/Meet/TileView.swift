@@ -42,31 +42,10 @@ class TileView: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    private var shadowLayer: CAShapeLayer!
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        
-        // Shadow
-        shadowLayer = CAShapeLayer()
-        
-        shadowLayer.path = UIBezierPath(rect: bounds).cgPath
-        shadowLayer.fillColor = UIColor.white.cgColor
-        
-        shadowLayer.shadowColor = UIColor.black.cgColor
-        shadowLayer.shadowPath = shadowLayer.path
-        shadowLayer.shadowOffset = CGSize(width: 0.0, height: 1.0)
-        shadowLayer.shadowOpacity = 0.3
-        shadowLayer.shadowRadius = 2
-        
-        layer.insertSublayer(shadowLayer, at: 0)
-    }
-    
+
 }
 
 extension TileView: UITextFieldDelegate {
-    
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
        textField.resignFirstResponder()
        return true

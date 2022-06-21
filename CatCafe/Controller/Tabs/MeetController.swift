@@ -9,23 +9,24 @@ import UIKit
 
 class MeetController: UIViewController {
     
-    lazy var arrangeMeetButtonItem = UIBarButtonItem(title: "舉辦聚會",
-                                                     style: .plain,
-                                                     target: self,
-                                                     action: #selector(arrangeMeetTapped))
+    lazy var arrangeMeetButon = makeTitleButton(withText: "舉辦聚會", font: .notoRegular(size: 12))
+    lazy var arrangeMeetButtonItem = UIBarButtonItem(customView: arrangeMeetButon)
     lazy var allButton = makeTitleButton(withText: "全部",
                                          font: .notoRegular(size: 11),
                                          insets: UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5),
+                                         cornerRadius: 8,
                                          borderWidth: 1,
                                          borderColor: .systemBrown)
     lazy var myArrangedButton = makeTitleButton(withText: "我發起的",
                                                 font: .notoRegular(size: 11),
                                                 insets: UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5),
+                                                cornerRadius: 8,
                                                 borderWidth: 1,
                                                 borderColor: .systemBrown)
     lazy var myAttendButton = makeTitleButton(withText: "我報名的",
                                               font: .notoRegular(size: 11),
                                               insets: UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5),
+                                              cornerRadius: 8,
                                               borderWidth: 1,
                                               borderColor: .systemBrown)
     lazy var stackView = UIStackView(arrangedSubviews: [allButton, myArrangedButton, myAttendButton])
@@ -71,6 +72,7 @@ class MeetController: UIViewController {
     // MARK: - Helper
     
     func setupArrangeMeetButton() {
+        arrangeMeetButon.addTarget(self, action: #selector(arrangeMeetTapped), for: .touchUpInside)
         navigationItem.leftBarButtonItem = arrangeMeetButtonItem
     }
     
@@ -88,7 +90,7 @@ class MeetController: UIViewController {
 extension MeetController: UICollectionViewDataSource, UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        10
+        return 10
     }
     
     func collectionView(_ collectionView: UICollectionView,
@@ -164,11 +166,22 @@ final class MeetCell: UICollectionViewCell {
     }()
     let hostnameLabel = UILabel()
     let infoLabel = UILabel()
-    
+        
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
-        // setup
+        setup()
+        style()
+        layout()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError()
+    }
+    
+}
+
+extension MeetCell {
+    fileprivate func setup() {
         titleLabel.text = "春Land"
         timeTitleLabel.text = "時間"
         timeLabel.text = "06/25 19:00"
@@ -176,7 +189,9 @@ final class MeetCell: UICollectionViewCell {
         placeLabel.text = "Legacy Taipei"
         hostnameLabel.text = "阿布"
         infoLabel.text = "5人報名 | 1則留言"
-        
+    }
+    
+    fileprivate func style() {
         // style
         backgroundColor = .white
         layer.cornerRadius = 12
@@ -204,7 +219,9 @@ final class MeetCell: UICollectionViewCell {
         hostnameLabel.font = .notoRegular(size: 11)
         infoLabel.font = .notoRegular(size: 12)
         infoLabel.textColor = .systemGray
-        
+    }
+    
+    fileprivate func layout() {
         // layout
         [meetImageView,
          titleLabel,
@@ -237,9 +254,5 @@ final class MeetCell: UICollectionViewCell {
                               leftAnchor: hostProfileImageView.rightAnchor,
                               paddingLeft: 8)
         infoLabel.anchor(top: hostnameLabel.bottomAnchor, right: rightAnchor, paddingRight: 16)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError()
     }
 }

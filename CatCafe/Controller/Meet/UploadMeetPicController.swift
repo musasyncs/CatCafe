@@ -25,7 +25,7 @@ class UploadMeetPicController: UIViewController {
         view.backgroundColor = .white
         view.clipsToBounds = true
         view.layer.cornerRadius = 16
-        view.layer.borderWidth = 2
+        view.layer.borderWidth = 1
         view.layer.borderColor = UIColor.black.cgColor
         
         let recognizer = UITapGestureRecognizer(target: self, action: #selector(selectMeetImage))
@@ -85,7 +85,7 @@ class UploadMeetPicController: UIViewController {
         let imagePicker = UIImagePickerController()
         imagePicker.allowsEditing = true
         imagePicker.sourceType = mode
-        imagePicker.delegate = self // Set the tab bar controller as the delegate
+        imagePicker.delegate = self
         present(imagePicker, animated: true, completion: nil)
     }
     
@@ -96,8 +96,18 @@ class UploadMeetPicController: UIViewController {
     }
 
     @objc private func handleNext() {
+        guard let selectedImage = selectedImage else {
+            let alert = UIAlertController(title: "",
+                                          message: "請上傳聚會封面",
+                                          preferredStyle: .alert)
+            let okAction = UIAlertAction(title: "確定", style: .default) { _ in }
+            okAction.setValue(UIColor.systemBrown, forKey: "titleTextColor")
+            alert.addAction(okAction)
+            present(alert, animated: true)
+            return
+        }
         let controller = ArrangeMeetController()
-        controller.selectedImage = self.selectedImage
+        controller.selectedImage = selectedImage
         let navController = UINavigationController(rootViewController: controller)
         navController.modalPresentationStyle = .fullScreen
         present(navController, animated: true)
@@ -110,22 +120,25 @@ class UploadMeetPicController: UIViewController {
         
         // Only add the camera button if it's available
         if UIImagePickerController.isSourceTypeAvailable(.camera) {
-            let cameraButton = UIAlertAction(title: "Camera", style: .default) { _ in
+            let cameraAction = UIAlertAction(title: "Camera", style: .default) { _ in
                 self.showImagePicker(mode: .camera)
             }
-            actionSheet.addAction(cameraButton)
+            cameraAction.setValue(UIColor.systemBrown, forKey: "titleTextColor")
+            actionSheet.addAction(cameraAction)
         }
         
         // Only add the library button if it's available
         if UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
-            let libraryButton = UIAlertAction(title: "Photo Library", style: .default) { _ in
+            let libraryAction = UIAlertAction(title: "Photo Library", style: .default) { _ in
                 self.showImagePicker(mode: .photoLibrary)
             }
-            actionSheet.addAction(libraryButton)
+            libraryAction.setValue(UIColor.systemBrown, forKey: "titleTextColor")
+            actionSheet.addAction(libraryAction)
         }
         
-        let cancelButton = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
-        actionSheet.addAction(cancelButton)
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        cancelAction.setValue(UIColor.systemBrown, forKey: "titleTextColor")
+        actionSheet.addAction(cancelAction)
         
         present(actionSheet, animated: true, completion: nil)
     }

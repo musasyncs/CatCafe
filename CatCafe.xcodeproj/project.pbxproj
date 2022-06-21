@@ -63,6 +63,7 @@
 		BADBFF71286164B700146D6F /* ArrangeMeetController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BADBFF70286164B700146D6F /* ArrangeMeetController.swift */; };
 		BADBFF742861A84A00146D6F /* TileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BADBFF732861A84A00146D6F /* TileView.swift */; };
 		BADBFF762861A86200146D6F /* MeetTimeTileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BADBFF752861A86200146D6F /* MeetTimeTileView.swift */; };
+		BADBFF782861F06400146D6F /* ImageHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BADBFF772861F06400146D6F /* ImageHeaderView.swift */; };
 		BADF1F60285B3607004CF329 /* PostEditController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BADF1F5F285B3607004CF329 /* PostEditController.swift */; };
 		BADF1F62285C4E2E004CF329 /* CafeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BADF1F61285C4E2E004CF329 /* CafeService.swift */; };
 		BADF1F65285C4F78004CF329 /* Cafe.swift in Sources */ = {isa = PBXBuildFile; fileRef = BADF1F64285C4F78004CF329 /* Cafe.swift */; };
@@ -148,6 +149,7 @@
 		BADBFF70286164B700146D6F /* ArrangeMeetController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrangeMeetController.swift; sourceTree = "<group>"; };
 		BADBFF732861A84A00146D6F /* TileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TileView.swift; sourceTree = "<group>"; };
 		BADBFF752861A86200146D6F /* MeetTimeTileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetTimeTileView.swift; sourceTree = "<group>"; };
+		BADBFF772861F06400146D6F /* ImageHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageHeaderView.swift; sourceTree = "<group>"; };
 		BADF1F5F285B3607004CF329 /* PostEditController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostEditController.swift; sourceTree = "<group>"; };
 		BADF1F61285C4E2E004CF329 /* CafeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CafeService.swift; sourceTree = "<group>"; };
 		BADF1F64285C4F78004CF329 /* Cafe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cafe.swift; sourceTree = "<group>"; };
@@ -482,8 +484,9 @@
 		BADBFF722861A83200146D6F /* Meet */ = {
 			isa = PBXGroup;
 			children = (
-				BADBFF732861A84A00146D6F /* TileView.swift */,
+				BADBFF772861F06400146D6F /* ImageHeaderView.swift */,
 				BADBFF752861A86200146D6F /* MeetTimeTileView.swift */,
+				BADBFF732861A84A00146D6F /* TileView.swift */,
 			);
 			path = Meet;
 			sourceTree = "<group>";
@@ -718,6 +721,7 @@
 				BA44779128597ED00045DDB8 /* ProfileHeader.swift in Sources */,
 				BA7BB6F42859FAE500465DEC /* ProfileHeaderViewModel.swift in Sources */,
 				BA44778C285961A50045DDB8 /* FeedCell.swift in Sources */,
+				BADBFF782861F06400146D6F /* ImageHeaderView.swift in Sources */,
 				BA7BB71B285A083D00465DEC /* JGProgressHUDWrapper.swift in Sources */,
 				BA7BB70F285A083D00465DEC /* UIColor+Extension.swift in Sources */,
 				BA7BB713285A083D00465DEC /* UIImage+Extension.swift in Sources */,

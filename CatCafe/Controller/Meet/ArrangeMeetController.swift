@@ -19,8 +19,10 @@ class ArrangeMeetController: UIViewController {
     var meetTitleText: String? {
         titleTileView.textField.text
     }
-    var meetPlaceText: String? {
-        placeTileView.textField.text
+    var selectedCafe: Cafe? {
+        didSet {
+            placeTileView.textField.text = selectedCafe?.title
+        }
     }
     var meetDescription: String? {
         descriptionTileView.textField.text
@@ -36,7 +38,7 @@ class ArrangeMeetController: UIViewController {
     )
     let placeTileView = TileView(
         title: "聚會地點",
-        placeholder: "碰面的方式，或者地址"
+        placeholder: "選擇咖啡廳"
     )
     let descriptionTileView = TileView(
         title: "聚會描述",
@@ -53,10 +55,18 @@ class ArrangeMeetController: UIViewController {
     fileprivate func setup() {
         meetTimeTileView.delegate = self
         [
-            imageHeaderView, titleTileView, placeTileView, meetTimeTileView, descriptionTileView
+            imageHeaderView,
+            titleTileView,
+            placeTileView,
+            meetTimeTileView,
+            descriptionTileView
         ].forEach {
             stackView.addArrangedSubview($0)
         }
+        
+        placeTileView.textField.inputView = UIView()
+        placeTileView.textField.tintColor = .white
+        placeTileView.textField.addTarget(self, action: #selector(showSelectCafePage), for: .editingDidBegin)
     }
     
     fileprivate func style() {
@@ -75,7 +85,7 @@ class ArrangeMeetController: UIViewController {
                           left: view.leftAnchor,
                           bottom: view.bottomAnchor,
                           right: view.rightAnchor,
-                          paddingTop: 8, paddingLeft: 8, paddingRight: 8)
+                          paddingTop: 8, paddingLeft: 8, paddingBottom: 16, paddingRight: 8)
         
         scrollView.addSubview(stackView)
         stackView.fillSuperView()
@@ -107,20 +117,6 @@ class ArrangeMeetController: UIViewController {
         )
     }
     
-    func checkIfMeetCanArranged() {
-        guard let selectedImage = selectedImage,
-              let chosenDate = chosenDate,
-              let meetTitleText = meetTitleText, !meetTitleText.isEmpty,
-              let meetPlaceText = meetPlaceText, !meetPlaceText.isEmpty,
-              let meetDescription = meetDescription, !meetDescription.isEmpty
-        else {
-            print("DEBUG: upload\(selectedImage) \(chosenDate) \(meetTitleText) \(meetPlaceText) \(meetDescription)")
-            print("DEBUG: Something is nil")
-            return
-        }
-        print("DEBUG: upload\(selectedImage) \(chosenDate) \(meetTitleText) \(meetPlaceText) \(meetDescription)")
-    }
-    
     // MARK: - Action
     
     @objc private func handleCancel() {
@@ -128,58 +124,43 @@ class ArrangeMeetController: UIViewController {
     }
     
     @objc private func handleUpload() {
-        checkIfMeetCanArranged()
+        guard let selectedImage = selectedImage,
+              let chosenDate = chosenDate,
+              let selectedCafe = selectedCafe,
+              let meetTitleText = meetTitleText, !meetTitleText.isEmpty,
+              let meetDescription = meetDescription, !meetDescription.isEmpty
+        else {
+            let alert = UIAlertController(title: "Validate Failed",
+                                          message: "欄位不可留白",
+                                          preferredStyle: .alert)
+            let okAction = UIAlertAction(title: "確定", style: .default) { _ in }
+            okAction.setValue(UIColor.systemBrown, forKey: "titleTextColor")
+            alert.addAction(okAction)
+            present(alert, animated: true)
+            return
+        }
+        
+        print("DEBUG: upload\(selectedImage) \(chosenDate) \(meetTitleText) \(selectedCafe.title) \(meetDescription)")
     }
     
+    @objc func showSelectCafePage() {
+        let controller = SelectCafeController()
+        controller.delegate = self
+        let navController = UINavigationController(rootViewController: controller)
+        navController.modalPresentationStyle = .fullScreen
+        present(navController, animated: true)
+    }
+    
+}
+
+extension ArrangeMeetController: SelectCafeControllerDelegate {
+    func didSelectCafe(_ cafe: Cafe) {
+        self.selectedCafe = cafe
+    }
 }
 
 extension ArrangeMeetController: MeetTimeTileViewDelegate {
     func didChooseDate(_ selector: MeetTimeTileView, date: Date) {
         self.chosenDate = date
-    }
-}
-
-class ImageHeaderView: UIView {
-    
-    lazy var picView: PicView = {
-        let view = PicView()
-        view.backgroundColor = .white
-        view.clipsToBounds = true
-        view.layer.cornerRadius = 16
-        view.layer.borderWidth = 2
-        view.layer.borderColor = UIColor.black.cgColor
-        return view
-    }()
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        addSubview(picView)
-        picView.centerX(inView: self)
-        picView.centerY(inView: self)
-        picView.setDimensions(height: 104, width: 104)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-}
-
-final class PicView: UIView {
-    
-    lazy var placedImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFill
-        return imageView
-    }()
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        addSubview(placedImageView)
-        placedImageView.fillSuperView()
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
 }

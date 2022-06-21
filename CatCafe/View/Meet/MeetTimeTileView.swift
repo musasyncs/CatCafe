@@ -172,12 +172,10 @@ final class TimeSelectorView: UIView {
         
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd HH:mm"
-        let oneDaysAfter = Date().addingTimeInterval(60 * 60 * 24 * 1)
-        let ninetyDaysAfter = Date().addingTimeInterval(60 * 60 * 24 * 90)
-        datePicker.minimumDate = oneDaysAfter
-        datePicker.maximumDate = ninetyDaysAfter
+        datePicker.minimumDate = Date().addingTimeInterval(60 * 60 * 5)
+        datePicker.maximumDate = Date().addingTimeInterval(60 * 60 * 24 * 90)
         datePicker.locale = Locale(identifier: "zh_TW")
-        datePicker.timeZone = TimeZone(secondsFromGMT: 0)
+        datePicker.timeZone = TimeZone(secondsFromGMT: TimeZone.current.secondsFromGMT())
         datePicker.datePickerMode = .dateAndTime
         datePicker.minuteInterval = 15
         
