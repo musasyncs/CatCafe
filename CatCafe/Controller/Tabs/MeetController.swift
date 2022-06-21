@@ -65,7 +65,10 @@ class MeetController: UIViewController {
     // MARK: - Action
     
     @objc func arrangeMeetTapped() {
-       print("DEBUG: Arrange meet")
+        let controller = UploadMeetController()
+        let navController = UINavigationController(rootViewController: controller)
+        navController.modalPresentationStyle = .fullScreen
+        present(navController, animated: true)
     }
     
 }
@@ -83,7 +86,7 @@ extension MeetController: UICollectionViewDataSource, UICollectionViewDelegate {
             withReuseIdentifier: MeetCell.identifier,
             for: indexPath ) as? MeetCell
         else { return UICollectionViewCell() }
-         
+        
         return cell
     }
     
@@ -106,19 +109,19 @@ extension MeetController: UICollectionViewDelegateFlowLayout {
         _ collectionView: UICollectionView,
         layout collectionViewLayout: UICollectionViewLayout,
         minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return 16
-    }
+            return 16
+        }
     
 }
 
 final class MeetCell: UICollectionViewCell {
     
-//    var viewModel: ? {
-//        didSet {
-//            guard let viewModel = viewModel else { return }
-//
-//        }
-//    }
+    //    var viewModel: ? {
+    //        didSet {
+    //            guard let viewModel = viewModel else { return }
+    //
+    //        }
+    //    }
     
     private let meetImageView: UIImageView = {
         let imageView = UIImageView()
