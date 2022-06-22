@@ -55,18 +55,17 @@ class MeetController: UIViewController {
         stackView.spacing = 8
         stackView.distribution = .fillProportionally
         
-        view.addSubview(collectionView)
-        collectionView.anchor(top: view.safeAreaLayoutGuide.topAnchor,
-                              left: view.leftAnchor,
-                              bottom: view.bottomAnchor,
-                              right: view.rightAnchor,
-                              paddingTop: 60)
-        
         view.addSubview(stackView)
         stackView.anchor(top: view.safeAreaLayoutGuide.topAnchor,
                          left: view.leftAnchor,
                          paddingTop: 8,
                          paddingLeft: 8)
+        view.addSubview(collectionView)
+        collectionView.anchor(top: stackView.bottomAnchor,
+                              left: view.leftAnchor,
+                              bottom: view.bottomAnchor,
+                              right: view.rightAnchor,
+                              paddingTop: 8)
     }
     
     // MARK: - Helper
@@ -102,6 +101,12 @@ extension MeetController: UICollectionViewDataSource, UICollectionViewDelegate {
         else { return UICollectionViewCell() }
         
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let controller = MeetDetailController(collectionViewLayout: StretchyHeaderLayout())
+        
+        navigationController?.pushViewController(controller, animated: true)
     }
     
 }
