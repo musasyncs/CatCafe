@@ -13,7 +13,10 @@ class TileView: UIView {
     var placeholder: String
     
     let titleLabel = UILabel()
-    lazy var textField = MeetArrangeTextField(placeholder: placeholder)
+    lazy var textField = CustomTextField(placeholder: placeholder,
+                                         textColor: .black,
+                                         fgColor: .systemBrown,
+                                         font: .notoRegular(size: 11))
     
     init(title: String, placeholder: String) {
         self.title = title

@@ -17,7 +17,7 @@ class CommentInputAccessoryView: UIView {
     
     private let commentTextView: InputTextView = {
         let textView = InputTextView()
-        textView.placeholderText = "新增留言....."
+        textView.placeholderText = "新增留言..."
         textView.font = UIFont.systemFont(ofSize: 15)
         textView.isScrollEnabled = false
         textView.placeholderShouldCenter = true
@@ -26,7 +26,7 @@ class CommentInputAccessoryView: UIView {
     
     lazy var postButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Post", for: .normal)
+        button.setTitle("發佈", for: .normal)
         button.setTitleColor(.black, for: .normal)
         button.titleLabel?.font = .boldSystemFont(ofSize: 14)
         button.addTarget(self, action: #selector(handlePostTapped), for: .touchUpInside)

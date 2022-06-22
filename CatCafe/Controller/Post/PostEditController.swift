@@ -216,7 +216,7 @@ class PostEditController: UIViewController {
         horiStack.isHidden = true
     }
     
-    func checkMaxlength(_ textView: UITextView) {
+    private func checkMaxlength(_ textView: UITextView) {
         if textView.text.count > 1000 {
             textView.deleteBackward()
         }

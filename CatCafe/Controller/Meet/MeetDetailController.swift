@@ -115,6 +115,7 @@ extension MeetDetailController {
                 withReuseIdentifier: CommentSectionHeader.identifier,
                 for: indexPath
             ) as? CommentSectionHeader else { return UICollectionReusableView() }
+            header.delegate = self
             return header
         }
     }
@@ -142,7 +143,7 @@ extension MeetDetailController: UICollectionViewDelegateFlowLayout {
         referenceSizeForHeaderInSection section: Int
     ) -> CGSize {
         if section == 0 {
-            return CGSize(width: view.frame.width, height: 340)
+            return CGSize(width: view.frame.width, height: 240)
             
         } else {
             
@@ -165,8 +166,15 @@ extension MeetDetailController: UICollectionViewDelegateFlowLayout {
 
 }
 
+extension MeetDetailController: CommentSectionHeaderDelegate {
+    func didTapAttendButton(_ header: CommentSectionHeader) {
+        let controller = AttendMeetController()
+        controller.modalPresentationStyle = .overFullScreen
+        present(controller, animated: true)
+    }
+}
+
 extension MeetDetailController: CommentInputAccessoryViewDelegate {
-    
     func inputView(_ inputView: CommentInputAccessoryView, wantsToUploadComment comment: String) {
         
     }

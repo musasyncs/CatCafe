@@ -258,6 +258,6 @@ extension MeetCell {
         hostnameLabel.centerY(inView: hostProfileImageView,
                               leftAnchor: hostProfileImageView.rightAnchor,
                               paddingLeft: 8)
-        infoLabel.anchor(top: hostnameLabel.bottomAnchor, right: rightAnchor, paddingRight: 16)
+        infoLabel.anchor(top: hostnameLabel.bottomAnchor, right: rightAnchor, paddingRight: 8)
     }
 }

@@ -28,10 +28,10 @@
 		BA4477992859D0FD0045DDB8 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA4477982859D0FD0045DDB8 /* User.swift */; };
 		BA44779B2859D3950045DDB8 /* UserCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA44779A2859D3950045DDB8 /* UserCellViewModel.swift */; };
 		BA44779F2859DE6C0045DDB8 /* RegistrationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA44779E2859DE6C0045DDB8 /* RegistrationController.swift */; };
-		BA4477A22859DEEF0045DDB8 /* CustomTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA4477A12859DEEF0045DDB8 /* CustomTextField.swift */; };
 		BA4477A42859DF1C0045DDB8 /* RegistrationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA4477A32859DF1C0045DDB8 /* RegistrationViewModel.swift */; };
 		BA4477A82859E0AD0045DDB8 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA4477A72859E0AD0045DDB8 /* AuthService.swift */; };
 		BA4477AA2859E0DB0045DDB8 /* AuthCredentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA4477A92859E0DB0045DDB8 /* AuthCredentials.swift */; };
+		BA7735912862CEDF0050E2A4 /* AttendMeetController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA7735902862CEDF0050E2A4 /* AttendMeetController.swift */; };
 		BA7BB6E72859E31500465DEC /* ImageUplader.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA7BB6E62859E31500465DEC /* ImageUplader.swift */; };
 		BA7BB6E92859E74C00465DEC /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA7BB6E82859E74C00465DEC /* LoginController.swift */; };
 		BA7BB6F42859FAE500465DEC /* ProfileHeaderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA7BB6F32859FAE500465DEC /* ProfileHeaderViewModel.swift */; };
@@ -118,10 +118,10 @@
 		BA4477982859D0FD0045DDB8 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		BA44779A2859D3950045DDB8 /* UserCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCellViewModel.swift; sourceTree = "<group>"; };
 		BA44779E2859DE6C0045DDB8 /* RegistrationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationController.swift; sourceTree = "<group>"; };
-		BA4477A12859DEEF0045DDB8 /* CustomTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTextField.swift; sourceTree = "<group>"; };
 		BA4477A32859DF1C0045DDB8 /* RegistrationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationViewModel.swift; sourceTree = "<group>"; };
 		BA4477A72859E0AD0045DDB8 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
 		BA4477A92859E0DB0045DDB8 /* AuthCredentials.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthCredentials.swift; sourceTree = "<group>"; };
+		BA7735902862CEDF0050E2A4 /* AttendMeetController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttendMeetController.swift; sourceTree = "<group>"; };
 		BA7BB6E62859E31500465DEC /* ImageUplader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageUplader.swift; sourceTree = "<group>"; };
 		BA7BB6E82859E74C00465DEC /* LoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
 		BA7BB6F32859FAE500465DEC /* ProfileHeaderViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileHeaderViewModel.swift; sourceTree = "<group>"; };
@@ -264,7 +264,6 @@
 		BA44774228588C8C0045DDB8 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				BA4477A02859DED30045DDB8 /* Auth */,
 				BA44778A285961940045DDB8 /* Home */,
 				BA4477922859CE200045DDB8 /* Explore */,
 				BA44778D28597DAF0045DDB8 /* Profile */,
@@ -358,14 +357,6 @@
 				BA44774628588D150045DDB8 /* MainTabController.swift */,
 			);
 			path = Base;
-			sourceTree = "<group>";
-		};
-		BA4477A02859DED30045DDB8 /* Auth */ = {
-			isa = PBXGroup;
-			children = (
-				BA4477A12859DEEF0045DDB8 /* CustomTextField.swift */,
-			);
-			path = Auth;
 			sourceTree = "<group>";
 		};
 		BA4477A52859E0870045DDB8 /* User */ = {
@@ -486,6 +477,7 @@
 				BADBFF6E28614E1000146D6F /* UploadMeetPicController.swift */,
 				BADBFF70286164B700146D6F /* ArrangeMeetController.swift */,
 				BADBFF79286202B100146D6F /* MeetDetailController.swift */,
+				BA7735902862CEDF0050E2A4 /* AttendMeetController.swift */,
 			);
 			path = Meet;
 			sourceTree = "<group>";
@@ -741,6 +733,7 @@
 				BA7BB713285A083D00465DEC /* UIImage+Extension.swift in Sources */,
 				BA7BB71C285A083D00465DEC /* MJRefreshWrapper.swift in Sources */,
 				BA7BB723285AD90400465DEC /* DropDownCell.swift in Sources */,
+				BA7735912862CEDF0050E2A4 /* AttendMeetController.swift in Sources */,
 				BADF1F60285B3607004CF329 /* PostEditController.swift in Sources */,
 				BADF1F62285C4E2E004CF329 /* CafeService.swift in Sources */,
 				BADF1F65285C4F78004CF329 /* Cafe.swift in Sources */,
@@ -754,7 +747,6 @@
 				BA44773228587ED30045DDB8 /* SelectCafeController.swift in Sources */,
 				BA7BB70D285A083D00465DEC /* CCConstant.swift in Sources */,
 				BA7BB731285B0E6E00465DEC /* ControlSectionHeader.swift in Sources */,
-				BA4477A22859DEEF0045DDB8 /* CustomTextField.swift in Sources */,
 				BADF1F6D285C84DA004CF329 /* PostService.swift in Sources */,
 				BA7BB718285A083D00465DEC /* NSLocalizedString+Extension.swift in Sources */,
 				BA7BB717285A083D00465DEC /* identifiers.swift in Sources */,

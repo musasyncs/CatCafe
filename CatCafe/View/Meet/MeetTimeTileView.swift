@@ -20,7 +20,10 @@ class MeetTimeTileView: UIView {
     let noticeLabel = UILabel()
     
     let timeSelectorView = TimeSelectorView()
-    lazy var textField = MeetArrangeTextField(placeholder: "聚會會維持公開直到聚會時間，如果要提早關閉，可以使用刪除功能")
+    lazy var textField = CustomTextField(placeholder: "聚會會維持公開直到聚會時間，如果要提早關閉，可以使用刪除功能",
+                                         textColor: .black,
+                                         fgColor: .systemBrown,
+                                         font: .notoRegular(size: 11))
     
     var heightConstraint: NSLayoutConstraint?
     

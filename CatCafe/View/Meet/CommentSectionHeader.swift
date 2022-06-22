@@ -7,7 +7,13 @@
 
 import UIKit
 
+protocol CommentSectionHeaderDelegate: AnyObject {
+    func didTapAttendButton(_ header: CommentSectionHeader)
+}
+
 class CommentSectionHeader: UICollectionReusableView {
+    
+    weak var delegate: CommentSectionHeaderDelegate?
     
     private let hostProfileImageView: UIImageView = {
         let imageView = UIImageView()
@@ -31,7 +37,10 @@ class CommentSectionHeader: UICollectionReusableView {
     lazy var placeStackView = UIStackView(arrangedSubviews: [placeTitleLabel, placeLabel])
 
     let infoLabel = UILabel()
-    let attendButton = makeTitleButton(withText: "報名聚會", font: .notoRegular(size: 16))
+    let attendButton = makeTitleButton(withText: "報名聚會",
+                                       font: .notoRegular(size: 15),
+                                       foregroundColor: .white,
+                                       backgroundColor: .systemBrown)
     let publicCommentLabel = UILabel()
 
     override init(frame: CGRect) {
@@ -117,13 +126,14 @@ class CommentSectionHeader: UICollectionReusableView {
         placeStackView.anchor(top: timeStackView.bottomAnchor, left: hostProfileImageView.leftAnchor)
         infoLabel.anchor(top: placeStackView.bottomAnchor,
                          right: rightAnchor,
-                         paddingRight: 32)
-        attendButton.anchor(top: infoLabel.bottomAnchor, paddingTop: 24)
+                         paddingRight: 16)
+        attendButton.anchor(top: infoLabel.bottomAnchor, paddingTop: 16)
+        attendButton.setDimensions(height: 50, width: UIScreen.width)
         attendButton.centerX(inView: self)
         publicCommentLabel.anchor(top: attendButton.bottomAnchor,
                                   left: leftAnchor,
                                   bottom: bottomAnchor,
-                                  paddingTop: 24,
+                                  paddingTop: 16,
                                   paddingLeft: 8,
                                   paddingBottom: 8)
     }
@@ -131,7 +141,7 @@ class CommentSectionHeader: UICollectionReusableView {
     // MARK: - Action
     
     @objc func handleAttendTapped() {
-        print("DEBUG: handleAttendTapped")
+        delegate?.didTapAttendButton(self)
     }
 
 }
