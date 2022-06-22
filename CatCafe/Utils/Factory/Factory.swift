@@ -150,7 +150,7 @@ func makeIconButton(imagename: String,
                     imageColor: UIColor,
                     imageWidth: Int,
                     imageHeight: Int,
-                    backgroundColor: UIColor = .white,
+                    backgroundColor: UIColor = .clear,
                     cornerRadius: CGFloat = 0,
                     borderWith: CGFloat = 0,
                     borderColor: UIColor = .clear) -> UIButton {

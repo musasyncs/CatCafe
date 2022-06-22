@@ -59,7 +59,10 @@
 		BA7BB72F285AEAEA00465DEC /* TopTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA7BB72E285AEAEA00465DEC /* TopTableViewCell.swift */; };
 		BA7BB731285B0E6E00465DEC /* ControlSectionHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA7BB730285B0E6E00465DEC /* ControlSectionHeader.swift */; };
 		BA7BB733285B181700465DEC /* PhotoWallTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA7BB732285B181700465DEC /* PhotoWallTableViewCell.swift */; };
-		BADBFF6F28614E1000146D6F /* UploadMeetPicController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BADBFF6E28614E1000146D6F /* UploadMeetPicController.swift */; };
+		BAD1339E2863124C00B8015A /* Meet.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAD1339D2863124C00B8015A /* Meet.swift */; };
+		BAD133A02863132300B8015A /* meetService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAD1339F2863132300B8015A /* meetService.swift */; };
+		BAD133A22863629B00B8015A /* MeetCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAD133A12863629B00B8015A /* MeetCell.swift */; };
+		BADBFF6F28614E1000146D6F /* SelectMeetPicController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BADBFF6E28614E1000146D6F /* SelectMeetPicController.swift */; };
 		BADBFF71286164B700146D6F /* ArrangeMeetController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BADBFF70286164B700146D6F /* ArrangeMeetController.swift */; };
 		BADBFF742861A84A00146D6F /* TileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BADBFF732861A84A00146D6F /* TileView.swift */; };
 		BADBFF762861A86200146D6F /* MeetTimeTileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BADBFF752861A86200146D6F /* MeetTimeTileView.swift */; };
@@ -149,7 +152,10 @@
 		BA7BB72E285AEAEA00465DEC /* TopTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopTableViewCell.swift; sourceTree = "<group>"; };
 		BA7BB730285B0E6E00465DEC /* ControlSectionHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlSectionHeader.swift; sourceTree = "<group>"; };
 		BA7BB732285B181700465DEC /* PhotoWallTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoWallTableViewCell.swift; sourceTree = "<group>"; };
-		BADBFF6E28614E1000146D6F /* UploadMeetPicController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadMeetPicController.swift; sourceTree = "<group>"; };
+		BAD1339D2863124C00B8015A /* Meet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Meet.swift; sourceTree = "<group>"; };
+		BAD1339F2863132300B8015A /* meetService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = meetService.swift; sourceTree = "<group>"; };
+		BAD133A12863629B00B8015A /* MeetCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetCell.swift; sourceTree = "<group>"; };
+		BADBFF6E28614E1000146D6F /* SelectMeetPicController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectMeetPicController.swift; sourceTree = "<group>"; };
 		BADBFF70286164B700146D6F /* ArrangeMeetController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrangeMeetController.swift; sourceTree = "<group>"; };
 		BADBFF732861A84A00146D6F /* TileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TileView.swift; sourceTree = "<group>"; };
 		BADBFF752861A86200146D6F /* MeetTimeTileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetTimeTileView.swift; sourceTree = "<group>"; };
@@ -257,6 +263,7 @@
 				BADF1F6B285C84CD004CF329 /* Post */,
 				BADF1F7A285DB55F004CF329 /* Comment */,
 				BADF1F87285EB8F9004CF329 /* Notification */,
+				BAD1339C2863122F00B8015A /* Meet */,
 			);
 			path = API;
 			sourceTree = "<group>";
@@ -471,10 +478,19 @@
 			path = PostSelect;
 			sourceTree = "<group>";
 		};
+		BAD1339C2863122F00B8015A /* Meet */ = {
+			isa = PBXGroup;
+			children = (
+				BAD1339D2863124C00B8015A /* Meet.swift */,
+				BAD1339F2863132300B8015A /* meetService.swift */,
+			);
+			path = Meet;
+			sourceTree = "<group>";
+		};
 		BADBFF6D28614DD900146D6F /* Meet */ = {
 			isa = PBXGroup;
 			children = (
-				BADBFF6E28614E1000146D6F /* UploadMeetPicController.swift */,
+				BADBFF6E28614E1000146D6F /* SelectMeetPicController.swift */,
 				BADBFF70286164B700146D6F /* ArrangeMeetController.swift */,
 				BADBFF79286202B100146D6F /* MeetDetailController.swift */,
 				BA7735902862CEDF0050E2A4 /* AttendMeetController.swift */,
@@ -485,6 +501,7 @@
 		BADBFF722861A83200146D6F /* Meet */ = {
 			isa = PBXGroup;
 			children = (
+				BAD133A12863629B00B8015A /* MeetCell.swift */,
 				BADBFF772861F06400146D6F /* ImageHeaderView.swift */,
 				BADBFF752861A86200146D6F /* MeetTimeTileView.swift */,
 				BADBFF732861A84A00146D6F /* TileView.swift */,
@@ -767,6 +784,7 @@
 				BA7BB6E72859E31500465DEC /* ImageUplader.swift in Sources */,
 				BADF1F90285ED0B6004CF329 /* NotificationCell.swift in Sources */,
 				BA7BB712285A083D00465DEC /* UIView+Extension.swift in Sources */,
+				BAD133A22863629B00B8015A /* MeetCell.swift in Sources */,
 				BA4477942859CE2F0045DDB8 /* UserCell.swift in Sources */,
 				BA7BB716285A083D00465DEC /* UIScreen+Extension.swift in Sources */,
 				BA44773028587ED30045DDB8 /* SceneDelegate.swift in Sources */,
@@ -779,14 +797,16 @@
 				BA7BB725285AE4D000465DEC /* PostSelectController.swift in Sources */,
 				BA4477972859D0280045DDB8 /* UserService.swift in Sources */,
 				BA4477AA2859E0DB0045DDB8 /* AuthCredentials.swift in Sources */,
-				BADBFF6F28614E1000146D6F /* UploadMeetPicController.swift in Sources */,
+				BADBFF6F28614E1000146D6F /* SelectMeetPicController.swift in Sources */,
 				BADBFF802862B4E900146D6F /* StretchyHeaderLayout.swift in Sources */,
 				BA7BB72F285AEAEA00465DEC /* TopTableViewCell.swift in Sources */,
 				BA7BB710285A083D00465DEC /* UILabel+Extension.swift in Sources */,
 				BADBFF71286164B700146D6F /* ArrangeMeetController.swift in Sources */,
 				BA44779F2859DE6C0045DDB8 /* RegistrationController.swift in Sources */,
+				BAD1339E2863124C00B8015A /* Meet.swift in Sources */,
 				BADF1F8B285EC02C004CF329 /* NotificationService.swift in Sources */,
 				BADBFF7C28620C5D00146D6F /* MeetStretchyHeader.swift in Sources */,
+				BAD133A02863132300B8015A /* meetService.swift in Sources */,
 				BA44779B2859D3950045DDB8 /* UserCellViewModel.swift in Sources */,
 				BA44774B28588ECA0045DDB8 /* ExploreController.swift in Sources */,
 				BADF1F89285EB90F004CF329 /* Notification.swift in Sources */,

@@ -8,7 +8,7 @@
 import UIKit
 import Photos
 
-class UploadMeetPicController: UIViewController {
+class SelectMeetPicController: UIViewController {
         
     var selectedImage: UIImage? {
         didSet {
@@ -146,7 +146,7 @@ class UploadMeetPicController: UIViewController {
 }
 
 // MARK: - UIImagePickerControllerDelegate, UINavigationControllerDelegate
-extension UploadMeetPicController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+extension SelectMeetPicController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         picker.dismiss(animated: true, completion: nil)

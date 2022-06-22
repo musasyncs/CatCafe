@@ -140,6 +140,29 @@ class ArrangeMeetController: UIViewController {
             return
         }
         
+        // Uploading...
+        navigationItem.rightBarButtonItem?.isEnabled = false
+        showLoader(true)
+        
+        MeetService.uploadMeet(title: meetTitleText,
+                               caption: meetDescription,
+                               meetImage: selectedImage,
+                               cafeId: selectedCafe.id,
+                               cafeName: selectedCafe.title) { error in
+            self.showLoader(false)
+            
+            if let error = error {
+                print("DEBUG: Failed to upload meet with error \(error.localizedDescription)")
+                self.navigationItem.rightBarButtonItem?.isEnabled = true
+                return
+            }
+            
+            self.presentingViewController?.presentingViewController?.dismiss(animated: true, completion: {
+                NotificationCenter.default.post(name: CCConstant.NotificationName.updateMeetFeed, object: nil)
+            })
+
+        }
+        
         print("DEBUG: upload\(selectedImage) \(chosenDate) \(meetTitleText) \(selectedCafe.title) \(meetDescription)")
     }
     

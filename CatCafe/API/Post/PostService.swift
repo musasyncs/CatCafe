@@ -21,7 +21,7 @@ struct PostService {
     ) {
         guard let uid = LocalStorage.shared.getUid() else { return }
         
-        ImageUplader.uploadPostImage(image: postImage) { imageUrlString in
+        ImageUplader.uploadImage(for: .post, image: postImage) { imageUrlString in
             let dic: [String: Any] = [
                 "ownerUid": uid,
                 "mediaType": 0,
@@ -86,7 +86,7 @@ struct PostService {
         }
     }
     
-    // MARK: - Like a post / UnLike a post / Check if a user like a post
+    // MARK: - Like a post / UnLike a post / Check if current user like a post
     
     static func likePost(post: Post, completion: @escaping(FirestoreCompletion)) {
         guard let uid = LocalStorage.shared.getUid() else { return }

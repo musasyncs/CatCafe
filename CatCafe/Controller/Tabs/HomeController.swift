@@ -61,7 +61,7 @@ class HomeController: UICollectionViewController {
         }
     }
     
-    func checkIfCurrentUserLikedPosts() {
+    private func checkIfCurrentUserLikedPosts() {
         if let post = post {
             PostService.checkIfCurrentUserLikedPost(post: post) { isLiked in
                 self.post?.isLiked = isLiked

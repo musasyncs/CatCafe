@@ -61,7 +61,7 @@ class RegistrationController: UIViewController {
             
             switch result {
             case .success(let authUser):
-                ImageUplader.uploadProfileImage(image: credentials.profileImage) { imageUrlString in
+                ImageUplader.uploadImage(for: .profile, image: credentials.profileImage) { imageUrlString in
                     UserService.createUserProfile(
                         userId: authUser.uid,
                         profileImageUrlString: imageUrlString,
