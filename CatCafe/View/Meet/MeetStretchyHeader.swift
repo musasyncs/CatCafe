@@ -10,7 +10,14 @@ import SDWebImage
 
 final class MeetStretchyHeader: UICollectionReusableView {
     
-    private let meetImageView: UIImageView = {
+    var imageUrlString: String? {
+        didSet {
+            guard let imageUrlString = imageUrlString else { return }
+            meetImageView.sd_setImage(with: URL(string: imageUrlString))
+        }
+    }
+    
+    let meetImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(named: "shin")
         imageView.contentMode = .scaleAspectFill

@@ -9,6 +9,8 @@ import UIKit
 
 class MeetDetailController: UICollectionViewController {
     
+    var meet: Meet?
+    
     private lazy var commentInputView: CommentInputAccessoryView = {
         let frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 50)
         let inputView = CommentInputAccessoryView(frame: frame)
@@ -20,6 +22,15 @@ class MeetDetailController: UICollectionViewController {
     override var canBecomeFirstResponder: Bool { return true }
         
     // MARK: - Life Cycle
+        
+    init(meet: Meet) {
+        self.meet = meet
+        super.init(collectionViewLayout: StretchyHeaderLayout())
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -108,6 +119,7 @@ extension MeetDetailController {
                 withReuseIdentifier: MeetStretchyHeader.identifier,
                 for: indexPath
             ) as? MeetStretchyHeader else { return UICollectionReusableView() }
+            header.imageUrlString = meet?.mediaUrlString
             return header
         } else {
             guard let header = collectionView.dequeueReusableSupplementaryView(
@@ -115,7 +127,17 @@ extension MeetDetailController {
                 withReuseIdentifier: CommentSectionHeader.identifier,
                 for: indexPath
             ) as? CommentSectionHeader else { return UICollectionReusableView() }
+            
+            guard let meet = meet else { return UICollectionReusableView() }
+            
             header.delegate = self
+            header.viewModel = MeetViewModel(meet: meet)
+            
+            UserService.fetchUserBy(uid: meet.ownerUid) { user in
+                header.viewModel?.ownerUsername = user.username
+                header.viewModel?.ownerImageUrl = URL(string: user.profileImageUrlString)
+            }
+            
             return header
         }
     }
@@ -165,6 +187,8 @@ extension MeetDetailController: UICollectionViewDelegateFlowLayout {
     }
 
 }
+ 
+// MARK: - CommentSectionHeaderDelegate
 
 extension MeetDetailController: CommentSectionHeaderDelegate {
     func didTapAttendButton(_ header: CommentSectionHeader) {
@@ -173,6 +197,8 @@ extension MeetDetailController: CommentSectionHeaderDelegate {
         present(controller, animated: true)
     }
 }
+
+// MARK: - CommentInputAccessoryViewDelegate
 
 extension MeetDetailController: CommentInputAccessoryViewDelegate {
     func inputView(_ inputView: CommentInputAccessoryView, wantsToUploadComment comment: String) {

@@ -142,6 +142,14 @@ class MeetController: UIViewController {
     
 }
 
+// MARK: - MeetCellDelegate
+
+extension MeetController: MeetCellDelegate {
+    func cell(_ cell: MeetCell, didLike meet: Meet) {
+        
+    }
+}
+
 // MARK: - UICollectionViewDataSource, UICollectionViewDelegate
 
 extension MeetController: UICollectionViewDataSource, UICollectionViewDelegate {
@@ -158,12 +166,21 @@ extension MeetController: UICollectionViewDataSource, UICollectionViewDelegate {
             for: indexPath ) as? MeetCell
         else { return UICollectionViewCell() }
         
+        cell.delegate = self
+        
+        cell.viewModel = MeetViewModel(meet: meets[indexPath.item])
+        
+        UserService.fetchUserBy(uid: meets[indexPath.item].ownerUid) { user in
+            cell.viewModel?.ownerUsername = user.username
+            cell.viewModel?.ownerImageUrl = URL(string: user.profileImageUrlString)
+        }
+    
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let controller = MeetDetailController(collectionViewLayout: StretchyHeaderLayout())
-        
+        let meet = meets[indexPath.item]
+        let controller = MeetDetailController(meet: meet)
         navigationController?.pushViewController(controller, animated: true)
     }
     
@@ -179,7 +196,7 @@ extension MeetController: UICollectionViewDelegateFlowLayout {
         sizeForItemAt indexPath: IndexPath
     ) -> CGSize {
         let width = view.frame.width - 16
-        return CGSize(width: width, height: 150)
+        return CGSize(width: width, height: 170)
     }
     
     func collectionView(
@@ -188,5 +205,4 @@ extension MeetController: UICollectionViewDelegateFlowLayout {
         minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
             return 16
         }
-    
 }

@@ -62,6 +62,7 @@
 		BAD1339E2863124C00B8015A /* Meet.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAD1339D2863124C00B8015A /* Meet.swift */; };
 		BAD133A02863132300B8015A /* meetService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAD1339F2863132300B8015A /* meetService.swift */; };
 		BAD133A22863629B00B8015A /* MeetCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAD133A12863629B00B8015A /* MeetCell.swift */; };
+		BAD133A428636B9400B8015A /* MeetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAD133A328636B9400B8015A /* MeetViewModel.swift */; };
 		BADBFF6F28614E1000146D6F /* SelectMeetPicController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BADBFF6E28614E1000146D6F /* SelectMeetPicController.swift */; };
 		BADBFF71286164B700146D6F /* ArrangeMeetController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BADBFF70286164B700146D6F /* ArrangeMeetController.swift */; };
 		BADBFF742861A84A00146D6F /* TileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BADBFF732861A84A00146D6F /* TileView.swift */; };
@@ -155,6 +156,7 @@
 		BAD1339D2863124C00B8015A /* Meet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Meet.swift; sourceTree = "<group>"; };
 		BAD1339F2863132300B8015A /* meetService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = meetService.swift; sourceTree = "<group>"; };
 		BAD133A12863629B00B8015A /* MeetCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetCell.swift; sourceTree = "<group>"; };
+		BAD133A328636B9400B8015A /* MeetViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetViewModel.swift; sourceTree = "<group>"; };
 		BADBFF6E28614E1000146D6F /* SelectMeetPicController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectMeetPicController.swift; sourceTree = "<group>"; };
 		BADBFF70286164B700146D6F /* ArrangeMeetController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrangeMeetController.swift; sourceTree = "<group>"; };
 		BADBFF732861A84A00146D6F /* TileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TileView.swift; sourceTree = "<group>"; };
@@ -293,6 +295,7 @@
 				BADF1F70285CBB99004CF329 /* PostViewModel.swift */,
 				BADF1F7F285DCAA1004CF329 /* CommentViewModel.swift */,
 				BADF1F8C285ECCCD004CF329 /* NotificationViewModel.swift */,
+				BAD133A328636B9400B8015A /* MeetViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -744,6 +747,7 @@
 				BA7BB6F42859FAE500465DEC /* ProfileHeaderViewModel.swift in Sources */,
 				BADBFF7A286202B100146D6F /* MeetDetailController.swift in Sources */,
 				BA44778C285961A50045DDB8 /* FeedCell.swift in Sources */,
+				BAD133A428636B9400B8015A /* MeetViewModel.swift in Sources */,
 				BADBFF782861F06400146D6F /* ImageHeaderView.swift in Sources */,
 				BA7BB71B285A083D00465DEC /* JGProgressHUDWrapper.swift in Sources */,
 				BA7BB70F285A083D00465DEC /* UIColor+Extension.swift in Sources */,

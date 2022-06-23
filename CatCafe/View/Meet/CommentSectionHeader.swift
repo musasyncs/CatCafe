@@ -13,6 +13,27 @@ protocol CommentSectionHeaderDelegate: AnyObject {
 
 class CommentSectionHeader: UICollectionReusableView {
     
+    var viewModel: MeetViewModel? {
+        didSet {
+            guard let viewModel = viewModel else { return }
+                        
+            hostProfileImageView.sd_setImage(with: viewModel.ownerImageUrl)
+            hostnameLabel.text = viewModel.ownerUsername
+            
+            titleLabel.text = viewModel.titleText
+            
+            descriptionLabel.text = viewModel.descriptionLabel
+            
+            timeLabel.text = viewModel.timestampText
+            placeLabel.text = viewModel.locationText
+            
+            infoLabel.text = viewModel.infoText
+            likeButton.tintColor = viewModel.likeButtonTintColor
+            likeButton.setImage(viewModel.likeButtonImage, for: .normal)
+            likesLabel.text = viewModel.likesLabelText
+        }
+    }
+    
     weak var delegate: CommentSectionHeaderDelegate?
     
     private let hostProfileImageView: UIImageView = {
@@ -37,6 +58,9 @@ class CommentSectionHeader: UICollectionReusableView {
     lazy var placeStackView = UIStackView(arrangedSubviews: [placeTitleLabel, placeLabel])
 
     let infoLabel = UILabel()
+    lazy var likeButton = UIButton(type: .system)
+    private let likesLabel = UILabel()
+    
     let attendButton = makeTitleButton(withText: "報名聚會",
                                        font: .notoRegular(size: 15),
                                        foregroundColor: .white,
@@ -68,6 +92,7 @@ class CommentSectionHeader: UICollectionReusableView {
         publicCommentLabel.text = "公開留言"
         
         attendButton.addTarget(self, action: #selector(handleAttendTapped), for: .touchUpInside)
+        likeButton.addTarget(self, action: #selector(didTapLike), for: .touchUpInside)
     }
     
     func style() {
@@ -94,6 +119,10 @@ class CommentSectionHeader: UICollectionReusableView {
         infoLabel.font = .notoRegular(size: 12)
         infoLabel.textColor = .systemGray
         
+        likeButton.setImage(UIImage(named: "like_unselected"), for: .normal)
+        likeButton.tintColor = .black
+        likesLabel.font = .systemFont(ofSize: 10, weight: .regular)
+        
         publicCommentLabel.font = .notoMedium(size: 12)
         publicCommentLabel.textColor = .greyishBrown
     }
@@ -106,6 +135,8 @@ class CommentSectionHeader: UICollectionReusableView {
         addSubview(timeStackView)
         addSubview(placeStackView)
         addSubview(infoLabel)
+        addSubview(likeButton)
+        addSubview(likesLabel)
         addSubview(attendButton)
         addSubview(publicCommentLabel)
         
@@ -124,9 +155,18 @@ class CommentSectionHeader: UICollectionReusableView {
                              left: hostProfileImageView.leftAnchor,
                              paddingTop: 16)
         placeStackView.anchor(top: timeStackView.bottomAnchor, left: hostProfileImageView.leftAnchor)
-        infoLabel.anchor(top: placeStackView.bottomAnchor,
-                         right: rightAnchor,
-                         paddingRight: 16)
+        
+        likeButton.anchor(top: placeStackView.bottomAnchor,
+                          right: rightAnchor,
+                          paddingTop: 8,
+                          paddingRight: 16)
+        likesLabel.anchor(left: likeButton.rightAnchor,
+                          bottom: likeButton.bottomAnchor,
+                          paddingBottom: -4)
+        
+        infoLabel.anchor(right: likeButton.leftAnchor, paddingRight: 8)
+        infoLabel.centerY(inView: likeButton)
+                
         attendButton.anchor(top: infoLabel.bottomAnchor, paddingTop: 16)
         attendButton.setDimensions(height: 50, width: UIScreen.width)
         attendButton.centerX(inView: self)
@@ -140,8 +180,13 @@ class CommentSectionHeader: UICollectionReusableView {
     
     // MARK: - Action
     
+    @objc func didTapLike() {
+        guard let viewModel = viewModel else { return }
+        print("DEBUG: didTapLike")
+    }
+    
     @objc func handleAttendTapped() {
         delegate?.didTapAttendButton(self)
     }
-
+    
 }

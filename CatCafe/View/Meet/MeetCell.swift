@@ -6,15 +6,34 @@
 //
 
 import UIKit
+import SDWebImage
+
+protocol MeetCellDelegate: AnyObject {
+    func cell(_ cell: MeetCell, didLike meet: Meet)
+}
 
 final class MeetCell: UICollectionViewCell {
     
-    //    var viewModel: ? {
-    //        didSet {
-    //            guard let viewModel = viewModel else { return }
-    //
-    //        }
-    //    }
+    weak var delegate: MeetCellDelegate?
+    
+    var viewModel: MeetViewModel? {
+        didSet {
+            guard let viewModel = viewModel else { return }
+            meetImageView.sd_setImage(with: viewModel.mediaUrl)
+            
+            titleLabel.text = viewModel.titleText
+            timeLabel.text = viewModel.timestampText
+            placeLabel.text = viewModel.locationText
+            
+            hostProfileImageView.sd_setImage(with: viewModel.ownerImageUrl)
+            hostnameLabel.text = viewModel.ownerUsername
+            
+            infoLabel.text = viewModel.infoText
+            likeButton.tintColor = viewModel.likeButtonTintColor
+            likeButton.setImage(viewModel.likeButtonImage, for: .normal)
+            likesLabel.text = viewModel.likesLabelText
+        }
+    }
     
     private let meetImageView: UIImageView = {
         let imageView = UIImageView()
@@ -45,6 +64,8 @@ final class MeetCell: UICollectionViewCell {
     }()
     let hostnameLabel = UILabel()
     let infoLabel = UILabel()
+    lazy var likeButton = UIButton(type: .system)
+    private let likesLabel = UILabel()
         
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -57,21 +78,24 @@ final class MeetCell: UICollectionViewCell {
         fatalError()
     }
     
+    // MARK: - Action
+    
+    @objc func didTapLike() {
+        guard let viewModel = viewModel else { return }
+        delegate?.cell(self, didLike: viewModel.meet)
+    }
+    
 }
 
 extension MeetCell {
+    
     fileprivate func setup() {
-        titleLabel.text = "春Land"
         timeTitleLabel.text = "時間"
-        timeLabel.text = "06/25 19:00"
         placeTitleLabel.text = "地點"
-        placeLabel.text = "Legacy Taipei"
-        hostnameLabel.text = "阿布"
-        infoLabel.text = "5人報名 | 1則留言"
+        likeButton.addTarget(self, action: #selector(didTapLike), for: .touchUpInside)
     }
     
     fileprivate func style() {
-        // style
         backgroundColor = .white
         layer.cornerRadius = 12
         layer.shadowColor = UIColor.black.cgColor
@@ -98,17 +122,24 @@ extension MeetCell {
         hostnameLabel.font = .notoRegular(size: 11)
         infoLabel.font = .notoRegular(size: 12)
         infoLabel.textColor = .systemGray
+        
+        likeButton.setImage(UIImage(named: "like_unselected"), for: .normal)
+        likeButton.tintColor = .black
+        likesLabel.font = .systemFont(ofSize: 10, weight: .regular)
     }
     
     fileprivate func layout() {
-        // layout
-        [meetImageView,
-         titleLabel,
-         timeStackView,
-         placeStackView,
-         hostProfileImageView,
-         hostnameLabel,
-         infoLabel].forEach {
+        [
+            meetImageView,
+            titleLabel,
+            timeStackView,
+            placeStackView,
+            hostProfileImageView,
+            hostnameLabel,
+            infoLabel,
+            likeButton,
+            likesLabel
+        ].forEach {
             addSubview($0)
         }
         
@@ -132,6 +163,14 @@ extension MeetCell {
         hostnameLabel.centerY(inView: hostProfileImageView,
                               leftAnchor: hostProfileImageView.rightAnchor,
                               paddingLeft: 8)
-        infoLabel.anchor(top: hostnameLabel.bottomAnchor, right: rightAnchor, paddingRight: 8)
+        likeButton.anchor(top: hostnameLabel.bottomAnchor,
+                          right: rightAnchor,
+                          paddingTop: 8,
+                          paddingRight: 16)
+        likesLabel.anchor(left: likeButton.rightAnchor,
+                          bottom: likeButton.bottomAnchor,
+                          paddingBottom: -4)
+        infoLabel.anchor(right: likeButton.leftAnchor, paddingRight: 8)
+        infoLabel.centerY(inView: likeButton)
     }
 }

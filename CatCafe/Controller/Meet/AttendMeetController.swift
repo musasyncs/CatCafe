@@ -106,7 +106,6 @@ class AttendMeetController: UIViewController {
     }
     
     fileprivate func layout() {
-        // layout
         [bottomView, exitButton, titleLabel, topDivider,
          contactLabel, contactTextView, characterCountLabel,
          descriptionLabel,
