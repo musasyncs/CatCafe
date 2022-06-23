@@ -9,7 +9,9 @@ import UIKit
 
 class MeetDetailController: UICollectionViewController {
     
-    var meet: Meet?
+    private let meet: Meet
+    private var comments = [Comment]()
+    private var people = [User]()
     
     private lazy var commentInputView: CommentInputAccessoryView = {
         let frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 50)
@@ -48,14 +50,21 @@ class MeetDetailController: UICollectionViewController {
         tabBarController?.tabBar.isHidden = false
     }
     
+    // MARK: - Helpers
+    
     // MARK: - API
     
     func fetchComments() {
-
+        CommentService.fetchMeetComments(forMeet: meet.meetId) { comments in
+            self.comments = comments
+            self.collectionView.reloadData()
+        }
     }
-    
-    // MARK: - Helpers
-    
+
+}
+
+extension MeetDetailController {
+
     func setupCollectionView() {
         collectionView.register(
             MeetStretchyHeader.self,
@@ -77,7 +86,6 @@ class MeetDetailController: UICollectionViewController {
         collectionView.backgroundColor = .white
         collectionView.showsVerticalScrollIndicator = false
     }
-    
 }
 
 // MARK: - UICollectionViewDataSource / UICollectionViewDelegate
@@ -92,7 +100,7 @@ extension MeetDetailController {
         if section == 0 {
             return 0
         } else {
-            return 3
+            return comments.count
         }
     }
     
@@ -104,6 +112,15 @@ extension MeetDetailController {
             withReuseIdentifier: CommentCell.identifier,
             for: indexPath) as? CommentCell
         else { return UICollectionViewCell() }
+        
+        let comment = comments[indexPath.item]
+        cell.viewModel = CommentViewModel(comment: comment)
+        
+        UserService.fetchUserBy(uid: comment.uid) { user in
+            cell.viewModel?.username = user.username
+            cell.viewModel?.profileImageUrl = URL(string: user.profileImageUrlString)
+        }
+        
         return cell
     }
     
@@ -119,17 +136,16 @@ extension MeetDetailController {
                 withReuseIdentifier: MeetStretchyHeader.identifier,
                 for: indexPath
             ) as? MeetStretchyHeader else { return UICollectionReusableView() }
-            header.imageUrlString = meet?.mediaUrlString
+            header.imageUrlString = meet.mediaUrlString
             return header
+            
         } else {
             guard let header = collectionView.dequeueReusableSupplementaryView(
                 ofKind: kind,
                 withReuseIdentifier: CommentSectionHeader.identifier,
                 for: indexPath
             ) as? CommentSectionHeader else { return UICollectionReusableView() }
-            
-            guard let meet = meet else { return UICollectionReusableView() }
-            
+                        
             header.delegate = self
             header.viewModel = MeetViewModel(meet: meet)
             
@@ -137,6 +153,11 @@ extension MeetDetailController {
                 header.viewModel?.ownerUsername = user.username
                 header.viewModel?.ownerImageUrl = URL(string: user.profileImageUrlString)
             }
+            
+            // comments count
+            header.viewModel?.comments = self.comments
+            // people count
+            header.viewModel?.people = self.people
             
             return header
         }
@@ -203,5 +224,30 @@ extension MeetDetailController: CommentSectionHeaderDelegate {
 extension MeetDetailController: CommentInputAccessoryViewDelegate {
     func inputView(_ inputView: CommentInputAccessoryView, wantsToUploadComment comment: String) {
         
+        // 拿目前user
+        guard let tabBarController = tabBarController as? MainTabController else { return }
+        guard let currentUser = tabBarController.user else { return }
+        
+        showLoader(true)
+        
+        CommentService.uploadMeetComment(
+            meetId: meet.meetId,
+            user: currentUser,
+            commentType: 0,
+            mediaUrlString: "",
+            comment: comment
+        ) { error in
+            
+            self.showLoader(false)
+            
+            if let error = error {
+                print("DEBUG: Failed to upload comment with error \(error.localizedDescription)")
+                return
+            }
+            
+            inputView.clearCommentTextView()
+            
+            // 通知被留言的人
+        }
     }
 }

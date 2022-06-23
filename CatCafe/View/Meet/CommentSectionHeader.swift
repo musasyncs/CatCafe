@@ -80,15 +80,24 @@ class CommentSectionHeader: UICollectionReusableView {
     
     // MARK: - Helpers
     
+    // MARK: - Action
+    
+    @objc func didTapLike() {
+        guard let viewModel = viewModel else { return }
+        print("DEBUG: didTapLike")
+    }
+    
+    @objc func handleAttendTapped() {
+        delegate?.didTapAttendButton(self)
+    }
+    
+}
+
+extension CommentSectionHeader {
+    
     func setup() {
-        titleLabel.text = "春Land"
-        descriptionLabel.text = "JHIFTYU FVTF FTYU FVTFFTYU FVTFFTYU FVTFFTYU FVTF"
         timeTitleLabel.text = "時間"
-        timeLabel.text = "06/25 19:00"
         placeTitleLabel.text = "地點"
-        placeLabel.text = "Legacy Taipei"
-        hostnameLabel.text = "阿布"
-        infoLabel.text = "5人報名 | 1則留言"
         publicCommentLabel.text = "公開留言"
         
         attendButton.addTarget(self, action: #selector(handleAttendTapped), for: .touchUpInside)
@@ -166,7 +175,7 @@ class CommentSectionHeader: UICollectionReusableView {
         
         infoLabel.anchor(right: likeButton.leftAnchor, paddingRight: 8)
         infoLabel.centerY(inView: likeButton)
-                
+        
         attendButton.anchor(top: infoLabel.bottomAnchor, paddingTop: 16)
         attendButton.setDimensions(height: 50, width: UIScreen.width)
         attendButton.centerX(inView: self)
@@ -177,16 +186,4 @@ class CommentSectionHeader: UICollectionReusableView {
                                   paddingLeft: 8,
                                   paddingBottom: 8)
     }
-    
-    // MARK: - Action
-    
-    @objc func didTapLike() {
-        guard let viewModel = viewModel else { return }
-        print("DEBUG: didTapLike")
-    }
-    
-    @objc func handleAttendTapped() {
-        delegate?.didTapAttendButton(self)
-    }
-    
 }

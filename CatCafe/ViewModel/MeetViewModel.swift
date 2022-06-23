@@ -11,6 +11,8 @@ import Firebase
 struct MeetViewModel {
     
     var meet: Meet
+    var comments = [Comment]()
+    var people = [User]()
     
     // ===
     var titleText: String? {
@@ -22,15 +24,15 @@ struct MeetViewModel {
     }
     
     var peopleCount: Int {
-        return 0
+        return people.count
     }
     
     var commentCount: Int {
-        return 0
+        return comments.count
     }
     
     var infoText: String? {
-        return "\(peopleCount)人報名｜\(peopleCount)則留言"
+        return "\(peopleCount)人報名｜\(commentCount)則留言"
     }
     
     // ===

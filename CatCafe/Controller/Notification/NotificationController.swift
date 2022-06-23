@@ -147,7 +147,7 @@ extension NotificationController: NotificationCellDelegate {
             self.showLoader(false)
             let flowLayout = UICollectionViewFlowLayout()
             flowLayout.scrollDirection = .vertical
-            let controller = HomeController(collectionViewLayout: flowLayout)
+            let controller = FeedController(collectionViewLayout: flowLayout)
             controller.post = post
             self.navigationController?.pushViewController(controller, animated: true)
         }

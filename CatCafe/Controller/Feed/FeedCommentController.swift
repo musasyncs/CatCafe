@@ -1,5 +1,5 @@
 //
-//  CommentController.swift
+//  FeedCommentController.swift
 //  CatCafe
 //
 //  Created by Ewen on 2022/6/18.
@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-class CommentController: UICollectionViewController {
+class FeedCommentController: UICollectionViewController {
     
     private let post: Post
     private var comments = [Comment]()
@@ -55,6 +55,8 @@ class CommentController: UICollectionViewController {
         tabBarController?.tabBar.isHidden = false
     }
     
+    // MARK: - Helpers
+    
     // MARK: - API
     
     func fetchComments() {
@@ -64,7 +66,9 @@ class CommentController: UICollectionViewController {
         }
     }
     
-    // MARK: - Helpers
+}
+
+extension FeedCommentController {
     
     func setupCollectionView() {
         collectionView.backgroundColor = .white
@@ -76,7 +80,7 @@ class CommentController: UICollectionViewController {
 
 // MARK: - UICollectionViewDataSource / UICollectionViewDelegate
 
-extension CommentController {
+extension FeedCommentController {
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return comments.count
     }
@@ -112,7 +116,7 @@ extension CommentController {
 
 // MARK: - UICollectionViewDelegateFlowlayout
 
-extension CommentController: UICollectionViewDelegateFlowLayout {
+extension FeedCommentController: UICollectionViewDelegateFlowLayout {
     func collectionView(
         _ collectionView: UICollectionView,
         layout collectionViewLayout: UICollectionViewLayout,
@@ -127,7 +131,7 @@ extension CommentController: UICollectionViewDelegateFlowLayout {
 
 // MARK: - CommentInputAccessoryViewDelegate
 
-extension CommentController: CommentInputAccessoryViewDelegate {
+extension FeedCommentController: CommentInputAccessoryViewDelegate {
     func inputView(_ inputView: CommentInputAccessoryView, wantsToUploadComment comment: String) {
         
         // 拿目前user

@@ -186,13 +186,19 @@ extension MeetController: UICollectionViewDataSource, UICollectionViewDelegate {
         
         cell.delegate = self
         
-        cell.viewModel = MeetViewModel(meet: meets[indexPath.item])
+        let meet = meets[indexPath.item]
+        cell.viewModel = MeetViewModel(meet: meet)
         
-        UserService.fetchUserBy(uid: meets[indexPath.item].ownerUid) { user in
+        UserService.fetchUserBy(uid: meet.ownerUid) { user in
             cell.viewModel?.ownerUsername = user.username
             cell.viewModel?.ownerImageUrl = URL(string: user.profileImageUrlString)
         }
-    
+        
+        // meet comments count
+        CommentService.fetchMeetComments(forMeet: meet.meetId) { comments in
+            cell.viewModel?.comments = comments
+        }
+        
         return cell
     }
     

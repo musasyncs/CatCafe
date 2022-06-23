@@ -65,13 +65,31 @@ class AttendMeetController: UIViewController {
         })
     }
     
+    // MARK: - Helpers
+    
     private func checkMaxlength(_ textView: UITextView) {
         if textView.text.count > 300 {
             textView.deleteBackward()
         }
     }
     
-    // MARK: - Helpers
+    // MARK: - Action
+    
+    @objc func exitTapped() {
+        self.dismiss(animated: false)
+    }
+    
+    @objc func cancelTapped() {
+        print("DEBUG: cencel")
+    }
+    
+    @objc func sendTapped() {
+        print("DEBUG: send")
+    }
+    
+}
+
+extension AttendMeetController {
     
     fileprivate func setup() {
         // setup
@@ -175,21 +193,6 @@ class AttendMeetController: UIViewController {
                           paddingRight: 64)
         sendButton.setHeight(48)
     }
-    
-    // MARK: - Action
-    
-    @objc func exitTapped() {
-        self.dismiss(animated: false)
-    }
-    
-    @objc func cancelTapped() {
-        print("DEBUG: cencel")
-    }
-    
-    @objc func sendTapped() {
-        print("DEBUG: send")
-    }
-    
 }
 
 // MARK: - UITextViewDelegate

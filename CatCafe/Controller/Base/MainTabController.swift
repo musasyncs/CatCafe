@@ -54,7 +54,7 @@ class MainTabController: UITabBarController {
         let home = templateNavigationController(
             unselectedImage: UIImage(named: "home_unselected")!,
             selectedImage: UIImage(named: "home_selected")!,
-            rootViewController: HomeController(collectionViewLayout: layout)
+            rootViewController: FeedController(collectionViewLayout: layout)
         )
         
         let explore = templateNavigationController(

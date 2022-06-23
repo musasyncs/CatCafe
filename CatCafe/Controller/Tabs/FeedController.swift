@@ -1,5 +1,5 @@
 //
-//  HomeController.swift
+//  FeedController.swift
 //  CatCafe
 //
 //  Created by Ewen on 2022/6/14.
@@ -8,7 +8,7 @@
 import UIKit
 import FirebaseAuth
 
-class HomeController: UICollectionViewController {
+class FeedController: UICollectionViewController {
     
     var posts = [Post]() {
         didSet {
@@ -165,7 +165,7 @@ class HomeController: UICollectionViewController {
 
 // MARK: - FeedCellDelegate
 
-extension HomeController: FeedCellDelegate {
+extension FeedController: FeedCellDelegate {
     
     func cell(_ cell: FeedCell, wantsToShowProfileFor uid: String) {
         UserService.fetchUserBy(uid: uid) { user in
@@ -175,7 +175,7 @@ extension HomeController: FeedCellDelegate {
     }
     
     func cell(_ cell: FeedCell, showCommentsFor post: Post) {
-        let controller = CommentController(post: post)
+        let controller = FeedCommentController(post: post)
         navigationController?.pushViewController(controller, animated: true)
     }
     
@@ -210,7 +210,7 @@ extension HomeController: FeedCellDelegate {
 
 // MARK: - UICollectionViewDataSource / UICollectionViewDelegate
 
-extension HomeController {
+extension FeedController {
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return post == nil ? posts.count : 1
@@ -251,7 +251,7 @@ extension HomeController {
 
 // MARK: - UICollectionViewDelegateFlowLayout
 
-extension HomeController: UICollectionViewDelegateFlowLayout {
+extension FeedController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(
         _ collectionView: UICollectionView,
@@ -268,7 +268,7 @@ extension HomeController: UICollectionViewDelegateFlowLayout {
 
 // MARK: - UIViewControllerTransitioningDelegate
 
-extension HomeController: UIViewControllerTransitioningDelegate {
+extension FeedController: UIViewControllerTransitioningDelegate {
     
     func animationController(forPresented presented: UIViewController,
                              presenting: UIViewController,
@@ -283,7 +283,7 @@ extension HomeController: UIViewControllerTransitioningDelegate {
 
 // MARK: - UITableViewDelegate, UITableViewDataSource - Drop down menu
 
-extension HomeController: UITableViewDelegate, UITableViewDataSource {
+extension FeedController: UITableViewDelegate, UITableViewDataSource {
         
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return showMenu ? 2 : 0
