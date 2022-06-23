@@ -145,8 +145,26 @@ class MeetController: UIViewController {
 // MARK: - MeetCellDelegate
 
 extension MeetController: MeetCellDelegate {
+    
     func cell(_ cell: MeetCell, didLike meet: Meet) {
+        cell.viewModel?.meet.isLiked.toggle()
         
+        if meet.isLiked {
+            
+            MeetService.unlikeMeet(meet: meet) { _ in
+                cell.likeButton.setImage(UIImage(named: "like_unselected"), for: .normal)
+                cell.likeButton.tintColor = .black
+                cell.viewModel?.meet.likes = meet.likes - 1
+            }
+        } else {
+            MeetService.likeMeet(meet: meet) { _ in
+                cell.likeButton.setImage(UIImage(named: "like_selected"), for: .normal)
+                cell.likeButton.tintColor = .systemRed
+                cell.viewModel?.meet.likes = meet.likes + 1
+                
+                // 發like通知給對方 Optional
+            }
+        }
     }
 }
 
