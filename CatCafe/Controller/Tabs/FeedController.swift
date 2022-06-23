@@ -187,14 +187,10 @@ extension FeedController: FeedCellDelegate {
         
         if post.isLiked {
             PostService.unlikePost(post: post) { _ in
-                cell.likeButton.setImage(UIImage(named: "like_unselected"), for: .normal)
-                cell.likeButton.tintColor = .black
                 cell.viewModel?.post.likes = post.likes - 1
             }
         } else {
             PostService.likePost(post: post) { _ in
-                cell.likeButton.setImage(UIImage(named: "like_selected"), for: .normal)
-                cell.likeButton.tintColor = .systemRed
                 cell.viewModel?.post.likes = post.likes + 1
                 
                 // 發like通知給對方

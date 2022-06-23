@@ -96,7 +96,7 @@ struct PostService {
         CCConstant.COLLECTION_POSTS.document(post.postId)
             .collection("post-likes").document(uid).setData([:]) { _ in
                 CCConstant.COLLECTION_USERS.document(uid)
-                    .collection("user-likes").document(post.postId).setData([:], completion: completion)
+                    .collection("user-post-likes").document(post.postId).setData([:], completion: completion)
         }
     }
     
@@ -109,7 +109,7 @@ struct PostService {
         CCConstant.COLLECTION_POSTS.document(post.postId)
             .collection("post-likes").document(uid).delete { _ in
                 CCConstant.COLLECTION_USERS.document(uid)
-                    .collection("user-likes").document(post.postId).delete(completion: completion)
+                    .collection("user-post-likes").document(post.postId).delete(completion: completion)
             }
     }
     
@@ -117,7 +117,7 @@ struct PostService {
         guard let uid = LocalStorage.shared.getUid() else { return }
         
         CCConstant.COLLECTION_USERS.document(uid)
-            .collection("user-likes").document(post.postId).getDocument { snapshot, _ in
+            .collection("user-post-likes").document(post.postId).getDocument { snapshot, _ in
                 guard let isLiked = snapshot?.exists else { return }
                 completion(isLiked)
             }

@@ -97,13 +97,7 @@ class SelectMeetPicController: UIViewController {
 
     @objc private func handleNext() {
         guard let selectedImage = selectedImage else {
-            let alert = UIAlertController(title: "",
-                                          message: "請上傳聚會封面",
-                                          preferredStyle: .alert)
-            let okAction = UIAlertAction(title: "確定", style: .default) { _ in }
-            okAction.setValue(UIColor.systemBrown, forKey: "titleTextColor")
-            alert.addAction(okAction)
-            present(alert, animated: true)
+            showMessage(withTitle: "", message: "請上傳聚會封面")
             return
         }
         let controller = ArrangeMeetController()

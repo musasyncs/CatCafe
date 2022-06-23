@@ -120,6 +120,7 @@ extension RegistrationController {
     }
     
     func style() {
+        view.backgroundColor = .white
         plusPhotoButton.setImage(UIImage(named: "plus_photo"), for: .normal)
         plusPhotoButton.tintColor = .lightGray
         stackView.axis = .vertical

@@ -12,7 +12,6 @@ struct MeetViewModel {
     
     var meet: Meet
     var comments = [Comment]()
-    var people = [User]()
     
     // ===
     var titleText: String? {
@@ -24,7 +23,7 @@ struct MeetViewModel {
     }
     
     var peopleCount: Int {
-        return people.count
+        return meet.peopleCount
     }
     
     var commentCount: Int {
@@ -72,6 +71,32 @@ struct MeetViewModel {
         return formatter.string(from: meet.timestamp.dateValue())
     }
     
+    var attendButtonBackgroundColor: UIColor {
+        let currentUid = LocalStorage.shared.getUid()
+        if meet.ownerUid == currentUid {
+            return .systemGray5
+        } else {
+            if meet.isAttended {
+                return .systemGray5
+            } else {
+                return .systemBrown
+            }
+        }
+    }
+    
+    var attendButtonEnabled: Bool {
+        let currentUid = LocalStorage.shared.getUid()
+        if meet.ownerUid == currentUid {
+            return false
+        } else {
+            if meet.isAttended {
+                return false
+            } else {
+                return true
+            }
+        }
+    }
+
     init(meet: Meet) {
         self.meet = meet
     }

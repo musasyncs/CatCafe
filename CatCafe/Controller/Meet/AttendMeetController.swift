@@ -9,10 +9,13 @@ import UIKit
 
 class AttendMeetController: UIViewController {
     
+    let meet: Meet
+    
     let bottomView = UIView()
     let exitButton = UIButton()
     let titleLabel = UILabel()
     let topDivider = UIView()
+    
     let contactLabel = UILabel()
 
     lazy var contactTextView: InputTextView = {
@@ -26,11 +29,33 @@ class AttendMeetController: UIViewController {
         return textView
     }()
     
-    let characterCountLabel: UILabel = {
+    let contactCountLabel: UILabel = {
         let label = UILabel()
         label.textColor = .lightGray
         label.font = .systemFont(ofSize: 8, weight: .regular)
-        label.text = "0/300"
+        label.text = "0/200"
+        label.textAlignment = .center
+        return label
+    }()
+    
+    let remarkLabel = UILabel()
+
+    lazy var remarkTextView: InputTextView = {
+        let textView = InputTextView()
+        textView.placeholderText = "輸入想對聚會主說的話"
+        textView.font = .systemFont(ofSize: 13, weight: .regular)
+        textView.showsVerticalScrollIndicator = false
+        textView.isScrollEnabled = false
+        textView.delegate = self
+        textView.placeholderShouldCenter = false
+        return textView
+    }()
+    
+    let remarkCountLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .lightGray
+        label.font = .systemFont(ofSize: 8, weight: .regular)
+        label.text = "0/200"
         label.textAlignment = .center
         return label
     }()
@@ -41,9 +66,18 @@ class AttendMeetController: UIViewController {
     let sendButton = makeTitleButton(withText: "送出", font: .notoRegular(size: 12))
     
     var bottomConstraint: NSLayoutConstraint?
-    var popupOffset: CGFloat = UIScreen.height *  0.5
+    var popupOffset: CGFloat = UIScreen.height *  0.7
 
     // MARK: - Life Cycle
+    
+    init(meet: Meet) {
+        self.meet = meet
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -68,7 +102,7 @@ class AttendMeetController: UIViewController {
     // MARK: - Helpers
     
     private func checkMaxlength(_ textView: UITextView) {
-        if textView.text.count > 300 {
+        if textView.text.count > 200 {
             textView.deleteBackward()
         }
     }
@@ -80,11 +114,33 @@ class AttendMeetController: UIViewController {
     }
     
     @objc func cancelTapped() {
-        print("DEBUG: cencel")
+ 
     }
     
     @objc func sendTapped() {
-        print("DEBUG: send")
+        guard let contact = contactTextView.text, contact.isEmpty == false,
+              let remarks = remarkTextView.text, remarks.isEmpty == false
+        else {
+            showMessage(withTitle: "Validate Failed", message: "欄位不可留白")
+            return
+        }
+        
+        showLoader(true)
+        MeetService.attendMeet(meet: meet,
+                               contact: contact,
+                               remarks: remarks) { error in
+            self.showLoader(false)
+            
+            if let error = error {
+                print("DEBUG: Failed to attend meet with error \(error.localizedDescription)")
+                return
+            }
+            
+            // Back to feed page
+            
+            // update meet feed
+            NotificationCenter.default.post(name: CCConstant.NotificationName.updateMeetFeed, object: nil)
+        }
     }
     
 }
@@ -92,14 +148,12 @@ class AttendMeetController: UIViewController {
 extension AttendMeetController {
     
     fileprivate func setup() {
-        // setup
         exitButton.addTarget(self, action: #selector(exitTapped), for: .touchUpInside)
         cancelButton.addTarget(self, action: #selector(cancelTapped), for: .touchUpInside)
         sendButton.addTarget(self, action: #selector(sendTapped), for: .touchUpInside)
     }
     
     fileprivate func style() {
-        // style
         bottomView.backgroundColor = .white
         bottomView.layer.cornerRadius = 12
         bottomView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
@@ -112,10 +166,17 @@ extension AttendMeetController {
         titleLabel.text = "報名聚會"
         titleLabel.textColor = UIColor.rgb(red: 63, green: 58, blue: 58)
         titleLabel.font = .notoMedium(size: 15)
+        
         contactLabel.text = "聯絡方式"
         contactLabel.textColor = .systemRed
         contactLabel.font = .notoRegular(size: 15)
         contactTextView.backgroundColor = .systemGray6
+        
+        remarkLabel.text = "想對聚會主說的話"
+        remarkLabel.textColor = .black
+        remarkLabel.font = .notoRegular(size: 15)
+        remarkTextView.backgroundColor = .systemGray6
+        
         descriptionLabel.text = "收到您的報名資訊，聚會主會決定是否透過上述資訊聯絡您。"
         descriptionLabel.textColor = .lightGray
         descriptionLabel.font = .notoRegular(size: 11)
@@ -125,7 +186,8 @@ extension AttendMeetController {
     
     fileprivate func layout() {
         [bottomView, exitButton, titleLabel, topDivider,
-         contactLabel, contactTextView, characterCountLabel,
+         contactLabel, contactTextView, contactCountLabel,
+         remarkLabel, remarkTextView, remarkCountLabel,
          descriptionLabel,
          bottomDivider,
          cancelButton, sendButton].forEach {
@@ -158,7 +220,6 @@ extension AttendMeetController {
                             left: bottomView.leftAnchor,
                             paddingTop: 16,
                             paddingLeft: 16)
-        
         contactTextView.anchor(top: contactLabel.bottomAnchor,
                                left: bottomView.leftAnchor,
                                right: bottomView.rightAnchor,
@@ -166,10 +227,22 @@ extension AttendMeetController {
                                paddingLeft: 16,
                                paddingRight: 16)
         contactTextView.setHeight(50)
+        contactCountLabel.anchor(bottom: contactTextView.topAnchor, right: contactTextView.rightAnchor)
         
-        characterCountLabel.anchor(bottom: contactTextView.topAnchor, right: contactTextView.rightAnchor)
+        remarkLabel.anchor(top: contactTextView.bottomAnchor,
+                            left: bottomView.leftAnchor,
+                            paddingTop: 16,
+                            paddingLeft: 16)
+        remarkTextView.anchor(top: remarkLabel.bottomAnchor,
+                               left: bottomView.leftAnchor,
+                               right: bottomView.rightAnchor,
+                               paddingTop: 8,
+                               paddingLeft: 16,
+                               paddingRight: 16)
+        remarkTextView.setHeight(50)
+        remarkCountLabel.anchor(bottom: remarkTextView.topAnchor, right: contactTextView.rightAnchor)
         
-        descriptionLabel.anchor(top: contactTextView.bottomAnchor,
+        descriptionLabel.anchor(top: remarkTextView.bottomAnchor,
                                 left: bottomView.leftAnchor,
                                 right: bottomView.rightAnchor,
                                 paddingTop: 24,
@@ -200,10 +273,17 @@ extension AttendMeetController {
 extension AttendMeetController: UITextViewDelegate {
     
     func textViewDidChange(_ textView: UITextView) {
-        checkMaxlength(textView)
-        let count = textView.text.count
-        characterCountLabel.text  = "\(count)/300"
         
+        if textView == contactTextView {
+            checkMaxlength(textView)
+            let count = textView.text.count
+            contactCountLabel.text  = "\(count)/200"
+        } else {
+            checkMaxlength(textView)
+            let count = textView.text.count
+            remarkCountLabel.text  = "\(count)/200"
+        }
+            
         let size = CGSize(width: bottomView.frame.width - 32, height: .infinity)
         let estimatedSize = textView.sizeThatFits(size)
         

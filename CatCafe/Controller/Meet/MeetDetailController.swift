@@ -9,9 +9,16 @@ import UIKit
 
 class MeetDetailController: UICollectionViewController {
     
-    private let meet: Meet
-    private var comments = [Comment]()
-    private var people = [User]()
+    private var meet: Meet {
+        didSet {
+            collectionView.reloadData()
+        }
+    }
+    private var comments = [Comment]() {
+        didSet {
+            collectionView.reloadData()
+        }
+    }
     
     private lazy var commentInputView: CommentInputAccessoryView = {
         let frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 50)
@@ -37,6 +44,9 @@ class MeetDetailController: UICollectionViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupCollectionView()
+        fetchMeetWithMeetId()
+        checkIfCurrentUserLikedMeet()
+        checkIfCurrentUserAttendedMeet()
         fetchComments()
     }
     
@@ -53,14 +63,31 @@ class MeetDetailController: UICollectionViewController {
     // MARK: - Helpers
     
     // MARK: - API
+
+    func fetchMeetWithMeetId() {
+        MeetService.fetchMeet(withMeetId: meet.meetId) { meet in
+            self.meet.likes = meet.likes
+        }
+    }
+    
+    func checkIfCurrentUserLikedMeet() {
+        MeetService.checkIfCurrentUserLikedMeet(meet: meet) { isLiked in
+            self.meet.isLiked = isLiked
+        }
+    }
+
+    func checkIfCurrentUserAttendedMeet() {
+        MeetService.checkIfCurrentUserAttendedMeet(meet: meet) { isAttended in
+            self.meet.isAttended = isAttended
+        }
+    }
     
     func fetchComments() {
         CommentService.fetchMeetComments(forMeet: meet.meetId) { comments in
             self.comments = comments
-            self.collectionView.reloadData()
         }
     }
-
+    
 }
 
 extension MeetDetailController {
@@ -148,7 +175,7 @@ extension MeetDetailController {
                         
             header.delegate = self
             header.viewModel = MeetViewModel(meet: meet)
-            
+                        
             UserService.fetchUserBy(uid: meet.ownerUid) { user in
                 header.viewModel?.ownerUsername = user.username
                 header.viewModel?.ownerImageUrl = URL(string: user.profileImageUrlString)
@@ -156,9 +183,7 @@ extension MeetDetailController {
             
             // comments count
             header.viewModel?.comments = self.comments
-            // people count
-            header.viewModel?.people = self.people
-            
+                                
             return header
         }
     }
@@ -213,7 +238,7 @@ extension MeetDetailController: UICollectionViewDelegateFlowLayout {
 
 extension MeetDetailController: CommentSectionHeaderDelegate {
     func didTapAttendButton(_ header: CommentSectionHeader) {
-        let controller = AttendMeetController()
+        let controller = AttendMeetController(meet: meet)
         controller.modalPresentationStyle = .overFullScreen
         present(controller, animated: true)
     }

@@ -85,6 +85,7 @@ extension LoginController {
     }
     
     func style() {
+        view.backgroundColor = .white
         navigationController?.navigationBar.isHidden = true
         navigationController?.navigationBar.barStyle = .black
         stackView.axis = .vertical

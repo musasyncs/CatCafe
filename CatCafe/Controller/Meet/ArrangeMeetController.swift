@@ -130,13 +130,7 @@ class ArrangeMeetController: UIViewController {
               let meetTitleText = meetTitleText, !meetTitleText.isEmpty,
               let meetDescription = meetDescription, !meetDescription.isEmpty
         else {
-            let alert = UIAlertController(title: "Validate Failed",
-                                          message: "欄位不可留白",
-                                          preferredStyle: .alert)
-            let okAction = UIAlertAction(title: "確定", style: .default) { _ in }
-            okAction.setValue(UIColor.systemBrown, forKey: "titleTextColor")
-            alert.addAction(okAction)
-            present(alert, animated: true)
+            showMessage(withTitle: "Validate Failed", message: "欄位不可留白")
             return
         }
         

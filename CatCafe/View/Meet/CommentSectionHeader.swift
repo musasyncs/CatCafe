@@ -31,6 +31,9 @@ class CommentSectionHeader: UICollectionReusableView {
             likeButton.tintColor = viewModel.likeButtonTintColor
             likeButton.setImage(viewModel.likeButtonImage, for: .normal)
             likesLabel.text = viewModel.likesLabelText
+            
+            attendButton.backgroundColor = viewModel.attendButtonBackgroundColor
+            attendButton.isEnabled = viewModel.attendButtonEnabled
         }
     }
     
@@ -83,8 +86,7 @@ class CommentSectionHeader: UICollectionReusableView {
     // MARK: - Action
     
     @objc func didTapLike() {
-        guard let viewModel = viewModel else { return }
-        print("DEBUG: didTapLike")
+        print("DEBUG: List all users like this post")
     }
     
     @objc func handleAttendTapped() {
