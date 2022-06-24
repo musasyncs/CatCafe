@@ -30,7 +30,7 @@ class MeetPeopleViewController: UIViewController {
     let briefInfoView = BriefInfoView()
     let leaveButton = makeTitleButton(
         withText: "離開",
-        font: .systemFont(ofSize: 18, weight: .regular),
+        font: .systemFont(ofSize: 15, weight: .regular),
         kern: 1,
         foregroundColor: .white,
         backgroundColor: .clear,

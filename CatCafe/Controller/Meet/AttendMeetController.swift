@@ -120,14 +120,15 @@ class AttendMeetController: UIViewController {
                                contact: contact,
                                remarks: remarks) { error in
             self.showLoader(false)
-            
+
             if let error = error {
                 print("DEBUG: Failed to attend meet with error \(error.localizedDescription)")
                 return
             }
-            
-            // Back to feed page
-            
+
+            // dismiss
+            self.presentingViewController?.presentingViewController?.dismiss(animated: true, completion: nil)
+
             // update meet feed
             NotificationCenter.default.post(name: CCConstant.NotificationName.updateMeetFeed, object: nil)
         }
