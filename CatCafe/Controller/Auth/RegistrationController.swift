@@ -22,10 +22,10 @@ class RegistrationController: UIViewController {
     private lazy var stackView = UIStackView(
         arrangedSubviews: [emailTextField, passwordTextField, fullnameTextField, usernameTextField, signUpButton]
     )
-    private let emailTextField = CustomTextField(placeholder: "Email")
-    private let passwordTextField = CustomTextField(placeholder: "Password")
-    private let fullnameTextField = CustomTextField(placeholder: "Fullname")
-    private let usernameTextField = CustomTextField(placeholder: "Username")
+    private let emailTextField = RegTextField(placeholder: "Email")
+    private let passwordTextField = RegTextField(placeholder: "Password")
+    private let fullnameTextField = RegTextField(placeholder: "Fullname")
+    private let usernameTextField = RegTextField(placeholder: "Username")
     private let signUpButton = UIButton(type: .system)
     private lazy var alreadyHaveAccountButton = UIButton(type: .system)
     
@@ -61,7 +61,7 @@ class RegistrationController: UIViewController {
             
             switch result {
             case .success(let authUser):
-                ImageUplader.uploadProfileImage(image: credentials.profileImage) { imageUrlString in
+                ImageUplader.uploadImage(for: .profile, image: credentials.profileImage) { imageUrlString in
                     UserService.createUserProfile(
                         userId: authUser.uid,
                         profileImageUrlString: imageUrlString,
@@ -120,6 +120,7 @@ extension RegistrationController {
     }
     
     func style() {
+        view.backgroundColor = .white
         plusPhotoButton.setImage(UIImage(named: "plus_photo"), for: .normal)
         plusPhotoButton.tintColor = .lightGray
         stackView.axis = .vertical

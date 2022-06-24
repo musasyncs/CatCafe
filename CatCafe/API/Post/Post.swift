@@ -18,7 +18,6 @@ struct Post {
     let timestamp: Timestamp
     
     var postId: String
-    
     var isLiked = false
         
     init(postId: String, dic: [String: Any]) {

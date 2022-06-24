@@ -17,6 +17,7 @@ struct CCConstant {
     
     struct NotificationName {
         static let updateFeed = NSNotification.Name("updateFeed")
+        static let updateMeetFeed = NSNotification.Name("updateMeetFeed")
     }
 
     static let COLLECTION_USERS = Firestore.firestore().collection("users")
@@ -25,4 +26,5 @@ struct CCConstant {
     static let COLLECTION_CAFES = Firestore.firestore().collection("cafes")
     static let COLLECTION_POSTS = Firestore.firestore().collection("posts")
     static let COLLECTION_NOTIFICATIONS = Firestore.firestore().collection("notifications")
+    static let COLLECTION_MEETS = Firestore.firestore().collection("meets")
 }

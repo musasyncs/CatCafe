@@ -21,7 +21,7 @@ struct PostService {
     ) {
         guard let uid = LocalStorage.shared.getUid() else { return }
         
-        ImageUplader.uploadPostImage(image: postImage) { imageUrlString in
+        ImageUplader.uploadImage(for: .post, image: postImage) { imageUrlString in
             let dic: [String: Any] = [
                 "ownerUid": uid,
                 "mediaType": 0,
@@ -54,7 +54,7 @@ struct PostService {
         query.getDocuments { snapshot, _ in
             guard let documents = snapshot?.documents else { return }
             var posts = documents.map { Post(postId: $0.documentID, dic: $0.data()) }
-            posts.sort(by: {$0.timestamp.seconds > $1.timestamp.seconds })
+            posts.sort(by: { $0.timestamp.seconds > $1.timestamp.seconds })
             completion(posts)
         }
     }
@@ -77,7 +77,7 @@ struct PostService {
             snapshot?.documents.forEach({ document in
                 fetchPost(withPostId: document.documentID) { post in
                     posts.append(post)
-                    posts.sort(by: {$0.timestamp.seconds > $1.timestamp.seconds })
+                    posts.sort(by: { $0.timestamp.seconds > $1.timestamp.seconds })
                     completion(posts)
                 }
             })
@@ -86,7 +86,7 @@ struct PostService {
         }
     }
     
-    // MARK: - Like a post / UnLike a post / Check if a user like a post
+    // MARK: - Like a post / UnLike a post / Check if current user like a post
     
     static func likePost(post: Post, completion: @escaping(FirestoreCompletion)) {
         guard let uid = LocalStorage.shared.getUid() else { return }
@@ -96,7 +96,7 @@ struct PostService {
         CCConstant.COLLECTION_POSTS.document(post.postId)
             .collection("post-likes").document(uid).setData([:]) { _ in
                 CCConstant.COLLECTION_USERS.document(uid)
-                    .collection("user-likes").document(post.postId).setData([:], completion: completion)
+                    .collection("user-post-likes").document(post.postId).setData([:], completion: completion)
         }
     }
     
@@ -109,7 +109,7 @@ struct PostService {
         CCConstant.COLLECTION_POSTS.document(post.postId)
             .collection("post-likes").document(uid).delete { _ in
                 CCConstant.COLLECTION_USERS.document(uid)
-                    .collection("user-likes").document(post.postId).delete(completion: completion)
+                    .collection("user-post-likes").document(post.postId).delete(completion: completion)
             }
     }
     
@@ -117,7 +117,7 @@ struct PostService {
         guard let uid = LocalStorage.shared.getUid() else { return }
         
         CCConstant.COLLECTION_USERS.document(uid)
-            .collection("user-likes").document(post.postId).getDocument { snapshot, _ in
+            .collection("user-post-likes").document(post.postId).getDocument { snapshot, _ in
                 guard let isLiked = snapshot?.exists else { return }
                 completion(isLiked)
             }

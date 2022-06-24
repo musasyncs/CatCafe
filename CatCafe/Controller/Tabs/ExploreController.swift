@@ -33,8 +33,6 @@ class ExploreController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        view.backgroundColor = .white
         configureUI()
         configureSearchController()
         
@@ -61,6 +59,7 @@ class ExploreController: UIViewController {
     // MARK: - Helpers
     
     func configureUI() {
+        view.backgroundColor = .white
         tableView.dataSource = self
         tableView.delegate = self
         tableView.register(UserCell.self, forCellReuseIdentifier: UserCell.identifier)

@@ -9,25 +9,18 @@ import UIKit
 
 final class ControlSectionHeader: UITableViewHeaderFooterView {
     
-    lazy var galleryButton = makeAttriTitleButton(
-        text: "圖庫",
-        font: .systemFont(ofSize: 17, weight: .regular),
-        fgColor: .black,
-        kern: 1
-    )
-    lazy var cameraButton = makeIconButton(
-        imagename: "camera",
-        imageColor: .white,
-        imageWidth: 15,
-        imageHeight: 15,
-        borderWith: 0,
-        borderColor: .black,
-        backgroundColor: .systemGray
-    )
+    lazy var galleryButton = makeTitleButton(withText: "圖庫",
+                                             font: .systemFont(ofSize: 17, weight: .regular))
+    lazy var cameraButton = makeIconButton(imagename: "camera",
+                                           imageColor: .white,
+                                           imageWidth: 15,
+                                           imageHeight: 15,
+                                           backgroundColor: .systemGray,
+                                           borderColor: .black)
     
     override init(reuseIdentifier: String?) {
         super.init(reuseIdentifier: reuseIdentifier)
-
+        
         cameraButton.layer.cornerRadius = 30 / 2
 
         addSubview(galleryButton)

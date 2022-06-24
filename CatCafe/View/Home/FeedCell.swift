@@ -34,7 +34,19 @@ final class FeedCell: UICollectionViewCell {
         }
     }
     
-    private let profileImageView = UIImageView()
+    private lazy var profileImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
+        imageView.isUserInteractionEnabled = true
+        imageView.backgroundColor = .lightGray
+        
+        let recognizer = UITapGestureRecognizer(target: self, action: #selector(showUserProfile))
+        imageView.isUserInteractionEnabled = true
+        imageView.addGestureRecognizer(recognizer)
+        return imageView
+    }()
+    
     private lazy var usernameButton = UIButton(type: .system)
     private lazy var locationButton = UIButton(type: .system)
     private lazy var infoStackView = UIStackView(arrangedSubviews: [usernameButton, locationButton])
@@ -63,20 +75,10 @@ final class FeedCell: UICollectionViewCell {
         usernameButton.addTarget(self, action: #selector(showUserProfile), for: .touchUpInside)
         commentButton.addTarget(self, action: #selector(didTapComments), for: .touchUpInside)
         likeButton.addTarget(self, action: #selector(didTapLike), for: .touchUpInside)
-        
-        let recognizer = UITapGestureRecognizer(target: self, action: #selector(showUserProfile))
-        profileImageView.isUserInteractionEnabled = true
-        profileImageView.addGestureRecognizer(recognizer)
     }
     
     func configureUI() {
         backgroundColor = .white
-        
-        profileImageView.contentMode = .scaleAspectFill
-        profileImageView.clipsToBounds = true
-        profileImageView.isUserInteractionEnabled = true
-        profileImageView.backgroundColor = .lightGray
-        
         usernameButton.setTitleColor(.black, for: .normal)
         usernameButton.titleLabel?.font = .notoMedium(size: 13)
         locationButton.setTitleColor(.systemBrown, for: .normal)

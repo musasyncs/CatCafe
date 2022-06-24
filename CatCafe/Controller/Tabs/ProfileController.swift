@@ -226,7 +226,7 @@ extension ProfileController: ProfileHeaderDelegate {
                 self.collectionView.reloadData()
             }
             
-            PostService.updateUserFeedAfterFollowing(user: user, didFollow: true)
+            PostService.updateUserFeedAfterFollowing(user: user, didFollow: false)
             
         } else {
             // Handle follow user
@@ -236,13 +236,14 @@ extension ProfileController: ProfileHeaderDelegate {
             }
             
             // 通知被follow的人
-            guard let tab = tabBarController as? MainTabController else { return }
-            guard let currentUser = tab.user else { return }
-            
-            NotificationService.uploadNotification(toUid: user.uid,
-                                                   notiType: .follow,
-                                                   fromUser: currentUser)
-            
+            guard let currentUid = LocalStorage.shared.getUid() else { return }
+            UserService.fetchUserBy(uid: currentUid, completion: { currentUser in
+                NotificationService.uploadNotification(
+                    toUid: user.uid,
+                    notiType: .follow,
+                    fromUser: currentUser)
+            })
+                                    
             // 資料庫user-feed更新
             PostService.updateUserFeedAfterFollowing(user: user, didFollow: true)
         }

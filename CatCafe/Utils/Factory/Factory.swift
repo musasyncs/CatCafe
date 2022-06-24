@@ -7,6 +7,71 @@
 
 import UIKit
 
+// MARK: - Custom Text Field
+
+class RegTextField: UITextField {
+    
+    init(placeholder: String) {
+        super.init(frame: .zero)
+        borderStyle = .none
+        textColor = .black
+        keyboardAppearance = .light
+        keyboardType = .emailAddress
+        backgroundColor = UIColor.systemGray6
+        
+        attributedPlaceholder = NSAttributedString(
+            string: placeholder,
+            attributes: [.foregroundColor: UIColor.lightGray]
+        )
+        
+        let spacer = UIView()
+        spacer.setDimensions(height: 50, width: 12)
+        leftView = spacer
+        leftViewMode = .always
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+}
+
+class CustomTextField: UITextField {
+    
+    override func textRect(forBounds bounds: CGRect) -> CGRect {
+        return bounds.inset(by: UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8))
+    }
+    
+    override func editingRect(forBounds bounds: CGRect) -> CGRect {
+        return bounds.inset(by: UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8))
+    }
+    
+    init(placeholder: String, textColor: UIColor, fgColor: UIColor, font: UIFont) {
+        super.init(frame: .zero)
+        
+        self.textColor = textColor
+        self.font = .notoRegular(size: 11)
+        
+        attributedPlaceholder = NSAttributedString(
+            string: placeholder,
+            attributes: [
+                NSAttributedString.Key.foregroundColor: fgColor,
+                NSAttributedString.Key.font: font
+            ]
+        )
+        
+        // Add Under Line
+        let underline = UIView()
+        addSubview(underline)
+        underline.anchor(left: leftAnchor, bottom: bottomAnchor, right: rightAnchor, height: 0.5)
+        underline.backgroundColor = .black
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
 // MARK: - UITextView
 
 class InputTextView: UITextView {
@@ -29,7 +94,7 @@ class InputTextView: UITextView {
     }
     
     let placeholderLabel: UILabel = {
-       let label = UILabel()
+        let label = UILabel()
         label.font = UIFont.notoMedium(size: 12)
         label.textColor = .lightGray
         return label
@@ -39,7 +104,7 @@ class InputTextView: UITextView {
         super.init(frame: frame, textContainer: textContainer)
         
         addSubview(placeholderLabel)
-    
+        
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(handleTextDidChange),
@@ -81,38 +146,86 @@ func makeStackView(axis: NSLayoutConstraint.Axis) -> UIStackView {
 
 // MARK: - Buttons
 
-func makeAttriTitleButton(text: String, font: UIFont, fgColor: UIColor, kern: Double) -> UIButton {
-    let button = UIButton(type: .custom)
-    let attributedText = NSMutableAttributedString(string: text, attributes: [
-        .font: font,
-        .foregroundColor: fgColor,
-        .kern: kern
-    ])
+func makeBarButtonItem(target: Any?,
+                       foregroundColor: UIColor,
+                       text: String,
+                       traits: UIFontDescriptor.SymbolicTraits,
+                       insets: UIEdgeInsets = .zero,
+                       selector: Selector
+) -> UIBarButtonItem {
+    let button = UIButton()
+    button.translatesAutoresizingMaskIntoConstraints = false
+    button.addTarget(target, action: selector, for: .primaryActionTriggered)
+    
+    let attributes = [
+        NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: .title1).withTraits(traits: traits),
+        NSAttributedString.Key.foregroundColor: foregroundColor
+    ]
+    let attributedText = NSMutableAttributedString(string: text, attributes: attributes)
     button.setAttributedTitle(attributedText, for: .normal)
-    return button
+    
+    button.contentEdgeInsets = insets
+    
+    let barButtonItem = UIBarButtonItem(customView: button)
+    return barButtonItem
 }
 
 func makeIconButton(imagename: String,
-                    imageColor: UIColor,
+                    imageColor: UIColor? = nil,
                     imageWidth: Int,
                     imageHeight: Int,
-                    borderWith: CGFloat? = nil,
-                    borderColor: UIColor? = nil,
-                    backgroundColor: UIColor? = nil) -> UIButton {
+                    backgroundColor: UIColor = .clear,
+                    cornerRadius: CGFloat = 0,
+                    borderWith: CGFloat = 0,
+                    borderColor: UIColor = .clear) -> UIButton {
     let button = UIButton()
     button.translatesAutoresizingMaskIntoConstraints = false
     
-    let image = UIImage(named: imagename)?
-        .withTintColor(imageColor)
+    var image = UIImage(named: imagename)?
         .resize(to: .init(width: imageWidth, height: imageHeight))
+    
+    if let imageColor = imageColor {
+        image = image?.withTintColor(imageColor)
+    }
+    
     button.setImage(image, for: .normal)
     
     button.backgroundColor = backgroundColor
+    button.layer.cornerRadius = cornerRadius
+    button.layer.borderWidth = borderWith
+    button.layer.borderColor = borderColor.cgColor
+    return button
+}
+
+func makeTitleButton(withText text: String,
+                     font: UIFont,
+                     kern: Double = 1,
+                     foregroundColor: UIColor = .black,
+                     backgroundColor: UIColor = .clear,
+                     insets: UIEdgeInsets = .zero,
+                     cornerRadius: CGFloat = 0,
+                     borderWidth: CGFloat = 0,
+                     borderColor: UIColor = .clear
+) -> UIButton {
+    let button = UIButton()
+    button.translatesAutoresizingMaskIntoConstraints = false
     
-    if let borderWith = borderWith {
-        button.layer.borderWidth = borderWith
-    }
-    button.layer.borderColor = borderColor?.cgColor
+    let attributedText = NSMutableAttributedString(
+        string: text,
+        attributes: [
+            .font: font,
+            .foregroundColor: foregroundColor,
+            .kern: kern
+        ])
+    button.setAttributedTitle(attributedText, for: .normal)
+    button.backgroundColor = backgroundColor
+    
+    button.titleLabel?.adjustsFontSizeToFitWidth = true
+    
+    button.contentEdgeInsets = insets
+    button.layer.cornerRadius = cornerRadius
+    button.layer.borderWidth = borderWidth
+    button.layer.borderColor = borderColor.cgColor
     return button
 }
 
