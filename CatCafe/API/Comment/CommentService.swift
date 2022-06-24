@@ -42,8 +42,8 @@ struct CommentService {
     ) {
         var comments = [Comment]()
         
-        let query = CCConstant.COLLECTION_POSTS.document(postId)
-            .collection("comments").order(by: "timestamp", descending: true)
+        let query = CCConstant.COLLECTION_POSTS.document(postId).collection("comments")
+            .order(by: "timestamp", descending: false)
         
         query.addSnapshotListener { snapshot, _ in
             snapshot?.documentChanges.forEach({ change in
@@ -91,8 +91,7 @@ struct CommentService {
     ) {
         var comments = [Comment]()
         
-        let query = CCConstant.COLLECTION_MEETS.document(meetId)
-            .collection("comments").order(by: "timestamp", descending: true)
+        let query = CCConstant.COLLECTION_MEETS.document(meetId).collection("comments").order(by: "timestamp", descending: false)
         
         query.addSnapshotListener { snapshot, _ in
             snapshot?.documentChanges.forEach({ change in

@@ -16,6 +16,7 @@ class PostSelectController: UIViewController {
     var image: UIImage? {
         didSet {
             topHeaderView.image = image
+            navigationItem.rightBarButtonItem?.isEnabled = true
         }
     }
     
@@ -76,6 +77,7 @@ class PostSelectController: UIViewController {
             target: self,
             action: #selector(handleNext)
         )
+        navigationItem.rightBarButtonItem?.isEnabled = false
     }
     
     func setupTableView() {

@@ -39,7 +39,7 @@ class BriefInfoView: UIView {
         button.setTitle("查看個人頁面", for: .normal)
         button.backgroundColor = .systemBrown
         button.setTitleColor(.white, for: .normal)
-        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 13)
         button.layer.cornerRadius = 5
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
@@ -48,6 +48,8 @@ class BriefInfoView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = .white
+        contactLabel.numberOfLines = 0
+        remarksLabel.numberOfLines = 0
     }
     
     required init?(coder: NSCoder) {
@@ -89,13 +91,12 @@ class BriefInfoView: UIView {
         
         addSubview(contactLabel)
         contactLabel.anchor(top: topView.bottomAnchor,
-                            left: leftAnchor,
-                            paddingTop: 16, paddingLeft: 16)
+                            left: leftAnchor, right: rightAnchor,
+                            paddingTop: 16, paddingLeft: 16, paddingRight: 16)
         addSubview(remarksLabel)
         remarksLabel.anchor(top: contactLabel.bottomAnchor,
-                            left: leftAnchor,
-                            paddingTop: 16,
-                            paddingLeft: 16)
+                            left: leftAnchor, right: rightAnchor,
+                            paddingTop: 16, paddingLeft: 16, paddingRight: 16)
         
         addSubview(profileButton)
         profileButton.anchor(

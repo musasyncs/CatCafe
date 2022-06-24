@@ -15,11 +15,12 @@ class CommentInputAccessoryView: UIView {
     
     weak var delegate: CommentInputAccessoryViewDelegate?
     
-    private let commentTextView: InputTextView = {
+    lazy var commentTextView: InputTextView = {
         let textView = InputTextView()
         textView.placeholderText = "新增留言..."
         textView.font = UIFont.systemFont(ofSize: 15)
         textView.isScrollEnabled = false
+        textView.delegate = self
         textView.placeholderShouldCenter = true
         return textView
     }()
@@ -27,15 +28,15 @@ class CommentInputAccessoryView: UIView {
     lazy var postButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("發佈", for: .normal)
-        button.setTitleColor(.black, for: .normal)
-        button.titleLabel?.font = .boldSystemFont(ofSize: 14)
+        button.setTitleColor(UIColor.lightGray, for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 14, weight: .medium)
         button.addTarget(self, action: #selector(handlePostTapped), for: .touchUpInside)
+        button.isEnabled = false
         return button
     }()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
         backgroundColor = .white
         autoresizingMask = .flexibleHeight
         
@@ -81,4 +82,16 @@ class CommentInputAccessoryView: UIView {
         delegate?.inputView(self, wantsToUploadComment: commentTextView.text)
     }
     
+}
+
+extension CommentInputAccessoryView: UITextViewDelegate {
+    func textViewDidChange(_ textView: UITextView) {
+        if !textView.text.isEmpty {
+            self.postButton.setTitleColor(UIColor.black, for: .normal)
+            self.postButton.isEnabled = true
+        } else {
+            self.postButton.setTitleColor(UIColor.lightGray, for: .normal)
+            self.postButton.isEnabled = false
+        }
+    }
 }

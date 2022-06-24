@@ -180,26 +180,30 @@ extension FeedController: FeedCellDelegate {
     }
     
     func cell(_ cell: FeedCell, didLike post: Post) {
-        guard let tab = tabBarController as? MainTabController else { return }
-        guard let currentUser = tab.user else { return }
         
-        cell.viewModel?.post.isLiked.toggle()
+        guard let currentUid = LocalStorage.shared.getUid() else { return }
+        UserService.fetchUserBy(uid: currentUid, completion: { currentUser in
         
-        if post.isLiked {
-            PostService.unlikePost(post: post) { _ in
-                cell.viewModel?.post.likes = post.likes - 1
+            cell.viewModel?.post.isLiked.toggle()
+            
+            if post.isLiked {
+                PostService.unlikePost(post: post) { _ in
+                    cell.viewModel?.post.likes = post.likes - 1
+                }
+            } else {
+                PostService.likePost(post: post) { _ in
+                    cell.viewModel?.post.likes = post.likes + 1
+                    
+                    // 發like通知給對方
+                    NotificationService.uploadNotification(toUid: post.ownerUid,
+                                                           notiType: .like,
+                                                           fromUser: currentUser,
+                                                           post: post)
+                }
             }
-        } else {
-            PostService.likePost(post: post) { _ in
-                cell.viewModel?.post.likes = post.likes + 1
-                
-                // 發like通知給對方
-                NotificationService.uploadNotification(toUid: post.ownerUid,
-                                                       notiType: .like,
-                                                       fromUser: currentUser,
-                                                       post: post)
-            }
-        }
+            
+        })
+        
     }
     
 }

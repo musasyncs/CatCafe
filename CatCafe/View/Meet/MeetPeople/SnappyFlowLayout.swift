@@ -24,7 +24,7 @@ class SnappyFlowLayout: UICollectionViewFlowLayout {
     
     func setup() {
         scrollDirection = .horizontal
-        minimumLineSpacing = 40
+        minimumLineSpacing = 65
     }
     
     private func getCollectionView() -> UICollectionView {
@@ -37,8 +37,8 @@ class SnappyFlowLayout: UICollectionViewFlowLayout {
     // swiftlint:disable all
     override func prepare() {
         let collectionView = getCollectionView()
-        let width = collectionView.frame.width * 0.6
-        let height = collectionView.frame.height * 0.6
+        let width = collectionView.frame.width * 0.5
+        let height = collectionView.frame.height * 0.5
         itemSize = CGSize(width: width, height: height)
         
         let verticalInsets = (collectionView.frame.height - collectionView.adjustedContentInset.top - collectionView.adjustedContentInset.bottom - height) / 2

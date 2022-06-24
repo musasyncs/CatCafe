@@ -12,11 +12,13 @@ class AttendMeetController: UIViewController {
     let meet: Meet
     
     let bottomView = UIView()
-    let exitButton = UIButton()
     let titleLabel = UILabel()
     let topDivider = UIView()
     
     let contactLabel = UILabel()
+    
+    override var inputAccessoryView: UIView? { return nil }
+    override var canBecomeFirstResponder: Bool { return true }
 
     lazy var contactTextView: InputTextView = {
         let textView = InputTextView()
@@ -33,7 +35,7 @@ class AttendMeetController: UIViewController {
         let label = UILabel()
         label.textColor = .lightGray
         label.font = .systemFont(ofSize: 8, weight: .regular)
-        label.text = "0/200"
+        label.text = "0/100"
         label.textAlignment = .center
         return label
     }()
@@ -55,13 +57,14 @@ class AttendMeetController: UIViewController {
         let label = UILabel()
         label.textColor = .lightGray
         label.font = .systemFont(ofSize: 8, weight: .regular)
-        label.text = "0/200"
+        label.text = "0/150"
         label.textAlignment = .center
         return label
     }()
     
     let descriptionLabel = UILabel()
     let bottomDivider = UIView()
+    let centerDivider = UIView()
     let cancelButton = makeTitleButton(withText: "取消", font: .notoRegular(size: 12), foregroundColor: .systemRed)
     let sendButton = makeTitleButton(withText: "送出", font: .notoRegular(size: 12))
     
@@ -88,7 +91,6 @@ class AttendMeetController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
         bottomConstraint?.constant = popupOffset
         view.backgroundColor = .black.withAlphaComponent(0)
         
@@ -99,22 +101,10 @@ class AttendMeetController: UIViewController {
         })
     }
     
-    // MARK: - Helpers
-    
-    private func checkMaxlength(_ textView: UITextView) {
-        if textView.text.count > 200 {
-            textView.deleteBackward()
-        }
-    }
-    
     // MARK: - Action
     
-    @objc func exitTapped() {
-        self.dismiss(animated: false)
-    }
-    
     @objc func cancelTapped() {
- 
+        self.dismiss(animated: true)
     }
     
     @objc func sendTapped() {
@@ -148,7 +138,6 @@ class AttendMeetController: UIViewController {
 extension AttendMeetController {
     
     fileprivate func setup() {
-        exitButton.addTarget(self, action: #selector(exitTapped), for: .touchUpInside)
         cancelButton.addTarget(self, action: #selector(cancelTapped), for: .touchUpInside)
         sendButton.addTarget(self, action: #selector(sendTapped), for: .touchUpInside)
     }
@@ -161,8 +150,7 @@ extension AttendMeetController {
         bottomView.layer.shadowOffset = CGSize(width: 0, height: 5)
         bottomView.layer.shadowOpacity = 0.7
         bottomView.layer.shadowRadius = 10
-        
-        exitButton.setBackgroundImage(UIImage(named: "Icons_24px_Close"), for: .normal)
+
         titleLabel.text = "報名聚會"
         titleLabel.textColor = UIColor.rgb(red: 63, green: 58, blue: 58)
         titleLabel.font = .notoMedium(size: 15)
@@ -182,15 +170,16 @@ extension AttendMeetController {
         descriptionLabel.font = .notoRegular(size: 11)
         topDivider.backgroundColor = .lightGray
         bottomDivider.backgroundColor = .lightGray
+        centerDivider.backgroundColor = .lightGray
     }
     
     fileprivate func layout() {
-        [bottomView, exitButton, titleLabel, topDivider,
+        [bottomView, titleLabel, topDivider,
          contactLabel, contactTextView, contactCountLabel,
          remarkLabel, remarkTextView, remarkCountLabel,
          descriptionLabel,
          bottomDivider,
-         cancelButton, sendButton].forEach {
+         cancelButton, centerDivider, sendButton].forEach {
             view.addSubview($0)
         }
         
@@ -199,12 +188,7 @@ extension AttendMeetController {
                           height: popupOffset)
         bottomConstraint = bottomView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: popupOffset)
         bottomConstraint?.isActive = true
-        
-        exitButton.anchor(top: bottomView.topAnchor,
-                          left: bottomView.leftAnchor,
-                          paddingTop: 16, paddingLeft: 16)
-        exitButton.setDimensions(height: 24, width: 24)
-        
+
         titleLabel.anchor(top: bottomView.topAnchor, paddingTop: 24)
         titleLabel.centerX(inView: bottomView)
         
@@ -258,13 +242,16 @@ extension AttendMeetController {
         
         cancelButton.anchor(top: bottomDivider.bottomAnchor,
                             left: bottomView.leftAnchor,
-                            paddingLeft: 64)
+                            paddingLeft: UIScreen.width / 5)
         cancelButton.setHeight(48)
         sendButton.anchor(top: bottomDivider.bottomAnchor,
                           bottom: bottomView.bottomAnchor,
                           right: bottomView.rightAnchor,
-                          paddingRight: 64)
+                          paddingRight: UIScreen.width / 5)
         sendButton.setHeight(48)
+        centerDivider.setDimensions(height: 20, width: 1)
+        centerDivider.centerX(inView: view)
+        centerDivider.centerY(inView: cancelButton)
     }
 }
 
@@ -275,13 +262,15 @@ extension AttendMeetController: UITextViewDelegate {
     func textViewDidChange(_ textView: UITextView) {
         
         if textView == contactTextView {
-            checkMaxlength(textView)
-            let count = textView.text.count
-            contactCountLabel.text  = "\(count)/200"
+            if textView.text.count > 100 {
+                textView.deleteBackward()
+            }
+            contactCountLabel.text  = "\(textView.text.count)/100"
         } else {
-            checkMaxlength(textView)
-            let count = textView.text.count
-            remarkCountLabel.text  = "\(count)/200"
+            if textView.text.count > 150 {
+                textView.deleteBackward()
+            }
+            remarkCountLabel.text  = "\(textView.text.count)/150"
         }
             
         let size = CGSize(width: bottomView.frame.width - 32, height: .infinity)

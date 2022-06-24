@@ -108,8 +108,8 @@ extension MeetDetailController {
         backButton.layer.cornerRadius = 40 / 2
         backButton.clipsToBounds = true
         view.addSubview(backButton)
-        backButton.anchor(top: view.topAnchor, left: view.leftAnchor,
-                          paddingTop: 24, paddingLeft: 16)
+        backButton.anchor(top: view.safeAreaLayoutGuide.topAnchor,
+                          left: view.leftAnchor, paddingLeft: 24)
         backButton.setDimensions(height: 40, width: 40)
     }
 
@@ -276,30 +276,32 @@ extension MeetDetailController: CommentSectionHeaderDelegate {
 extension MeetDetailController: CommentInputAccessoryViewDelegate {
     func inputView(_ inputView: CommentInputAccessoryView, wantsToUploadComment comment: String) {
         
-        // 拿目前user
-        guard let tabBarController = tabBarController as? MainTabController else { return }
-        guard let currentUser = tabBarController.user else { return }
-        
-        showLoader(true)
-        
-        CommentService.uploadMeetComment(
-            meetId: meet.meetId,
-            user: currentUser,
-            commentType: 0,
-            mediaUrlString: "",
-            comment: comment
-        ) { error in
+        guard let currentUid = LocalStorage.shared.getUid() else { return }
+        UserService.fetchUserBy(uid: currentUid, completion: { currentUser in
             
-            self.showLoader(false)
+            self.showLoader(true)
             
-            if let error = error {
-                print("DEBUG: Failed to upload comment with error \(error.localizedDescription)")
-                return
+            CommentService.uploadMeetComment(
+                meetId: self.meet.meetId,
+                user: currentUser,
+                commentType: 0,
+                mediaUrlString: "",
+                comment: comment
+            ) { error in
+                
+                self.showLoader(false)
+                
+                if let error = error {
+                    print("DEBUG: Failed to upload comment with error \(error.localizedDescription)")
+                    return
+                }
+                
+                inputView.clearCommentTextView()
+                
+                // 通知被留言的人
             }
             
-            inputView.clearCommentTextView()
-            
-            // 通知被留言的人
-        }
+        })
+                                
     }
 }
