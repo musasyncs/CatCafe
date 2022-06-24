@@ -9,6 +9,7 @@ import UIKit
 
 protocol CommentSectionHeaderDelegate: AnyObject {
     func didTapAttendButton(_ header: CommentSectionHeader)
+    func didTapSeeAllPeopleButton(_ header: CommentSectionHeader)
 }
 
 class CommentSectionHeader: UICollectionReusableView {
@@ -19,6 +20,7 @@ class CommentSectionHeader: UICollectionReusableView {
                         
             hostProfileImageView.sd_setImage(with: viewModel.ownerImageUrl)
             hostnameLabel.text = viewModel.ownerUsername
+            seeAllPeopleButton.isHidden = viewModel.shouldHidePeopleButton
             
             titleLabel.text = viewModel.titleText
             
@@ -69,7 +71,13 @@ class CommentSectionHeader: UICollectionReusableView {
                                        foregroundColor: .white,
                                        backgroundColor: .systemBrown)
     let publicCommentLabel = UILabel()
-
+    
+    let seeAllPeopleButton = makeTitleButton(withText: "查看報名者",
+                                             font: .notoRegular(size: 13),
+                                             foregroundColor: .systemBrown, backgroundColor: .white,
+                                             insets: .init(top: 5, left: 5, bottom: 5, right: 5),
+                                             cornerRadius: 5, borderWidth: 1, borderColor: .systemBrown)
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setup()
@@ -84,6 +92,10 @@ class CommentSectionHeader: UICollectionReusableView {
     // MARK: - Helpers
     
     // MARK: - Action
+    
+    @objc func seeAllPeople() {
+        delegate?.didTapSeeAllPeopleButton(self)
+    }
     
     @objc func didTapLike() {
         print("DEBUG: List all users like this post")
@@ -104,6 +116,8 @@ extension CommentSectionHeader {
         
         attendButton.addTarget(self, action: #selector(handleAttendTapped), for: .touchUpInside)
         likeButton.addTarget(self, action: #selector(didTapLike), for: .touchUpInside)
+        
+        seeAllPeopleButton.addTarget(self, action: #selector(seeAllPeople), for: .touchUpInside)
     }
     
     func style() {
@@ -141,6 +155,7 @@ extension CommentSectionHeader {
     func layout() {
         addSubview(hostProfileImageView)
         addSubview(hostnameLabel)
+        addSubview(seeAllPeopleButton)
         addSubview(titleLabel)
         addSubview(descriptionLabel)
         addSubview(timeStackView)
@@ -156,24 +171,21 @@ extension CommentSectionHeader {
         hostnameLabel.centerY(inView: hostProfileImageView,
                               leftAnchor: hostProfileImageView.rightAnchor,
                               paddingLeft: 8)
+        seeAllPeopleButton.centerY(inView: hostnameLabel)
+        seeAllPeopleButton.anchor(right: rightAnchor, paddingRight: 16)
+        
         titleLabel.anchor(top: hostProfileImageView.bottomAnchor, left: hostProfileImageView.leftAnchor, paddingTop: 16)
         descriptionLabel.anchor(top: titleLabel.bottomAnchor,
                                 left: hostProfileImageView.leftAnchor,
                                 right: rightAnchor,
-                                paddingTop: 16,
-                                paddingRight: 16)
+                                paddingTop: 16, paddingRight: 16)
         timeStackView.anchor(top: descriptionLabel.bottomAnchor,
                              left: hostProfileImageView.leftAnchor,
                              paddingTop: 16)
         placeStackView.anchor(top: timeStackView.bottomAnchor, left: hostProfileImageView.leftAnchor)
         
-        likeButton.anchor(top: placeStackView.bottomAnchor,
-                          right: rightAnchor,
-                          paddingTop: 8,
-                          paddingRight: 16)
-        likesLabel.anchor(left: likeButton.rightAnchor,
-                          bottom: likeButton.bottomAnchor,
-                          paddingBottom: -4)
+        likeButton.anchor(top: placeStackView.bottomAnchor, right: rightAnchor, paddingTop: 8, paddingRight: 16)
+        likesLabel.anchor(left: likeButton.rightAnchor, bottom: likeButton.bottomAnchor, paddingBottom: -4)
         
         infoLabel.anchor(right: likeButton.leftAnchor, paddingRight: 8)
         infoLabel.centerY(inView: likeButton)
@@ -184,8 +196,6 @@ extension CommentSectionHeader {
         publicCommentLabel.anchor(top: attendButton.bottomAnchor,
                                   left: leftAnchor,
                                   bottom: bottomAnchor,
-                                  paddingTop: 16,
-                                  paddingLeft: 8,
-                                  paddingBottom: 8)
+                                  paddingTop: 16, paddingLeft: 8, paddingBottom: 8)
     }
 }

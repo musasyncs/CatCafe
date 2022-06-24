@@ -40,7 +40,7 @@ struct MeetService {
         }
     }
     
-    // MARK: - Fetch all meets / Fetch Meet with meet id
+    // MARK: - Fetch all meets / Fetch Meet with meet id / Fetch meets by uid / Fetch current user attended meets
     
     static func fetchMeets(completion: @escaping(([Meet]) -> Void)) {
         CCConstant.COLLECTION_MEETS.order(by: "timestamp", descending: true).getDocuments { snapshot, _ in
@@ -57,6 +57,35 @@ struct MeetService {
             guard let dic = snapshot.data() else { return }
             let meet = Meet(meetId: snapshot.documentID, dic: dic)
             completion(meet)
+        }
+    }
+    
+    static func fetchMeets(forUser uid: String, completion: @escaping(([Meet]) -> Void)) {
+        let query = CCConstant.COLLECTION_MEETS.whereField("ownerUid", isEqualTo: uid)
+        
+        query.getDocuments { snapshot, _ in
+            guard let documents = snapshot?.documents else { return }
+            var meets = documents.map { Meet(meetId: $0.documentID, dic: $0.data()) }
+            meets.sort(by: { $0.timestamp.seconds > $1.timestamp.seconds })
+            completion(meets)
+        }
+    }
+    
+    static func fetchCurrentUserAttendMeets(completion: @escaping([Meet]) -> Void) {
+        guard let currentUid = LocalStorage.shared.getUid() else { return }
+        
+        CCConstant.COLLECTION_USERS.document(currentUid).collection("user-attend").getDocuments { snapshot, _ in
+            
+            var meets = [Meet]()
+            snapshot?.documents.forEach({ document in
+                fetchMeet(withMeetId: document.documentID) { meet in
+                    meets.append(meet)
+                    meets.sort(by: { $0.timestamp.seconds > $1.timestamp.seconds })
+                    completion(meets)
+                }
+            })
+
+            completion([Meet]())
         }
     }
         
@@ -132,4 +161,29 @@ struct MeetService {
                 completion(isAttended)
             }
     }
+    
+    // MARK: - Fetch all people for a meet
+        
+    static func fetchPeople(
+        forMeet meetId: String,
+        completion: @escaping ([Person]) -> Void
+    ) {
+        var people = [Person]()
+        
+        let query = CCConstant.COLLECTION_MEETS.document(meetId)
+            .collection("people").order(by: "timestamp", descending: true)
+        
+        query.addSnapshotListener { snapshot, _ in
+            snapshot?.documentChanges.forEach({ change in
+                if change.type == .added {
+                    let data = change.document.data()
+                    let person = Person(dic: data)
+                    people.append(person)
+                }
+            })
+            
+            completion(people)
+        }
+    }
+    
 }

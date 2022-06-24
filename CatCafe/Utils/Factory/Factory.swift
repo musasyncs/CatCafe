@@ -146,8 +146,32 @@ func makeStackView(axis: NSLayoutConstraint.Axis) -> UIStackView {
 
 // MARK: - Buttons
 
+func makeBarButtonItem(target: Any?,
+                       foregroundColor: UIColor,
+                       text: String,
+                       traits: UIFontDescriptor.SymbolicTraits,
+                       insets: UIEdgeInsets = .zero,
+                       selector: Selector
+) -> UIBarButtonItem {
+    let button = UIButton()
+    button.translatesAutoresizingMaskIntoConstraints = false
+    button.addTarget(target, action: selector, for: .primaryActionTriggered)
+    
+    let attributes = [
+        NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: .title1).withTraits(traits: traits),
+        NSAttributedString.Key.foregroundColor: foregroundColor
+    ]
+    let attributedText = NSMutableAttributedString(string: text, attributes: attributes)
+    button.setAttributedTitle(attributedText, for: .normal)
+    
+    button.contentEdgeInsets = insets
+    
+    let barButtonItem = UIBarButtonItem(customView: button)
+    return barButtonItem
+}
+
 func makeIconButton(imagename: String,
-                    imageColor: UIColor,
+                    imageColor: UIColor? = nil,
                     imageWidth: Int,
                     imageHeight: Int,
                     backgroundColor: UIColor = .clear,
@@ -157,9 +181,13 @@ func makeIconButton(imagename: String,
     let button = UIButton()
     button.translatesAutoresizingMaskIntoConstraints = false
     
-    let image = UIImage(named: imagename)?
-        .withTintColor(imageColor)
+    var image = UIImage(named: imagename)?
         .resize(to: .init(width: imageWidth, height: imageHeight))
+    
+    if let imageColor = imageColor {
+        image = image?.withTintColor(imageColor)
+    }
+    
     button.setImage(image, for: .normal)
     
     button.backgroundColor = backgroundColor
@@ -177,7 +205,8 @@ func makeTitleButton(withText text: String,
                      insets: UIEdgeInsets = .zero,
                      cornerRadius: CGFloat = 0,
                      borderWidth: CGFloat = 0,
-                     borderColor: UIColor = .clear) -> UIButton {
+                     borderColor: UIColor = .clear
+) -> UIButton {
     let button = UIButton()
     button.translatesAutoresizingMaskIntoConstraints = false
     
@@ -189,13 +218,14 @@ func makeTitleButton(withText text: String,
             .kern: kern
         ])
     button.setAttributedTitle(attributedText, for: .normal)
+    button.backgroundColor = backgroundColor
+    
     button.titleLabel?.adjustsFontSizeToFitWidth = true
     
     button.contentEdgeInsets = insets
     button.layer.cornerRadius = cornerRadius
     button.layer.borderWidth = borderWidth
     button.layer.borderColor = borderColor.cgColor
-    button.backgroundColor = backgroundColor
     return button
 }
 

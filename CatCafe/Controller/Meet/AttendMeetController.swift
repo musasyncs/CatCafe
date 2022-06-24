@@ -89,8 +89,8 @@ class AttendMeetController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        self.bottomConstraint?.constant = popupOffset
-        self.view.backgroundColor = .black.withAlphaComponent(0)
+        bottomConstraint?.constant = popupOffset
+        view.backgroundColor = .black.withAlphaComponent(0)
         
         UIView.animate(withDuration: 0.3, animations: {
             self.bottomConstraint?.constant = 0

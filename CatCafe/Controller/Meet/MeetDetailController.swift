@@ -29,6 +29,12 @@ class MeetDetailController: UICollectionViewController {
     
     override var inputAccessoryView: UIView? { return commentInputView }
     override var canBecomeFirstResponder: Bool { return true }
+    
+    lazy var backButton = makeIconButton(imagename: "Icons_24px_Close",
+                                    imageColor: .white,
+                                    imageWidth: 24, imageHeight: 24,
+                                    backgroundColor: UIColor(white: 0.5, alpha: 0.7),
+                                    cornerRadius: 40 / 2)
         
     // MARK: - Life Cycle
         
@@ -43,6 +49,7 @@ class MeetDetailController: UICollectionViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupBackButton()
         setupCollectionView()
         fetchMeetWithMeetId()
         checkIfCurrentUserLikedMeet()
@@ -59,8 +66,6 @@ class MeetDetailController: UICollectionViewController {
         super.viewWillDisappear(animated)
         tabBarController?.tabBar.isHidden = false
     }
-    
-    // MARK: - Helpers
     
     // MARK: - API
 
@@ -88,9 +93,25 @@ class MeetDetailController: UICollectionViewController {
         }
     }
     
+    // MARK: - Action
+    
+    @objc func goBack() {
+        dismiss(animated: true)
+    }
+    
 }
 
 extension MeetDetailController {
+
+    func setupBackButton() {
+        backButton.addTarget(self, action: #selector(goBack), for: .touchUpInside)
+        backButton.layer.cornerRadius = 40 / 2
+        backButton.clipsToBounds = true
+        view.addSubview(backButton)
+        backButton.anchor(top: view.topAnchor, left: view.leftAnchor,
+                          paddingTop: 24, paddingLeft: 16)
+        backButton.setDimensions(height: 40, width: 40)
+    }
 
     func setupCollectionView() {
         collectionView.register(
@@ -237,6 +258,12 @@ extension MeetDetailController: UICollectionViewDelegateFlowLayout {
 // MARK: - CommentSectionHeaderDelegate
 
 extension MeetDetailController: CommentSectionHeaderDelegate {
+    func didTapSeeAllPeopleButton(_ header: CommentSectionHeader) {
+        let controller = MeetPeopleViewController(meet: meet)
+        controller.modalPresentationStyle = .overFullScreen
+        present(controller, animated: true)
+    }
+    
     func didTapAttendButton(_ header: CommentSectionHeader) {
         let controller = AttendMeetController(meet: meet)
         controller.modalPresentationStyle = .overFullScreen

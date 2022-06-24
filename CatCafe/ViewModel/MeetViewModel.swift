@@ -34,6 +34,15 @@ struct MeetViewModel {
         return "\(peopleCount)人報名｜\(commentCount)則留言"
     }
     
+    var shouldHidePeopleButton: Bool {
+        guard let currentUid = LocalStorage.shared.getUid() else { return true }
+        if meet.ownerUid == currentUid {
+            return false
+        } else {
+            return true
+        }
+    }
+    
     // ===
     
     var ownerImageUrl: URL?
