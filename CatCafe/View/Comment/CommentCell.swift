@@ -22,7 +22,7 @@ final class CommentCell: UICollectionViewCell {
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         imageView.backgroundColor = .lightGray
-        imageView.layer.cornerRadius = 40 / 2
+        imageView.layer.cornerRadius = 24 / 2
         return imageView
     }()
     
@@ -38,10 +38,12 @@ final class CommentCell: UICollectionViewCell {
         addSubview(profileImageView)
         addSubview(commentLabel)
         profileImageView.centerY(inView: self, leftAnchor: leftAnchor, paddingLeft: 8)
-        profileImageView.setDimensions(height: 40, width: 40)
-        commentLabel.centerY(inView: profileImageView,
-                             leftAnchor: profileImageView.rightAnchor,
-                             paddingLeft: 8)
+        profileImageView.setDimensions(height: 24, width: 24)
+        commentLabel.anchor(
+            top: profileImageView.topAnchor,
+            left: profileImageView.rightAnchor,
+            paddingLeft: 8
+        )
         commentLabel.anchor(right: rightAnchor, paddingRight: 8)
     }
     

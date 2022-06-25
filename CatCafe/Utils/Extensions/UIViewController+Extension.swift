@@ -11,13 +11,13 @@ import JGProgressHUD
 extension UIViewController {
     static let hud = JGProgressHUD(style: .dark)
 
-    func configureGradientLayer() {
-        let gradient = CAGradientLayer()
-        gradient.colors = [UIColor.systemPurple.cgColor, UIColor.systemBlue.cgColor]
-        gradient.locations = [0, 1]
-        view.layer.addSublayer(gradient)
-        gradient.frame = view.bounds
-    }
+//    func configureGradientLayer() {
+//        let gradient = CAGradientLayer()
+//        gradient.colors = [UIColor.systemPurple.cgColor, UIColor.systemBlue.cgColor]
+//        gradient.locations = [0, 1]
+//        view.layer.addSublayer(gradient)
+//        gradient.frame = view.bounds
+//    }
 
     func showLoader(_ show: Bool) {
         view.endEditing(true)
@@ -31,7 +31,22 @@ extension UIViewController {
 
     func showMessage(withTitle title: String, message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
-        present(alert, animated: true, completion: nil)
+        let okAction = UIAlertAction(title: "Ok", style: .default) { _ in }
+        okAction.setValue(UIColor.systemBrown, forKey: "titleTextColor")
+        alert.addAction(okAction)
+        present(alert, animated: true)
+    }
+    
+    func add(_ child: UIViewController) {
+        addChild(child)
+        view.addSubview(child.view)
+        child.didMove(toParent: self)
+    }
+
+    func remove() {
+        guard parent != nil else { return }
+        willMove(toParent: nil)
+        view.removeFromSuperview()
+        removeFromParent()
     }
 }

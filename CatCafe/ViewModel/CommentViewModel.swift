@@ -18,7 +18,7 @@ struct CommentViewModel {
         guard let username = username else { return NSAttributedString(string: "") }
         
         let attrString = NSMutableAttributedString(
-            string: "\(username) ",
+            string: "\(username)\n",
             attributes: [
                 .font: UIFont.systemFont(ofSize: 14, weight: .medium)
             ])

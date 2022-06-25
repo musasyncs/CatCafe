@@ -13,8 +13,8 @@ class LoginController: UIViewController {
     
     private var viewModel = LoginViewModel()
         
-    private let emailTextField = CustomTextField(placeholder: "Email")
-    private let passwordTextField = CustomTextField(placeholder: "Password")
+    private let emailTextField = RegTextField(placeholder: "Email")
+    private let passwordTextField = RegTextField(placeholder: "Password")
     private lazy var loginButton = UIButton(type: .system)
     private let forgotPasswordButton = UIButton(type: .system)
     private lazy var stackView = UIStackView(
@@ -85,6 +85,7 @@ extension LoginController {
     }
     
     func style() {
+        view.backgroundColor = .white
         navigationController?.navigationBar.isHidden = true
         navigationController?.navigationBar.barStyle = .black
         stackView.axis = .vertical

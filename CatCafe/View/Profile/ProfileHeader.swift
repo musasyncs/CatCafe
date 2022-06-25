@@ -50,6 +50,7 @@ final class ProfileHeader: UICollectionReusableView {
     private lazy var editProfileFollowButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Loading...", for: .normal)
+        button.setTitleColor(UIColor.black, for: .normal)
         button.layer.cornerRadius = 3
         button.layer.borderColor = UIColor.lightGray.cgColor
         button.layer.borderWidth = 0.5
@@ -81,31 +82,6 @@ final class ProfileHeader: UICollectionReusableView {
     }()
     
     lazy var stack = UIStackView(arrangedSubviews: [postsLabel, followersLabel, followingLabel])
-    
-    let gridButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setImage(UIImage(named: "grid"), for: .normal)
-        return button
-    }()
-    
-    let listButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setImage(UIImage(named: "list"), for: .normal)
-        button.tintColor = UIColor(white: 0, alpha: 0.2)
-        return button
-    }()
-    
-    let bookmarkButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setImage(UIImage(named: "ribbon"), for: .normal)
-        button.tintColor = UIColor(white: 0, alpha: 0.2)
-        return button
-    }()
-    
-    lazy var buttonStack = UIStackView(arrangedSubviews: [gridButton, listButton, bookmarkButton])
-    
-    let topDivider = UIView()
-    let bottomDivider = UIView()
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -122,9 +98,6 @@ final class ProfileHeader: UICollectionReusableView {
     func configureUI() {
         backgroundColor = .white
         stack.distribution = .fillEqually
-        topDivider.backgroundColor = .lightGray
-        bottomDivider.backgroundColor = .lightGray
-        buttonStack.distribution = .fillEqually
     }
     
     func layout() {
