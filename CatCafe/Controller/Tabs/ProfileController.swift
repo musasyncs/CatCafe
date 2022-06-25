@@ -116,7 +116,6 @@ class ProfileController: UICollectionViewController {
     }
     
     @objc func handleRefresh() {
-        posts.removeAll()
         fetchUserPosts()
         fetchUserStats()
     }

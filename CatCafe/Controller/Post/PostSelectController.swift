@@ -97,8 +97,9 @@ class PostSelectController: UIViewController {
     }
 
     @objc private func handleNext() {
+        guard let croppedImage = gridScrollView.croppedImage else { return }
         let controller = PostFilterController()
-        controller.croppedImage = gridScrollView.croppedImage
+        controller.croppedImage = croppedImage
         navigationController?.pushViewController(controller, animated: false)
     }
 

@@ -25,9 +25,12 @@ class PostCameraController: UIViewController {
     
     lazy var capturePhotoButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setImage(UIImage(named: "capture_photo")?
-                            .withRenderingMode(.alwaysOriginal),
-                        for: .normal)
+        button.setImage(
+            UIImage(named: "capture_photo")?
+                .resize(to: CGSize(width: 96, height: 96))?
+                .withRenderingMode(.alwaysOriginal),
+            for: .normal
+        )
         button.addTarget(self, action: #selector(handleCapturePhoto), for: .touchUpInside)
         return button
     }()
@@ -73,12 +76,14 @@ class PostCameraController: UIViewController {
     private func setupCaptureButton() {
         view.addSubview(capturePhotoButton)
         capturePhotoButton.anchor(bottom: view.bottomAnchor, paddingBottom: 24)
-        capturePhotoButton.setDimensions(height: 80, width: 80)
+        capturePhotoButton.setDimensions(height: 96, width: 96)
         capturePhotoButton.centerX(inView: view)
         
         view.addSubview(dismissButton)
-        dismissButton.anchor(top: view.topAnchor, right: view.rightAnchor,
-                             paddingTop: 24, paddingRight: 12)
+        dismissButton.anchor(top: view.topAnchor,
+                             right: view.rightAnchor,
+                             paddingTop: 24,
+                             paddingRight: 12)
         dismissButton.setDimensions(height: 50, width: 50)
     }
     
@@ -91,7 +96,9 @@ class PostCameraController: UIViewController {
     @objc func handleCapturePhoto() {
         print("Capturing photo")
         let settings = AVCapturePhotoSettings()
-        guard let previewFormatType = settings.availablePreviewPhotoPixelFormatTypes.first else { return }
+        guard let previewFormatType = settings.availablePreviewPhotoPixelFormatTypes.first else {
+            return
+        }
         settings.previewPhotoFormat = [kCVPixelBufferPixelFormatTypeKey as String: previewFormatType]
         output.capturePhoto(with: settings, delegate: self)
     }

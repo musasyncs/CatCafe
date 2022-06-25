@@ -157,7 +157,6 @@ class FeedController: UICollectionViewController {
     }
     
     @objc func handleRefresh() {
-        posts.removeAll()
         fetchPosts()
     }
     

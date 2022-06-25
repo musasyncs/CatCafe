@@ -58,15 +58,7 @@ class MyAttendController: UIViewController {
 
     // MARK: - Action
     
-    @objc func arrangeMeetTapped() {
-        let controller = SelectMeetPicController()
-        let navController = UINavigationController(rootViewController: controller)
-        navController.modalPresentationStyle = .fullScreen
-        present(navController, animated: true)
-    }
-    
     @objc func handleRefresh() {
-        meets.removeAll()
         fetchCurrentUserAttendMeets()
     }
     
@@ -164,7 +156,7 @@ extension MyAttendController: UICollectionViewDataSource, UICollectionViewDelega
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let controller = MeetDetailController(meet: meets[indexPath.item])
-        controller.modalPresentationStyle = .fullScreen
+        controller.modalPresentationStyle = .overFullScreen
         present(controller, animated: true)
     }
     
