@@ -10,7 +10,6 @@
 #import "MTIFunctionDescriptor.h"
 #import "MTIRenderPassOutputDescriptor.h"
 #import "MTIImage.h"
-#import "MTIVertex.h"
 
 MTICropRegion MTICropRegionMake(CGRect rect, MTICropRegionUnit unit) {
     return (MTICropRegion) {

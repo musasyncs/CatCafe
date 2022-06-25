@@ -10,9 +10,7 @@
 #import "MTIMPSKernel.h"
 #import "MTIImage.h"
 #import "MTIHasher.h"
-#import "MTILock.h"
 
-__attribute__((objc_subclassing_restricted))
 @interface MTIMPSImageConvolutionSettings : NSObject <NSCopying>
 
 @property (nonatomic,readonly) NSUInteger kernelWidth;
@@ -84,11 +82,11 @@ __attribute__((objc_subclassing_restricted))
 
 + (MTIMPSKernel *)kernelWithSettings:(MTIMPSImageConvolutionSettings *)settings {
     static NSMutableDictionary *kernels;
-    static id<NSLocking> kernelsLock;
+    static NSLock *kernelsLock;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         kernels = [NSMutableDictionary dictionary];
-        kernelsLock = MTILockCreate();
+        kernelsLock = [[NSLock alloc] init];
     });
     [kernelsLock lock];
     MTIMPSKernel *kernel = kernels[settings];

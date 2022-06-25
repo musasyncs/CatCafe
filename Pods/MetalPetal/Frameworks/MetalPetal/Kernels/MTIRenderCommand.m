@@ -17,7 +17,17 @@
         NSParameterAssert(images);
         NSParameterAssert(parameters);
         NSParameterAssert(geometry);
-        NSParameterAssert([kernel.alphaTypeHandlingRule _canHandleAlphaTypesInImages:images]);
+        NSParameterAssert({
+            /* Alpha Type Assert */
+            BOOL canAcceptAlphaType = YES;
+            for (MTIImage *image in images) {
+                if (![kernel.alphaTypeHandlingRule canAcceptAlphaType:image.alphaType]) {
+                    canAcceptAlphaType = NO;
+                    break;
+                }
+            }
+            canAcceptAlphaType;
+        });
         _kernel = kernel;
         _geometry = [geometry copyWithZone:nil];
         _images = [images copy];

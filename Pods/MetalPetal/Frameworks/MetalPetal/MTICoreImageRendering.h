@@ -12,7 +12,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-__attribute__((objc_subclassing_restricted))
 @interface MTICIImageRenderingOptions : NSObject <NSCopying>
 
 @property (nullable, nonatomic, readonly) CGColorSpaceRef colorSpace;
@@ -21,21 +20,20 @@ __attribute__((objc_subclassing_restricted))
 
 @property (nonatomic, readonly) MTLPixelFormat destinationPixelFormat;
 
-@property (nonatomic, readonly) CIRenderDestinationAlphaMode alphaMode;
+@property (nonatomic, readonly) CIRenderDestinationAlphaMode alphaMode NS_AVAILABLE(10_13, 11_0);
 
 - (instancetype)init NS_UNAVAILABLE;
 
 + (instancetype)new NS_UNAVAILABLE;
 
-- (instancetype)initWithDestinationPixelFormat:(MTLPixelFormat)pixelFormat colorSpace:(nullable CGColorSpaceRef)colorSpace flipped:(BOOL)flipped;
+- (instancetype)initWithDestinationPixelFormat:(MTLPixelFormat)pixelFormat colorSpace:(nullable CGColorSpaceRef)colorSpace flipped:(BOOL)flipped NS_DESIGNATED_INITIALIZER;
 
-- (instancetype)initWithDestinationPixelFormat:(MTLPixelFormat)pixelFormat alphaMode:(CIRenderDestinationAlphaMode)alphaMode colorSpace:(nullable CGColorSpaceRef)colorSpace flipped:(BOOL)flipped NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithDestinationPixelFormat:(MTLPixelFormat)pixelFormat alphaMode:(CIRenderDestinationAlphaMode)alphaMode colorSpace:(nullable CGColorSpaceRef)colorSpace flipped:(BOOL)flipped NS_DESIGNATED_INITIALIZER NS_AVAILABLE(10_13, 11_0);
 
 @property (nonatomic, strong, class, readonly) MTICIImageRenderingOptions *defaultOptions;
 
 @end
 
-__attribute__((objc_subclassing_restricted))
 @interface MTICIImageCreationOptions: NSObject <NSCopying>
 
 @property (nonatomic, nullable, readonly) CGColorSpaceRef colorSpace;

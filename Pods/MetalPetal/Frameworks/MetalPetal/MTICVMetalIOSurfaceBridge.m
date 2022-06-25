@@ -9,7 +9,6 @@
 
 NSString * const MTICVMetalIOSurfaceBridgeErrorDomain = @"MTICVMetalIOSurfaceBridgeErrorDomain";
 
-__attribute__((objc_subclassing_restricted))
 @interface MTICVMetalIOSurfaceBridgeTexture : NSObject <MTICVMetalTexture>
 
 @end

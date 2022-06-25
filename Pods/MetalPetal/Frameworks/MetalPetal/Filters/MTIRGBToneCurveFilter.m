@@ -9,7 +9,6 @@
 #import "MTIImage.h"
 #import "MTIRenderPipelineKernel.h"
 #import "MTIFunctionDescriptor.h"
-#import "MTIVector.h"
 #import <Accelerate/Accelerate.h>
 
 @interface MTIRGBToneCurveFilter () {

@@ -30,15 +30,12 @@ NSString * const MTIImageViewErrorDomain = @"MTIImageViewErrorDomain";
 
 @property CGFloat contentsScale;
 
-@property (nullable) CGColorSpaceRef colorspace;
-
 - (id<CAMetalDrawable>)nextDrawable;
 
 @end
 
 
 // For simulator < iOS 13
-__attribute__((objc_subclassing_restricted))
 @interface MTIStubMetalLayer : CALayer <MTICAMetalLayer>
 
 @property (nullable, retain, atomic) id<MTLDevice> device;
@@ -47,22 +44,12 @@ __attribute__((objc_subclassing_restricted))
 
 @property (atomic) CGSize drawableSize;
 
-@property (nullable) CGColorSpaceRef colorspace;
-
 @end
 
 @implementation MTIStubMetalLayer
 
 - (id<CAMetalDrawable>)nextDrawable {
     return nil;
-}
-
-- (CGColorSpaceRef)colorspace {
-    return nil;
-}
-
-- (void)setColorspace:(CGColorSpaceRef)colorspace {
-    
 }
 
 @end
@@ -92,8 +79,6 @@ __attribute__((objc_subclassing_restricted))
 @property (nonatomic) BOOL currentDrawableValid;
 
 @property (nonatomic) CGSize currentDrawableSize;
-
-@property (nonatomic, strong) NSError *contextCreationError;
 
 @end
 
@@ -132,8 +117,14 @@ __attribute__((objc_subclassing_restricted))
 - (void)setupImageView {
     _renderLayer = (id)self.layer;
     _resizingMode = MTIDrawableRenderingResizingModeAspect;
-    _automaticallyCreatesContext = YES;
-    _renderLayer.device = nil;
+
+    id<MTLDevice> device = MTLCreateSystemDefaultDevice();
+    NSError *error;
+    _context = [[MTIContext alloc] initWithDevice:device error:&error];
+    if (error) {
+        NSLog(@"%@: Failed to create MTIContext - %@",self,error);
+    }
+    _renderLayer.device = device;
     _currentDrawableSize = _renderLayer.drawableSize;
     _lock = MTILockCreate();
     self.opaque = YES;
@@ -171,22 +162,9 @@ __attribute__((objc_subclassing_restricted))
 
 - (MTIContext *)context {
     [_lock lock];
-    [self setupContextIfNeeded];
     MTIContext *c = _context;
     [_lock unlock];
     return c;
-}
-
-- (void)setupContextIfNeeded {
-    NSAssert([_lock tryLock] == NO, @"");
-    if (!_context && !_contextCreationError && _automaticallyCreatesContext) {
-        NSError *error;
-        _context = [[MTIContext alloc] initWithDevice:MTLCreateSystemDefaultDevice() error:&error];
-        if (error) {
-            _contextCreationError = error;
-        }
-        _renderLayer.device = _context.device;
-    }
 }
 
 - (void)setColorPixelFormat:(MTLPixelFormat)colorPixelFormat {
@@ -203,22 +181,6 @@ __attribute__((objc_subclassing_restricted))
     MTLPixelFormat format = _renderLayer.pixelFormat;
     [_lock unlock];
     return format;
-}
-
-- (void)setColorSpace:(CGColorSpaceRef)colorSpace {
-    [_lock lock];
-    if (_renderLayer.colorspace != colorSpace) {
-        _renderLayer.colorspace = colorSpace;
-        [self renderImage:_image completion:nil];
-    }
-    [_lock unlock];
-}
-
-- (CGColorSpaceRef)colorSpace {
-    [_lock lock];
-    CGColorSpaceRef colorspace = _renderLayer.colorspace;
-    [_lock unlock];
-    return colorspace;
 }
 
 - (void)setClearColor:(MTLClearColor)clearColor {
@@ -290,10 +252,8 @@ __attribute__((objc_subclassing_restricted))
     [super layoutSubviews];
     
     [_lock lock];
-    if (!CGRectEqualToRect(_backgroundAccessingBounds, self.bounds)) {
-        _backgroundAccessingBounds = self.bounds;
-        [self renderImage:_image completion:nil];
-    }
+    _backgroundAccessingBounds = self.bounds;
+    [self renderImage:_image completion:nil];
     [_lock unlock];
 }
 
@@ -302,12 +262,10 @@ __attribute__((objc_subclassing_restricted))
 - (void)renderImage:(MTIImage *)image completion:(void (^)(NSError *))completion {
     NSAssert([_lock tryLock] == NO, @"");
     
-    [self setupContextIfNeeded];
-    
     MTIContext *context = self -> _context;
     if (!context) {
         if (completion) {
-            completion(_contextCreationError ?: [NSError errorWithDomain:MTIImageViewErrorDomain code:MTIImageViewErrorContextNotFound userInfo:nil]);
+            completion([NSError errorWithDomain:MTIImageViewErrorDomain code:MTIImageViewErrorContextNotFound userInfo:nil]);
         }
         return;
     }

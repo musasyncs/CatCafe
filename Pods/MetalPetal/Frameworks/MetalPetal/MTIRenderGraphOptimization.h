@@ -5,17 +5,13 @@
 //  Created by Yu Ao on 20/11/2017.
 //
 
-#if __has_include(<MetalPetal/MetalPetal.h>)
-#import <MetalPetal/MTIImagePromise.h>
-#else
+#import <Foundation/Foundation.h>
 #import "MTIImagePromise.h"
-#endif
 
 NS_ASSUME_NONNULL_BEGIN
 
 @class MTIImage;
 
-__attribute__((objc_subclassing_restricted))
 @interface MTIRenderGraphNode: NSObject
 
 @property (nonatomic, strong, nullable) NSMutableArray<MTIRenderGraphNode *> *inputs;
@@ -26,7 +22,6 @@ __attribute__((objc_subclassing_restricted))
 
 @end
 
-__attribute__((objc_subclassing_restricted))
 @interface MTIRenderGraphOptimizer : NSObject
 
 + (id<MTIImagePromise>)promiseByOptimizingRenderGraphOfPromise:(id<MTIImagePromise>)promise;

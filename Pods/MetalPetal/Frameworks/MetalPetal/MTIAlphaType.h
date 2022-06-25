@@ -11,7 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// Describe different ways to represent the opacity of a color value. See also: https://microsoft.github.io/Win2D/html/PremultipliedAlpha.htm
 typedef NS_CLOSED_ENUM(NSInteger, MTIAlphaType) {
-    /// The alpha type is unknown.
+    /// MTIAlphaTypeUnknown The alpha type is unknown.
     MTIAlphaTypeUnknown = 0,
     
     /// RGB values specify the color of the thing being drawn. The alpha value specifies how solid it is.
@@ -30,8 +30,7 @@ FOUNDATION_EXPORT NSString * MTIAlphaTypeGetDescription(MTIAlphaType alphaType);
 
 typedef MTIAlphaType (^MTIAlphaTypeHandlingOutputAlphaTypeRule)(NSArray<NSNumber *> *inputAlphaTypes);
 
-/// Describes how a image processing unit handles alpha types.
-__attribute__((objc_subclassing_restricted))
+/// Describes how a image processing unit handles alpha type.
 @interface MTIAlphaTypeHandlingRule: NSObject <NSCopying>
 
 /// Acceptable alpha types.
@@ -51,13 +50,12 @@ __attribute__((objc_subclassing_restricted))
 
 - (instancetype)initWithAcceptableAlphaTypes:(NSArray<NSNumber *> *)acceptableAlphaTypes outputAlphaType:(MTIAlphaType)outputAlphaType NS_DESIGNATED_INITIALIZER NS_REFINED_FOR_SWIFT;
 
-/// Accepts MTIAlphaTypeNonPremultiplied and MTIAlphaTypeAlphaIsOne. Outputs MTIAlphaTypeNonPremultiplied.
+/// Accepts MTIAlphaTypeNonPremultiplied, MTIAlphaTypeAlphaIsOne. Outputs MTIAlphaTypeNonPremultiplied.
 @property (nonatomic, copy, class, readonly) MTIAlphaTypeHandlingRule *generalAlphaTypeHandlingRule;
 
 /// Accepts all alpha types. The output alpha type is the same as input alpha type.
 @property (nonatomic, copy, class, readonly) MTIAlphaTypeHandlingRule *passthroughAlphaTypeHandlingRule;
 
-- (BOOL)_canHandleAlphaTypesInImages:(NSArray<MTIImage *> *)images;
 
 @end
 

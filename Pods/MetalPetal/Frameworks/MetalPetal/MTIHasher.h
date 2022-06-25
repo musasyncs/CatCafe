@@ -15,40 +15,40 @@ struct MTIHasher {
 };
 typedef struct MTIHasher MTIHasher;
 
-NS_INLINE MTIHasher MTIHasherMake(NSUInteger seed) {
+static inline MTIHasher MTIHasherMake(NSUInteger seed) {
     //MTIHasher is designed to work on 64-bit systems.
     assert(sizeof(NSUInteger) == 8);
     return (MTIHasher){._seed = seed, ._finalized = NO};
 }
 
-NS_INLINE __attribute__((__overloadable__)) void MTIHasherCombine(MTIHasher *hasher, uint64_t value) {
+static inline __attribute__((__overloadable__)) void MTIHasherCombine(MTIHasher *hasher, uint64_t value) {
     //Ref boost::hash_combine
     //Ref https://stackoverflow.com/questions/4948780/magic-number-in-boosthash-combine
     hasher -> _seed ^= value + 0x9e3779b97f4a7c15 + (hasher -> _seed << 6) + (hasher -> _seed >> 2);
 }
 
-NS_INLINE __attribute__((__overloadable__)) void MTIHasherCombine(MTIHasher *hasher, unsigned int intValue) {
+static inline __attribute__((__overloadable__)) void MTIHasherCombine(MTIHasher *hasher, unsigned int intValue) {
     uint64_t value = intValue;
     MTIHasherCombine(hasher, value);
 }
 
-NS_INLINE __attribute__((__overloadable__)) void MTIHasherCombine(MTIHasher *hasher, unsigned long intValue) {
+static inline __attribute__((__overloadable__)) void MTIHasherCombine(MTIHasher *hasher, unsigned long intValue) {
     uint64_t value = intValue;
     MTIHasherCombine(hasher, value);
 }
 
-NS_INLINE __attribute__((__overloadable__)) void MTIHasherCombine(MTIHasher *hasher, double doubleValue) {
-    static_assert(sizeof(uint64_t) == sizeof(double), "");
+static inline __attribute__((__overloadable__)) void MTIHasherCombine(MTIHasher *hasher, double doubleValue) {
+    //in .m file: static_assert(sizeof(uint64_t) == sizeof(double), "") 
     uint64_t value = *(uint64_t *)&doubleValue;
     MTIHasherCombine(hasher, value);
 }
 
-NS_INLINE __attribute__((__overloadable__)) void MTIHasherCombine(MTIHasher *hasher, float floatValue) {
+static inline __attribute__((__overloadable__)) void MTIHasherCombine(MTIHasher *hasher, float floatValue) {
     double doubleValue = floatValue;
     MTIHasherCombine(hasher, doubleValue);
 }
 
-NS_INLINE NSUInteger MTIHasherFinalize(MTIHasher *hasher) {
+static inline __attribute__((__overloadable__)) NSUInteger MTIHasherFinalize(MTIHasher *hasher) {
     NSCParameterAssert(hasher -> _finalized == NO);
     hasher -> _finalized = YES;
     return (NSUInteger)hasher -> _seed;

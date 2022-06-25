@@ -17,7 +17,6 @@
 #import "MTIComputePipeline.h"
 #import "MTITextureDescriptor.h"
 #import "MTIShaderLib.h"
-#import "MTIImagePromise.h"
 #import "MTIImagePromiseDebug.h"
 #import "MTIContext+Internal.h"
 #import "MTIVector+SIMD.h"
@@ -30,7 +29,6 @@ MTICLAHESize MTICLAHESizeMake(NSUInteger width, NSUInteger height) {
     return (MTICLAHESize){.width = width, .height = height };
 }
 
-__attribute__((objc_subclassing_restricted))
 @interface MTICLAHELUTKernelState: NSObject
 
 @property (nonatomic,strong,readonly) MPSImageHistogram *histogramKernel;
@@ -52,12 +50,10 @@ __attribute__((objc_subclassing_restricted))
 
 @end
 
-__attribute__((objc_subclassing_restricted))
 @interface MTICLAHELUTKernel: NSObject <MTIKernel>
 
 @end
 
-__attribute__((objc_subclassing_restricted))
 @interface MTICLAHELUTRecipe: NSObject <MTIImagePromise>
 
 @property (nonatomic,strong,readonly) MTICLAHELUTKernel *kernel;
@@ -112,7 +108,7 @@ __attribute__((objc_subclassing_restricted))
     }
     
     MTITextureDescriptor *textureDescriptor = [MTITextureDescriptor texture2DDescriptorWithPixelFormat:MTLPixelFormatR8Unorm width:MTICLAHEHistogramBinCount height:self.numberOfLUTs mipmapped:NO usage:MTLTextureUsageShaderWrite | MTLTextureUsageShaderRead resourceOptions:MTLResourceStorageModePrivate];
-    MTIImagePromiseRenderTarget *renderTarget = [renderingContext.context newRenderTargetWithReusableTextureDescriptor:textureDescriptor error:&error];
+    MTIImagePromiseRenderTarget *renderTarget = [renderingContext.context newRenderTargetWithResuableTextureDescriptor:textureDescriptor error:&error];
     if (error) {
         if (inOutError) {
             *inOutError = error;

@@ -6,24 +6,20 @@
 //
 //
 
+#import <Foundation/Foundation.h>
 #import <Metal/Metal.h>
-#if __has_include(<MetalPetal/MetalPetal.h>)
-#import <MetalPetal/MTIKernel.h>
-#import <MetalPetal/MTITextureDimensions.h>
-#import <MetalPetal/MTIRenderCommand.h>
-#else
 #import "MTIKernel.h"
-#import "MTITextureDimensions.h"
+#import "MTIVertex.h"
+#import "MTIAlphaType.h"
+#import "MTIImagePromise.h"
 #import "MTIRenderCommand.h"
-#endif
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class MTIRenderPipeline, MTIFunctionDescriptor, MTIContext, MTIImage, MTIRenderPassOutputDescriptor, MTIAlphaTypeHandlingRule;
+@class MTIRenderPipeline, MTIFunctionDescriptor, MTIContext, MTIImage, MTIRenderPassOutputDescriptor;
 
 FOUNDATION_EXPORT NSUInteger const MTIRenderPipelineMaximumColorAttachmentCount;
 
-__attribute__((objc_subclassing_restricted))
 @interface MTIRenderPipelineKernelConfiguration: NSObject <MTIKernelConfiguration>
 
 @property (nonatomic, readonly) const MTLPixelFormat *colorAttachmentPixelFormats;
@@ -34,8 +30,6 @@ __attribute__((objc_subclassing_restricted))
 
 @property (nonatomic, readonly) MTLPixelFormat stencilAttachmentPixelFormat;
 
-@property (nonatomic, readonly) NSUInteger rasterSampleCount;
-
 - (instancetype)init NS_UNAVAILABLE;
 
 + (instancetype)new NS_UNAVAILABLE;
@@ -44,11 +38,10 @@ __attribute__((objc_subclassing_restricted))
 
 - (instancetype)initWithColorAttachmentPixelFormat:(MTLPixelFormat)colorAttachmentPixelFormat;
 
-- (instancetype)initWithColorAttachmentPixelFormats:(MTLPixelFormat[_Nonnull])colorAttachmentPixelFormats count:(NSUInteger)count depthAttachmentPixelFormat:(MTLPixelFormat)depthAttachmentPixelFormat stencilAttachmentPixelFormat:(MTLPixelFormat)stencilAttachmentPixelFormat rasterSampleCount:(NSUInteger)rasterSampleCount NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithColorAttachmentPixelFormats:(MTLPixelFormat[_Nonnull])colorAttachmentPixelFormats count:(NSUInteger)count depthAttachmentPixelFormat:(MTLPixelFormat)depthAttachmentPixelFormat stencilAttachmentPixelFormat:(MTLPixelFormat)stencilAttachmentPixelFormat NS_DESIGNATED_INITIALIZER;
 
 @end
 
-__attribute__((objc_subclassing_restricted))
 @interface MTIRenderPipelineKernel : NSObject <MTIKernel>
 
 @property (nonatomic,copy,readonly) MTIFunctionDescriptor *vertexFunctionDescriptor;
@@ -81,11 +74,11 @@ __attribute__((objc_subclassing_restricted))
 - (MTIImage *)applyToInputImages:(NSArray<MTIImage *> *)images
                       parameters:(NSDictionary<NSString *,id> *)parameters
          outputTextureDimensions:(MTITextureDimensions)outputTextureDimensions
-               outputPixelFormat:(MTLPixelFormat)outputPixelFormat NS_REFINED_FOR_SWIFT;
+               outputPixelFormat:(MTLPixelFormat)outputPixelFormat;
 
 - (NSArray<MTIImage *> *)applyToInputImages:(NSArray<MTIImage *> *)images
                                  parameters:(NSDictionary<NSString *,id> *)parameters
-                          outputDescriptors:(NSArray<MTIRenderPassOutputDescriptor *> *)outputDescriptors NS_REFINED_FOR_SWIFT;
+                          outputDescriptors:(NSArray<MTIRenderPassOutputDescriptor *> *)outputDescriptors;
 
 @end
 
@@ -98,11 +91,6 @@ __attribute__((objc_subclassing_restricted))
 @interface MTIRenderCommand (ImageCreation)
 
 + (NSArray<MTIImage *> *)imagesByPerformingRenderCommands:(NSArray<MTIRenderCommand *> *)renderCommands
-                                        outputDescriptors:(NSArray<MTIRenderPassOutputDescriptor *> *)outputDescriptors;
-
-
-+ (NSArray<MTIImage *> *)imagesByPerformingRenderCommands:(NSArray<MTIRenderCommand *> *)renderCommands
-                                        rasterSampleCount:(NSUInteger)rasterSampleCount
                                         outputDescriptors:(NSArray<MTIRenderPassOutputDescriptor *> *)outputDescriptors;
 
 @end

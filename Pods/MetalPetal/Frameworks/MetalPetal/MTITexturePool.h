@@ -6,6 +6,7 @@
 //
 //
 
+#import <Foundation/Foundation.h>
 #import <Metal/Metal.h>
 
 NS_ASSUME_NONNULL_BEGIN
@@ -13,7 +14,6 @@ NS_ASSUME_NONNULL_BEGIN
 @class MTITextureDescriptor;
 
 /// A reusable texture from a texture pool.
-__attribute__((objc_subclassing_restricted))
 @interface MTIReusableTexture : NSObject
 
 /// Returns the underlaying texture. When a reusable texture's texture retain count reachs zero, this method will return nil.
@@ -39,7 +39,7 @@ __attribute__((objc_subclassing_restricted))
 - (void)flush;
 
 /// The size in bytes occupied by idle resources.
-@property (nonatomic, readonly) NSUInteger idleResourceSize;
+@property (nonatomic, readonly) NSUInteger idleResourceSize NS_AVAILABLE(10_13, 11_0);
 
 /// The count of idle resources.
 @property (nonatomic, readonly) NSUInteger idleResourceCount;
@@ -48,7 +48,6 @@ __attribute__((objc_subclassing_restricted))
 
 
 /// Deivce allocated texture pool.
-__attribute__((objc_subclassing_restricted))
 @interface MTIDeviceTexturePool: NSObject <MTITexturePool>
 
 - (instancetype)init NS_UNAVAILABLE;
@@ -57,11 +56,12 @@ __attribute__((objc_subclassing_restricted))
 
 - (instancetype)initWithDevice:(id<MTLDevice>)device NS_DESIGNATED_INITIALIZER;
 
+@property (nonatomic, readonly) NSUInteger idleResourceSize NS_AVAILABLE(10_13, 11_0);
+
 @end
 
 
 /// Heap texture pool. **May** have smaller memory footprint than `MTIDeviceTexturePool` depending on your use case. `MTIHeapTexturePool` uses `MTLHeap`s for texture allocations. Heaps are reused based on heap's size and resource options. For example, the heap for a 512x512 bgra8Unorm texture may then be reused to create a 256x256 rgba32Float texture.
-__attribute__((objc_subclassing_restricted))
 NS_AVAILABLE(10_15, 13_0)
 @interface MTIHeapTexturePool: NSObject <MTITexturePool>
 

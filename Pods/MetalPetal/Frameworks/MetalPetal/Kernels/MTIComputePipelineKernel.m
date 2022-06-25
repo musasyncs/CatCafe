@@ -18,8 +18,6 @@
 #import "MTIImagePromiseDebug.h"
 #import "MTIContext+Internal.h"
 #import "MTIError.h"
-#import "MTIPixelFormat.h"
-#import "MTIFunctionArgumentsEncoder.h"
 
 @interface MTIComputeFunctionDispatchOptions ()
 
@@ -55,7 +53,6 @@
 
 @end
 
-__attribute__((objc_subclassing_restricted))
 @interface MTIImageComputeRecipe : NSObject <MTIImagePromise>
 
 @property (nonatomic,copy,readonly) NSArray<MTIImage *> *inputImages;
@@ -104,7 +101,7 @@ __attribute__((objc_subclassing_restricted))
         textureDescriptor = [MTITextureDescriptor texture2DDescriptorWithPixelFormat:pixelFormat width:_dimensions.width height:_dimensions.height mipmapped:NO usage:MTLTextureUsageShaderWrite | MTLTextureUsageShaderRead resourceOptions:MTLResourceStorageModePrivate];
     }
 
-    MTIImagePromiseRenderTarget *renderTarget = [renderingContext.context newRenderTargetWithReusableTextureDescriptor:textureDescriptor error:&error];
+    MTIImagePromiseRenderTarget *renderTarget = [renderingContext.context newRenderTargetWithResuableTextureDescriptor:textureDescriptor error:&error];
     if (error) {
         if (inOutError) {
             *inOutError = error;
@@ -130,7 +127,7 @@ __attribute__((objc_subclassing_restricted))
     }
     [commandEncoder setTexture:renderTarget.texture atIndex:index];
     
-    [MTIFunctionArgumentsEncoder encodeArguments:computePipeline.reflection.arguments values:self.functionParameters functionType:MTLFunctionTypeKernel encoder:commandEncoder error:&error];
+    [MTIArgumentsEncoder encodeArguments:computePipeline.reflection.arguments values:self.functionParameters functionType:MTLFunctionTypeKernel encoder:commandEncoder error:&error];
     
     if (error) {
         [commandEncoder endEncoding];
@@ -156,28 +153,26 @@ __attribute__((objc_subclassing_restricted))
         }
     }
     
-    #if TARGET_OS_TV
-        [commandEncoder dispatchThreadgroups:threadgroupsPerGrid threadsPerThreadgroup:threadsPerThreadgroup];
-    #else
+    if (@available(iOS 11.0, macOS 10.13, *)) {
         BOOL supportsNonUniformThreadgroupSize = NO;
-        
         #if TARGET_OS_IPHONE
             #if TARGET_OS_MACCATALYST
-                supportsNonUniformThreadgroupSize = [renderingContext.context.device supportsFamily:MTLGPUFamilyMacCatalyst1];
+            supportsNonUniformThreadgroupSize = [renderingContext.context.device supportsFamily:MTLGPUFamilyMacCatalyst1];
             #else
-                supportsNonUniformThreadgroupSize = [renderingContext.context.device supportsFeatureSet:MTLFeatureSet_iOS_GPUFamily4_v1];
+            supportsNonUniformThreadgroupSize = [renderingContext.context.device supportsFeatureSet:MTLFeatureSet_iOS_GPUFamily4_v1];
             #endif
         #else
-            supportsNonUniformThreadgroupSize = [renderingContext.context.device supportsFeatureSet:MTLFeatureSet_macOS_GPUFamily1_v3];
+        supportsNonUniformThreadgroupSize = [renderingContext.context.device supportsFeatureSet:MTLFeatureSet_macOS_GPUFamily1_v3];
         #endif
-    
         if (supportsNonUniformThreadgroupSize) {
             [commandEncoder dispatchThreads:threadsPerGrid threadsPerThreadgroup:threadsPerThreadgroup];
         } else {
             [commandEncoder dispatchThreadgroups:threadgroupsPerGrid threadsPerThreadgroup:threadsPerThreadgroup];
         }
-    #endif
-
+    } else {
+        [commandEncoder dispatchThreadgroups:threadgroupsPerGrid threadsPerThreadgroup:threadsPerThreadgroup];
+    }
+    
     [commandEncoder endEncoding];
     
     return renderTarget;
@@ -198,7 +193,17 @@ __attribute__((objc_subclassing_restricted))
        outputTextureDimensions:(MTITextureDimensions)outputTextureDimensions
              outputPixelFormat:(MTLPixelFormat)outputPixelFormat {
     if (self = [super init]) {
-        NSParameterAssert([kernel.alphaTypeHandlingRule _canHandleAlphaTypesInImages:inputImages]);
+        NSParameterAssert({
+            /* Alpha Type Assert */
+            BOOL canAcceptAlphaType = YES;
+            for (MTIImage *image in inputImages) {
+                if (![kernel.alphaTypeHandlingRule canAcceptAlphaType:image.alphaType]) {
+                    canAcceptAlphaType = NO;
+                    break;
+                }
+            }
+            canAcceptAlphaType;
+        });
         _inputImages = inputImages;
         _kernel = kernel;
         _functionParameters = functionParameters;

@@ -22,8 +22,6 @@
 #import "MTILock.h"
 #import "MTIPixelFormat.h"
 #import "MTILibrarySource.h"
-#import "MTITexturePool.h"
-#import "MTITextureLoader.h"
 #import <MetalPerformanceShaders/MetalPerformanceShaders.h>
 
 // TODO: Remove this in swift 5.3. https://github.com/apple/swift-evolution/blob/master/proposals/0271-package-manager-resources.md
@@ -34,16 +32,6 @@
 NSString * const MTIContextDefaultLabel = @"MetalPetal";
 
 @implementation MTIContextOptions
-
-static NSURL * MTIDefaultBuiltinLibraryURLForBundle(NSBundle *bundle) {
-    if (@available(iOS 14.0, tvOS 14.0, macOS 11.0, macCatalyst 14.0, *)) {
-        return
-        [bundle URLForResource:@"default.msl23" withExtension:@"metallib"] ?:
-        [bundle URLForResource:@"default" withExtension:@"metallib"];
-    } else {
-        return [bundle URLForResource:@"default" withExtension:@"metallib"];
-    }
-}
 
 static NSBundle * MTIDefaultBuiltinLibraryBundle(void) {
     static NSBundle *bundle = nil;
@@ -73,37 +61,69 @@ static NSBundle * MTIDefaultBuiltinLibraryBundle(void) {
         _workingPixelFormat = MTLPixelFormatBGRA8Unorm;
         _enablesRenderGraphOptimization = NO;
         _enablesYCbCrPixelFormatSupport = YES;
-        _automaticallyReclaimsResources = YES;
+        _automaticallyReclaimResources = YES;
         _label = MTIContextDefaultLabel;
         
         // TODO: Remove this in swift 5.3. https://github.com/apple/swift-evolution/blob/master/proposals/0271-package-manager-resources.md
         #if __has_include("MTISwiftPMBuiltinLibrarySupport.h")
         _defaultLibraryURL = _MTISwiftPMBuiltinLibrarySourceURL();
         #else
-        _defaultLibraryURL = MTIDefaultBuiltinLibraryURLForBundle(MTIDefaultBuiltinLibraryBundle());
+        _defaultLibraryURL = MTIDefaultLibraryURLForBundle(MTIDefaultBuiltinLibraryBundle());
         #endif
         
-        _textureLoaderClass = nil;
-        _coreVideoMetalTextureBridgeClass = nil;
-        _texturePoolClass = nil;
+        _textureLoaderClass = MTIContextOptions.defaultTextureLoaderClass;
+        _coreVideoMetalTextureBridgeClass = MTIContextOptions.defaultCoreVideoMetalTextureBridgeClass;
+        _texturePoolClass = MTIContextOptions.defaultTexturePoolClass;
     }
     return self;
 }
 
 - (id)copyWithZone:(NSZone *)zone {
-    NSAssert(NO, @"MTIContextOptions no longer supports NSCopying.");
     MTIContextOptions *options = [[MTIContextOptions allocWithZone:zone] init];
     options.coreImageContextOptions = _coreImageContextOptions;
     options.workingPixelFormat = _workingPixelFormat;
     options.enablesRenderGraphOptimization = _enablesRenderGraphOptimization;
-    options.enablesYCbCrPixelFormatSupport = _enablesYCbCrPixelFormatSupport;
-    options.automaticallyReclaimsResources = _automaticallyReclaimsResources;
+    options.automaticallyReclaimResources = _automaticallyReclaimResources;
     options.label = _label;
     options.defaultLibraryURL = _defaultLibraryURL;
     options.textureLoaderClass = _textureLoaderClass;
     options.coreVideoMetalTextureBridgeClass = _coreVideoMetalTextureBridgeClass;
     options.texturePoolClass = _texturePoolClass;
     return options;
+}
+
+static Class _defaultTextureLoaderClass = nil;
+
++ (void)setDefaultTextureLoaderClass:(Class<MTITextureLoader>)defaultTextureLoaderClass {
+    _defaultTextureLoaderClass = defaultTextureLoaderClass;
+}
+
++ (Class<MTITextureLoader>)defaultTextureLoaderClass {
+    return _defaultTextureLoaderClass ?: MTKTextureLoader.class;
+}
+
+static Class _defaultCoreVideoMetalTextureBridgeClass = nil;
+
++ (void)setDefaultCoreVideoMetalTextureBridgeClass:(Class<MTICVMetalTextureBridging>)defaultCoreVideoMetalTextureBridgeClass {
+    _defaultCoreVideoMetalTextureBridgeClass = defaultCoreVideoMetalTextureBridgeClass;
+}
+
++ (Class<MTICVMetalTextureBridging>)defaultCoreVideoMetalTextureBridgeClass {
+    if (@available(iOS 11_0, macOS 10_11, *)) {
+        return _defaultCoreVideoMetalTextureBridgeClass ?: MTICVMetalIOSurfaceBridge.class;
+    } else {
+        return _defaultCoreVideoMetalTextureBridgeClass ?: MTICVMetalTextureCache.class;
+    }
+}
+
+static Class _defaultTexturePoolClass = nil;
+
++ (void)setDefaultTexturePoolClass:(Class<MTITexturePool>)defaultTexturePoolClass {
+    _defaultTexturePoolClass = defaultTexturePoolClass;
+}
+
++ (Class<MTITexturePool>)defaultTexturePoolClass {
+    return _defaultTexturePoolClass ?: MTIDeviceTexturePool.class;
 }
 
 @end
@@ -116,11 +136,7 @@ NSURL * MTIDefaultLibraryURLForBundle(NSBundle *bundle) {
 
 static BOOL MTIMPSSupportsMTLDevice(id<MTLDevice> device) {
 #if TARGET_OS_SIMULATOR
-    if (@available(iOS 14.0, tvOS 14.0, *)) {
-        return MPSSupportsMTLDevice(device);
-    } else {
-        return NO;
-    }
+    return NO;
 #else
     return MPSSupportsMTLDevice(device);
 #endif
@@ -184,8 +200,6 @@ static void MTIContextEnumerateAllInstances(void (^enumerator)(MTIContext *conte
 
 @property (nonatomic, strong, readonly) id<MTILocking> renderingLock;
 
-@property (nonatomic, copy) NSDictionary<NSString *, NSString *> *defaultLibraryFunctionShort2FullNames;
-
 @end
 
 @implementation MTIContext
@@ -237,18 +251,6 @@ static void MTIContextEnumerateAllInstances(void (^enumerator)(MTIContext *conte
             return nil;
         }
         
-        NSMutableDictionary *defaultLibraryFunctionShort2FullNames = [NSMutableDictionary dictionary];
-        for (NSString *name in defaultLibrary.functionNames) {
-            NSArray<NSString *> *nameComponents = [name componentsSeparatedByString:@"::"];
-            if (nameComponents.count > 1) {
-                NSString *shortName = nameComponents.lastObject;
-                NSAssert(defaultLibraryFunctionShort2FullNames[shortName] == nil, @"Duplicated function short name in default library: %@", shortName);
-                defaultLibraryFunctionShort2FullNames[shortName] = name;
-            }
-        }
-        _defaultLibraryFunctionShort2FullNames = [defaultLibraryFunctionShort2FullNames copy];
-        _defaultLibrarySupportsProgrammableBlending = [defaultLibrary.functionNames containsObject:@"mti_haveColorArguments"];
-        
         _label = options.label;
         _workingPixelFormat = options.workingPixelFormat;
         _isRenderGraphOptimizationEnabled = options.enablesRenderGraphOptimization;
@@ -260,25 +262,11 @@ static void MTIContextEnumerateAllInstances(void (^enumerator)(MTIContext *conte
         
         _isMetalPerformanceShadersSupported = MTIMPSSupportsMTLDevice(device);
         _isYCbCrPixelFormatSupported = options.enablesYCbCrPixelFormatSupport && MTIDeviceSupportsYCBCRPixelFormat(device);
-        _isMemorylessTextureSupported = [MTIContext deviceSupportsMemorylessTexture:device];
-        _isProgrammableBlendingSupported = [MTIContext deviceSupportsProgrammableBlending:device];
         
-        _textureLoader = [(options.textureLoaderClass ?: MTIDefaultTextureLoader.class) newTextureLoaderWithDevice:device];
+        _textureLoader = [options.textureLoaderClass newTextureLoaderWithDevice:device];
         NSAssert(_textureLoader != nil, @"Cannot create texture loader.");
         
-        Class<MTITexturePool> texturePoolClass = options.texturePoolClass;
-        if (texturePoolClass == nil) {
-            if (@available(macOS 10.15, iOS 13.0, tvOS 13.0, *)) {
-                if ([MTIHeapTexturePool isSupportedOnDevice:device]) {
-                    texturePoolClass = MTIHeapTexturePool.class;
-                } else {
-                    texturePoolClass = MTIDeviceTexturePool.class;
-                }
-            } else {
-                texturePoolClass = MTIDeviceTexturePool.class;
-            }
-        }
-        _texturePool = [texturePoolClass newTexturePoolWithDevice:device];
+        _texturePool = [options.texturePoolClass newTexturePoolWithDevice:device];
         _libraryCache = [NSMutableDictionary dictionary];
         _libraryCache[options.defaultLibraryURL] = defaultLibrary;
         _functionCache = [NSMutableDictionary dictionary];
@@ -298,9 +286,8 @@ static void MTIContextEnumerateAllInstances(void (^enumerator)(MTIContext *conte
         
         _renderingLock = MTILockCreate();
         
-        Class<MTICVMetalTextureBridging> coreVideoMetalTextureBridgeClass = options.coreVideoMetalTextureBridgeClass ?: MTICVMetalIOSurfaceBridge.class;
         NSError *coreVideoMetalTextureBridgeError = nil;
-        _coreVideoTextureBridge = [coreVideoMetalTextureBridgeClass newCoreVideoMetalTextureBridgeWithDevice:device error:&coreVideoMetalTextureBridgeError];
+        _coreVideoTextureBridge = [options.coreVideoMetalTextureBridgeClass newCoreVideoMetalTextureBridgeWithDevice:device error:&coreVideoMetalTextureBridgeError];
         if (coreVideoMetalTextureBridgeError) {
             if (inOutError) {
                 *inOutError = coreVideoMetalTextureBridgeError;
@@ -308,13 +295,8 @@ static void MTIContextEnumerateAllInstances(void (^enumerator)(MTIContext *conte
             return nil;
         }
         
-        if (options.automaticallyReclaimsResources) {
+        if (options.automaticallyReclaimResources) {
             [MTIMemoryWarningObserver addMemoryWarningHandler:self];
-        }
-        
-        if (_isProgrammableBlendingSupported) {
-            //We assume that on a device which supports programmable blending, memoryless textures are also supported.
-            NSAssert(self.isMemorylessTextureSupported, @"");
         }
         
         MTIContextMarkInstanceCreation(self);
@@ -368,38 +350,6 @@ static void MTIContextEnumerateAllInstances(void (^enumerator)(MTIContext *conte
     MTIContextEnumerateAllInstances(enumerator);
 }
 
-+ (BOOL)deviceSupportsMemorylessTexture:(id<MTLDevice>)device {
-    if (@available(iOS 13.0, macOS 11.0, tvOS 13.0, macCatalyst 14.0, *)) {
-        return [device supportsFamily:MTLGPUFamilyApple1];
-    } else {
-        return (TARGET_OS_IPHONE && !TARGET_OS_SIMULATOR && !TARGET_OS_MACCATALYST);
-    }
-}
-
-+ (BOOL)deviceSupportsYCbCrPixelFormat:(id<MTLDevice>)device {
-    return MTIDeviceSupportsYCBCRPixelFormat(device);
-}
-
-+ (BOOL)deviceSupportsProgrammableBlending:(id<MTLDevice>)device {
-    // - Simulator does not support Programmable Blending. (Intel & Apple Silicon)
-    // - MacCatalyst supports Programmable Blending on Apple Silicon:
-    //      Apple Silicon: MTLGPUFamilyApple1 - Yes
-    //      Intel: MTLGPUFamilyApple1 - No
-    // - Mac supports Programmable Blending on Apple Silicon:
-    //      Apple Silicon: MTLGPUFamilyApple1 - Yes
-    //      Intel: MTLGPUFamilyApple1 - No
-    // - iOS/tvOS support Programmable Blending.
-#if TARGET_OS_SIMULATOR
-    return NO;
-#else
-    if (@available(iOS 13.0, macOS 11.0, tvOS 13.0, macCatalyst 14.0, *)) {
-        return [device supportsFamily:MTLGPUFamilyApple1];
-    } else {
-        return (TARGET_OS_IPHONE && !TARGET_OS_SIMULATOR && !TARGET_OS_MACCATALYST);
-    }
-#endif
-}
-
 @end
 
 #pragma mark - MTIImagePromiseRenderTarget
@@ -422,7 +372,7 @@ static void MTIContextEnumerateAllInstances(void (^enumerator)(MTIContext *conte
     return self;
 }
 
-- (instancetype)initWithReusableTexture:(MTIReusableTexture *)texture {
+- (instancetype)initWithResuableTexture:(MTIReusableTexture *)texture {
     if (self = [super init]) {
         _nonreusableTexture = nil;
         _reusableTexture = texture;
@@ -460,12 +410,12 @@ static void MTIContextEnumerateAllInstances(void (^enumerator)(MTIContext *conte
     return [[MTIImagePromiseRenderTarget alloc] initWithTexture:texture];
 }
 
-- (MTIImagePromiseRenderTarget *)newRenderTargetWithReusableTextureDescriptor:(MTITextureDescriptor *)textureDescriptor error:(NSError * __autoreleasing *)error {
+- (MTIImagePromiseRenderTarget *)newRenderTargetWithResuableTextureDescriptor:(MTITextureDescriptor *)textureDescriptor error:(NSError * __autoreleasing *)error {
     MTIReusableTexture *texture = [self.texturePool newTextureWithDescriptor:textureDescriptor error:error];
     if (!texture) {
         return nil;
     }
-    return [[MTIImagePromiseRenderTarget alloc] initWithReusableTexture:texture];
+    return [[MTIImagePromiseRenderTarget alloc] initWithResuableTexture:texture];
 }
 
 #pragma mark - Lock
@@ -480,7 +430,7 @@ static void MTIContextEnumerateAllInstances(void (^enumerator)(MTIContext *conte
 
 #pragma mark - Cache
 
-static NSString * const MTIContextRenderingLockNotLockedErrorDescription = @"Context is performing a render-releated operation without aquiring the renderingLock.";
+static NSString * const MTIContextRenderingLockNotLockedErrorDescription = @"Context is peformaning a render-releated operation without aquiring the renderingLock.";
 
 - (id<MTLLibrary>)libraryWithURL:(NSURL *)URL error:(NSError * __autoreleasing *)error {
     NSAssert([self.renderingLock tryLock] == NO, MTIContextRenderingLockNotLockedErrorDescription);
@@ -515,10 +465,14 @@ static NSString * const MTIContextRenderingLockNotLockedErrorDescription = @"Con
         }
         
         NSString *functionName = descriptor.name;
-        if (library == self.defaultLibrary) {
-            NSString *fullname = self.defaultLibraryFunctionShort2FullNames[descriptor.name];
-            functionName = fullname ?: functionName;
+        #if TARGET_OS_SIMULATOR || TARGET_OS_MACCATALYST
+        for (NSString *name in library.functionNames) {
+            if ([name hasSuffix:[@"::" stringByAppendingString:descriptor.name]]) {
+                functionName = name;
+                break;
+            }
         }
+        #endif
         
         if (descriptor.constantValues) {
             NSError *error = nil;

@@ -8,6 +8,11 @@
 import UIKit
 
 extension UIView {
+    
+    var keyWindowSafeAreaInsets: UIEdgeInsets {
+        return UIApplication.shared.keyWindow?.safeAreaInsets ?? .zero
+    }
+    
     func anchor(top: NSLayoutYAxisAnchor? = nil,
                 left: NSLayoutXAxisAnchor? = nil,
                 bottom: NSLayoutYAxisAnchor? = nil,

@@ -19,4 +19,4 @@ __strong MTIDeferBlock MTI_METAMACRO_CONCAT(MTIExitBlock_, __LINE__) __attribute
 
 typedef void (^MTIDeferBlock)(void);
 
-FOUNDATION_EXPORT void MTIExecuteCleanupBlock (__strong MTIDeferBlock *block);
+void MTIExecuteCleanupBlock (__strong MTIDeferBlock *block);

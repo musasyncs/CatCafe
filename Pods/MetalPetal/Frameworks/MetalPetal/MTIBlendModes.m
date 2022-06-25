@@ -6,9 +6,6 @@
 //
 
 #import "MTIBlendModes.h"
-#import "MTILibrarySource.h"
-#import "MTIBlendFormulaSupport.h"
-#import "MTIFunctionDescriptor.h"
 
 MTIBlendMode const MTIBlendModeNormal = @"Normal";
 
@@ -48,23 +45,12 @@ MTIBlendMode const MTIBlendModeColorLookup512x512 = @"ColorLookup512x512";
 @implementation MTIBlendFunctionDescriptors
 
 - (instancetype)initWithFragmentFunctionDescriptorForBlendFilter:(MTIFunctionDescriptor *)fragmentFunctionDescriptorForBlendFilter
-fragmentFunctionDescriptorForMultilayerCompositingFilterWithProgrammableBlending:(nullable MTIFunctionDescriptor *)fragmentFunctionDescriptorForMultilayerCompositingFilterWithProgrammableBlending
-fragmentFunctionDescriptorForMultilayerCompositingFilterWithoutProgrammableBlending:(MTIFunctionDescriptor *)fragmentFunctionDescriptorForMultilayerCompositingFilterWithoutProgrammableBlending {
+        fragmentFunctionDescriptorForMultilayerCompositingFilter:(MTIFunctionDescriptor *)fragmentFunctionDescriptorForMultilayerCompositingFilter {
     if (self = [super init]) {
         _fragmentFunctionDescriptorForBlendFilter = fragmentFunctionDescriptorForBlendFilter;
-        _fragmentFunctionDescriptorForMultilayerCompositingFilterWithProgrammableBlending = fragmentFunctionDescriptorForMultilayerCompositingFilterWithProgrammableBlending;
-        _fragmentFunctionDescriptorForMultilayerCompositingFilterWithoutProgrammableBlending = fragmentFunctionDescriptorForMultilayerCompositingFilterWithoutProgrammableBlending;
+        _fragmentFunctionDescriptorForMultilayerCompositingFilter = fragmentFunctionDescriptorForMultilayerCompositingFilter;
     }
     return self;
-}
-
-- (instancetype)initWithBlendFormula:(NSString *)formula {
-    MTLCompileOptions *compileOptions = [[MTLCompileOptions alloc] init];
-    NSURL *shaderLibraryURL = [MTILibrarySourceRegistration.sharedRegistration registerLibraryWithSource:MTIBuildBlendFormulaShaderSource(formula) compileOptions:compileOptions];
-    MTIFunctionDescriptor *blend = [[MTIFunctionDescriptor alloc] initWithName:@"customBlend" libraryURL:shaderLibraryURL];
-    MTIFunctionDescriptor *multilayerPB = [[MTIFunctionDescriptor alloc] initWithName:@"multilayerCompositeCustomBlend_programmableBlending" libraryURL:shaderLibraryURL];
-    MTIFunctionDescriptor *multilayer = [[MTIFunctionDescriptor alloc] initWithName:@"multilayerCompositeCustomBlend" libraryURL:shaderLibraryURL];
-    return [self initWithFragmentFunctionDescriptorForBlendFilter:blend fragmentFunctionDescriptorForMultilayerCompositingFilterWithProgrammableBlending:multilayerPB fragmentFunctionDescriptorForMultilayerCompositingFilterWithoutProgrammableBlending:multilayer];
 }
 
 - (id)copyWithZone:(NSZone *)zone {
@@ -115,12 +101,9 @@ static id<NSLocking> _registeredBlendModesLock;
         NSMutableDictionary *modes = [NSMutableDictionary dictionary];
         for (MTIBlendMode mode in builtinModes) {
             NSString *fragmentFunctionNameForBlendFilter = [[mode stringByReplacingCharactersInRange:NSMakeRange(0, 1) withString:[mode substringWithRange:NSMakeRange(0, 1)].lowercaseString] stringByAppendingString:@"Blend"];
-            NSString *fragmentFunctionNameForMultilayerCompositingFilterWithoutPB = [NSString stringWithFormat:@"multilayerComposite%@Blend",mode];
-            NSString *fragmentFunctionNameForMultilayerCompositingFilterWithPB = [NSString stringWithFormat:@"multilayerComposite%@Blend_programmableBlending",mode];
-            MTIBlendFunctionDescriptors *descriptors = [[MTIBlendFunctionDescriptors alloc]
-                                                        initWithFragmentFunctionDescriptorForBlendFilter:[[MTIFunctionDescriptor alloc] initWithName:fragmentFunctionNameForBlendFilter]
-                                                        fragmentFunctionDescriptorForMultilayerCompositingFilterWithProgrammableBlending:[[MTIFunctionDescriptor alloc] initWithName:fragmentFunctionNameForMultilayerCompositingFilterWithPB]
-                                                        fragmentFunctionDescriptorForMultilayerCompositingFilterWithoutProgrammableBlending:[[MTIFunctionDescriptor alloc] initWithName:fragmentFunctionNameForMultilayerCompositingFilterWithoutPB]];
+            NSString *fragmentFunctionNameForMultilayerCompositingFilter = [NSString stringWithFormat:@"multilayerComposite%@Blend",mode];
+            MTIBlendFunctionDescriptors *descriptors = [[MTIBlendFunctionDescriptors alloc] initWithFragmentFunctionDescriptorForBlendFilter:[[MTIFunctionDescriptor alloc] initWithName:fragmentFunctionNameForBlendFilter]
+                                                                                    fragmentFunctionDescriptorForMultilayerCompositingFilter:[[MTIFunctionDescriptor alloc] initWithName:fragmentFunctionNameForMultilayerCompositingFilter]];
             modes[mode] = descriptors;
         }
         _registeredBlendModes = [modes copy];
@@ -143,16 +126,6 @@ static id<NSLocking> _registeredBlendModesLock;
     NSParameterAssert(_registeredBlendModes[blendMode] == nil);
     NSMutableDictionary *modes = [NSMutableDictionary dictionaryWithDictionary:_registeredBlendModes];
     modes[blendMode] = functionDescriptors;
-    _registeredBlendModes = [modes copy];
-    [_registeredBlendModesLock unlock];
-}
-
-+ (void)unregisterBlendMode:(MTIBlendMode)blendMode {
-    NSParameterAssert(blendMode);
-    [_registeredBlendModesLock lock];
-    NSParameterAssert(_registeredBlendModes[blendMode] != nil);
-    NSMutableDictionary *modes = [NSMutableDictionary dictionaryWithDictionary:_registeredBlendModes];
-    [modes removeObjectForKey:blendMode];
     _registeredBlendModes = [modes copy];
     [_registeredBlendModesLock unlock];
 }

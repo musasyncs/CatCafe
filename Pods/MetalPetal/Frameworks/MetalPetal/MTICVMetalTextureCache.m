@@ -10,7 +10,6 @@
 
 NSString * const MTICVMetalTextureCacheErrorDomain = @"MTICVMetalTextureCacheErrorDomain";
 
-__attribute__((objc_subclassing_restricted))
 @interface MTICVMetalTextureCacheTexture: NSObject <MTICVMetalTexture>
 
 #if COREVIDEO_SUPPORTS_METAL
@@ -104,14 +103,15 @@ __attribute__((objc_subclassing_restricted))
     [_lock lock];
     CVMetalTextureRef textureRef = NULL;
     NSDictionary *textureAttributes = nil;
+    if (@available(iOS 11.0, *)) {
+        textureAttributes = @{
+            (id)kCVMetalTextureUsage: @(textureDescriptor.usage),
+        };
+    }
     if (@available(iOS 13.0, macOS 10.15, *)) {
         textureAttributes = @{
             (id)kCVMetalTextureUsage: @(textureDescriptor.usage),
             (id)kCVMetalTextureStorageMode: @(textureDescriptor.storageMode)
-        };
-    } else {
-        textureAttributes = @{
-            (id)kCVMetalTextureUsage: @(textureDescriptor.usage),
         };
     }
     CVReturn status = CVMetalTextureCacheCreateTextureFromImage(kCFAllocatorDefault, _cache, imageBuffer, (__bridge CFDictionaryRef)textureAttributes, textureDescriptor.pixelFormat, textureDescriptor.width, textureDescriptor.height, planeIndex, &textureRef);

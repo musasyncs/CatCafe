@@ -11,7 +11,6 @@
 #import "MTIFunctionDescriptor.h"
 #import "MTIImage.h"
 #import "MTIRGBToneCurveFilter.h"
-#import "MTIVector.h"
 #import <MetalPerformanceShaders/MetalPerformanceShaders.h>
 
 @interface MTIHighPassSkinSmoothingFilter ()
@@ -58,7 +57,6 @@
         _amount = 0.65;
         _radius = 8.0;
         _blurFilter = [[MTIMPSGaussianBlurFilter alloc] init];
-        _blurFilter.radius = _radius;
         _toneCurveFilter = [[MTIRGBToneCurveFilter alloc] init];
         _toneCurveFilter.RGBCompositeControlPoints = _toneCurveControlPoints;
     }

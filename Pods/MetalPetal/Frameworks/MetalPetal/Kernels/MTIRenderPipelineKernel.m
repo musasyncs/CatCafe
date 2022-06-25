@@ -24,8 +24,6 @@
 #import "MTIContext+Internal.h"
 #import "MTIHasher.h"
 #import "MTIError.h"
-#import "MTIPixelFormat.h"
-#import "MTIFunctionArgumentsEncoder.h"
 
 NSUInteger const MTIRenderPipelineMaximumColorAttachmentCount = 8;
 
@@ -37,10 +35,10 @@ NSUInteger const MTIRenderPipelineMaximumColorAttachmentCount = 8;
 @implementation MTIRenderPipelineKernelConfiguration
 
 - (instancetype)initWithColorAttachmentPixelFormats:(MTLPixelFormat [])colorAttachmentPixelFormats count:(NSUInteger)count {
-    return [self initWithColorAttachmentPixelFormats:colorAttachmentPixelFormats count:count depthAttachmentPixelFormat:MTLPixelFormatInvalid stencilAttachmentPixelFormat:MTLPixelFormatInvalid rasterSampleCount:1];
+    return [self initWithColorAttachmentPixelFormats:colorAttachmentPixelFormats count:count depthAttachmentPixelFormat:MTLPixelFormatInvalid stencilAttachmentPixelFormat:MTLPixelFormatInvalid];
 }
 
-- (instancetype)initWithColorAttachmentPixelFormats:(MTLPixelFormat [])colorAttachmentPixelFormats count:(NSUInteger)count depthAttachmentPixelFormat:(MTLPixelFormat)depthAttachmentPixelFormat stencilAttachmentPixelFormat:(MTLPixelFormat)stencilAttachmentPixelFormat rasterSampleCount:(NSUInteger)rasterSampleCount {
+- (instancetype)initWithColorAttachmentPixelFormats:(MTLPixelFormat [])colorAttachmentPixelFormats count:(NSUInteger)count depthAttachmentPixelFormat:(MTLPixelFormat)depthAttachmentPixelFormat stencilAttachmentPixelFormat:(MTLPixelFormat)stencilAttachmentPixelFormat {
     if (self = [super init]) {
         NSParameterAssert(count <= MTIRenderPipelineMaximumColorAttachmentCount);
         count = MIN(count, MTIRenderPipelineMaximumColorAttachmentCount);
@@ -50,14 +48,13 @@ NSUInteger const MTIRenderPipelineMaximumColorAttachmentCount = 8;
         _colorAttachmentCount = count;
         _depthAttachmentPixelFormat = depthAttachmentPixelFormat;
         _stencilAttachmentPixelFormat = stencilAttachmentPixelFormat;
-        _rasterSampleCount = rasterSampleCount;
     }
     return self;
 }
 
 - (instancetype)initWithColorAttachmentPixelFormat:(MTLPixelFormat)colorAttachmentPixelFormat {
     MTLPixelFormat formats[] = {colorAttachmentPixelFormat};
-    return [self initWithColorAttachmentPixelFormats:formats count:1 depthAttachmentPixelFormat:MTLPixelFormatInvalid stencilAttachmentPixelFormat:MTLPixelFormatInvalid rasterSampleCount:1];
+    return [self initWithColorAttachmentPixelFormats:formats count:1 depthAttachmentPixelFormat:MTLPixelFormatInvalid stencilAttachmentPixelFormat:MTLPixelFormatInvalid];
 }
 
 - (const MTLPixelFormat *)colorAttachmentPixelFormats {
@@ -71,7 +68,6 @@ NSUInteger const MTIRenderPipelineMaximumColorAttachmentCount = 8;
     }
     MTIHasherCombine(&hasher, _depthAttachmentPixelFormat);
     MTIHasherCombine(&hasher, _stencilAttachmentPixelFormat);
-    MTIHasherCombine(&hasher, _rasterSampleCount);
     return MTIHasherFinalize(&hasher);
 }
 
@@ -80,9 +76,7 @@ NSUInteger const MTIRenderPipelineMaximumColorAttachmentCount = 8;
         return YES;
     }
     MTIRenderPipelineKernelConfiguration *obj = object;
-    if ([obj isKindOfClass:MTIRenderPipelineKernelConfiguration.class] &&
-        obj -> _colorAttachmentCount == _colorAttachmentCount &&
-        obj -> _rasterSampleCount == _rasterSampleCount) {
+    if ([obj isKindOfClass:MTIRenderPipelineKernelConfiguration.class] && obj -> _colorAttachmentCount == _colorAttachmentCount) {
         for (NSUInteger index = 0; index < _colorAttachmentCount; index += 1) {
             if ((obj -> _pixelFormats)[index] != _pixelFormats[index]) {
                 return NO;
@@ -106,8 +100,8 @@ NSUInteger const MTIRenderPipelineMaximumColorAttachmentCount = 8;
     return self;
 }
 
-+ (instancetype)configurationWithColorAttachmentPixelFormats:(MTLPixelFormat[])colorAttachmentPixelFormats count:(NSUInteger)count rasterSampleCount:(NSUInteger)rasterSampleCount {
-    return [[MTIRenderPipelineKernelConfiguration alloc] initWithColorAttachmentPixelFormats:colorAttachmentPixelFormats count:count depthAttachmentPixelFormat:MTLPixelFormatInvalid stencilAttachmentPixelFormat:MTLPixelFormatInvalid rasterSampleCount:rasterSampleCount];
++ (instancetype)configurationWithColorAttachmentPixelFormats:(MTLPixelFormat[])colorAttachmentPixelFormats count:(NSUInteger)count {
+    return [[MTIRenderPipelineKernelConfiguration alloc] initWithColorAttachmentPixelFormats:colorAttachmentPixelFormats count:count];
 }
 
 @end
@@ -172,8 +166,6 @@ NSUInteger const MTIRenderPipelineMaximumColorAttachmentCount = 8;
     renderPipelineDescriptor.depthAttachmentPixelFormat = configuration.depthAttachmentPixelFormat;
     renderPipelineDescriptor.stencilAttachmentPixelFormat = configuration.stencilAttachmentPixelFormat;
     
-    renderPipelineDescriptor.rasterSampleCount = configuration.rasterSampleCount;
-    
     return [context renderPipelineWithDescriptor:renderPipelineDescriptor error:inOutError];
 }
 
@@ -183,7 +175,6 @@ NSUInteger const MTIRenderPipelineMaximumColorAttachmentCount = 8;
 
 @end
 
-__attribute__((objc_subclassing_restricted))
 @interface MTIImageRenderingRecipe : NSObject
 
 @property (nonatomic, copy, readonly) NSArray<MTIRenderCommand *> *renderCommands;
@@ -196,8 +187,6 @@ __attribute__((objc_subclassing_restricted))
 @property (nonatomic, readonly) MTIAlphaType alphaType;
 
 @property (nonatomic, copy, readonly) NSArray<MTIImage *> *dependencies;
-
-@property (nonatomic, readonly) NSUInteger rasterSampleCount;
 
 @end
 
@@ -218,7 +207,7 @@ __attribute__((objc_subclassing_restricted))
         pixelFormats[index] = pixelFormat;
         
         MTITextureDescriptor *textureDescriptor = [MTITextureDescriptor texture2DDescriptorWithPixelFormat:pixelFormat width:outputDescriptor.dimensions.width height:outputDescriptor.dimensions.height mipmapped:NO usage:MTLTextureUsageRenderTarget | MTLTextureUsageShaderRead resourceOptions:MTLResourceStorageModePrivate];
-        MTIImagePromiseRenderTarget *renderTarget = [renderingContext.context newRenderTargetWithReusableTextureDescriptor:textureDescriptor error:&error];
+        MTIImagePromiseRenderTarget *renderTarget = [renderingContext.context newRenderTargetWithResuableTextureDescriptor:textureDescriptor error:&error];
         if (error) {
             if (inOutError) {
                 *inOutError = error;
@@ -226,59 +215,10 @@ __attribute__((objc_subclassing_restricted))
             return nil;
         }
         
-        if (_rasterSampleCount > 1) {
-            if (renderingContext.context.isMemorylessTextureSupported) {
-                MTLTextureDescriptor *tempTextureDescriptor = [textureDescriptor newMTLTextureDescriptor];
-                tempTextureDescriptor.textureType = MTLTextureType2DMultisample;
-                tempTextureDescriptor.usage = MTLTextureUsageRenderTarget;
-                if (@available(macCatalyst 14.0, macOS 11.0, *)) {
-                    tempTextureDescriptor.storageMode = MTLStorageModeMemoryless;
-                } else {
-                    NSAssert(NO, @"");
-                }
-                tempTextureDescriptor.sampleCount = _rasterSampleCount;
-                id<MTLTexture> msaaTexture = [renderingContext.context.device newTextureWithDescriptor:tempTextureDescriptor];
-                if (!msaaTexture) {
-                    if (inOutError) {
-                        *inOutError = MTIErrorCreate(MTIErrorFailedToCreateTexture, nil);
-                    }
-                    return nil;
-                }
-                renderPassDescriptor.colorAttachments[index].texture = msaaTexture;
-                renderPassDescriptor.colorAttachments[index].clearColor = outputDescriptor.clearColor;
-                if (outputDescriptor.loadAction == MTLLoadActionLoad) {
-                    NSAssert(NO, @"Cannot use `MTLLoadActionLoad` for memoryless render target. Fallback to `MTLLoadActionClear`.");
-                    renderPassDescriptor.colorAttachments[index].loadAction = MTLLoadActionClear;
-                } else {
-                    renderPassDescriptor.colorAttachments[index].loadAction = outputDescriptor.loadAction;
-                }
-                renderPassDescriptor.colorAttachments[index].storeAction = MTLStoreActionMultisampleResolve;
-                renderPassDescriptor.colorAttachments[index].resolveTexture = renderTarget.texture;
-            } else {
-                MTLTextureDescriptor *tempTextureDescriptor = [textureDescriptor newMTLTextureDescriptor];
-                tempTextureDescriptor.textureType = MTLTextureType2DMultisample;
-                tempTextureDescriptor.usage = MTLTextureUsageRenderTarget;
-                tempTextureDescriptor.sampleCount = _rasterSampleCount;
-                MTIImagePromiseRenderTarget *msaaTarget = [renderingContext.context newRenderTargetWithReusableTextureDescriptor:[tempTextureDescriptor newMTITextureDescriptor] error:&error];
-                if (error) {
-                    if (inOutError) {
-                        *inOutError = error;
-                    }
-                    return nil;
-                }
-                renderPassDescriptor.colorAttachments[index].texture = msaaTarget.texture;
-                renderPassDescriptor.colorAttachments[index].clearColor = outputDescriptor.clearColor;
-                renderPassDescriptor.colorAttachments[index].loadAction = outputDescriptor.loadAction;
-                renderPassDescriptor.colorAttachments[index].storeAction = MTLStoreActionMultisampleResolve;
-                renderPassDescriptor.colorAttachments[index].resolveTexture = renderTarget.texture;
-                [msaaTarget releaseTexture];
-            }
-        } else {
-            renderPassDescriptor.colorAttachments[index].texture = renderTarget.texture;
-            renderPassDescriptor.colorAttachments[index].clearColor = outputDescriptor.clearColor;
-            renderPassDescriptor.colorAttachments[index].loadAction = outputDescriptor.loadAction;
-            renderPassDescriptor.colorAttachments[index].storeAction = outputDescriptor.storeAction;
-        }
+        renderPassDescriptor.colorAttachments[index].texture = renderTarget.texture;
+        renderPassDescriptor.colorAttachments[index].clearColor = outputDescriptor.clearColor;
+        renderPassDescriptor.colorAttachments[index].loadAction = outputDescriptor.loadAction;
+        renderPassDescriptor.colorAttachments[index].storeAction = outputDescriptor.storeAction;
         
         renderTargets[index] = renderTarget;
     }
@@ -293,7 +233,7 @@ __attribute__((objc_subclassing_restricted))
     }
     
     for (MTIRenderCommand *command in self.renderCommands) {
-        MTIRenderPipeline *renderPipeline = [renderingContext.context kernelStateForKernel:command.kernel configuration:[MTIRenderPipelineKernelConfiguration configurationWithColorAttachmentPixelFormats:pixelFormats count:outputCount rasterSampleCount:_rasterSampleCount] error:&error];
+        MTIRenderPipeline *renderPipeline = [renderingContext.context kernelStateForKernel:command.kernel configuration:[MTIRenderPipelineKernelConfiguration configurationWithColorAttachmentPixelFormats:pixelFormats count:outputCount] error:&error];
         
         if (error) {
             if (inOutError) {
@@ -306,14 +246,26 @@ __attribute__((objc_subclassing_restricted))
         
         [commandEncoder setRenderPipelineState:renderPipeline.state];
         
+        id<MTLSamplerState> samplerStates[command.images.count];
+        for (NSUInteger index = 0; index < command.images.count; index += 1) {
+            MTIImage *image = command.images[index];
+            id<MTLSamplerState> samplerState = [renderingContext.context samplerStateWithDescriptor:image.samplerDescriptor error:&error];
+            if (error) {
+                if (inOutError) {
+                    *inOutError = error;
+                }
+                return nil;
+            }
+            samplerStates[index] = samplerState;
+        }
+        
         for (MTLArgument *argument in renderPipeline.reflection.vertexArguments) {
             if (argument.type == MTLArgumentTypeTexture) {
                 NSUInteger index = argument.index;
                 if (index < command.images.count) {
                     id<MTLTexture> texture = [renderingContext resolvedTextureForImage:command.images[index]];
-                    id<MTLSamplerState> samplerState = [renderingContext resolvedSamplerStateForImage:command.images[index]];
                     [commandEncoder setVertexTexture:texture atIndex:index];
-                    [commandEncoder setVertexSamplerState:samplerState atIndex:index];
+                    [commandEncoder setVertexSamplerState:samplerStates[index] atIndex:index];
                 } else {
                     NSAssert(NO, @"Failed to set vertex textures.");
                     if (inOutError) {
@@ -335,9 +287,8 @@ __attribute__((objc_subclassing_restricted))
                 NSUInteger index = argument.index;
                 if (index < command.images.count) {
                     id<MTLTexture> texture = [renderingContext resolvedTextureForImage:command.images[index]];
-                    id<MTLSamplerState> samplerState = [renderingContext resolvedSamplerStateForImage:command.images[index]];
                     [commandEncoder setFragmentTexture:texture atIndex:index];
-                    [commandEncoder setFragmentSamplerState:samplerState atIndex:index];
+                    [commandEncoder setFragmentSamplerState:samplerStates[index] atIndex:index];
                 } else {
                     NSAssert(NO, @"Failed to set fragment textures.");
                     if (inOutError) {
@@ -356,7 +307,7 @@ __attribute__((objc_subclassing_restricted))
                 
         //encode parameters
         if (command.parameters.count > 0) {
-            [MTIFunctionArgumentsEncoder encodeArguments:renderPipeline.reflection.vertexArguments values:command.parameters functionType:MTLFunctionTypeVertex encoder:commandEncoder error:&error];
+            [MTIArgumentsEncoder encodeArguments:renderPipeline.reflection.vertexArguments values:command.parameters functionType:MTLFunctionTypeVertex encoder:commandEncoder error:&error];
             if (error) {
                 NSAssert(NO, @"Cannot encode vertex arguments: %@", error);
                 if (inOutError) {
@@ -366,7 +317,7 @@ __attribute__((objc_subclassing_restricted))
                 return nil;
             }
             
-            [MTIFunctionArgumentsEncoder encodeArguments:renderPipeline.reflection.fragmentArguments values:command.parameters functionType:MTLFunctionTypeFragment encoder:commandEncoder error:&error];
+            [MTIArgumentsEncoder encodeArguments:renderPipeline.reflection.fragmentArguments values:command.parameters functionType:MTLFunctionTypeFragment encoder:commandEncoder error:&error];
             if (error) {
                 NSAssert(NO, @"Cannot encode fragment arguments: %@", error);
                 if (inOutError) {
@@ -390,15 +341,11 @@ __attribute__((objc_subclassing_restricted))
 }
 
 - (instancetype)initWithRenderCommands:(NSArray<MTIRenderCommand *> *)renderCommands
-                     rasterSampleCount:(NSUInteger)rasterSampleCount
                      outputDescriptors:(NSArray<MTIRenderPassOutputDescriptor *> *)outputDescriptors {
     if (self = [super init]) {
         NSParameterAssert(renderCommands.count > 0);
-        NSParameterAssert(rasterSampleCount >= 1);
-        NSParameterAssert(outputDescriptors.count > 0);
         _renderCommands = [renderCommands copy];
         _outputDescriptors = [outputDescriptors copy];
-        _rasterSampleCount = rasterSampleCount;
         if (renderCommands.count == 0) {
             _dependencies = @[];
         } else if (renderCommands.count == 1) {
@@ -421,7 +368,7 @@ __attribute__((objc_subclassing_restricted))
 
 @end
 
-__attribute__((objc_subclassing_restricted))
+
 @interface MTIImageRenderingPromise: NSObject <MTIImagePromise>
 
 @property (nonatomic, strong, readonly) MTIImageRenderingRecipe *recipe;
@@ -491,7 +438,7 @@ __attribute__((objc_subclassing_restricted))
         MTIRenderCommand *newCommand = [[MTIRenderCommand alloc] initWithKernel:command.kernel geometry:command.geometry images:deps parameters:command.parameters];
         [newCommands addObject:newCommand];
     }
-    return [[MTIImageRenderingPromise alloc] initWithImageRenderingRecipe:[[MTIImageRenderingRecipe alloc] initWithRenderCommands:newCommands rasterSampleCount:_recipe.rasterSampleCount outputDescriptors:_recipe.outputDescriptors] outputIndex:_outputIndex];
+    return [[MTIImageRenderingPromise alloc] initWithImageRenderingRecipe:[[MTIImageRenderingRecipe alloc] initWithRenderCommands:newCommands  outputDescriptors:self.recipe.outputDescriptors] outputIndex:self.outputIndex];
 }
 
 - (MTIImagePromiseDebugInfo *)debugInfo {
@@ -515,7 +462,6 @@ __attribute__((objc_subclassing_restricted))
 }
 
 - (NSArray<MTIImage *> *)applyToInputImages:(NSArray<MTIImage *> *)images parameters:(NSDictionary<NSString *,id> *)parameters outputDescriptors:(NSArray<MTIRenderPassOutputDescriptor *> *)outputDescriptors {
-    NSParameterAssert(outputDescriptors.count == _colorAttachmentCount);
     MTIRenderCommand *command = [[MTIRenderCommand alloc] initWithKernel:self geometry:MTIVertices.fullViewportSquareVertices images:images parameters:parameters];
     return [MTIRenderCommand imagesByPerformingRenderCommands:@[command]
                                             outputDescriptors:outputDescriptors];
@@ -541,14 +487,7 @@ __attribute__((objc_subclassing_restricted))
 @implementation MTIRenderCommand (ImageCreation)
 
 + (NSArray<MTIImage *> *)imagesByPerformingRenderCommands:(NSArray<MTIRenderCommand *> *)renderCommands outputDescriptors:(NSArray<MTIRenderPassOutputDescriptor *> *)outputDescriptors {
-    return [self imagesByPerformingRenderCommands:renderCommands rasterSampleCount:1 outputDescriptors:outputDescriptors];
-}
-
-+ (NSArray<MTIImage *> *)imagesByPerformingRenderCommands:(NSArray<MTIRenderCommand *> *)renderCommands
-                                        rasterSampleCount:(NSUInteger)rasterSampleCount
-                                        outputDescriptors:(NSArray<MTIRenderPassOutputDescriptor *> *)outputDescriptors {
     MTIImageRenderingRecipe *recipe = [[MTIImageRenderingRecipe alloc] initWithRenderCommands:renderCommands
-                                                                            rasterSampleCount:rasterSampleCount
                                                                             outputDescriptors:outputDescriptors];
     if (outputDescriptors.count == 0) {
         return @[];
@@ -606,7 +545,7 @@ void MTIColorMatrixRenderGraphNodeOptimize(MTIRenderGraphNode *node) {
             MTIRenderCommand *lastCommand = lastPromise.recipe.renderCommands.firstObject;
             if (lastPromise.recipe.renderCommands.count == 1 && lastImage.cachePolicy == MTIImageCachePolicyTransient && [lastCommand.geometry isEqual:MTIVertices.fullViewportSquareVertices] && [lastPromise.recipe.outputDescriptors isEqualToArray:recipe.outputDescriptors] && lastCommand.kernel == MTIColorMatrixFilter.kernel) {
                 colorMatrix = MTIColorMatrixConcat(lastPromise.recipe.colorMatrix, colorMatrix);
-                MTIImageRenderingRecipe *r = [[MTIImageRenderingRecipe alloc] initWithRenderCommands:@[[[MTIRenderCommand alloc] initWithKernel:command.kernel geometry:command.geometry images:lastPromise.dependencies parameters:@{MTIColorMatrixFilterColorMatrixParameterKey: [NSData dataWithBytes:&colorMatrix length:sizeof(MTIColorMatrix)]}]] rasterSampleCount:MAX(recipe.rasterSampleCount,lastPromise.recipe.rasterSampleCount) outputDescriptors:recipe.outputDescriptors];
+                MTIImageRenderingRecipe *r = [[MTIImageRenderingRecipe alloc] initWithRenderCommands:@[[[MTIRenderCommand alloc] initWithKernel:command.kernel geometry:command.geometry images:lastPromise.dependencies parameters:@{MTIColorMatrixFilterColorMatrixParameterKey: [NSData dataWithBytes:&colorMatrix length:sizeof(MTIColorMatrix)]}]] outputDescriptors:recipe.outputDescriptors];
                 MTIImageRenderingPromise *promise = [[MTIImageRenderingPromise alloc] initWithImageRenderingRecipe:r outputIndex:0];
                 node.inputs = lastNode.inputs;
                 node.image = [[MTIImage alloc] initWithPromise:promise samplerDescriptor:node.image.samplerDescriptor cachePolicy:node.image.cachePolicy];

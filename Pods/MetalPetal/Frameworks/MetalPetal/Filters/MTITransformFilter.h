@@ -6,11 +6,7 @@
 //
 
 #import <QuartzCore/QuartzCore.h>
-#if __has_include(<MetalPetal/MetalPetal.h>)
-#import <MetalPetal/MTIFilter.h>
-#else
 #import "MTIFilter.h"
-#endif
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -29,12 +25,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 typedef CGRect MTITransformFilterViewport NS_SWIFT_NAME(MTITransformFilter.Viewport);
 
-FOUNDATION_EXPORT MTITransformFilterViewport MTITransformFilterMinimumEnclosingViewportForImageWithTransform(MTIImage *image, CATransform3D transform, float fieldOfView) NS_SWIFT_NAME(MTITransformFilter.minimumEnclosingViewport(for:transform:fieldOfView:));
-FOUNDATION_EXPORT MTITransformFilterViewport MTITransformFilterDefaultViewportForImage(MTIImage *image) NS_SWIFT_NAME(MTITransformFilter.defaultViewport(for:));
-
-FOUNDATION_EXPORT MTIImage * MTITransformFilterApplyTransformToImage(MTIImage *image, CATransform3D transform, float fieldOfView, NSUInteger rasterSampleCount, MTITransformFilterViewport viewport, MTLPixelFormat outputPixelFormat);
-
-__attribute__((objc_subclassing_restricted))
 @interface MTITransformFilter : NSObject <MTIUnaryFilter>
 
 @property (nonatomic) CATransform3D transform;
@@ -51,8 +41,6 @@ __attribute__((objc_subclassing_restricted))
 @property (nonatomic, readonly) MTITransformFilterViewport minimumEnclosingViewport;
 
 @property (nonatomic, readonly) MTITransformFilterViewport defaultViewport;
-
-@property (nonatomic) NSUInteger rasterSampleCount;
 
 @end
 

@@ -5,35 +5,27 @@
 //  Created by Yu Ao on 30/09/2017.
 //
 
-#if __has_include(<MetalPetal/MetalPetal.h>)
-#import <MetalPetal/MTIFilter.h>
-#else
 #import "MTIFilter.h"
-#endif
+#import "MTIUnaryImageRenderingFilter.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class MTIRenderPipelineKernel;
-
-__attribute__((objc_subclassing_restricted))
-@interface MTIUnpremultiplyAlphaFilter : NSObject <MTIUnaryFilter>
-
-@property (nonatomic, class, strong, readonly) MTIRenderPipelineKernel *kernel;
+@interface MTIUnpremultiplyAlphaFilter : MTIUnaryImageRenderingFilter
 
 + (MTIImage *)imageByProcessingImage:(MTIImage *)image;
-
-+ (MTIImage *)imageByProcessingImage:(MTIImage *)image outputPixelFormat:(MTLPixelFormat)pixelFormat;
 
 @end
 
-__attribute__((objc_subclassing_restricted))
-@interface MTIPremultiplyAlphaFilter : NSObject <MTIUnaryFilter>
-
-@property (nonatomic, class, strong, readonly) MTIRenderPipelineKernel *kernel;
+@interface MTIPremultiplyAlphaFilter : MTIUnaryImageRenderingFilter
 
 + (MTIImage *)imageByProcessingImage:(MTIImage *)image;
 
-+ (MTIImage *)imageByProcessingImage:(MTIImage *)image outputPixelFormat:(MTLPixelFormat)pixelFormat;
+@end
+
+/// Unpremultiply alpha and convert to linear RGB
+@interface MTIUnpremultiplyAlphaWithSRGBToLinearRGBFilter : MTIUnaryImageRenderingFilter
+
++ (MTIImage *)imageByProcessingImage:(MTIImage *)image;
 
 @end
 

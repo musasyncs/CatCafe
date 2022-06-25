@@ -14,10 +14,7 @@
 #import "MTIError.h"
 #import "MTIImagePromiseDebug.h"
 #import "MTIContext+Internal.h"
-#import "MTIImagePromise.h"
-#import "MTIPixelFormat.h"
 
-__attribute__((objc_subclassing_restricted))
 @interface MTIMPSProcessingRecipe : NSObject <MTIImagePromise>
 
 @property (nonatomic,strong) MTIMPSKernel *kernel;
@@ -55,7 +52,7 @@ __attribute__((objc_subclassing_restricted))
     MTLPixelFormat pixelFormat = (self.outputPixelFormat == MTIPixelFormatUnspecified) ? renderingContext.context.workingPixelFormat : self.outputPixelFormat;
     
     MTITextureDescriptor *textureDescriptor = [MTITextureDescriptor texture2DDescriptorWithPixelFormat:pixelFormat width:_dimensions.width height:_dimensions.height mipmapped:NO usage:MTLTextureUsageShaderWrite | MTLTextureUsageShaderRead resourceOptions:MTLResourceStorageModePrivate];
-    MTIImagePromiseRenderTarget *renderTarget = [renderingContext.context newRenderTargetWithReusableTextureDescriptor:textureDescriptor error:&error];
+    MTIImagePromiseRenderTarget *renderTarget = [renderingContext.context newRenderTargetWithResuableTextureDescriptor:textureDescriptor error:&error];
     if (error) {
         if (inOutError) {
             *inOutError = error;
@@ -92,7 +89,17 @@ __attribute__((objc_subclassing_restricted))
        outputTextureDimensions:(MTITextureDimensions)outputTextureDimensions
              outputPixelFormat:(MTLPixelFormat)outputPixelFormat {
     if (self = [super init]) {
-        NSParameterAssert([kernel.alphaTypeHandlingRule _canHandleAlphaTypesInImages:inputImages]);
+        NSParameterAssert({
+            /* Alpha Type Assert */
+            BOOL canAcceptAlphaType = YES;
+            for (MTIImage *image in inputImages) {
+                if (![kernel.alphaTypeHandlingRule canAcceptAlphaType:image.alphaType]) {
+                    canAcceptAlphaType = NO;
+                    break;
+                }
+            }
+            canAcceptAlphaType;
+        });
         _inputImages = inputImages;
         _kernel = kernel;
         _parameters = parameters;

@@ -6,9 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <QuartzCore/QuartzCore.h>
-
-@protocol MTIImagePromise;
+#import "MTIImagePromise.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -19,7 +17,6 @@ typedef NS_ENUM(NSInteger, MTIImagePromiseType) {
 
 FOUNDATION_EXPORT NSString * MTIImagePromiseDebugIdentifierForObject(id object);
 
-__attribute__((objc_subclassing_restricted))
 @interface MTIImagePromiseDebugInfo : NSObject
 
 @property (nonatomic,copy,readonly) NSString *identifier;

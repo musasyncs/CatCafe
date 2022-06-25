@@ -97,8 +97,8 @@ class PostSelectController: UIViewController {
     }
 
     @objc private func handleNext() {
-        let controller = PostFilterController()        
-//        controller.croppedImage = scrollView.croppedImage
+        let controller = PostFilterController()
+        controller.croppedImage = gridScrollView.croppedImage
         navigationController?.pushViewController(controller, animated: false)
     }
 
@@ -106,6 +106,7 @@ class PostSelectController: UIViewController {
 
 extension PostSelectController {
     func setup() {
+        view.backgroundColor = .white
         navigationController?.navigationBar.tintColor = .black
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(
@@ -124,9 +125,6 @@ extension PostSelectController {
             target: self,
             action: #selector(handleNext)
         )
-        navigationItem.rightBarButtonItem?.isEnabled = false
-        
-        view.backgroundColor = .white
     }
     
     func layout() {

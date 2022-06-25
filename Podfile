@@ -19,5 +19,5 @@ target 'CatCafe' do
   pod 'SDWebImage' 
   pod 'JGProgressHUD'
   pod 'lottie-ios'
-  pod 'MetalPetal'
+  pod 'MetalPetal', '~> 1.10.1'
 end

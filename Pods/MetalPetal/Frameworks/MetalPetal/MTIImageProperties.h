@@ -11,7 +11,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-__attribute__((objc_subclassing_restricted))
 @interface MTIImageProperties : NSObject <NSCopying>
 
 + (instancetype)new NS_UNAVAILABLE;
@@ -20,9 +19,7 @@ __attribute__((objc_subclassing_restricted))
 
 - (nullable instancetype)initWithImageSource:(CGImageSourceRef)imageSource index:(NSUInteger)index NS_DESIGNATED_INITIALIZER;
 
-- (instancetype)initWithCGImage:(CGImageRef)image orientation:(CGImagePropertyOrientation)orientation NS_DESIGNATED_INITIALIZER;
-
-- (instancetype)initWithCGImage:(CGImageRef)image;
+- (instancetype)initWithCGImage:(CGImageRef)image NS_DESIGNATED_INITIALIZER;
 
 - (nullable instancetype)initWithImageAtURL:(NSURL *)URL;
 
@@ -30,8 +27,6 @@ __attribute__((objc_subclassing_restricted))
 @property (nonatomic, readonly) CGImageByteOrderInfo byteOrderInfo;
 @property (nonatomic, readonly) BOOL floatComponents;
 @property (nonatomic, readonly, nullable) CGColorSpaceRef colorSpace;
-
-@property (nonatomic, readonly) NSUInteger bitsPerComponent;
 
 @property (nonatomic, readonly) NSUInteger pixelWidth;
 @property (nonatomic, readonly) NSUInteger pixelHeight;

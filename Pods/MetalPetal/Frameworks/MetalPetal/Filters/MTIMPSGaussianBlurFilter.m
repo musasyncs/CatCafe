@@ -9,7 +9,6 @@
 #import "MTIMPSGaussianBlurFilter.h"
 #import "MTIMPSKernel.h"
 #import "MTIImage.h"
-#import "MTILock.h"
 
 @interface MTIMPSGaussianBlurFilter ()
 
@@ -21,11 +20,11 @@
 
 + (MTIMPSKernel *)kernelWithRadius:(NSInteger)radius {
     static NSMutableDictionary *kernels;
-    static id<NSLocking> kernelsLock;
+    static NSLock *kernelsLock;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         kernels = [NSMutableDictionary dictionary];
-        kernelsLock = MTILockCreate();
+        kernelsLock = [[NSLock alloc] init];
     });
     
     [kernelsLock lock];

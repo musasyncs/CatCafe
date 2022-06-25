@@ -6,6 +6,7 @@
 //
 //
 
+#import <Foundation/Foundation.h>
 #import <Metal/Metal.h>
 
 NS_ASSUME_NONNULL_BEGIN
@@ -23,6 +24,16 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol MTIKernel <NSObject>
 
 - (nullable id)newKernelStateWithContext:(MTIContext *)context configuration:(nullable id<MTIKernelConfiguration>)configuration error:(NSError **)error NS_SWIFT_NAME(makeKernelState(context:configuration:));
+
+@end
+
+@interface MTIArgumentsEncoder : NSObject
+
++ (BOOL)encodeArguments:(NSArray<MTLArgument *>*)arguments
+                 values:(NSDictionary<NSString *, id> *)parameters
+           functionType:(MTLFunctionType)functionType
+                encoder:(id<MTLCommandEncoder>)encoder
+                  error:(NSError **)error;
 
 @end
 

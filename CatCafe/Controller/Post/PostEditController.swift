@@ -7,6 +7,7 @@
 
 import UIKit
 import Firebase
+import Photos
 
 class PostEditController: UIViewController {
         
@@ -237,15 +238,14 @@ class PostEditController: UIViewController {
     }
     
     @objc private func handleImagePost() {
-        guard let selectedImage = image else { return }
+        guard let postImage = image else { return }
         guard let caption = captionTextView.text else { return }
         guard let selectedCafe = selectedCafe else { return }
         
         navigationItem.rightBarButtonItem?.isEnabled = false
         showLoader(true)
-        
         PostService.uploadImagePost(caption: caption,
-                                    postImage: selectedImage,
+                                    postImage: postImage,
                                     cafeId: selectedCafe.id,
                                     cafeName: selectedCafe.title) { error in
             self.showLoader(false)
@@ -257,6 +257,11 @@ class PostEditController: UIViewController {
             }
             
             self.dismiss(animated: true) {
+                // save photo
+                PHPhotoLibrary.shared().performChanges {
+                    PHAssetCreationRequest.creationRequestForAsset(from: postImage)
+                }
+                // notify feed update
                 NotificationCenter.default.post(name: CCConstant.NotificationName.updateFeed, object: nil)
             }
         }

@@ -22,7 +22,17 @@
 }
 
 - (instancetype)initWithName:(NSString *)name libraryURL:( NSURL * _Nullable )URL {
-    return [self initWithName:name constantValues:nil libraryURL:URL];
+    if (self = [super init]) {
+        _name = name;
+        _libraryURL = [URL copy];
+        _constantValues = nil;
+        
+        MTIHasher hasher = MTIHasherMake(0);
+        MTIHasherCombine(&hasher, _name.hash);
+        MTIHasherCombine(&hasher, _libraryURL.hash);
+        _cachedHashValue = MTIHasherFinalize(&hasher);
+    }
+    return self;
 }
 
 - (instancetype)initWithName:(NSString *)name constantValues:(MTLFunctionConstantValues *)constantValues libraryURL:(NSURL *)URL {
@@ -38,10 +48,6 @@
         _cachedHashValue = MTIHasherFinalize(&hasher);
     }
     return self;
-}
-
-- (MTIFunctionDescriptor *)functionDescriptorWithConstantValues:(MTLFunctionConstantValues *)constantValues {
-    return [[MTIFunctionDescriptor alloc] initWithName:_name constantValues:constantValues libraryURL:_libraryURL];
 }
 
 - (BOOL)isEqual:(id)object {
