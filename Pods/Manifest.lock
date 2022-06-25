@@ -755,6 +755,9 @@ PODS:
     - Libuv-gRPC/Interface (= 0.0.10)
   - Libuv-gRPC/Interface (0.0.10)
   - lottie-ios (3.3.0)
+  - MetalPetal (1.24.1):
+    - MetalPetal/Core (= 1.24.1)
+  - MetalPetal/Core (1.24.1)
   - MJRefresh (3.7.5)
   - nanopb (2.30909.0):
     - nanopb/decode (= 2.30909.0)
@@ -776,6 +779,7 @@ DEPENDENCIES:
   - JGProgressHUD
   - Kingfisher
   - lottie-ios
+  - MetalPetal
   - MJRefresh
   - SDWebImage
   - SwiftLint
@@ -808,6 +812,7 @@ SPEC REPOS:
     - leveldb-library
     - Libuv-gRPC
     - lottie-ios
+    - MetalPetal
     - MJRefresh
     - nanopb
     - PromisesObjC
@@ -841,12 +846,13 @@ SPEC CHECKSUMS:
   leveldb-library: 50c7b45cbd7bf543c81a468fe557a16ae3db8729
   Libuv-gRPC: 55e51798e14ef436ad9bc45d12d43b77b49df378
   lottie-ios: 6ac74dcc09904798f59b18cb3075c089d76be9ae
+  MetalPetal: 5801c52cb1ce686743f2d1955456bfcaba112832
   MJRefresh: fdf5e979eb406a0341468932d1dfc8b7f9fce961
   nanopb: b552cce312b6c8484180ef47159bc0f65a1f0431
   PromisesObjC: 99b6f43f9e1044bd87a95a60beff28c2c44ddb72
   SDWebImage: 0905f1b7760fc8ac4198cae0036600d67478751e
   SwiftLint: f80f1be7fa96d30e0aa68e58d45d4ea1ccaac519
 
-PODFILE CHECKSUM: 9c35a8fc0044035bf4ed14e3524c9696b1666228
+PODFILE CHECKSUM: e104aa001dc7fbcebba25bc9a50118aabfdce83e
 
 COCOAPODS: 1.11.2

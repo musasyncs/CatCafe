@@ -7,14 +7,14 @@
 
 import UIKit
 
-protocol ControlSectionHeaderDelegate: AnyObject {
-    func didTapGallery(_ header: ControlSectionHeader)
-    func didTapCamera(_ header: ControlSectionHeader)
+protocol ControlViewDelegate: AnyObject {
+    func didTapGallery(_ view: ControlView)
+    func didTapCamera(_ view: ControlView)
 }
 
-final class ControlSectionHeader: UITableViewHeaderFooterView {
+final class ControlView: UIView {
     
-    weak var delegate: ControlSectionHeaderDelegate?
+    weak var delegate: ControlViewDelegate?
     
     lazy var galleryButton = makeTitleButton(
         withText: "圖庫",
@@ -31,8 +31,8 @@ final class ControlSectionHeader: UITableViewHeaderFooterView {
         borderColor: .black
     )
     
-    override init(reuseIdentifier: String?) {
-        super.init(reuseIdentifier: reuseIdentifier)
+    override init(frame: CGRect) {
+        super.init(frame: frame)
 
         galleryButton.addTarget(self, action: #selector(handleGallery), for: .touchUpInside)
         cameraButton.addTarget(self, action: #selector(handleCamera), for: .touchUpInside)
