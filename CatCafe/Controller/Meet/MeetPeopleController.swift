@@ -158,7 +158,7 @@ extension MeetPeopleViewController: UICollectionViewDelegate, UICollectionViewDa
         didSelectItemAt indexPath: IndexPath
     ) {
         collectionView.deselectItem(at: indexPath, animated: true)
-        let person = people[indexPath.item]
+//        let person = people[indexPath.item]
         // go to profile
       
     }

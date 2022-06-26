@@ -23,7 +23,7 @@ class MeetTimeTileView: UIView {
     lazy var textField = CustomTextField(placeholder: "聚會會維持公開直到聚會時間，如果要提早關閉，可以使用刪除功能",
                                          textColor: .black,
                                          fgColor: .systemBrown,
-                                         font: .notoRegular(size: 11))
+                                         font: .systemFont(ofSize: 11, weight: .regular))
     
     var heightConstraint: NSLayoutConstraint?
     
@@ -31,13 +31,13 @@ class MeetTimeTileView: UIView {
         super.init(frame: .zero)
         
         titleLabel.text = "聚會時間"
-        titleLabel.font = .notoMedium(size: 15)
+        titleLabel.font = .systemFont(ofSize: 15, weight: .medium)
         titleLabel.textColor = .black
         
         makeOpenButton()
         
         noticeLabel.text = "請選擇聚會時間"
-        noticeLabel.font = .notoRegular(size: 11)
+        noticeLabel.font = .systemFont(ofSize: 11, weight: .regular)
         noticeLabel.textColor = .systemRed
         
         timeSelectorView.delegate = self

@@ -29,14 +29,14 @@ final class UserCell: UITableViewCell {
     
     private let usernameLabel: UILabel = {
        let label = UILabel()
-        label.font = .notoMedium(size: 14)
+        label.font = .systemFont(ofSize: 14, weight: .medium)
         label.text = "riho123"
         return label
     }()
     
     private let fullnameLabel: UILabel = {
        let label = UILabel()
-        label.font = .notoMedium(size: 12)
+        label.font = .systemFont(ofSize: 12, weight: .medium)
         label.text = "Riho Yoshioka"
         label.textColor = .lightGray
         return label

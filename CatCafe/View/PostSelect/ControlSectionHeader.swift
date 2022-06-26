@@ -7,20 +7,35 @@
 
 import UIKit
 
-final class ControlSectionHeader: UITableViewHeaderFooterView {
+protocol ControlViewDelegate: AnyObject {
+    func didTapGallery(_ view: ControlView)
+    func didTapCamera(_ view: ControlView)
+}
+
+final class ControlView: UIView {
     
-    lazy var galleryButton = makeTitleButton(withText: "圖庫",
-                                             font: .systemFont(ofSize: 17, weight: .regular))
-    lazy var cameraButton = makeIconButton(imagename: "camera",
-                                           imageColor: .white,
-                                           imageWidth: 15,
-                                           imageHeight: 15,
-                                           backgroundColor: .systemGray,
-                                           borderColor: .black)
+    weak var delegate: ControlViewDelegate?
     
-    override init(reuseIdentifier: String?) {
-        super.init(reuseIdentifier: reuseIdentifier)
-        
+    lazy var galleryButton = makeTitleButton(
+        withText: "圖庫",
+        font: .systemFont(ofSize: 17, weight: .regular),
+        kern: 1,
+        foregroundColor: .black
+    )
+    lazy var cameraButton = makeIconButton(
+        imagename: "camera",
+        imageColor: .white,
+        imageWidth: 15,
+        imageHeight: 15,
+        backgroundColor: .systemGray,
+        borderColor: .black
+    )
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+
+        galleryButton.addTarget(self, action: #selector(handleGallery), for: .touchUpInside)
+        cameraButton.addTarget(self, action: #selector(handleCamera), for: .touchUpInside)
         cameraButton.layer.cornerRadius = 30 / 2
 
         addSubview(galleryButton)
@@ -32,6 +47,16 @@ final class ControlSectionHeader: UITableViewHeaderFooterView {
     }
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: - Action
+    
+    @objc func handleGallery() {
+        delegate?.didTapGallery(self)
+    }
+    
+    @objc func handleCamera() {
+        delegate?.didTapCamera(self)
     }
     
 }

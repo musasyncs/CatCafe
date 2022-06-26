@@ -9,8 +9,17 @@ import UIKit
 
 class ExploreController: UIViewController {
     
-    private var posts = [Post]()
-    private var users = [User]()
+    private var posts = [Post]() {
+        didSet {
+            collectionView.reloadData()
+        }
+    }
+    
+    private var users = [User]() {
+        didSet {
+            tableView.reloadData()
+        }
+    }
     private var filteredUsers = [User]()
     
     private var inSearchMode: Bool {
@@ -38,6 +47,14 @@ class ExploreController: UIViewController {
         
         fetchUsers()
         fetchPosts()
+        
+        // setup pull to refresh
+        let postRefresher = UIRefreshControl()
+        let userRefresher = UIRefreshControl()
+        postRefresher.addTarget(self, action: #selector(handlePostRefresh), for: .valueChanged)
+        userRefresher.addTarget(self, action: #selector(handleUserRefresh), for: .valueChanged)
+        collectionView.refreshControl = postRefresher
+        tableView.refreshControl = userRefresher
     }
     
     // MARK: - API
@@ -45,14 +62,14 @@ class ExploreController: UIViewController {
     func fetchUsers() {
         UserService.fetchUsers { users in
             self.users = users
-            self.tableView.reloadData()
+            self.tableView.refreshControl?.endRefreshing()
         }
     }
     
     func fetchPosts() {
         PostService.fetchPosts { posts in
             self.posts = posts
-            self.collectionView.reloadData()
+            self.collectionView.refreshControl?.endRefreshing()
         }
     }
     
@@ -81,6 +98,17 @@ class ExploreController: UIViewController {
         navigationItem.searchController = searchController
         definesPresentationContext = false
     }
+    
+    // MARK: - Actions
+    
+    @objc func handlePostRefresh() {
+        fetchPosts()
+    }
+    
+    @objc func handleUserRefresh() {
+        fetchUsers()
+    }
+        
 }
 
 // MARK: - UITableViewDataSource / UITableViewDelegate

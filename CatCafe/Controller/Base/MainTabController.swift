@@ -57,7 +57,7 @@ class MainTabController: UITabBarController {
         tabBarAppearance.stackedLayoutAppearance.normal.iconColor = .black
         let attrs = [
             NSAttributedString.Key.foregroundColor: UIColor.systemBrown,
-            NSAttributedString.Key.font: UIFont.notoMedium(size: 20)
+            NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20, weight: .medium)
         ]
         tabBarAppearance.stackedLayoutAppearance.normal.titleTextAttributes = attrs
         tabBarAppearance.stackedLayoutAppearance.selected.titleTextAttributes = attrs
@@ -182,7 +182,7 @@ private enum Tab: Int {
         // navbar 標題顏色跟字型
         let attrs = [
             NSAttributedString.Key.foregroundColor: UIColor.systemBrown,
-            NSAttributedString.Key.font: UIFont.notoMedium(size: 20)
+            NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20, weight: .medium)
         ]
         navBarAppearance.titleTextAttributes = attrs
         

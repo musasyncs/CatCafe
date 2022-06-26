@@ -67,13 +67,13 @@ class CommentSectionHeader: UICollectionReusableView {
     private let likesLabel = UILabel()
     
     let attendButton = makeTitleButton(withText: "報名聚會",
-                                       font: .notoRegular(size: 15),
+                                       font: .systemFont(ofSize: 15, weight: .regular),
                                        foregroundColor: .white,
                                        backgroundColor: .systemBrown)
     let publicCommentLabel = UILabel()
     
     let seeAllPeopleButton = makeTitleButton(withText: "查看報名者",
-                                             font: .notoRegular(size: 13),
+                                             font: .systemFont(ofSize: 13, weight: .regular),
                                              foregroundColor: .systemBrown, backgroundColor: .white,
                                              insets: .init(top: 5, left: 5, bottom: 5, right: 5),
                                              cornerRadius: 5, borderWidth: 1, borderColor: .systemBrown)
@@ -123,14 +123,15 @@ extension CommentSectionHeader {
     func style() {
         backgroundColor = .white
         
-        titleLabel.font = .notoRegular(size: 15)
-        descriptionLabel.font = .notoRegular(size: 11)
-        timeTitleLabel.font = .notoRegular(size: 11)
+        titleLabel.font = .systemFont(ofSize: 15, weight: .regular)
+        descriptionLabel.font = .systemFont(ofSize: 11, weight: .regular)
+        descriptionLabel.numberOfLines = 0
+        timeTitleLabel.font = .systemFont(ofSize: 11, weight: .regular)
         timeTitleLabel.textColor = .systemGray
-        timeLabel.font = .notoRegular(size: 11)
-        placeTitleLabel.font = .notoRegular(size: 11)
+        timeLabel.font = .systemFont(ofSize: 11, weight: .regular)
+        placeTitleLabel.font = .systemFont(ofSize: 11, weight: .regular)
         placeTitleLabel.textColor = .systemGray
-        placeLabel.font = .notoRegular(size: 11)
+        placeLabel.font = .systemFont(ofSize: 11, weight: .regular)
         
         timeStackView.axis = .horizontal
         timeStackView.alignment = .center
@@ -140,15 +141,15 @@ extension CommentSectionHeader {
         placeStackView.alignment = .center
         placeStackView.spacing = 32
         
-        hostnameLabel.font = .notoRegular(size: 11)
-        infoLabel.font = .notoRegular(size: 12)
+        hostnameLabel.font = .systemFont(ofSize: 11, weight: .regular)
+        infoLabel.font = .systemFont(ofSize: 12, weight: .regular)
         infoLabel.textColor = .systemGray
         
         likeButton.setImage(UIImage(named: "like_unselected"), for: .normal)
         likeButton.tintColor = .black
         likesLabel.font = .systemFont(ofSize: 10, weight: .regular)
         
-        publicCommentLabel.font = .notoMedium(size: 12)
+        publicCommentLabel.font = .systemFont(ofSize: 12, weight: .medium)
         publicCommentLabel.textColor = .greyishBrown
     }
     
@@ -190,9 +191,11 @@ extension CommentSectionHeader {
         infoLabel.anchor(right: likeButton.leftAnchor, paddingRight: 8)
         infoLabel.centerY(inView: likeButton)
         
-        attendButton.anchor(top: infoLabel.bottomAnchor, paddingTop: 16)
-        attendButton.setDimensions(height: 50, width: UIScreen.width)
-        attendButton.centerX(inView: self)
+        attendButton.anchor(top: likesLabel.bottomAnchor,
+                            left: leftAnchor,
+                            right: rightAnchor,
+                            paddingTop: 16,
+                            height: 50)
         publicCommentLabel.anchor(top: attendButton.bottomAnchor,
                                   left: leftAnchor,
                                   bottom: bottomAnchor,

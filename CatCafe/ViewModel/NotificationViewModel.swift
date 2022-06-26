@@ -21,18 +21,18 @@ struct NotificationViewModel {
         
         let attributedText = NSMutableAttributedString(
             string: username,
-            attributes: [.font: UIFont.notoMedium(size: 12)]
+            attributes: [.font: UIFont.systemFont(ofSize: 12, weight: .medium)]
         )
         attributedText.append(
             NSAttributedString(
                 string: message,
-                attributes: [.font: UIFont.notoRegular(size: 12)]
+                attributes: [.font: UIFont.systemFont(ofSize: 12, weight: .regular)]
             ))
         attributedText.append(
             NSAttributedString(
                 string: "  \(timestampText ?? "")",
                 attributes: [
-                    .font: UIFont.notoRegular(size: 10),
+                    .font: UIFont.systemFont(ofSize: 10, weight: .regular),
                     .foregroundColor: UIColor.lightGray]
             ))
         return attributedText

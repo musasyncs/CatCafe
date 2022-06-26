@@ -50,7 +50,7 @@ class CustomTextField: UITextField {
         super.init(frame: .zero)
         
         self.textColor = textColor
-        self.font = .notoRegular(size: 11)
+        self.font = .systemFont(ofSize: 11, weight: .regular)
         
         attributedPlaceholder = NSAttributedString(
             string: placeholder,
@@ -95,7 +95,7 @@ class InputTextView: UITextView {
     
     let placeholderLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.notoMedium(size: 12)
+        label.font = .systemFont(ofSize: 12, weight: .medium)
         label.textColor = .lightGray
         return label
     }()

@@ -84,7 +84,6 @@ class NotificationController: UITableViewController {
     }
     
     @objc func handleRefresh() {
-        notifications.removeAll()
         fetchnotifications()
         refresher.endRefreshing()
     }

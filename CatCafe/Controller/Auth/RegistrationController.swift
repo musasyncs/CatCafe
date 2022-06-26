@@ -129,7 +129,7 @@ extension RegistrationController {
         passwordTextField.isSecureTextEntry = true
         signUpButton.setTitle("Sign Up", for: .normal)
         signUpButton.layer.cornerRadius = 5
-        signUpButton.titleLabel?.font = .notoMedium(size: 15)
+        signUpButton.titleLabel?.font = .systemFont(ofSize: 15, weight: .medium)
         signUpButton.backgroundColor = .systemPurple.withAlphaComponent(0.5)
         alreadyHaveAccountButton.attributedTitle(firstPart: "Already have an account?  ", secondPart: "Log In")
     }

@@ -10,55 +10,104 @@ import Photos
 
 class PostSelectController: UIViewController {
     
-    var images = [UIImage]()
-    var assets = [PHAsset]()
-    
-    var image: UIImage? {
-        didSet {
-            topHeaderView.image = image
-            navigationItem.rightBarButtonItem?.isEnabled = true
-        }
-    }
-    
-    var selectedImage: UIImage? {
-        didSet {
-            DispatchQueue.main.async {
-                guard let selectedImage = self.selectedImage else { return }
-                
-                if let index = self.images.firstIndex(of: selectedImage) {
-                    
-                    let imageManager = PHImageManager.default()
-                    let selectedAsset = self.assets[index]
-                    
-                    imageManager.requestImage(
-                        for: selectedAsset,
-                           targetSize: CGSize(width: 600, height: 600),
-                           contentMode: .aspectFill,
-                           options: nil
-                    ) { (image, _) in
-                        self.image = image
-                    }
-                }
-            }
-        }
-    }
-    
-    let tableView = UITableView(frame: .zero, style: .grouped)
-    let topHeaderView = TopTableHeaderView(frame: CGRect(x: 0, y: 0, width: UIScreen.width, height: UIScreen.width))
+    var selectedAsset: PHAsset?
+        
+    let topView = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.width, height: UIScreen.width))
+    var gridScrollView: GridScrollView!
+    let controlView = ControlView()
+    let albumView = UIView()
+    var albumPhotoViewController: AlbumPhotoViewController?
     
     // MARK: - Life Cycle
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
-        setupNavigationButtons()
-        setupTableView()
-        fetchPhotos()
+        setup()
+        layout()
+        requestPhoto()
     }
     
-    // MARK: - Helpers
+    deinit {
+        PHPhotoLibrary.shared().unregisterChangeObserver(self)
+    }
+    
+    fileprivate func requestPhoto() {
+        PHPhotoLibrary.requestAuthorization(for: .readWrite, handler: { status in
+            switch status {
+            case .authorized:
+                DispatchQueue.main.async {
+                    PHPhotoLibrary.shared().register(self)
+                    self.loadPhotos()
+                }
+            case .notDetermined:
+                break
+            default:
+                break
+            }
+        })
+    }
+    
+    fileprivate func loadPhotos() {
+        let options = PHFetchOptions()
+        options.wantsIncrementalChangeDetails = false
+        options.sortDescriptors = [ NSSortDescriptor(key: "creationDate", ascending: false) ]
+        let result = PHAsset.fetchAssets(with: .image, options: options)
+        if let firstAsset = result.firstObject {
+            loadImageFor(firstAsset)
+        }
+        
+        if let controller = albumPhotoViewController {
+            controller.update(dataSource: result)
+        } else {
+            let controller = AlbumPhotoViewController(dataSource: result)
+            controller.didSelectAssetHandler = { [weak self] selectedAsset in
+                self?.loadImageFor(selectedAsset)
+            }
+            
+            addChild(controller)
+            controller.didMove(toParent: self)
+            
+            albumView.addSubview(controller.view)
+            controller.view.frame = albumView.bounds
 
-    func setupNavigationButtons() {
+            self.albumPhotoViewController = controller
+        }
+    }
+    
+    fileprivate func loadImageFor(_ asset: PHAsset) {
+        let options = PHImageRequestOptions()
+        options.deliveryMode = .highQualityFormat
+        options.isSynchronous = true
+        
+        let targetSize = CGSize(width: asset.pixelWidth, height: asset.pixelHeight)
+        PHImageManager.default().requestImage(for: asset,
+                                              targetSize: targetSize,
+                                              contentMode: .default,
+                                              options: options
+        ) { (image, _) in
+            DispatchQueue.main.async {
+                self.gridScrollView.image = image
+            }
+        }
+        selectedAsset = asset
+    }
+    
+    // MARK: - Actions
+    @objc private func handleCancel() {
+        dismiss(animated: true, completion: nil)
+    }
+
+    @objc private func handleNext() {
+        guard let croppedImage = gridScrollView.croppedImage else { return }
+        let controller = PostFilterController()
+        controller.croppedImage = croppedImage
+        navigationController?.pushViewController(controller, animated: false)
+    }
+
+}
+
+extension PostSelectController {
+    func setup() {
+        view.backgroundColor = .white
         navigationController?.navigationBar.tintColor = .black
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(
@@ -77,130 +126,52 @@ class PostSelectController: UIViewController {
             target: self,
             action: #selector(handleNext)
         )
-        navigationItem.rightBarButtonItem?.isEnabled = false
     }
     
-    func setupTableView() {
-        tableView.tableHeaderView = topHeaderView
+    func layout() {
+        controlView.delegate = self
+            
+        gridScrollView = GridScrollView(frame: topView.bounds)
+        topView.addSubview(gridScrollView)
         
-        tableView.register(PhotoWallTableViewCell.self,
-                           forCellReuseIdentifier: PhotoWallTableViewCell.identifier)
-        tableView.register(ControlSectionHeader.self,
-                           forHeaderFooterViewReuseIdentifier: ControlSectionHeader.identifier)
-        tableView.dataSource = self
-        tableView.delegate = self
+        view.addSubview(topView)
+        topView.anchor(top: view.safeAreaLayoutGuide.topAnchor,
+                       left: view.leftAnchor,
+                       right: view.rightAnchor,
+                       height: UIScreen.width)
         
-        tableView.backgroundColor = .white
-        tableView.separatorStyle = .none
-        view.addSubview(tableView)
-        tableView.anchor(top: view.safeAreaLayoutGuide.topAnchor,
+        view.addSubview(controlView)
+        controlView.anchor(top: topView.bottomAnchor,
+                           left: view.leftAnchor,
+                           right: view.rightAnchor,
+                           height: 50)
+        
+        view.addSubview(albumView)
+        albumView.anchor(top: controlView.bottomAnchor,
                          left: view.leftAnchor,
                          bottom: view.bottomAnchor,
                          right: view.rightAnchor)
     }
-    
-    func fetchPhotos() {
-        let allPhotos = PHAsset.fetchAssets(with: .image, options: assetFetchOptions())
-        
-        DispatchQueue.global(qos: .background).async {
-            
-            allPhotos.enumerateObjects { (asset, count, _) in
-                
-                let phImageManager = PHImageManager.default()
-                let targetSize = CGSize(width: 200, height: 200)
-                let options = PHImageRequestOptions()
-                
-                options.isSynchronous = true
-                
-                phImageManager.requestImage(for: asset,
-                                               targetSize: targetSize,
-                                               contentMode: .aspectFit,
-                                               options: options,
-                                               resultHandler: { (image, _) in
-                    if let image = image {
-                        self.images.append(image)
-                        self.assets.append(asset)
-
-                        if self.selectedImage == nil {
-                            self.selectedImage = image
-                        }
-                    }
-                    
-                    if count == allPhotos.count - 1 {
-                        DispatchQueue.main.async {
-                            self.tableView.reloadData()
-                        }
-                    }
-                })
-            }
-        }
-    }
-    
-    fileprivate func assetFetchOptions() -> PHFetchOptions {
-        let fetchOptions = PHFetchOptions()
-        fetchOptions.fetchLimit = 30
-        let sortDescriptor = NSSortDescriptor(key: "creationDate", ascending: false)
-        fetchOptions.sortDescriptors = [sortDescriptor]
-        return fetchOptions
-    }
-    
-    // MARK: - Actions
-
-    @objc private func handleCancel() {
-        dismiss(animated: true, completion: nil)
-    }
-
-    @objc private func handleNext() {
-        let postEditController = PostEditController()
-        postEditController.image = self.image
-        navigationController?.pushViewController(postEditController, animated: false)
-    }
-
 }
 
-// MARK: - UITableViewDataSource, UITableViewDelegate
-
-extension PostSelectController: UITableViewDataSource, UITableViewDelegate {
-
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(
-            withIdentifier: PhotoWallTableViewCell.identifier,
-            for: indexPath) as? PhotoWallTableViewCell
-        else { return UITableViewCell() }
-        
-        cell.delegate = self
-        cell.images = self.images
-        
-        return cell
-    }
-        
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return UITableView.automaticDimension
-    }
-
-    // table view section header
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        guard let controlHeader = tableView.dequeueReusableHeaderFooterView(
-            withIdentifier: ControlSectionHeader.identifier) as? ControlSectionHeader
-        else { return UIView() }
-        return controlHeader
-    }
-    
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 50
+// MARK: - PHPhotoLibraryChangeObserver
+extension PostSelectController: PHPhotoLibraryChangeObserver {
+    func photoLibraryDidChange(_ changeInstance: PHChange) {
+        self.loadPhotos()
     }
 }
 
-// MARK: - PhotoWallTableViewCellDelegate
-
-extension PostSelectController: PhotoWallTableViewCellDelegate {
+// MARK: - ControlViewDelegate
+extension PostSelectController: ControlViewDelegate {
     
-    func didTapItem(_ cell: PhotoWallTableViewCell, with selectedImage: UIImage) {
-        self.selectedImage = selectedImage
+    func didTapGallery(_ view: ControlView) {
+        print("DEBUG: didTapGallery")
     }
     
+    func didTapCamera(_ view: ControlView) {
+        let controller = PostCameraController()
+        controller.modalPresentationStyle = .fullScreen
+        present(controller, animated: false)
+    }
+
 }

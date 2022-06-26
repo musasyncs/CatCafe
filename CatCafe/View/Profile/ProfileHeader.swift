@@ -42,19 +42,19 @@ final class ProfileHeader: UICollectionReusableView {
     
     private let nameLabel: UILabel = {
        let label = UILabel()
-        label.font = .notoMedium(size: 14)
+        label.font = .systemFont(ofSize: 14, weight: .medium)
         label.textAlignment = .left
         return label
     }()
     
     private lazy var editProfileFollowButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Loading...", for: .normal)
+//        button.setTitle("", for: .normal)
         button.setTitleColor(UIColor.black, for: .normal)
         button.layer.cornerRadius = 3
         button.layer.borderColor = UIColor.lightGray.cgColor
         button.layer.borderWidth = 0.5
-        button.titleLabel?.font = .notoMedium(size: 14)
+        button.titleLabel?.font = .systemFont(ofSize: 14, weight: .medium)
         button.setTitleColor(.black, for: .normal)
         button.addTarget(self, action: #selector(handleEditProfileFollowTapped), for: .touchUpInside)
         return button

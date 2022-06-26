@@ -80,9 +80,9 @@ final class FeedCell: UICollectionViewCell {
     func configureUI() {
         backgroundColor = .white
         usernameButton.setTitleColor(.black, for: .normal)
-        usernameButton.titleLabel?.font = .notoMedium(size: 13)
+        usernameButton.titleLabel?.font = .systemFont(ofSize: 13, weight: .medium)
         locationButton.setTitleColor(.systemBrown, for: .normal)
-        locationButton.titleLabel?.font = .notoMedium(size: 11)
+        locationButton.titleLabel?.font = .systemFont(ofSize: 11, weight: .medium)
         infoStackView.axis = .vertical
         infoStackView.distribution = .fillEqually
         infoStackView.spacing = 4

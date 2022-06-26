@@ -73,7 +73,7 @@ final class NotificationCell: UITableViewCell {
         button.layer.cornerRadius = 3
         button.layer.borderColor = UIColor.lightGray.cgColor
         button.layer.borderWidth = 0.5
-        button.titleLabel?.font = .notoMedium(size: 12)
+        button.titleLabel?.font = .systemFont(ofSize: 12, weight: .medium)
         button.setTitleColor(.black, for: .normal)
         button.addTarget(self, action: #selector(followButtonTapped), for: .touchUpInside)
         return button

@@ -9,12 +9,12 @@ import UIKit
 
 class MeetController: UIViewController {
         
-    lazy var arrangeMeetButon = makeTitleButton(withText: "舉辦聚會", font: .notoRegular(size: 12))
+    lazy var arrangeMeetButon = makeTitleButton(withText: "舉辦聚會", font: .systemFont(ofSize: 12, weight: .regular))
     lazy var arrangeMeetButtonItem = UIBarButtonItem(customView: arrangeMeetButon)
     
     lazy var allButton = makeTitleButton(
         withText: "全部",
-        font: .notoRegular(size: 11),
+        font: .systemFont(ofSize: 11, weight: .regular),
         foregroundColor: .systemBrown,
         insets: UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5),
         cornerRadius: 8,
@@ -23,7 +23,7 @@ class MeetController: UIViewController {
     )
     lazy var myArrangedButton = makeTitleButton(
         withText: "我發起的",
-        font: .notoRegular(size: 11),
+        font: .systemFont(ofSize: 11, weight: .regular),
         foregroundColor: .systemBrown,
         insets: UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5),
         cornerRadius: 8,
@@ -32,7 +32,7 @@ class MeetController: UIViewController {
     )
     lazy var myAttendButton = makeTitleButton(
         withText: "我報名的",
-        font: .notoRegular(size: 11),
+        font: .systemFont(ofSize: 11, weight: .regular),
         foregroundColor: .systemBrown,
         insets: UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5),
         cornerRadius: 8,
@@ -65,7 +65,7 @@ class MeetController: UIViewController {
         let text1 = NSMutableAttributedString(
             string: "全部",
             attributes: [
-                .font: UIFont.notoRegular(size: 11),
+                .font: UIFont.systemFont(ofSize: 11, weight: .regular),
                 .foregroundColor: button1fgColor,
                 .kern: 1
             ])
@@ -75,7 +75,7 @@ class MeetController: UIViewController {
         let text2 = NSMutableAttributedString(
             string: "我發起的",
             attributes: [
-                .font: UIFont.notoRegular(size: 11),
+                .font: UIFont.systemFont(ofSize: 11, weight: .regular),
                 .foregroundColor: button2fgColor,
                 .kern: 1
             ])
@@ -85,7 +85,7 @@ class MeetController: UIViewController {
         let text3 = NSMutableAttributedString(
             string: "我報名的",
             attributes: [
-                .font: UIFont.notoRegular(size: 11),
+                .font: UIFont.systemFont(ofSize: 11, weight: .regular),
                 .foregroundColor: button3fgColor,
                 .kern: 1
             ])
@@ -179,14 +179,17 @@ extension MeetController {
         allMeetsController.view.anchor(top: stackView.bottomAnchor,
                                        left: view.leftAnchor,
                                        bottom: view.safeAreaLayoutGuide.bottomAnchor,
-                                       right: view.rightAnchor)
+                                       right: view.rightAnchor,
+                                       paddingTop: 8)
         myArrangeController.view.anchor(top: stackView.bottomAnchor,
-                        left: view.leftAnchor,
-                        bottom: view.safeAreaLayoutGuide.bottomAnchor,
-                        right: view.rightAnchor)
+                                        left: view.leftAnchor,
+                                        bottom: view.safeAreaLayoutGuide.bottomAnchor,
+                                        right: view.rightAnchor,
+                                        paddingTop: 8)
         myAttendController.view.anchor(top: stackView.bottomAnchor,
-                        left: view.leftAnchor,
-                        bottom: view.safeAreaLayoutGuide.bottomAnchor,
-                        right: view.rightAnchor)
+                                       left: view.leftAnchor,
+                                       bottom: view.safeAreaLayoutGuide.bottomAnchor,
+                                       right: view.rightAnchor,
+                                       paddingTop: 8)
     }
 }

@@ -16,7 +16,7 @@ class TileView: UIView {
     lazy var textField = CustomTextField(placeholder: placeholder,
                                          textColor: .black,
                                          fgColor: .systemBrown,
-                                         font: .notoRegular(size: 11))
+                                         font: .systemFont(ofSize: 12, weight: .regular))
     
     init(title: String, placeholder: String) {
         self.title = title
@@ -28,7 +28,7 @@ class TileView: UIView {
         textField.delegate = self
         
         // style
-        titleLabel.font = .notoMedium(size: 15)
+        titleLabel.font = .systemFont(ofSize: 15, weight: .medium)
         titleLabel.textColor = .black
         
         // layout
