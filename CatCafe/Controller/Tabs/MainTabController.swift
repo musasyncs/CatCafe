@@ -17,7 +17,7 @@ class MainTabController: UITabBarController {
         }
     }
     
-    private let tabs: [Tab] = [.home, .explore, .meet, .collection, .profile]
+    private let tabs: [Tab] = [.home, .explore, .meet, .reels, .profile]
     
     // MARK: - Life Cycle
     
@@ -115,7 +115,7 @@ private enum Tab: Int {
     case home
     case explore
     case meet
-    case collection
+    case reels
     case profile
     
     func setController(user: User?) -> UIViewController {
@@ -129,7 +129,7 @@ private enum Tab: Int {
             controller = makeNavigationController(rootViewController: ExploreController())
         case .meet:
             controller = makeNavigationController(rootViewController: MeetController())
-        case .collection:
+        case .reels:
             controller = makeNavigationController(rootViewController: ReelsController())
         case .profile:
             if let user = user {
@@ -160,11 +160,13 @@ private enum Tab: Int {
                 title: nil,
                 image: UIImage(named: "speaker_unselected")!,
                 selectedImage: UIImage(named: "speaker_selected")!)
-        case .collection:
+        case .reels:
             return setTabBarItem(
                 title: nil,
-                image: UIImage(named: "bookmark_unselected")!,
-                selectedImage: UIImage(named: "bookmark_selected")!)
+                image: UIImage(named: "reels_unselected")?
+                    .resize(to: .init(width: 26, height: 26))!,
+                selectedImage: UIImage(named: "reels_selected")?
+                    .resize(to: .init(width: 26, height: 26))!)
         case .profile:
             return setTabBarItem(
                 title: nil,
@@ -227,8 +229,10 @@ private enum Tab: Int {
         image: UIImage?,
         selectedImage: UIImage?
     ) -> UITabBarItem {
-        let image = image?.withRenderingMode(.alwaysOriginal)
-        let selectedImage = selectedImage?.withRenderingMode(.alwaysOriginal)
+        let image = image?
+            .withRenderingMode(.alwaysOriginal)
+        let selectedImage = selectedImage?
+            .withRenderingMode(.alwaysOriginal)
         return UITabBarItem(title: title, image: image, selectedImage: selectedImage)
     }
 }
