@@ -108,7 +108,7 @@
 		BA44774928588E720045DDB8 /* FeedController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA44774828588E720045DDB8 /* FeedController.swift */; };
 		BA44774B28588ECA0045DDB8 /* ExploreController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA44774A28588ECA0045DDB8 /* ExploreController.swift */; };
 		BA44774D28588F4B0045DDB8 /* MeetController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA44774C28588F4B0045DDB8 /* MeetController.swift */; };
-		BA44774F28588FE40045DDB8 /* CollectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA44774E28588FE40045DDB8 /* CollectionController.swift */; };
+		BA44774F28588FE40045DDB8 /* ReelsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA44774E28588FE40045DDB8 /* ReelsController.swift */; };
 		BA44775128588FFD0045DDB8 /* ProfileController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA44775028588FFD0045DDB8 /* ProfileController.swift */; };
 		BA4477542858A7A70045DDB8 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = BA4477532858A7A70045DDB8 /* GoogleService-Info.plist */; };
 		BA44778C285961A50045DDB8 /* FeedCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA44778B285961A50045DDB8 /* FeedCell.swift */; };
@@ -303,7 +303,7 @@
 		BA44774828588E720045DDB8 /* FeedController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedController.swift; sourceTree = "<group>"; };
 		BA44774A28588ECA0045DDB8 /* ExploreController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreController.swift; sourceTree = "<group>"; };
 		BA44774C28588F4B0045DDB8 /* MeetController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetController.swift; sourceTree = "<group>"; };
-		BA44774E28588FE40045DDB8 /* CollectionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionController.swift; sourceTree = "<group>"; };
+		BA44774E28588FE40045DDB8 /* ReelsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReelsController.swift; sourceTree = "<group>"; };
 		BA44775028588FFD0045DDB8 /* ProfileController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileController.swift; sourceTree = "<group>"; };
 		BA4477532858A7A70045DDB8 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		BA44778B285961A50045DDB8 /* FeedCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedCell.swift; sourceTree = "<group>"; };
@@ -592,7 +592,7 @@
 		BA44774228588C8C0045DDB8 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				BA44778A285961940045DDB8 /* Home */,
+				BA44778A285961940045DDB8 /* Feed */,
 				BA4477922859CE200045DDB8 /* Explore */,
 				BA44778D28597DAF0045DDB8 /* Profile */,
 				BA7BB72B285AEA7E00465DEC /* PostSelect */,
@@ -625,7 +625,6 @@
 			isa = PBXGroup;
 			children = (
 				BA44779C2859DE370045DDB8 /* Auth */,
-				BA44779D2859DE420045DDB8 /* Base */,
 				BA44774528588CA90045DDB8 /* Tabs */,
 				BA7BB726285AE68D00465DEC /* Post */,
 				BADF1F74285D7C21004CF329 /* Feed */,
@@ -639,23 +638,24 @@
 		BA44774528588CA90045DDB8 /* Tabs */ = {
 			isa = PBXGroup;
 			children = (
+				BA44774628588D150045DDB8 /* MainTabController.swift */,
 				BA44774828588E720045DDB8 /* FeedController.swift */,
 				BA44774A28588ECA0045DDB8 /* ExploreController.swift */,
 				BA44774C28588F4B0045DDB8 /* MeetController.swift */,
 				BAD133AD2864A55C00B8015A /* MeetChild */,
-				BA44774E28588FE40045DDB8 /* CollectionController.swift */,
+				BA44774E28588FE40045DDB8 /* ReelsController.swift */,
 				BA44775028588FFD0045DDB8 /* ProfileController.swift */,
 			);
 			path = Tabs;
 			sourceTree = "<group>";
 		};
-		BA44778A285961940045DDB8 /* Home */ = {
+		BA44778A285961940045DDB8 /* Feed */ = {
 			isa = PBXGroup;
 			children = (
 				BA44778B285961A50045DDB8 /* FeedCell.swift */,
 				BA7BB722285AD90400465DEC /* DropDownCell.swift */,
 			);
-			path = Home;
+			path = Feed;
 			sourceTree = "<group>";
 		};
 		BA44778D28597DAF0045DDB8 /* Profile */ = {
@@ -682,14 +682,6 @@
 				BA44779E2859DE6C0045DDB8 /* RegistrationController.swift */,
 			);
 			path = Auth;
-			sourceTree = "<group>";
-		};
-		BA44779D2859DE420045DDB8 /* Base */ = {
-			isa = PBXGroup;
-			children = (
-				BA44774628588D150045DDB8 /* MainTabController.swift */,
-			);
-			path = Base;
 			sourceTree = "<group>";
 		};
 		BA4477A52859E0870045DDB8 /* User */ = {
@@ -1228,7 +1220,7 @@
 				BADF1F71285CBB99004CF329 /* PostViewModel.swift in Sources */,
 				BA44775128588FFD0045DDB8 /* ProfileController.swift in Sources */,
 				BADF1F80285DCAA1004CF329 /* CommentViewModel.swift in Sources */,
-				BA44774F28588FE40045DDB8 /* CollectionController.swift in Sources */,
+				BA44774F28588FE40045DDB8 /* ReelsController.swift in Sources */,
 				BA44774928588E720045DDB8 /* FeedController.swift in Sources */,
 				BA7BB725285AE4D000465DEC /* PostSelectController.swift in Sources */,
 				BA4477972859D0280045DDB8 /* UserService.swift in Sources */,

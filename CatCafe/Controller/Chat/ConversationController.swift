@@ -12,6 +12,19 @@ class ConversationController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .red
+        
+        view.backgroundColor = .white
+        
+        navigationItem.title = "Messages"
+        navigationItem.rightBarButtonItem = UIBarButtonItem(
+            image: UIImage(systemName: "person.circle.fill"),
+            style: .plain,
+            target: self,
+            action: #selector(showProfile)
+        )
+    }
+    
+    @objc func showProfile() {
+        
     }
 }

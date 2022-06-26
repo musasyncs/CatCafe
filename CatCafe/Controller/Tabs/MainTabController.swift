@@ -55,6 +55,7 @@ class MainTabController: UITabBarController {
         
         // titleTextAttributes
         tabBarAppearance.stackedLayoutAppearance.normal.iconColor = .black
+        
         let attrs = [
             NSAttributedString.Key.foregroundColor: UIColor.systemBrown,
             NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20, weight: .medium)
@@ -128,7 +129,7 @@ private enum Tab: Int {
         case .meet:
             controller = makeNavigationController(rootViewController: MeetController())
         case .collection:
-            controller = makeNavigationController(rootViewController: CollectionController())
+            controller = makeNavigationController(rootViewController: ReelsController())
         case .profile:
             if let user = user {
                 controller = makeNavigationController(rootViewController: ProfileController(user: user))
@@ -181,8 +182,8 @@ private enum Tab: Int {
         
         // navbar 標題顏色跟字型
         let attrs = [
-            NSAttributedString.Key.foregroundColor: UIColor.systemBrown,
-            NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20, weight: .medium)
+            NSAttributedString.Key.foregroundColor: UIColor.black,
+            NSAttributedString.Key.font: UIFont.systemFont(ofSize: 15, weight: .medium)
         ]
         navBarAppearance.titleTextAttributes = attrs
         
@@ -195,13 +196,26 @@ private enum Tab: Int {
         backButtonAppearance.normal.titleTextAttributes = [.foregroundColor: UIColor.clear]
         navBarAppearance.backButtonAppearance = backButtonAppearance
         
-        // Hide catalog page's underline of navigation bar
+        // Hide navigation bar underline
         let controllerName = String(describing: type(of: rootViewController.self))
-        if controllerName == "CatalogViewController" {
-            navBarAppearance.shadowColor = .clear
+        [
+            String(describing: FeedController.self),
+            String(describing: ExploreController.self),
+            String(describing: MeetController.self),
+            String(describing: ReelsController.self),
+            String(describing: ProfileController.self)
+            
+        ].forEach { name in
+            if name == controllerName {
+                navBarAppearance.shadowColor = .clear
+            }
         }
         
+        // Status bar style
+        navC.navigationBar.overrideUserInterfaceStyle = .light
+        
         navC.navigationBar.standardAppearance = navBarAppearance
+        navC.navigationBar.compactAppearance = navBarAppearance
         navC.navigationBar.scrollEdgeAppearance = navBarAppearance
         return navC
     }
