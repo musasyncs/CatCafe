@@ -9,7 +9,51 @@ import UIKit
 import JGProgressHUD
 
 extension UIViewController {
-   
+    
+    // MARK: - NavigationBar
+    
+    func configureNavigationBar(
+        withTitle title: String,
+        prefersLargeTitles: Bool,
+        shouldHideUnderline: Bool,
+        interfaceStyle: UIUserInterfaceStyle
+    ) {
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithDefaultBackground()
+        appearance.backgroundColor = .white
+        
+        // navbar 標題顏色跟字型
+        let attrs = [
+            NSAttributedString.Key.foregroundColor: UIColor.black,
+            NSAttributedString.Key.font: UIFont.systemFont(ofSize: 15, weight: .medium)
+        ]
+        appearance.titleTextAttributes = attrs
+        
+        // navbar 返回按鈕自訂圖片("arrow.backward")
+        let backIndicatorImage = UIImage(named: "Icons_24px_Back02")?.withRenderingMode(.alwaysOriginal)
+        appearance.setBackIndicatorImage(backIndicatorImage, transitionMaskImage: backIndicatorImage)
+        
+        // 返回按鈕 字型樣式(clear color)
+        let backButtonAppearance = UIBarButtonItemAppearance()
+        backButtonAppearance.normal.titleTextAttributes = [.foregroundColor: UIColor.clear]
+        appearance.backButtonAppearance = backButtonAppearance
+        
+        // Hide navigation bar underline
+        if shouldHideUnderline {
+            appearance.shadowColor = .clear
+        }
+        
+        // Status bar style
+        navigationController?.navigationBar.prefersLargeTitles = prefersLargeTitles
+        navigationController?.navigationBar.overrideUserInterfaceStyle = interfaceStyle
+        navigationController?.navigationBar.tintColor = .systemBrown
+        navigationItem.title = title
+        
+        navigationController?.navigationBar.standardAppearance = appearance
+        navigationController?.navigationBar.compactAppearance = appearance
+        navigationController?.navigationBar.scrollEdgeAppearance = appearance
+    }
+       
     // MARK: - JGProgressHUD
     
     static let hud = JGProgressHUD(style: .dark)

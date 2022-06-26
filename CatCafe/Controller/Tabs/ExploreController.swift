@@ -60,10 +60,10 @@ class ExploreController: UIViewController {
     // MARK: - API
     
     func fetchUsers() {
-        UserService.fetchUsers { users in
+        UserService.fetchUsers(exceptCurrentUser: true, completion: { users in
             self.users = users
             self.tableView.refreshControl?.endRefreshing()
-        }
+        })
     }
     
     func fetchPosts() {
@@ -92,11 +92,13 @@ class ExploreController: UIViewController {
     func configureSearchController() {
         searchController.searchResultsUpdater = self
         searchController.obscuresBackgroundDuringPresentation = false
-        searchController.hidesNavigationBarDuringPresentation = false
+        
         searchController.searchBar.placeholder = "Search"
         searchController.searchBar.delegate = self
+        
         navigationItem.searchController = searchController
-        definesPresentationContext = false
+        navigationItem.hidesSearchBarWhenScrolling = true
+        definesPresentationContext = true
     }
     
     // MARK: - Actions

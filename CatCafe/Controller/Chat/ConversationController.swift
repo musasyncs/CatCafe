@@ -13,6 +13,16 @@ let id = "cell"
 class ConversationController: UIViewController {
     
     let tableView = UITableView()
+    private lazy var newMessageButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setImage(UIImage(systemName: "plus"), for: .normal)
+        button.backgroundColor = .systemBrown
+        button.tintColor = .white
+        button.imageView?.setDimensions(height: 24, width: 24)
+        button.layer.cornerRadius = 56 / 2
+        button.addTarget(self, action: #selector(showNewMessage), for: .touchUpInside)
+        return button
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,7 +36,11 @@ class ConversationController: UIViewController {
         // style
         view.backgroundColor = .white
         
-        navigationItem.title = "Messages"
+        configureNavigationBar(withTitle: "Messages",
+                               prefersLargeTitles: false,
+                               shouldHideUnderline: true,
+                               interfaceStyle: .light)
+        
         navigationItem.rightBarButtonItem = UIBarButtonItem(
             image: UIImage(systemName: "person.circle.fill"),
             style: .plain,
@@ -34,20 +48,33 @@ class ConversationController: UIViewController {
             action: #selector(showProfile)
         )
         
-        tableView.rowHeight = 80
-        
-        // layout
         tableView.backgroundColor = .white
-        
+        tableView.rowHeight = 80
+    
+        // layout
         view.addSubview(tableView)
+        view.addSubview(newMessageButton)
         tableView.frame = view.bounds
+        newMessageButton.anchor(bottom: view.safeAreaLayoutGuide.bottomAnchor,
+                                right: view.rightAnchor,
+                                paddingBottom: 16,
+                                paddingRight: 24)
+        newMessageButton.setDimensions(height: 56, width: 56)
+        
     }
     
     @objc func showProfile() {
         
     }
+    
+    @objc func showNewMessage() {
+        let controller = NewMessageController()
+        controller.delegate = self
+        navigationController?.pushViewController(controller, animated: true)
+    }
 }
 
+// MARK: - UITableViewDataSource, UITableViewDelegate
 extension ConversationController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -65,4 +92,12 @@ extension ConversationController: UITableViewDataSource, UITableViewDelegate {
         
     }
     
+}
+
+// MARK: - NewMessageControllerDelegate
+extension ConversationController: NewMessageControllerDelegate {
+    func controller(_ controller: NewMessageController, wantsToStartChatWith user: User) {
+        let controller = ChatController(user: user)
+        self.navigationController?.pushViewController(controller, animated: true)
+    }
 }
