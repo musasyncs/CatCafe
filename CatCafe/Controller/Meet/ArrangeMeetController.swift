@@ -136,14 +136,14 @@ class ArrangeMeetController: UIViewController {
         
         // Uploading...
         navigationItem.rightBarButtonItem?.isEnabled = false
-        showLoader(true)
         
+        show()
         MeetService.uploadMeet(title: meetTitleText,
                                caption: meetDescription,
                                meetImage: selectedImage,
                                cafeId: selectedCafe.id,
                                cafeName: selectedCafe.title) { error in
-            self.showLoader(false)
+            self.dismiss()
             
             if let error = error {
                 print("DEBUG: Failed to upload meet with error \(error.localizedDescription)")

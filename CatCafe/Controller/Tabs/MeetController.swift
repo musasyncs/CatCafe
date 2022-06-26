@@ -99,7 +99,7 @@ class MeetController: UIViewController {
     @objc func arrangeMeetTapped() {
         let controller = SelectMeetPicController()
         let navController = UINavigationController(rootViewController: controller)
-        navController.modalPresentationStyle = .fullScreen
+        navController.modalPresentationStyle = .overFullScreen
         present(navController, animated: true)
     }
     

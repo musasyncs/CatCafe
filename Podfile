@@ -13,11 +13,14 @@ target 'CatCafe' do
   pod 'Firebase/Storage'
   pod 'Firebase/Crashlytics'
 
-  pod 'IQKeyboardManagerSwift'
-  pod 'MJRefresh'
+  pod 'MetalPetal', '~> 1.10.1'
+
   pod 'Kingfisher'
   pod 'SDWebImage' 
+
   pod 'JGProgressHUD'
+  pod 'MJRefresh'
+
   pod 'lottie-ios'
-  pod 'MetalPetal', '~> 1.10.1'
+  
 end

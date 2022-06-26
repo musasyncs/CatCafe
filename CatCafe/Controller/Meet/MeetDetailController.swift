@@ -141,7 +141,7 @@ class MeetDetailController: UIViewController {
     @objc func goBack() {
         dismiss(animated: false)
     }
-    
+
 }
 
 // MARK: - UICollectionViewDataSource / UICollectionViewDelegate
@@ -243,7 +243,7 @@ extension MeetDetailController: UICollectionViewDelegateFlowLayout {
         let approximateSize = CGSize(width: approximateWidthOfTextArea, height: 100)
         let attributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14, weight: .regular)]
         
-        let estimatedHeight: CGFloat = 8 + 32
+        let estimatedHeight: CGFloat = 8 + (32)
         
         // Get an estimation of the height of cell based on comments[indexPath.item].comment
         let estimatedFrame = String(describing: comments[indexPath.item].comment).boundingRect(
@@ -308,8 +308,7 @@ extension MeetDetailController: CommentInputAccessoryViewDelegate {
         guard let currentUid = LocalStorage.shared.getUid() else { return }
         UserService.fetchUserBy(uid: currentUid, completion: { currentUser in
             
-            self.showLoader(true)
-            
+            self.show()
             CommentService.uploadMeetComment(
                 meetId: self.meet.meetId,
                 user: currentUser,
@@ -317,8 +316,7 @@ extension MeetDetailController: CommentInputAccessoryViewDelegate {
                 mediaUrlString: "",
                 comment: comment
             ) { error in
-                
-                self.showLoader(false)
+                self.dismiss()
                 
                 if let error = error {
                     print("DEBUG: Failed to upload comment with error \(error.localizedDescription)")

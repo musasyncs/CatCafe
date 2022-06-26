@@ -37,7 +37,7 @@ class ConversationController: UIViewController {
         tableView.rowHeight = 80
         
         // layout
-        tableView.backgroundColor = .systemPink
+        tableView.backgroundColor = .white
         
         view.addSubview(tableView)
         tableView.frame = view.bounds

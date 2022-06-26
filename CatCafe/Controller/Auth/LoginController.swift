@@ -48,17 +48,21 @@ class LoginController: UIViewController {
                   print("DEBUG: email 和 password 不可為空")
                   return
               }
+        
+        show()
         AuthService.loginUser(withEmail: email, password: password) { [weak self] result in
             guard let self = self else { return }
+            self.dismiss()
+            
             switch result {
             case .success(let authUser):
-                
                 // Save uid; hasLogedIn = true
                 LocalStorage.shared.saveUid(authUser.uid)
                 LocalStorage.shared.hasLogedIn = true
-                
+                                
                 self.delegate?.authenticationDidComplete()
             case .failure(let error):
+                self.showFailure()
                 print("DEBUG: Failed to log user in \(error.localizedDescription)")
             }
         }
@@ -77,6 +81,25 @@ class LoginController: UIViewController {
             viewModel.password = sender.text
         }
         updateForm()
+    }
+    
+    @objc func keyboardWillShow(notification: NSNotification) {
+        let distance = CGFloat(30)
+        let transform = CGAffineTransform(translationX: 0, y: -distance)
+        
+        UIView.animate(withDuration: 0.2, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: []) {
+            self.view.transform = transform
+        }
+    }
+    
+    @objc func keyboardWillHide() {
+        UIView.animate(withDuration: 0.2, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: []) {
+            self.view.transform = .identity
+        }
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        view.endEditing(true)
     }
 }
 
@@ -121,6 +144,15 @@ extension LoginController {
     func configureNotificationObservers() {
         emailTextField.addTarget(self, action: #selector(textDidChange), for: .editingChanged)
         passwordTextField.addTarget(self, action: #selector(textDidChange), for: .editingChanged)
+        
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(keyboardWillShow),
+                                               name: UIResponder.keyboardDidShowNotification,
+                                               object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(keyboardWillHide),
+                                               name: UIResponder.keyboardWillHideNotification,
+                                               object: nil)
     }
 }
 

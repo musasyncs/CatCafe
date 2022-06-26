@@ -73,7 +73,7 @@ class CommentSectionHeader: UICollectionReusableView {
     let publicCommentLabel = UILabel()
     
     let seeAllPeopleButton = makeTitleButton(withText: "查看報名者",
-                                             font: .systemFont(ofSize: 13, weight: .regular),
+                                             font: .systemFont(ofSize: 12, weight: .regular),
                                              foregroundColor: .systemBrown, backgroundColor: .white,
                                              insets: .init(top: 5, left: 5, bottom: 5, right: 5),
                                              cornerRadius: 5, borderWidth: 1, borderColor: .systemBrown)
@@ -124,6 +124,7 @@ extension CommentSectionHeader {
         backgroundColor = .white
         
         titleLabel.font = .systemFont(ofSize: 15, weight: .regular)
+        titleLabel.numberOfLines = 0
         descriptionLabel.font = .systemFont(ofSize: 11, weight: .regular)
         descriptionLabel.numberOfLines = 0
         timeTitleLabel.font = .systemFont(ofSize: 11, weight: .regular)
@@ -176,7 +177,10 @@ extension CommentSectionHeader {
         seeAllPeopleButton.centerY(inView: hostnameLabel)
         seeAllPeopleButton.anchor(right: rightAnchor, paddingRight: 16)
         
-        titleLabel.anchor(top: hostProfileImageView.bottomAnchor, left: hostProfileImageView.leftAnchor, paddingTop: 16)
+        titleLabel.anchor(top: hostProfileImageView.bottomAnchor,
+                          left: hostProfileImageView.leftAnchor,
+                          right: rightAnchor,
+                          paddingTop: 16, paddingRight: 16)
         descriptionLabel.anchor(top: titleLabel.bottomAnchor,
                                 left: hostProfileImageView.leftAnchor,
                                 right: rightAnchor,

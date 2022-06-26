@@ -142,7 +142,6 @@
 		BA7BB718285A083D00465DEC /* NSLocalizedString+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA7BB704285A083D00465DEC /* NSLocalizedString+Extension.swift */; };
 		BA7BB719285A083D00465DEC /* NotoSansCJKtc-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = BA7BB706285A083D00465DEC /* NotoSansCJKtc-Medium.otf */; };
 		BA7BB71A285A083D00465DEC /* NotoSansCJKtc-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = BA7BB707285A083D00465DEC /* NotoSansCJKtc-Regular.otf */; };
-		BA7BB71B285A083D00465DEC /* JGProgressHUDWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA7BB709285A083D00465DEC /* JGProgressHUDWrapper.swift */; };
 		BA7BB71C285A083D00465DEC /* MJRefreshWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA7BB70A285A083D00465DEC /* MJRefreshWrapper.swift */; };
 		BA7BB71D285A083D00465DEC /* KingFisherWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA7BB70B285A083D00465DEC /* KingFisherWrapper.swift */; };
 		BA7BB71E285A083D00465DEC /* Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA7BB70C285A083D00465DEC /* Factory.swift */; };
@@ -339,7 +338,6 @@
 		BA7BB704285A083D00465DEC /* NSLocalizedString+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSLocalizedString+Extension.swift"; sourceTree = "<group>"; };
 		BA7BB706285A083D00465DEC /* NotoSansCJKtc-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NotoSansCJKtc-Medium.otf"; sourceTree = "<group>"; };
 		BA7BB707285A083D00465DEC /* NotoSansCJKtc-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NotoSansCJKtc-Regular.otf"; sourceTree = "<group>"; };
-		BA7BB709285A083D00465DEC /* JGProgressHUDWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JGProgressHUDWrapper.swift; sourceTree = "<group>"; };
 		BA7BB70A285A083D00465DEC /* MJRefreshWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MJRefreshWrapper.swift; sourceTree = "<group>"; };
 		BA7BB70B285A083D00465DEC /* KingFisherWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KingFisherWrapper.swift; sourceTree = "<group>"; };
 		BA7BB70C285A083D00465DEC /* Factory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Factory.swift; sourceTree = "<group>"; };
@@ -788,7 +786,6 @@
 		BA7BB708285A083D00465DEC /* Third Party Wrapper */ = {
 			isa = PBXGroup;
 			children = (
-				BA7BB709285A083D00465DEC /* JGProgressHUDWrapper.swift */,
 				BA7BB70A285A083D00465DEC /* MJRefreshWrapper.swift */,
 				BA7BB70B285A083D00465DEC /* KingFisherWrapper.swift */,
 			);
@@ -1150,7 +1147,6 @@
 				BAD133A428636B9400B8015A /* MeetViewModel.swift in Sources */,
 				BADBFF782861F06400146D6F /* ImageHeaderView.swift in Sources */,
 				BAD133B92865651800B8015A /* SnappyFlowLayout.swift in Sources */,
-				BA7BB71B285A083D00465DEC /* JGProgressHUDWrapper.swift in Sources */,
 				BA7BB70F285A083D00465DEC /* UIColor+Extension.swift in Sources */,
 				BA7BB713285A083D00465DEC /* UIImage+Extension.swift in Sources */,
 				BA1385B22866F52B001B7FF1 /* MTXpro2Filter.swift in Sources */,

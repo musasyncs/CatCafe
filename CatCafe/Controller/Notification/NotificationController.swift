@@ -132,18 +132,18 @@ extension NotificationController {
 extension NotificationController: NotificationCellDelegate {
     
     func cell(_ cell: NotificationCell, wantsToViewProfile uid: String) {
-        showLoader(true)
+        show()
         UserService.fetchUserBy(uid: uid) { user in
-            self.showLoader(false)
+            self.dismiss()
             let controller = ProfileController(user: user)
             self.navigationController?.pushViewController(controller, animated: true)
         }
     }
     
     func cell(_ cell: NotificationCell, wantsToViewPost postId: String) {
-        showLoader(true)
+        show()
         PostService.fetchPost(withPostId: postId) { post in
-            self.showLoader(false)
+            self.dismiss()
             let flowLayout = UICollectionViewFlowLayout()
             flowLayout.scrollDirection = .vertical
             let controller = FeedController(collectionViewLayout: flowLayout)
@@ -153,17 +153,17 @@ extension NotificationController: NotificationCellDelegate {
     }
     
     func cell(_ cell: NotificationCell, wantsToFollow uid: String) {
-        showLoader(true)
+        show()
         UserService.follow(uid: uid) { _ in
-            self.showLoader(false)
+            self.dismiss()
             cell.viewModel?.notification.userIsFollowed.toggle()
         }
     }
     
     func cell(_ cell: NotificationCell, wantsToUnfollow uid: String) {
-        showLoader(true)
+        show()
         UserService.unfollow(uid: uid) { _ in
-            self.showLoader(false)
+            self.dismiss()
             cell.viewModel?.notification.userIsFollowed.toggle()
         }
     }

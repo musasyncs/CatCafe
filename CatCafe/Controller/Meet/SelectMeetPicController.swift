@@ -92,7 +92,7 @@ class SelectMeetPicController: UIViewController {
     // MARK: - Action
     
     @objc private func handleCancel() {
-        dismiss(animated: true, completion: nil)
+        dismiss(animated: false, completion: nil)
     }
 
     @objc private func handleNext() {

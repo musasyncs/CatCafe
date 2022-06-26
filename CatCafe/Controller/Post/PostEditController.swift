@@ -243,12 +243,13 @@ class PostEditController: UIViewController {
         guard let selectedCafe = selectedCafe else { return }
         
         navigationItem.rightBarButtonItem?.isEnabled = false
-        showLoader(true)
+        
+        show()
         PostService.uploadImagePost(caption: caption,
                                     postImage: postImage,
                                     cafeId: selectedCafe.id,
                                     cafeName: selectedCafe.title) { error in
-            self.showLoader(false)
+            self.dismiss()
             
             if let error = error {
                 print("DEBUG: Failed to upload post with error \(error.localizedDescription)")

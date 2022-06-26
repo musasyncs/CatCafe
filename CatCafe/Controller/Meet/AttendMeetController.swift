@@ -122,12 +122,12 @@ class AttendMeetController: UIViewController {
             return
         }
         
-        showLoader(true)
+        show()
         MeetService.attendMeet(meet: meet,
                                contact: contact,
                                remarks: remarks) { error in
-            self.showLoader(false)
-
+            self.dismiss()
+            
             if let error = error {
                 print("DEBUG: Failed to attend meet with error \(error.localizedDescription)")
                 return
@@ -141,6 +141,25 @@ class AttendMeetController: UIViewController {
         }
     }
     
+    @objc func keyboardWillShow(notification: NSNotification) {        
+        let distance = CGFloat(100)
+        let transform = CGAffineTransform(translationX: 0, y: -distance)
+        
+        UIView.animate(withDuration: 0.2, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: []) {
+            self.view.transform = transform
+        }
+    }
+    
+    @objc func keyboardWillHide() {
+        UIView.animate(withDuration: 0.2, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: []) {
+            self.view.transform = .identity
+        }
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        view.endEditing(true)
+    }
+    
 }
 
 extension AttendMeetController {
@@ -148,6 +167,15 @@ extension AttendMeetController {
     fileprivate func setup() {
         cancelButton.addTarget(self, action: #selector(cancelTapped), for: .touchUpInside)
         sendButton.addTarget(self, action: #selector(sendTapped), for: .touchUpInside)
+        
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(keyboardWillShow),
+                                               name: UIResponder.keyboardDidShowNotification,
+                                               object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(keyboardWillHide),
+                                               name: UIResponder.keyboardWillHideNotification,
+                                               object: nil)
     }
     
     fileprivate func style() {

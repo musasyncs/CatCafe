@@ -270,7 +270,7 @@ extension FeedController: UICollectionViewDelegateFlowLayout {
         let approximateSize = CGSize(width: approximateWidthOfTextArea, height: 1000)
         let attributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14, weight: .regular)]
         
-        let estimatedHeight = 12 + 40 + 8 + UIScreen.width + 4 + 40 + 16 + 8 + 8 + 16 + 8
+        let estimatedHeight = 12 + 40 + 8 + UIScreen.width + 4 + 40 + 16 + 8 + 8 + 16 + 8 + (8)
         
         // Get an estimation of the height of cell based on post.caption
         if let post = post {

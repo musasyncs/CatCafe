@@ -10,35 +10,83 @@ import JGProgressHUD
 
 extension UIViewController {
    
+    // MARK: - JGProgressHUD
+    
     static let hud = JGProgressHUD(style: .dark)
-
-//    func configureGradientLayer() {
-//        let gradient = CAGradientLayer()
-//        gradient.colors = [UIColor.systemPurple.cgColor, UIColor.systemBlue.cgColor]
-//        gradient.locations = [0, 1]
-//        view.layer.addSublayer(gradient)
-//        gradient.frame = view.bounds
-//    }
-
-    func showLoader(_ show: Bool, withText text: String? = "Loading") {
-        view.endEditing(true)
-        
-        UIViewController.hud.textLabel.text = text
-
-        if show {
-            UIViewController.hud.show(in: view)
-        } else {
-            UIViewController.hud.dismiss()
+    
+    enum HUDType {
+        case success(String)
+        case failure(String)
+    }
+    
+    func show(type: HUDType) {
+        switch type {
+        case .success(let text):
+            showSuccess(text: text)
+        case .failure(let text):
+            showFailure(text: text)
         }
     }
+    
+    func show() {
+        if !Thread.isMainThread {
+            DispatchQueue.main.async {
+                self.show()
+            }
+            return
+        }
+        UIViewController.hud.indicatorView = JGProgressHUDIndeterminateIndicatorView()
+        UIViewController.hud.textLabel.text = "Loading"
+        UIViewController.hud.show(in: view)
+    }
+    
+    func dismiss() {
+        if !Thread.isMainThread {
+            DispatchQueue.main.async {
+                self.dismiss()
+            }
+            return
+        }
+        UIViewController.hud.dismiss()
+    }
+    
+    func showSuccess(text: String = "success") {
+        if !Thread.isMainThread {
+            DispatchQueue.main.async {
+                self.showSuccess(text: text)
+            }
+            return
+        }
+        UIViewController.hud.textLabel.text = text
+        UIViewController.hud.indicatorView = JGProgressHUDSuccessIndicatorView()
+        UIViewController.hud.show(in: view)
+        UIViewController.hud.dismiss(afterDelay: 1.5)
+    }
+    
+    func showFailure(text: String = "Failure") {
+        if !Thread.isMainThread {
+            DispatchQueue.main.async {
+                self.showFailure(text: text)
+            }
+            return
+        }
+        UIViewController.hud.textLabel.text = text
+        UIViewController.hud.indicatorView = JGProgressHUDErrorIndicatorView()
+        UIViewController.hud.show(in: view)
+        UIViewController.hud.dismiss(afterDelay: 1.5)
+    }
+    
+    // MARK: - UIAlertController
 
     func showMessage(withTitle title: String, message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        let okAction = UIAlertAction(title: "Ok", style: .default) { _ in }
+        let okAction = UIAlertAction(title: "確定", style: .default) { _ in }
         okAction.setValue(UIColor.systemBrown, forKey: "titleTextColor")
         alert.addAction(okAction)
         present(alert, animated: true)
     }
+    
+    // MARK: - Add / Remove child view controller
     
     func add(_ child: UIViewController) {
         addChild(child)
