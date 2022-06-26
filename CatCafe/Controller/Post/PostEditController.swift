@@ -233,7 +233,7 @@ class PostEditController: UIViewController {
         let controller = SelectCafeController()
         controller.delegate = self
         let navController = UINavigationController(rootViewController: controller)
-        navController.modalPresentationStyle = .fullScreen
+        navController.modalPresentationStyle = .overFullScreen
         present(navController, animated: true)
     }
     

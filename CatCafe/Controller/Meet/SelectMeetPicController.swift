@@ -103,7 +103,7 @@ class SelectMeetPicController: UIViewController {
         let controller = ArrangeMeetController()
         controller.selectedImage = selectedImage
         let navController = UINavigationController(rootViewController: controller)
-        navController.modalPresentationStyle = .fullScreen
+        navController.modalPresentationStyle = .overFullScreen
         present(navController, animated: true)
     }
     

@@ -70,8 +70,8 @@ class ProfileController: UICollectionViewController {
     func setupBarButtonItem() {
         navigationItem.rightBarButtonItem = UIBarButtonItem(
             image: UIImage(named: "logout")?
-                .resize(to: .init(width: 24, height: 24))?
-                .withTintColor(.systemBrown)
+                .resize(to: .init(width: 20, height: 20))?
+                .withTintColor(.black)
                 .withRenderingMode(.alwaysOriginal),
             style: .plain,
             target: self,
@@ -104,7 +104,6 @@ class ProfileController: UICollectionViewController {
             
             switch result {
             case .success:
-                
                 // Clear uid / hasLogedIn = false
                 LocalStorage.shared.clearUid()
                 LocalStorage.shared.hasLogedIn = false

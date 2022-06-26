@@ -135,15 +135,21 @@ class FeedController: UICollectionViewController {
     // MARK: - Actions
     
     @objc func gotoConversations() {
+        if showMenu == true {
+            handleDropDownMenu()
+        }
         let controller = ConversationController()
         navigationController?.pushViewController(controller, animated: true)
     }
     
     @objc func gotoNotificationPage() {
+        if showMenu == true {
+            handleDropDownMenu()
+        }
         let controller = NotificationController(style: .plain)
         let navController = UINavigationController(rootViewController: controller)
-        navController.modalPresentationStyle = .fullScreen
-        present(navController, animated: false)
+        navController.modalPresentationStyle = .overFullScreen
+        present(navController, animated: true)
     }
     
     @objc func handleDropDownMenu() {
