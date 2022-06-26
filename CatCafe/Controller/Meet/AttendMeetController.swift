@@ -65,8 +65,8 @@ class AttendMeetController: UIViewController {
     let descriptionLabel = UILabel()
     let bottomDivider = UIView()
     let centerDivider = UIView()
-    let cancelButton = makeTitleButton(withText: "取消", font: .notoRegular(size: 12), foregroundColor: .systemRed)
-    let sendButton = makeTitleButton(withText: "送出", font: .notoRegular(size: 12))
+    let cancelButton = makeTitleButton(withText: "取消", font: .systemFont(ofSize: 12, weight: .regular), foregroundColor: .systemRed)
+    let sendButton = makeTitleButton(withText: "送出", font: .systemFont(ofSize: 12, weight: .regular))
     
     var bottomConstraint: NSLayoutConstraint?
     var popupOffset: CGFloat = UIScreen.height *  0.7
@@ -154,21 +154,21 @@ extension AttendMeetController {
 
         titleLabel.text = "報名聚會"
         titleLabel.textColor = UIColor.rgb(red: 63, green: 58, blue: 58)
-        titleLabel.font = .notoMedium(size: 15)
+        titleLabel.font = .systemFont(ofSize: 15, weight: .medium)
         
         contactLabel.text = "聯絡方式"
         contactLabel.textColor = .systemRed
-        contactLabel.font = .notoRegular(size: 15)
+        contactLabel.font = .systemFont(ofSize: 15, weight: .regular)
         contactTextView.backgroundColor = .systemGray6
         
         remarkLabel.text = "想對聚會主說的話"
         remarkLabel.textColor = .black
-        remarkLabel.font = .notoRegular(size: 15)
+        remarkLabel.font = .systemFont(ofSize: 15, weight: .regular)
         remarkTextView.backgroundColor = .systemGray6
         
         descriptionLabel.text = "收到您的報名資訊，聚會主會決定是否透過上述資訊聯絡您。"
         descriptionLabel.textColor = .lightGray
-        descriptionLabel.font = .notoRegular(size: 11)
+        descriptionLabel.font = .systemFont(ofSize: 11, weight: .regular)
         topDivider.backgroundColor = .lightGray
         bottomDivider.backgroundColor = .lightGray
         centerDivider.backgroundColor = .lightGray

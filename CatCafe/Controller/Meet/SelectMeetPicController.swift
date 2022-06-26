@@ -40,9 +40,9 @@ class SelectMeetPicController: UIViewController {
         // style
         view.backgroundColor = .white
         titleLabel.text = "設定封面"
-        titleLabel.font = .notoMedium(size: 15)
+        titleLabel.font = .systemFont(ofSize: 15, weight: .medium)
         subtitleLabel.text = "請上傳一張照片作為封面"
-        subtitleLabel.font = .notoRegular(size: 13)
+        subtitleLabel.font = .systemFont(ofSize: 13, weight: .regular)
         setupNavigationButtons()
         
         // layout

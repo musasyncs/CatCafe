@@ -16,7 +16,7 @@ struct PlaceCellViewModel {
             string: cafe.title,
             attributes: [
                 .foregroundColor: UIColor.black,
-                .font: UIFont.notoMedium(size: 14) as Any
+                .font: UIFont.systemFont(ofSize: 14, weight: .medium) as Any
             ]
         )
         return attributedText
@@ -27,7 +27,7 @@ struct PlaceCellViewModel {
             string: cafe.address,
             attributes: [
                 .foregroundColor: UIColor.lightGray,
-                .font: UIFont.notoMedium(size: 12) as Any
+                .font: UIFont.systemFont(ofSize: 12, weight: .medium) as Any
             ]
         )
         return attrText

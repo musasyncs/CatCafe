@@ -242,12 +242,11 @@ extension MeetDetailController: UICollectionViewDelegateFlowLayout {
                 collectionView,
                 viewForSupplementaryElementOfKind: UICollectionView.elementKindSectionHeader,
                 at: indexPath)
+            
             // Use this view to calculate the optimal size based on the collection view's width
             return headerView.systemLayoutSizeFitting(
-                CGSize(
-                    width: collectionView.frame.width,
-                    height: UIView.layoutFittingExpandedSize.height
-                ),
+                CGSize(width: collectionView.frame.width,
+                       height: UIView.layoutFittingExpandedSize.height),
                 withHorizontalFittingPriority: .required, // Width is fixed
                 verticalFittingPriority: .fittingSizeLevel) // Height can be as large as needed
         }

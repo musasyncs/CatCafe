@@ -72,8 +72,8 @@ class PreviewPhotoContainerView: UIView {
 
             DispatchQueue.main.async {
                 let savedLabel = UILabel()
-                savedLabel.text = "Saved Successfully"
-                savedLabel.font = UIFont.notoMedium(size: 18)
+                savedLabel.text = "保存成功"
+                savedLabel.font = .systemFont(ofSize: 18, weight: .medium)
                 savedLabel.textColor = .white
                 savedLabel.numberOfLines = 0
                 savedLabel.backgroundColor = UIColor(white: 0, alpha: 0.3)

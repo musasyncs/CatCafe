@@ -61,7 +61,7 @@ class SnappyCell: UICollectionViewCell {
         superImageView.layer.masksToBounds = true
 
         timeLabel.textColor = .white
-        timeLabel.font = .notoRegular(size: 10)
+        timeLabel.font = .systemFont(ofSize: 10, weight: .regular)
         
         // layout
         contentView.addSubview(superImageView)

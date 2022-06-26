@@ -25,7 +25,7 @@ class PostEditController: UIViewController {
                 string: selectedCafe.title,
                 attributes: [
                     .foregroundColor: UIColor.systemBrown,
-                    .font: UIFont.notoMedium(size: 13) as Any
+                    .font: UIFont.systemFont(ofSize: 13, weight: .medium) as Any
                 ])
             titleLabel.attributedText = titleAttrText
             
@@ -33,7 +33,7 @@ class PostEditController: UIViewController {
                 string: selectedCafe.address,
                 attributes: [
                     .foregroundColor: UIColor.systemGray3,
-                    .font: UIFont.notoMedium(size: 11) as Any
+                    .font: UIFont.systemFont(ofSize: 11, weight: .medium) as Any
                 ])
             subtitleLabel.attributedText = subtitleAttrText
             
