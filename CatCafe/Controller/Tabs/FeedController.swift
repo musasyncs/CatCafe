@@ -258,11 +258,35 @@ extension FeedController: UICollectionViewDelegateFlowLayout {
         layout collectionViewLayout: UICollectionViewLayout,
         sizeForItemAt indexPath: IndexPath
     ) -> CGSize {
-        let width = view.frame.width
-        var height = width + 8 + 40 + 8
-        height += 50
-        height += 60
-        return CGSize(width: width, height: height)
+                
+        let approximateWidthOfTextArea = UIScreen.width - 8 - 8
+        let approximateSize = CGSize(width: approximateWidthOfTextArea, height: 1000)
+        let attributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14, weight: .regular)]
+        
+        let estimatedHeight = 12 + 40 + 8 + UIScreen.width + 4 + 40 + 16 + 8 + 8 + 16
+        
+        // Get an estimation of the height of cell based on post.caption
+        if let post = post {
+            let estimatedFrame = String(describing: post.caption).boundingRect(
+                with: approximateSize,
+                options: .usesLineFragmentOrigin,
+                attributes: attributes,
+                context: nil)
+            return CGSize(
+                width: view.frame.width,
+                height: estimatedFrame.height + estimatedHeight
+            )
+        } else {
+            let estimatedFrame = String(describing: posts[indexPath.item].caption).boundingRect(
+                with: approximateSize,
+                options: .usesLineFragmentOrigin,
+                attributes: attributes,
+                context: nil)
+            return CGSize(
+                width: view.frame.width,
+                height: estimatedFrame.height + estimatedHeight
+            )
+        }
     }
 }
 

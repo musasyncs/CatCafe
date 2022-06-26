@@ -101,7 +101,10 @@ final class FeedCell: UICollectionViewCell {
         controlStackView.distribution = .fillEqually
         
         likesLabel.font = .systemFont(ofSize: 13, weight: .medium)
+        likesLabel.textColor = .black
         captionLabel.font = .systemFont(ofSize: 14, weight: .regular)
+        captionLabel.textColor = .black
+        captionLabel.numberOfLines = 0
         postTimeLabel.font = .systemFont(ofSize: 12, weight: .medium)
         postTimeLabel.textColor = .lightGray
     }
@@ -126,10 +129,24 @@ final class FeedCell: UICollectionViewCell {
         
         postImageView.anchor(top: profileImageView.bottomAnchor, left: leftAnchor, right: rightAnchor, paddingTop: 8)
         postImageView.heightAnchor.constraint(equalTo: widthAnchor, multiplier: 1).isActive = true
-        controlStackView.anchor(top: postImageView.bottomAnchor, left: leftAnchor, paddingLeft: 8, height: 50)
-        likesLabel.anchor(top: controlStackView.bottomAnchor, left: leftAnchor, paddingTop: 0, paddingLeft: 8)
-        captionLabel.anchor(top: likesLabel.bottomAnchor, left: leftAnchor, paddingTop: 8, paddingLeft: 8)
-        postTimeLabel.anchor(top: captionLabel.bottomAnchor, left: leftAnchor, paddingTop: 8, paddingLeft: 8)
+        controlStackView.anchor(top: postImageView.bottomAnchor,
+                                left: leftAnchor,
+                                paddingTop: 4,
+                                paddingLeft: 8,
+                                height: 40)
+        likesLabel.anchor(top: controlStackView.bottomAnchor,
+                          left: leftAnchor,
+                          paddingLeft: 8,
+                          height: 16)
+        captionLabel.anchor(top: likesLabel.bottomAnchor,
+                            left: leftAnchor,
+                            right: rightAnchor,
+                            paddingTop: 8, paddingLeft: 8, paddingRight: 8)
+        postTimeLabel.anchor(top: captionLabel.bottomAnchor,
+                             left: leftAnchor,
+                             bottom: bottomAnchor,
+                             paddingTop: 8, paddingLeft: 8,
+                             height: 16)
     }
     
     // MARK: - Action
