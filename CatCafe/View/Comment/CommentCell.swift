@@ -35,14 +35,21 @@ final class CommentCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
+        backgroundColor = .white
+        
         addSubview(profileImageView)
         addSubview(commentLabel)
-        profileImageView.centerY(inView: self, leftAnchor: leftAnchor, paddingLeft: 8)
+        profileImageView.anchor(top: topAnchor,
+                                left: leftAnchor,
+                                paddingTop: 8,
+                                paddingLeft: 8)
         profileImageView.setDimensions(height: 24, width: 24)
         commentLabel.anchor(
             top: profileImageView.topAnchor,
             left: profileImageView.rightAnchor,
-            paddingLeft: 8
+            bottom: bottomAnchor,
+            right: rightAnchor,
+            paddingLeft: 8, paddingRight: 8
         )
         commentLabel.anchor(right: rightAnchor, paddingRight: 8)
     }

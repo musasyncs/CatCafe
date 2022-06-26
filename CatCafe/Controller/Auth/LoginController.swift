@@ -12,15 +12,19 @@ class LoginController: UIViewController {
     weak var delegate: AuthenticationDelegate?
     
     private var viewModel = LoginViewModel()
-        
-    private let emailTextField = RegTextField(placeholder: "Email")
-    private let passwordTextField = RegTextField(placeholder: "Password")
+    
+    let emailTextField = RegTextField(placeholder: "Email")
+    let passwordTextField = RegTextField(placeholder: "Password")
+    lazy var emailContainerView = InputContainerView(imageName: "mail",
+                                                     textField: emailTextField)
+    lazy var passwordContainerView = InputContainerView(imageName: "lock",
+                                                        textField: passwordTextField)
     private lazy var loginButton = UIButton(type: .system)
     private let forgotPasswordButton = UIButton(type: .system)
     private lazy var stackView = UIStackView(
         arrangedSubviews: [
-            emailTextField,
-            passwordTextField,
+            emailContainerView,
+            passwordContainerView,
             loginButton,
             forgotPasswordButton
         ]
@@ -90,7 +94,6 @@ extension LoginController {
         navigationController?.navigationBar.barStyle = .black
         stackView.axis = .vertical
         stackView.spacing = 20
-        emailTextField.keyboardType = .emailAddress
         passwordTextField.isSecureTextEntry = true
         loginButton.setTitle("Log In", for: .normal)
         loginButton.layer.cornerRadius = 5
@@ -103,10 +106,13 @@ extension LoginController {
         view.addSubview(stackView)
         view.addSubview(dontHaveAccountButton)
 
-        stackView.centerX(inView: view)
         stackView.centerY(inView: view)
-        emailTextField.setHeight(36)
-        passwordTextField.setHeight(36)
+        stackView.anchor(
+            left: view.leftAnchor,
+            right: view.rightAnchor,
+            paddingLeft: 48, paddingRight: 48
+        )
+        
         loginButton.setHeight(36)
         dontHaveAccountButton.centerX(inView: view)
         dontHaveAccountButton.anchor(bottom: view.safeAreaLayoutGuide.bottomAnchor)

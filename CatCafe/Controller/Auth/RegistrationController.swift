@@ -20,12 +20,25 @@ class RegistrationController: UIViewController {
 
     private let plusPhotoButton = UIButton(type: .system)
     private lazy var stackView = UIStackView(
-        arrangedSubviews: [emailTextField, passwordTextField, fullnameTextField, usernameTextField, signUpButton]
+        arrangedSubviews: [
+            emailContainerView, passwordContainerView,
+            fullnameContainerView, usernameContainerView, signUpButton
+        ]
     )
-    private let emailTextField = RegTextField(placeholder: "Email")
-    private let passwordTextField = RegTextField(placeholder: "Password")
-    private let fullnameTextField = RegTextField(placeholder: "Fullname")
-    private let usernameTextField = RegTextField(placeholder: "Username")
+    let emailTextField = RegTextField(placeholder: "Email")
+    let passwordTextField = RegTextField(placeholder: "Password")
+    let fullnameTextField = RegTextField(placeholder: "Full name")
+    let usernameTextField = RegTextField(placeholder: "User name")
+    
+    lazy var emailContainerView = InputContainerView(imageName: "mail",
+                                                     textField: emailTextField)
+    lazy var passwordContainerView = InputContainerView(imageName: "lock",
+                                                        textField: passwordTextField)
+    lazy var fullnameContainerView = InputContainerView(imageName: "user",
+                                                        textField: fullnameTextField)
+    lazy var usernameContainerView = InputContainerView(imageName: "user",
+                                                        textField: usernameTextField)
+
     private let signUpButton = UIButton(type: .system)
     private lazy var alreadyHaveAccountButton = UIButton(type: .system)
     
@@ -90,11 +103,11 @@ class RegistrationController: UIViewController {
     }
     
     @objc func textDidChange(sender: UITextField) {
-        if sender == emailTextField {
+        if sender == emailContainerView {
             viewModel.email = sender.text
-        } else if sender == passwordTextField {
+        } else if sender == passwordContainerView {
             viewModel.password = sender.text
-        } else if sender == fullnameTextField {
+        } else if sender == fullnameContainerView {
             viewModel.fullname = sender.text
         } else {
             viewModel.username = sender.text
@@ -123,9 +136,9 @@ extension RegistrationController {
         view.backgroundColor = .white
         plusPhotoButton.setImage(UIImage(named: "plus_photo"), for: .normal)
         plusPhotoButton.tintColor = .lightGray
+        plusPhotoButton.imageView?.contentMode = .scaleAspectFill
         stackView.axis = .vertical
         stackView.spacing = 20
-        emailTextField.keyboardType = .emailAddress
         passwordTextField.isSecureTextEntry = true
         signUpButton.setTitle("Sign Up", for: .normal)
         signUpButton.layer.cornerRadius = 5
@@ -147,10 +160,6 @@ extension RegistrationController {
             right: view.rightAnchor,
             paddingTop: 48, paddingLeft: 48, paddingRight: 48
         )
-        emailTextField.setHeight(36)
-        passwordTextField.setHeight(36)
-        fullnameTextField.setHeight(36)
-        usernameTextField.setHeight(36)
         signUpButton.setHeight(36)
         alreadyHaveAccountButton.centerX(inView: view)
         alreadyHaveAccountButton.anchor(bottom: view.safeAreaLayoutGuide.bottomAnchor)
@@ -182,14 +191,11 @@ extension RegistrationController: UIImagePickerControllerDelegate, UINavigationC
         _ picker: UIImagePickerController,
         didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]
     ) {
-        
         guard let selectedImage = info[.editedImage] as? UIImage else { return }
         profileImage = selectedImage
         
         plusPhotoButton.layer.cornerRadius = plusPhotoButton.frame.width / 2
         plusPhotoButton.layer.masksToBounds = true
-        plusPhotoButton.layer.borderColor = UIColor.white.cgColor
-        plusPhotoButton.layer.borderWidth = 2
         plusPhotoButton.setImage(selectedImage.withRenderingMode(.alwaysOriginal), for: .normal)
         self.dismiss(animated: true)
     }

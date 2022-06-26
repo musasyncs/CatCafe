@@ -145,7 +145,7 @@ final class FeedCell: UICollectionViewCell {
         postTimeLabel.anchor(top: captionLabel.bottomAnchor,
                              left: leftAnchor,
                              bottom: bottomAnchor,
-                             paddingTop: 8, paddingLeft: 8,
+                             paddingTop: 8, paddingLeft: 8, paddingBottom: 8,
                              height: 16)
     }
     

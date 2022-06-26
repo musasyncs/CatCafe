@@ -100,7 +100,8 @@ extension MainTabController: UITabBarControllerDelegate {
             guard LocalStorage.shared.hasLogedIn else {
                 let loginVC = LoginController()
                 loginVC.delegate = self
-                present(loginVC, animated: true)
+                let loginNav = UINavigationController(rootViewController: loginVC)
+                present(loginNav, animated: true)
                 return false
             }
             return true

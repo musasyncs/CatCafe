@@ -98,6 +98,8 @@
 		BA1385C52866FA77001B7FF1 /* FilterPickerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA1385C42866FA77001B7FF1 /* FilterPickerCell.swift */; };
 		BA1385C72866FA8C001B7FF1 /* FilterControlView+HorizontalSliderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA1385C62866FA8C001B7FF1 /* FilterControlView+HorizontalSliderView.swift */; };
 		BA1385CA2867F8EF001B7FF1 /* ConversationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA1385C92867F8EF001B7FF1 /* ConversationController.swift */; };
+		BA1385CD28682943001B7FF1 /* InputContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA1385CC28682943001B7FF1 /* InputContainerView.swift */; };
+		BA1385CF28682BB4001B7FF1 /* CustomTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA1385CE28682BB4001B7FF1 /* CustomTextField.swift */; };
 		BA44772E28587ED30045DDB8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA44772D28587ED30045DDB8 /* AppDelegate.swift */; };
 		BA44773028587ED30045DDB8 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA44772F28587ED30045DDB8 /* SceneDelegate.swift */; };
 		BA44773228587ED30045DDB8 /* SelectCafeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA44773128587ED30045DDB8 /* SelectCafeController.swift */; };
@@ -291,6 +293,8 @@
 		BA1385C42866FA77001B7FF1 /* FilterPickerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterPickerCell.swift; sourceTree = "<group>"; };
 		BA1385C62866FA8C001B7FF1 /* FilterControlView+HorizontalSliderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FilterControlView+HorizontalSliderView.swift"; sourceTree = "<group>"; };
 		BA1385C92867F8EF001B7FF1 /* ConversationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationController.swift; sourceTree = "<group>"; };
+		BA1385CC28682943001B7FF1 /* InputContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputContainerView.swift; sourceTree = "<group>"; };
+		BA1385CE28682BB4001B7FF1 /* CustomTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTextField.swift; sourceTree = "<group>"; };
 		BA44772A28587ED30045DDB8 /* CatCafe.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CatCafe.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BA44772D28587ED30045DDB8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BA44772F28587ED30045DDB8 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -535,6 +539,34 @@
 			path = Chat;
 			sourceTree = "<group>";
 		};
+		BA1385CB28682933001B7FF1 /* Auth */ = {
+			isa = PBXGroup;
+			children = (
+				BA1385CC28682943001B7FF1 /* InputContainerView.swift */,
+			);
+			path = Auth;
+			sourceTree = "<group>";
+		};
+		BA1385D028682BF6001B7FF1 /* ArrangeMeet */ = {
+			isa = PBXGroup;
+			children = (
+				BADBFF772861F06400146D6F /* ImageHeaderView.swift */,
+				BADBFF752861A86200146D6F /* MeetTimeTileView.swift */,
+				BADBFF732861A84A00146D6F /* TileView.swift */,
+				BA1385CE28682BB4001B7FF1 /* CustomTextField.swift */,
+			);
+			path = ArrangeMeet;
+			sourceTree = "<group>";
+		};
+		BA1385D128682C0A001B7FF1 /* MeetDetail */ = {
+			isa = PBXGroup;
+			children = (
+				BADBFF7B28620C5D00146D6F /* MeetStretchyHeader.swift */,
+				BADBFF7D2862A78A00146D6F /* CommentSectionHeader.swift */,
+			);
+			path = MeetDetail;
+			sourceTree = "<group>";
+		};
 		BA44772128587ED30045DDB8 = {
 			isa = PBXGroup;
 			children = (
@@ -592,6 +624,7 @@
 		BA44774228588C8C0045DDB8 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				BA1385CB28682933001B7FF1 /* Auth */,
 				BA44778A285961940045DDB8 /* Feed */,
 				BA4477922859CE200045DDB8 /* Explore */,
 				BA44778D28597DAF0045DDB8 /* Profile */,
@@ -847,11 +880,8 @@
 			isa = PBXGroup;
 			children = (
 				BAD133A12863629B00B8015A /* MeetCell.swift */,
-				BADBFF772861F06400146D6F /* ImageHeaderView.swift */,
-				BADBFF752861A86200146D6F /* MeetTimeTileView.swift */,
-				BADBFF732861A84A00146D6F /* TileView.swift */,
-				BADBFF7B28620C5D00146D6F /* MeetStretchyHeader.swift */,
-				BADBFF7D2862A78A00146D6F /* CommentSectionHeader.swift */,
+				BA1385D028682BF6001B7FF1 /* ArrangeMeet */,
+				BA1385D128682C0A001B7FF1 /* MeetDetail */,
 				BAD133BA2865656100B8015A /* MeetPeople */,
 			);
 			path = Meet;
@@ -1132,6 +1162,7 @@
 				BADF1F62285C4E2E004CF329 /* CafeService.swift in Sources */,
 				BADF1F65285C4F78004CF329 /* Cafe.swift in Sources */,
 				BA1385B12866F52B001B7FF1 /* MTWaldenFilter.metal in Sources */,
+				BA1385CF28682BB4001B7FF1 /* CustomTextField.swift in Sources */,
 				BA1385B32866F52B001B7FF1 /* MTEarlybirdFilter.metal in Sources */,
 				BA13856B2866F52A001B7FF1 /* MTReyesFilter.swift in Sources */,
 				BA4477A82859E0AD0045DDB8 /* AuthService.swift in Sources */,
@@ -1227,6 +1258,7 @@
 				BA1385842866F52B001B7FF1 /* MTEarlybirdFilter.swift in Sources */,
 				BA4477AA2859E0DB0045DDB8 /* AuthCredentials.swift in Sources */,
 				BADBFF6F28614E1000146D6F /* SelectMeetPicController.swift in Sources */,
+				BA1385CD28682943001B7FF1 /* InputContainerView.swift in Sources */,
 				BA1385882866F52B001B7FF1 /* MTVesperVideoFilter.metal in Sources */,
 				BA7BB72F285AEAEA00465DEC /* GridScrollView.swift in Sources */,
 				BA1385952866F52B001B7FF1 /* MTHefeFilter.metal in Sources */,

@@ -244,7 +244,6 @@ extension FeedController {
                 cell.viewModel?.ownerImageUrl = URL(string: user.profileImageUrlString)
             }
         }
-        
         return cell
     }
 }
@@ -256,6 +255,14 @@ extension FeedController: UICollectionViewDelegateFlowLayout {
     func collectionView(
         _ collectionView: UICollectionView,
         layout collectionViewLayout: UICollectionViewLayout,
+        minimumLineSpacingForSectionAt section: Int
+    ) -> CGFloat {
+        return 0
+    }
+    
+    func collectionView(
+        _ collectionView: UICollectionView,
+        layout collectionViewLayout: UICollectionViewLayout,
         sizeForItemAt indexPath: IndexPath
     ) -> CGSize {
                 
@@ -263,7 +270,7 @@ extension FeedController: UICollectionViewDelegateFlowLayout {
         let approximateSize = CGSize(width: approximateWidthOfTextArea, height: 1000)
         let attributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14, weight: .regular)]
         
-        let estimatedHeight = 12 + 40 + 8 + UIScreen.width + 4 + 40 + 16 + 8 + 8 + 16
+        let estimatedHeight = 12 + 40 + 8 + UIScreen.width + 4 + 40 + 16 + 8 + 8 + 16 + 8
         
         // Get an estimation of the height of cell based on post.caption
         if let post = post {
