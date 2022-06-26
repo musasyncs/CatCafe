@@ -22,12 +22,11 @@ class MTRiseFilter: MTFilter {
         return "MTRiseFragment"
     }
 
-   override var samplers: [String : String] {
+   override var samplers: [String: String] {
         return [
             "blowout": "blackboard.png",
             "map": "riseMap.png",
-            "overlay": "overlayMap.png",
+            "overlay": "overlayMap.png"
         ]
     }
-
 }

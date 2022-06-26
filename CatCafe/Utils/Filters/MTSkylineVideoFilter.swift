@@ -22,10 +22,9 @@ class MTSkylineVideoFilter: MTFilter {
         return "MTSkylineVideoFragment"
     }
 
-   override var samplers: [String : String] {
+   override var samplers: [String: String] {
         return [
-            "map": "super_film_stock_curves.png",
+            "map": "super_film_stock_curves.png"
         ]
     }
-
 }

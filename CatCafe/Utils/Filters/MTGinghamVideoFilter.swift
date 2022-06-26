@@ -22,11 +22,10 @@ class MTGinghamVideoFilter: MTFilter {
         return "MTGinghamVideoFragment"
     }
 
-   override var samplers: [String : String] {
+   override var samplers: [String: String] {
         return [
             "map": "vintage_signature_curves1.png",
-            "mapLgg": "vintage_signature_lgg_curves.png",
+            "mapLgg": "vintage_signature_lgg_curves.png"
         ]
     }
-
 }

@@ -22,14 +22,13 @@ class MTBrannanFilter: MTFilter {
         return "MTBrannanFragment"
     }
 
-   override var samplers: [String : String] {
+   override var samplers: [String: String] {
         return [
             "blowout": "brannanBlowout.png",
             "brannanMap": "brannanProcess.png",
             "contrast": "brannanContrast.png",
             "lumaMap": "brannanLuma.png",
-            "screenMap": "brannanScreen.png",
+            "screenMap": "brannanScreen.png"
         ]
     }
-
 }

@@ -22,10 +22,9 @@ class MTVesperVideoFilter: MTFilter {
         return "MTVesperVideoFragment"
     }
 
-   override var samplers: [String : String] {
+   override var samplers: [String: String] {
         return [
-            "map": "luster_map.png",
+            "map": "luster_map.png"
         ]
     }
-
 }

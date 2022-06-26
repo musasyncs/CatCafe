@@ -22,11 +22,10 @@ class MTMoonVideoFilter: MTFilter {
         return "MTMoonVideoFragment"
     }
 
-   override var samplers: [String : String] {
+   override var samplers: [String: String] {
         return [
             "map1": "bw_vintage_curves1.png",
-            "map2": "bw_vintage_curves2.png",
+            "map2": "bw_vintage_curves2.png"
         ]
     }
-
 }

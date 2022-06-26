@@ -22,10 +22,9 @@ class MTBrooklynVideoFilter: MTFilter {
         return "MTBrooklynVideoFragment"
     }
 
-   override var samplers: [String : String] {
+   override var samplers: [String: String] {
         return [
-            "map": "crossprotwo_curves.png",
+            "map": "crossprotwo_curves.png"
         ]
     }
-
 }

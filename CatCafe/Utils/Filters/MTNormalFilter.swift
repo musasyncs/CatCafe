@@ -22,10 +22,7 @@ class MTNormalFilter: MTFilter {
         return "MTNormalFragment"
     }
 
-   override var samplers: [String : String] {
-        return [
-            :
-        ]
+   override var samplers: [String: String] {
+        return [:]
     }
-
 }

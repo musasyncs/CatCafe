@@ -22,14 +22,13 @@ class MTToasterFilter: MTFilter {
         return "MTToasterFragment"
     }
 
-   override var samplers: [String : String] {
+   override var samplers: [String: String] {
         return [
             "colorShift": "toasterColorShift.png",
             "curves": "toasterCurves.png",
             "metal": "metalTexture2.pvr",
             "softLight": "toasterSoftLight.png",
-            "vignetteMap": "toasterOverlayMapWarm.png",
+            "vignetteMap": "toasterOverlayMapWarm.png"
         ]
     }
-
 }

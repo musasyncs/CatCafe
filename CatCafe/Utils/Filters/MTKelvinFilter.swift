@@ -22,9 +22,9 @@ class MTKelvinFilter: MTFilter {
         return "MTKelvinFragment"
     }
 
-   override var samplers: [String : String] {
+   override var samplers: [String: String] {
         return [
-            "map": "kelvinMap.png",
+            "map": "kelvinMap.png"
         ]
     }
 

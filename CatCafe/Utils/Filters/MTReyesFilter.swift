@@ -22,10 +22,9 @@ class MTReyesFilter: MTFilter {
         return "MTReyesFragment"
     }
 
-   override var samplers: [String : String] {
+   override var samplers: [String: String] {
         return [
-            "lookup": "reyes_map.png",
+            "lookup": "reyes_map.png"
         ]
     }
-
 }

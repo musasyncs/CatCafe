@@ -65,8 +65,15 @@ class AttendMeetController: UIViewController {
     let descriptionLabel = UILabel()
     let bottomDivider = UIView()
     let centerDivider = UIView()
-    let cancelButton = makeTitleButton(withText: "取消", font: .systemFont(ofSize: 12, weight: .regular), foregroundColor: .systemRed)
-    let sendButton = makeTitleButton(withText: "送出", font: .systemFont(ofSize: 12, weight: .regular))
+    let cancelButton = makeTitleButton(
+        withText: "取消",
+        font: .systemFont(ofSize: 12, weight: .regular),
+        foregroundColor: .systemRed
+    )
+    let sendButton = makeTitleButton(
+        withText: "送出",
+        font: .systemFont(ofSize: 12, weight: .regular)
+    )
     
     var bottomConstraint: NSLayoutConstraint?
     var popupOffset: CGFloat = UIScreen.height *  0.7
@@ -174,6 +181,7 @@ extension AttendMeetController {
         centerDivider.backgroundColor = .lightGray
     }
     
+    // swiftlint:disable all
     fileprivate func layout() {
         [bottomView, titleLabel, topDivider,
          contactLabel, contactTextView, contactCountLabel,
@@ -254,6 +262,7 @@ extension AttendMeetController {
         centerDivider.centerX(inView: view)
         centerDivider.centerY(inView: cancelButton)
     }
+    // swiftlint:enable all
 }
 
 // MARK: - UITextViewDelegate

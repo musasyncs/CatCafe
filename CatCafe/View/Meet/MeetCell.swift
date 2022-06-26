@@ -106,10 +106,10 @@ extension MeetCell {
         titleLabel.font = .systemFont(ofSize: 15, weight: .medium)
         timeTitleLabel.font = .systemFont(ofSize: 10, weight: .regular)
         timeTitleLabel.textColor = .systemGray
-        timeLabel.font = .systemFont(ofSize: 11, weight: .medium)
+        timeLabel.font = .systemFont(ofSize: 11, weight: .regular)
         placeTitleLabel.font = .systemFont(ofSize: 10, weight: .regular)
         placeTitleLabel.textColor = .systemGray
-        placeLabel.font = .systemFont(ofSize: 11, weight: .medium)
+        placeLabel.font = .systemFont(ofSize: 11, weight: .regular)
         
         timeStackView.axis = .horizontal
         timeStackView.alignment = .center

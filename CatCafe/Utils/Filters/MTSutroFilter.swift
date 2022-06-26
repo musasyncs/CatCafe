@@ -22,14 +22,13 @@ class MTSutroFilter: MTFilter {
         return "MTSutroFragment"
     }
 
-   override var samplers: [String : String] {
+   override var samplers: [String: String] {
         return [
             "curves": "sutroCurves.png",
             "edgeBurn": "sutroEdgeBurn.pvr",
             "softLight": "softLight.png",
             "sutroMetal": "sutroMetal.pvr",
-            "vignetteMap": "blackOverlayMap.png",
+            "vignetteMap": "blackOverlayMap.png"
         ]
     }
-
 }

@@ -9,6 +9,7 @@ import Foundation
 import UIKit
 import MetalPetal
 
+// swiftlint:disable all
 class MTFilterManager {
     
     static let shared = MTFilterManager()
@@ -22,7 +23,6 @@ class MTFilterManager {
     var device = MTLCreateSystemDefaultDevice()!
     
     init() {
-        
         allFilters.append(MTNormalFilter.self)
         allFilters.append(MTClarendonVideoFilter.self)
         allFilters.append(MTGinghamVideoFilter.self)
@@ -93,3 +93,4 @@ class MTFilterManager {
     }
     
 }
+// swiftlint:enable all

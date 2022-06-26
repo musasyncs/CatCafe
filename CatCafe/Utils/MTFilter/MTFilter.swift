@@ -61,7 +61,10 @@ class MTFilter: NSObject, MTIUnaryFilter {
         images.insert(input, at: 0)
         
         let outputDescriptors = [
-            MTIRenderPassOutputDescriptor(dimensions: MTITextureDimensions(cgSize: input.size), pixelFormat: outputPixelFormat)
+            MTIRenderPassOutputDescriptor(
+                dimensions: MTITextureDimensions(cgSize: input.size),
+                pixelFormat: outputPixelFormat
+            )
         ]
         
         var params = parameters
@@ -74,8 +77,14 @@ class MTFilter: NSObject, MTIUnaryFilter {
     
     var kernel: MTIRenderPipelineKernel {
         let vertexDescriptor = MTIFunctionDescriptor(name: MTIFilterPassthroughVertexFunctionName)
-        let fragmentDescriptor = MTIFunctionDescriptor(name: fragmentName, libraryURL: MTIDefaultLibraryURLForBundle(Bundle.main))
-        let kernel = MTIRenderPipelineKernel(vertexFunctionDescriptor: vertexDescriptor, fragmentFunctionDescriptor: fragmentDescriptor)
+        let fragmentDescriptor = MTIFunctionDescriptor(
+            name: fragmentName,
+            libraryURL: MTIDefaultLibraryURLForBundle(Bundle.main)
+        )
+        let kernel = MTIRenderPipelineKernel(
+            vertexFunctionDescriptor: vertexDescriptor,
+            fragmentFunctionDescriptor: fragmentDescriptor
+        )
         return kernel
     }
     

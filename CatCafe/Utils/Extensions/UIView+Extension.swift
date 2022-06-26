@@ -9,8 +9,11 @@ import UIKit
 
 extension UIView {
     
-    var keyWindowSafeAreaInsets: UIEdgeInsets {
-        return UIApplication.shared.keyWindow?.safeAreaInsets ?? .zero
+    var windowSafeAreaInsets: UIEdgeInsets {
+        let scenes = UIApplication.shared.connectedScenes
+        let windowScene = scenes.first as? UIWindowScene
+        let window = windowScene?.windows.first
+        return window?.safeAreaInsets ?? .zero
     }
     
     func anchor(top: NSLayoutYAxisAnchor? = nil,

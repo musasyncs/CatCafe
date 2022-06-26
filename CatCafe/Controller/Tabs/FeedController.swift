@@ -82,7 +82,7 @@ class FeedController: UICollectionViewController {
     private func setupRightNavItems() {
         chatButton.setImage(UIImage(named: "send2")?.withRenderingMode(.alwaysOriginal), for: .normal)
         chatButton.frame = CGRect(x: 0, y: 0, width: 34, height: 34)
-        chatButton.addTarget(self, action: #selector(gotoChatRoom), for: .touchUpInside)
+        chatButton.addTarget(self, action: #selector(gotoConversations), for: .touchUpInside)
         
         notiButton.setImage(UIImage(named: "like_unselected")?.withRenderingMode(.alwaysOriginal), for: .normal)
         notiButton.frame = CGRect(x: 0, y: 0, width: 34, height: 34)
@@ -134,8 +134,9 @@ class FeedController: UICollectionViewController {
     
     // MARK: - Actions
     
-    @objc func gotoChatRoom() {
-        
+    @objc func gotoConversations() {
+        let controller = ConversationController()
+        navigationController?.pushViewController(controller, animated: true)
     }
     
     @objc func gotoNotificationPage() {

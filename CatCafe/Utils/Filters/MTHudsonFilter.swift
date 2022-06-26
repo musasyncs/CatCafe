@@ -22,12 +22,11 @@ class MTHudsonFilter: MTFilter {
         return "MTHudsonFragment"
     }
 
-   override var samplers: [String : String] {
+   override var samplers: [String: String] {
         return [
             "blowout": "hudsonBackground.pvr",
             "map": "hudsonMap.png",
-            "overlay": "overlayMap.png",
+            "overlay": "overlayMap.png"
         ]
     }
-
 }

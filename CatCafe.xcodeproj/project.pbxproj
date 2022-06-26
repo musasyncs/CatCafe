@@ -97,6 +97,7 @@
 		BA1385C22866F648001B7FF1 /* FilterToolItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA1385C12866F648001B7FF1 /* FilterToolItem.swift */; };
 		BA1385C52866FA77001B7FF1 /* FilterPickerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA1385C42866FA77001B7FF1 /* FilterPickerCell.swift */; };
 		BA1385C72866FA8C001B7FF1 /* FilterControlView+HorizontalSliderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA1385C62866FA8C001B7FF1 /* FilterControlView+HorizontalSliderView.swift */; };
+		BA1385CA2867F8EF001B7FF1 /* ConversationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA1385C92867F8EF001B7FF1 /* ConversationController.swift */; };
 		BA44772E28587ED30045DDB8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA44772D28587ED30045DDB8 /* AppDelegate.swift */; };
 		BA44773028587ED30045DDB8 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA44772F28587ED30045DDB8 /* SceneDelegate.swift */; };
 		BA44773228587ED30045DDB8 /* SelectCafeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA44773128587ED30045DDB8 /* SelectCafeController.swift */; };
@@ -289,6 +290,7 @@
 		BA1385C12866F648001B7FF1 /* FilterToolItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterToolItem.swift; sourceTree = "<group>"; };
 		BA1385C42866FA77001B7FF1 /* FilterPickerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterPickerCell.swift; sourceTree = "<group>"; };
 		BA1385C62866FA8C001B7FF1 /* FilterControlView+HorizontalSliderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FilterControlView+HorizontalSliderView.swift"; sourceTree = "<group>"; };
+		BA1385C92867F8EF001B7FF1 /* ConversationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationController.swift; sourceTree = "<group>"; };
 		BA44772A28587ED30045DDB8 /* CatCafe.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CatCafe.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BA44772D28587ED30045DDB8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BA44772F28587ED30045DDB8 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -506,14 +508,14 @@
 			path = Filters;
 			sourceTree = "<group>";
 		};
-		BA1385BA2866F53B001B7FF1 /* CCFilter */ = {
+		BA1385BA2866F53B001B7FF1 /* MTFilter */ = {
 			isa = PBXGroup;
 			children = (
 				BA1385BB2866F558001B7FF1 /* MTFilter.swift */,
 				BA1385BD2866F56B001B7FF1 /* MTFilterManager.swift */,
 				BA1385C12866F648001B7FF1 /* FilterToolItem.swift */,
 			);
-			path = CCFilter;
+			path = MTFilter;
 			sourceTree = "<group>";
 		};
 		BA1385C32866FA66001B7FF1 /* PostFilter */ = {
@@ -523,6 +525,14 @@
 				BA1385C62866FA8C001B7FF1 /* FilterControlView+HorizontalSliderView.swift */,
 			);
 			path = PostFilter;
+			sourceTree = "<group>";
+		};
+		BA1385C82867F8B5001B7FF1 /* Chat */ = {
+			isa = PBXGroup;
+			children = (
+				BA1385C92867F8EF001B7FF1 /* ConversationController.swift */,
+			);
+			path = Chat;
 			sourceTree = "<group>";
 		};
 		BA44772128587ED30045DDB8 = {
@@ -621,6 +631,7 @@
 				BADF1F74285D7C21004CF329 /* Feed */,
 				BADF1F84285E786F004CF329 /* Notification */,
 				BADBFF6D28614DD900146D6F /* Meet */,
+				BA1385C82867F8B5001B7FF1 /* Chat */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -702,7 +713,7 @@
 		BA7BB6F6285A083D00465DEC /* Utils */ = {
 			isa = PBXGroup;
 			children = (
-				BA1385BA2866F53B001B7FF1 /* CCFilter */,
+				BA1385BA2866F53B001B7FF1 /* MTFilter */,
 				BA1385142866F4E9001B7FF1 /* Filters */,
 				BA7BB727285AE9DF00465DEC /* Custom Animation */,
 				BA7BB6F7285A083D00465DEC /* Constants */,
@@ -1233,6 +1244,7 @@
 				BA7BB710285A083D00465DEC /* UILabel+Extension.swift in Sources */,
 				BAD133AC2864A26F00B8015A /* MyAttendController.swift in Sources */,
 				BADBFF71286164B700146D6F /* ArrangeMeetController.swift in Sources */,
+				BA1385CA2867F8EF001B7FF1 /* ConversationController.swift in Sources */,
 				BA44779F2859DE6C0045DDB8 /* RegistrationController.swift in Sources */,
 				BA13857A2866F52A001B7FF1 /* MTHudsonFilter.metal in Sources */,
 				BA1385792866F52A001B7FF1 /* MTMayfairFilter.swift in Sources */,
@@ -1414,6 +1426,8 @@
 				DEVELOPMENT_TEAM = CNCBQDYY2M;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = CatCafe/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "We would like to access the camera to take photos.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "We'd like access to your photos right now.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -1423,7 +1437,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.0;
 				MTL_ENABLE_MODULES = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ethanchen.CatCafe;
@@ -1445,6 +1459,8 @@
 				DEVELOPMENT_TEAM = CNCBQDYY2M;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = CatCafe/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "We would like to access the camera to take photos.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "We'd like access to your photos right now.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -1454,7 +1470,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.0;
 				MTL_ENABLE_MODULES = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ethanchen.CatCafe;

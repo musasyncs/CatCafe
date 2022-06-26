@@ -22,14 +22,13 @@ class MTHefeFilter: MTFilter {
         return "MTHefeFragment"
     }
 
-   override var samplers: [String : String] {
+   override var samplers: [String: String] {
         return [
             "edgeBurn": "edgeBurn.pvr",
             "gradMap": "hefeGradientMap.png",
             "hefeMetal": "hefeMetal.pvr",
             "map": "hefeMap.png",
-            "softLight": "hefeSoftLight.png",
+            "softLight": "hefeSoftLight.png"
         ]
     }
-
 }

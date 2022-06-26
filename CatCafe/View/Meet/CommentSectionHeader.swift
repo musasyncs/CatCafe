@@ -135,11 +135,11 @@ extension CommentSectionHeader {
         
         timeStackView.axis = .horizontal
         timeStackView.alignment = .center
-        timeStackView.spacing = 32
+        timeStackView.spacing = 16
         
         placeStackView.axis = .horizontal
         placeStackView.alignment = .center
-        placeStackView.spacing = 32
+        placeStackView.spacing = 16
         
         hostnameLabel.font = .systemFont(ofSize: 11, weight: .regular)
         infoLabel.font = .systemFont(ofSize: 12, weight: .regular)
@@ -153,6 +153,7 @@ extension CommentSectionHeader {
         publicCommentLabel.textColor = .greyishBrown
     }
     
+    // swiftlint:disable all
     func layout() {
         addSubview(hostProfileImageView)
         addSubview(hostnameLabel)
@@ -183,7 +184,9 @@ extension CommentSectionHeader {
         timeStackView.anchor(top: descriptionLabel.bottomAnchor,
                              left: hostProfileImageView.leftAnchor,
                              paddingTop: 16)
-        placeStackView.anchor(top: timeStackView.bottomAnchor, left: hostProfileImageView.leftAnchor)
+        placeStackView.anchor(top: timeStackView.bottomAnchor,
+                              left: hostProfileImageView.leftAnchor,
+                              paddingTop: 8)
         
         likeButton.anchor(top: placeStackView.bottomAnchor, right: rightAnchor, paddingTop: 8, paddingRight: 16)
         likesLabel.anchor(left: likeButton.rightAnchor, bottom: likeButton.bottomAnchor, paddingBottom: -4)
@@ -201,4 +204,5 @@ extension CommentSectionHeader {
                                   bottom: bottomAnchor,
                                   paddingTop: 16, paddingLeft: 8, paddingBottom: 8)
     }
+    // swiftlint:enable all
 }

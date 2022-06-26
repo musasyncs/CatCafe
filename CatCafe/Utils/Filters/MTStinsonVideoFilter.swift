@@ -22,10 +22,9 @@ class MTStinsonVideoFilter: MTFilter {
         return "MTStinsonVideoFragment"
     }
 
-   override var samplers: [String : String] {
+   override var samplers: [String: String] {
         return [
-            "map": "seventies_curves.png",
+            "map": "seventies_curves.png"
         ]
     }
-
 }

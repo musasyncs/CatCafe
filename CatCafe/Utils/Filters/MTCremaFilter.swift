@@ -22,10 +22,9 @@ class MTCremaFilter: MTFilter {
         return "MTCremaFragment"
     }
 
-   override var samplers: [String : String] {
+   override var samplers: [String: String] {
         return [
-            "lookup": "crema_map.png",
+            "lookup": "crema_map.png"
         ]
     }
-
 }

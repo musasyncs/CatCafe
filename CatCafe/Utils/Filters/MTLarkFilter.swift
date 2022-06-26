@@ -22,10 +22,9 @@ class MTLarkFilter: MTFilter {
         return "MTLarkFragment"
     }
 
-   override var samplers: [String : String] {
+   override var samplers: [String: String] {
         return [
-            "lookup": "lark_map.png",
+            "lookup": "lark_map.png"
         ]
     }
-
 }

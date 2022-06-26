@@ -96,7 +96,7 @@ class MeetDetailController: UICollectionViewController {
     // MARK: - Action
     
     @objc func goBack() {
-        dismiss(animated: true)
+        dismiss(animated: false)
     }
     
 }

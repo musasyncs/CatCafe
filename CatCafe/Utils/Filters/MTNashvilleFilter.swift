@@ -22,10 +22,9 @@ class MTNashvilleFilter: MTFilter {
         return "MTNashvilleFragment"
     }
 
-   override var samplers: [String : String] {
+   override var samplers: [String: String] {
         return [
-            "map": "nashvilleMap.png",
+            "map": "nashvilleMap.png"
         ]
     }
-
 }
