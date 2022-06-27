@@ -59,28 +59,33 @@ class RegistrationController: UIViewController {
         guard let password = passwordTextField.text else { return }
         guard let fullname = fullnameTextField.text else { return }
         guard let username = usernameTextField.text?.lowercased() else { return }
-        guard let profileImage = profileImage else { return }
+        guard let profileImage = profileImage else {
+            showMessage(withTitle: "Validate Failed", message: "請選擇大頭照")
+            return
+        }
         
-        let credentials = AuthCredentials(
-            email: email,
-            password: password,
-            fullname: fullname,
-            username: username,
-            profileImage: profileImage
-        )
+        let credentials = AuthCredentials(email: email,
+                                          password: password,
+                                          fullname: fullname,
+                                          username: username,
+                                          profileImage: profileImage)
         
+        show()
         AuthService.registerUser(withCredial: credentials) { [weak self] result in
             guard let self = self else { return }
             
             switch result {
             case .success(let authUser):
+                
                 ImageUplader.uploadImage(for: .profile, image: credentials.profileImage) { imageUrlString in
                     UserService.createUserProfile(
                         userId: authUser.uid,
                         profileImageUrlString: imageUrlString,
                         credentials: credentials
                     ) { error in
+                    
                         if let error = error {
+                            self.showFailure()
                             print("DEBUG: Failed to create user profile with error: \(error.localizedDescription)")
                             return
                         }
@@ -93,6 +98,7 @@ class RegistrationController: UIViewController {
                     }
                 }
             case .failure(let error):
+                self.showFailure()
                 print("DEBUG: Failed to create authUser with error: \(error.localizedDescription)")
             }
         }
@@ -103,11 +109,11 @@ class RegistrationController: UIViewController {
     }
     
     @objc func textDidChange(sender: UITextField) {
-        if sender == emailContainerView {
+        if sender == emailTextField {
             viewModel.email = sender.text
-        } else if sender == passwordContainerView {
+        } else if sender == passwordTextField {
             viewModel.password = sender.text
-        } else if sender == fullnameContainerView {
+        } else if sender == fullnameTextField {
             viewModel.fullname = sender.text
         } else {
             viewModel.username = sender.text
@@ -159,10 +165,21 @@ extension RegistrationController {
         stackView.spacing = 20
         passwordTextField.isSecureTextEntry = true
         signUpButton.setTitle("Sign Up", for: .normal)
+        signUpButton.setTitleColor(.white, for: .normal)
         signUpButton.layer.cornerRadius = 5
         signUpButton.titleLabel?.font = .systemFont(ofSize: 15, weight: .medium)
-        signUpButton.backgroundColor = .systemPurple.withAlphaComponent(0.5)
+        signUpButton.backgroundColor = .systemBrown
         alreadyHaveAccountButton.attributedTitle(firstPart: "Already have an account?  ", secondPart: "Log In")
+        
+        // 防止 Strong password overlay 和 Emoji 輸入
+        emailTextField.textContentType = .oneTimeCode
+        passwordTextField.textContentType = .oneTimeCode
+        usernameTextField.textContentType = .oneTimeCode
+        fullnameTextField.textContentType = .oneTimeCode
+        emailTextField.keyboardType = .asciiCapable
+        passwordTextField.keyboardType = .asciiCapable
+        usernameTextField.keyboardType = .asciiCapable
+        fullnameTextField.keyboardType = .asciiCapable
     }
     
     func layout() {

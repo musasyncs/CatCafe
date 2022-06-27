@@ -57,9 +57,7 @@ struct UserService {
             }
         }
         
-        
     }
-    
     
     static func fetchUsers(exceptCurrentUser: Bool, completion: @escaping([User]) -> Void) {
         CCConstant.COLLECTION_USERS.limit(to: 500).getDocuments { snapshot, _ in

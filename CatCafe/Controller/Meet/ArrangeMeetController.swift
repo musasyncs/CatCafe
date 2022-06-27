@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Firebase
 
 class ArrangeMeetController: UIViewController {
     
@@ -142,7 +143,9 @@ class ArrangeMeetController: UIViewController {
                                caption: meetDescription,
                                meetImage: selectedImage,
                                cafeId: selectedCafe.id,
-                               cafeName: selectedCafe.title) { error in
+                               cafeName: selectedCafe.title,
+                               meetDate: chosenDate
+        ) { error in
             self.dismiss()
             
             if let error = error {
@@ -157,7 +160,6 @@ class ArrangeMeetController: UIViewController {
 
         }
         
-        print("DEBUG: upload\(selectedImage) \(chosenDate) \(meetTitleText) \(selectedCafe.title) \(meetDescription)")
     }
     
     @objc func showSelectCafePage() {

@@ -39,15 +39,15 @@ class LoginController: UIViewController {
         layout()
         configureNotificationObservers()
     }
-        
+    
     // MARK: - Action
     
     @objc func handleLogin() {
         guard let email = emailTextField.text, !email.isEmpty,
               let password = passwordTextField.text, !password.isEmpty else {
-                  print("DEBUG: email 和 password 不可為空")
-                  return
-              }
+            showMessage(withTitle: "Validate Failed", message: "欄位不可留白")
+            return
+        }
         
         show()
         AuthService.loginUser(withEmail: email, password: password) { [weak self] result in
@@ -56,6 +56,7 @@ class LoginController: UIViewController {
             
             switch result {
             case .success(let authUser):
+                
                 // Save uid; hasLogedIn = true
                 LocalStorage.shared.saveUid(authUser.uid)
                 LocalStorage.shared.hasLogedIn = true
@@ -117,10 +118,19 @@ extension LoginController {
         navigationController?.navigationBar.barStyle = .black
         stackView.axis = .vertical
         stackView.spacing = 20
+        
+        // 防止 Strong password overlay 和 Emoji 輸入
+        emailTextField.textContentType = .emailAddress
+        emailTextField.keyboardType = .asciiCapable
+       
         passwordTextField.isSecureTextEntry = true
+        passwordTextField.textContentType = .oneTimeCode
+        passwordTextField.keyboardType = .asciiCapable
+        
         loginButton.setTitle("Log In", for: .normal)
         loginButton.layer.cornerRadius = 5
         loginButton.titleLabel?.font = .systemFont(ofSize: 15, weight: .medium)
+        
         forgotPasswordButton.attributedTitle(firstPart: "Forgot your password?  ", secondPart: "Get help signing in.")
         dontHaveAccountButton.attributedTitle(firstPart: "Don't have an account?  ", secondPart: "Sign Up")
     }

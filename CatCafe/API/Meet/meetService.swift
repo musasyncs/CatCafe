@@ -19,6 +19,7 @@ struct MeetService {
         meetImage: UIImage,
         cafeId: String,
         cafeName: String,
+        meetDate: Date,
         completion: @escaping(FirestoreCompletion)
     ) {
         guard let uid = LocalStorage.shared.getUid() else { return }
@@ -30,7 +31,7 @@ struct MeetService {
                 "mediaUrlString": imageUrlString,
                 "caption": caption,
                 "likes": 0,
-                "timestamp": Timestamp(date: Date()),
+                "timestamp": Timestamp(date: meetDate),
                 "cafeId": cafeId,
                 "cafeName": cafeName,
                 "title": title,
