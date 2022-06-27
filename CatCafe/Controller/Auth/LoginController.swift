@@ -12,15 +12,19 @@ class LoginController: UIViewController {
     weak var delegate: AuthenticationDelegate?
     
     private var viewModel = LoginViewModel()
-        
-    private let emailTextField = RegTextField(placeholder: "Email")
-    private let passwordTextField = RegTextField(placeholder: "Password")
+    
+    let emailTextField = RegTextField(placeholder: "Email")
+    let passwordTextField = RegTextField(placeholder: "Password")
+    lazy var emailContainerView = InputContainerView(imageName: "mail",
+                                                     textField: emailTextField)
+    lazy var passwordContainerView = InputContainerView(imageName: "lock",
+                                                        textField: passwordTextField)
     private lazy var loginButton = UIButton(type: .system)
     private let forgotPasswordButton = UIButton(type: .system)
     private lazy var stackView = UIStackView(
         arrangedSubviews: [
-            emailTextField,
-            passwordTextField,
+            emailContainerView,
+            passwordContainerView,
             loginButton,
             forgotPasswordButton
         ]
@@ -35,26 +39,31 @@ class LoginController: UIViewController {
         layout()
         configureNotificationObservers()
     }
-        
+    
     // MARK: - Action
     
     @objc func handleLogin() {
         guard let email = emailTextField.text, !email.isEmpty,
               let password = passwordTextField.text, !password.isEmpty else {
-                  print("DEBUG: email 和 password 不可為空")
-                  return
-              }
+            showMessage(withTitle: "Validate Failed", message: "欄位不可留白")
+            return
+        }
+        
+        show()
         AuthService.loginUser(withEmail: email, password: password) { [weak self] result in
             guard let self = self else { return }
+            self.dismiss()
+            
             switch result {
             case .success(let authUser):
                 
                 // Save uid; hasLogedIn = true
                 LocalStorage.shared.saveUid(authUser.uid)
                 LocalStorage.shared.hasLogedIn = true
-                
+                                
                 self.delegate?.authenticationDidComplete()
             case .failure(let error):
+                self.showFailure()
                 print("DEBUG: Failed to log user in \(error.localizedDescription)")
             }
         }
@@ -74,6 +83,25 @@ class LoginController: UIViewController {
         }
         updateForm()
     }
+    
+    @objc func keyboardWillShow(notification: NSNotification) {
+        let distance = CGFloat(30)
+        let transform = CGAffineTransform(translationX: 0, y: -distance)
+        
+        UIView.animate(withDuration: 0.2, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: []) {
+            self.view.transform = transform
+        }
+    }
+    
+    @objc func keyboardWillHide() {
+        UIView.animate(withDuration: 0.2, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: []) {
+            self.view.transform = .identity
+        }
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        view.endEditing(true)
+    }
 }
 
 extension LoginController {
@@ -90,11 +118,19 @@ extension LoginController {
         navigationController?.navigationBar.barStyle = .black
         stackView.axis = .vertical
         stackView.spacing = 20
-        emailTextField.keyboardType = .emailAddress
+        
+        // 防止 Strong password overlay 和 Emoji 輸入
+        emailTextField.textContentType = .emailAddress
+        emailTextField.keyboardType = .asciiCapable
+       
         passwordTextField.isSecureTextEntry = true
+        passwordTextField.textContentType = .oneTimeCode
+        passwordTextField.keyboardType = .asciiCapable
+        
         loginButton.setTitle("Log In", for: .normal)
         loginButton.layer.cornerRadius = 5
         loginButton.titleLabel?.font = .systemFont(ofSize: 15, weight: .medium)
+        
         forgotPasswordButton.attributedTitle(firstPart: "Forgot your password?  ", secondPart: "Get help signing in.")
         dontHaveAccountButton.attributedTitle(firstPart: "Don't have an account?  ", secondPart: "Sign Up")
     }
@@ -103,10 +139,13 @@ extension LoginController {
         view.addSubview(stackView)
         view.addSubview(dontHaveAccountButton)
 
-        stackView.centerX(inView: view)
         stackView.centerY(inView: view)
-        emailTextField.setHeight(36)
-        passwordTextField.setHeight(36)
+        stackView.anchor(
+            left: view.leftAnchor,
+            right: view.rightAnchor,
+            paddingLeft: 48, paddingRight: 48
+        )
+        
         loginButton.setHeight(36)
         dontHaveAccountButton.centerX(inView: view)
         dontHaveAccountButton.anchor(bottom: view.safeAreaLayoutGuide.bottomAnchor)
@@ -115,6 +154,15 @@ extension LoginController {
     func configureNotificationObservers() {
         emailTextField.addTarget(self, action: #selector(textDidChange), for: .editingChanged)
         passwordTextField.addTarget(self, action: #selector(textDidChange), for: .editingChanged)
+        
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(keyboardWillShow),
+                                               name: UIResponder.keyboardDidShowNotification,
+                                               object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(keyboardWillHide),
+                                               name: UIResponder.keyboardWillHideNotification,
+                                               object: nil)
     }
 }
 

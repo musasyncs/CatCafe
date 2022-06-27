@@ -9,10 +9,6 @@ import UIKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
-    // swiftlint:disable force_cast
-    static let shared = UIApplication.shared.delegate as! SceneDelegate
-    // swiftlint:enable force_cast
-    
     var window: UIWindow?
     
     func scene(_ scene: UIScene,

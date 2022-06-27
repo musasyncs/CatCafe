@@ -137,8 +137,7 @@ extension FeedCommentController: CommentInputAccessoryViewDelegate {
         guard let currentUid = LocalStorage.shared.getUid() else { return }
         UserService.fetchUserBy(uid: currentUid, completion: { currentUser in
             
-            self.showLoader(true)
-
+            self.show()
             CommentService.uploadComment(
                 postId: self.post.postId,
                 user: currentUser,
@@ -146,8 +145,7 @@ extension FeedCommentController: CommentInputAccessoryViewDelegate {
                 mediaUrlString: "",
                 comment: comment
             ) { error in
-                
-                self.showLoader(false)
+                self.dismiss()
                 
                 if let error = error {
                     print("DEBUG: Failed to upload comment with error \(error.localizedDescription)")

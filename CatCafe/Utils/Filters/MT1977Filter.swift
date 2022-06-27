@@ -22,11 +22,10 @@ class MT1977Filter: MTFilter {
         return "MT1977Fragment"
     }
 
-   override var samplers: [String : String] {
+   override var samplers: [String: String] {
         return [
             "map": "1977map.png",
-            "screen": "screen30.png",
+            "screen": "screen30.png"
         ]
     }
-
 }

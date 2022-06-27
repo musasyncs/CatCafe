@@ -22,11 +22,10 @@ class MTAshbyVideoFilter: MTFilter {
         return "MTAshbyVideoFragment"
     }
 
-   override var samplers: [String : String] {
+   override var samplers: [String: String] {
         return [
             "levels": "classy_look_levels2.png",
-            "tonemap": "classy_look_tonemap1.png",
+            "tonemap": "classy_look_tonemap1.png"
         ]
     }
-
 }

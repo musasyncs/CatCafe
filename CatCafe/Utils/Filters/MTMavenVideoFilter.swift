@@ -22,11 +22,10 @@ class MTMavenVideoFilter: MTFilter {
         return "MTMavenVideoFragment"
     }
 
-   override var samplers: [String : String] {
+   override var samplers: [String: String] {
         return [
             "map1": "Lansdowne1.png",
-            "map2": "Lansdowne2.png",
+            "map2": "Lansdowne2.png"
         ]
     }
-
 }

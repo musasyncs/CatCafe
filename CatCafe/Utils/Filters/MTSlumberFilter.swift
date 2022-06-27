@@ -22,10 +22,9 @@ class MTSlumberFilter: MTFilter {
         return "MTSlumberFragment"
     }
 
-   override var samplers: [String : String] {
+   override var samplers: [String: String] {
         return [
-            "lookup": "slumber_map.png",
+            "lookup": "slumber_map.png"
         ]
     }
-
 }

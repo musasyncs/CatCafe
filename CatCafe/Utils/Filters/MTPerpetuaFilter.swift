@@ -22,11 +22,10 @@ class MTPerpetuaFilter: MTFilter {
         return "MTPerpetuaFragment"
     }
 
-   override var samplers: [String : String] {
+   override var samplers: [String: String] {
         return [
             "gradient": "perpetua_overlay.png",
-            "lookup": "perpetua_map.png",
+            "lookup": "perpetua_map.png"
         ]
     }
-
 }

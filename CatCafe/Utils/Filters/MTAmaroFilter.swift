@@ -22,12 +22,11 @@ class MTAmaroFilter: MTFilter {
         return "MTAmaroFragment"
     }
 
-   override var samplers: [String : String] {
+   override var samplers: [String: String] {
         return [
             "blackboard": "blackboard.png",
             "map": "amaroMap.png",
-            "overlay": "overlayMap.png",
+            "overlay": "overlayMap.png"
         ]
     }
-
 }

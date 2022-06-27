@@ -38,16 +38,6 @@ class PostEditController: UIViewController {
             subtitleLabel.attributedText = subtitleAttrText
             
             horiStack.isHidden = false
-            navigationItem.rightBarButtonItem?.isEnabled = true
-            navigationItem.rightBarButtonItem = UIBarButtonItem(
-                image: UIImage(named: "check")?
-                    .resize(to: .init(width: 24, height: 24))?
-                    .withTintColor(.systemBrown)
-                    .withRenderingMode(.alwaysOriginal),
-                style: .plain,
-                target: self,
-                action: #selector(handleImagePost)
-            )
         }
     }
 
@@ -142,15 +132,16 @@ class PostEditController: UIViewController {
             target: self,
             action: #selector(handleCancel)
         )
+        
         navigationItem.rightBarButtonItem = UIBarButtonItem(
             image: UIImage(named: "check")?
                 .resize(to: .init(width: 24, height: 24))?
-                .withTintColor(.gray)
+                .withTintColor(.systemBrown)
                 .withRenderingMode(.alwaysOriginal),
             style: .plain,
-            target: nil, action: nil
+            target: self,
+            action: #selector(handleImagePost)
         )
-        navigationItem.rightBarButtonItem?.isEnabled = false
     }
     
     func setupContainerView() {
@@ -233,22 +224,29 @@ class PostEditController: UIViewController {
         let controller = SelectCafeController()
         controller.delegate = self
         let navController = UINavigationController(rootViewController: controller)
-        navController.modalPresentationStyle = .fullScreen
+        navController.modalPresentationStyle = .overFullScreen
         present(navController, animated: true)
     }
     
     @objc private func handleImagePost() {
         guard let postImage = image else { return }
-        guard let caption = captionTextView.text else { return }
-        guard let selectedCafe = selectedCafe else { return }
+        guard let caption = captionTextView.text, !caption.isEmpty else {
+            showMessage(withTitle: "Validate Failed", message: "請撰寫貼文")
+            return
+        }
+        guard let selectedCafe = selectedCafe else {
+            showMessage(withTitle: "Validate Failed", message: "請選擇咖啡廳")
+            return
+        }
         
         navigationItem.rightBarButtonItem?.isEnabled = false
-        showLoader(true)
+        
+        show()
         PostService.uploadImagePost(caption: caption,
                                     postImage: postImage,
                                     cafeId: selectedCafe.id,
                                     cafeName: selectedCafe.title) { error in
-            self.showLoader(false)
+            self.dismiss()
             
             if let error = error {
                 print("DEBUG: Failed to upload post with error \(error.localizedDescription)")

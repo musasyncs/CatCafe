@@ -57,6 +57,7 @@ class MeetController: UIViewController {
     
     // MARK: - Helpers
     
+    // swiftlint:disable:next function_parameter_count
     private func setupButtons(
         button1fgColor: UIColor, button1bgColor: UIColor,
         button2fgColor: UIColor, button2bgColor: UIColor,
@@ -98,7 +99,7 @@ class MeetController: UIViewController {
     @objc func arrangeMeetTapped() {
         let controller = SelectMeetPicController()
         let navController = UINavigationController(rootViewController: controller)
-        navController.modalPresentationStyle = .fullScreen
+        navController.modalPresentationStyle = .overFullScreen
         present(navController, animated: true)
     }
     

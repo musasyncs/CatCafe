@@ -22,11 +22,10 @@ class MTWaldenFilter: MTFilter {
         return "MTWaldenFragment"
     }
 
-   override var samplers: [String : String] {
+   override var samplers: [String: String] {
         return [
             "vignetteMap": "vignetteMap.png",
-            "waldenMap": "waldenMap.png",
+            "waldenMap": "waldenMap.png"
         ]
     }
-
 }

@@ -82,7 +82,7 @@ class FeedController: UICollectionViewController {
     private func setupRightNavItems() {
         chatButton.setImage(UIImage(named: "send2")?.withRenderingMode(.alwaysOriginal), for: .normal)
         chatButton.frame = CGRect(x: 0, y: 0, width: 34, height: 34)
-        chatButton.addTarget(self, action: #selector(gotoChatRoom), for: .touchUpInside)
+        chatButton.addTarget(self, action: #selector(gotoConversations), for: .touchUpInside)
         
         notiButton.setImage(UIImage(named: "like_unselected")?.withRenderingMode(.alwaysOriginal), for: .normal)
         notiButton.frame = CGRect(x: 0, y: 0, width: 34, height: 34)
@@ -134,15 +134,22 @@ class FeedController: UICollectionViewController {
     
     // MARK: - Actions
     
-    @objc func gotoChatRoom() {
-        
+    @objc func gotoConversations() {
+        if showMenu == true {
+            handleDropDownMenu()
+        }
+        let controller = ConversationController()
+        navigationController?.pushViewController(controller, animated: true)
     }
     
     @objc func gotoNotificationPage() {
+        if showMenu == true {
+            handleDropDownMenu()
+        }
         let controller = NotificationController(style: .plain)
         let navController = UINavigationController(rootViewController: controller)
-        navController.modalPresentationStyle = .fullScreen
-        present(navController, animated: false)
+        navController.modalPresentationStyle = .overFullScreen
+        present(navController, animated: true)
     }
     
     @objc func handleDropDownMenu() {
@@ -243,7 +250,6 @@ extension FeedController {
                 cell.viewModel?.ownerImageUrl = URL(string: user.profileImageUrlString)
             }
         }
-        
         return cell
     }
 }
@@ -255,13 +261,45 @@ extension FeedController: UICollectionViewDelegateFlowLayout {
     func collectionView(
         _ collectionView: UICollectionView,
         layout collectionViewLayout: UICollectionViewLayout,
+        minimumLineSpacingForSectionAt section: Int
+    ) -> CGFloat {
+        return 0
+    }
+    
+    func collectionView(
+        _ collectionView: UICollectionView,
+        layout collectionViewLayout: UICollectionViewLayout,
         sizeForItemAt indexPath: IndexPath
     ) -> CGSize {
-        let width = view.frame.width
-        var height = width + 8 + 40 + 8
-        height += 50
-        height += 60
-        return CGSize(width: width, height: height)
+                
+        let approximateWidthOfTextArea = UIScreen.width - 8 - 8
+        let approximateSize = CGSize(width: approximateWidthOfTextArea, height: 1000)
+        let attributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14, weight: .regular)]
+        
+        let estimatedHeight = 12 + 40 + 8 + UIScreen.width + 4 + 40 + 16 + 8 + 8 + 16 + 8 + (8)
+        
+        // Get an estimation of the height of cell based on post.caption
+        if let post = post {
+            let estimatedFrame = String(describing: post.caption).boundingRect(
+                with: approximateSize,
+                options: .usesLineFragmentOrigin,
+                attributes: attributes,
+                context: nil)
+            return CGSize(
+                width: view.frame.width,
+                height: estimatedFrame.height + estimatedHeight
+            )
+        } else {
+            let estimatedFrame = String(describing: posts[indexPath.item].caption).boundingRect(
+                with: approximateSize,
+                options: .usesLineFragmentOrigin,
+                attributes: attributes,
+                context: nil)
+            return CGSize(
+                width: view.frame.width,
+                height: estimatedFrame.height + estimatedHeight
+            )
+        }
     }
 }
 
@@ -304,8 +342,9 @@ extension FeedController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        
         if indexPath.row == 0 {
-            
             handleDropDownMenu()
             
             presentTransition = CustomAnimationPresentor()

@@ -28,7 +28,7 @@ struct UserService {
         CCConstant.COLLECTION_USERS.document(userId).setData(dic, completion: completion)
     }
     
-    // MARK: - Fetch user by uid / Fetch all users
+    // MARK: - Fetch user by uid / Fetch users with uids / Fetch all users
     
     static func fetchUserBy(uid: String, completion: @escaping(User) -> Void) {
         CCConstant.COLLECTION_USERS.document(uid).getDocument { snapshot, _ in
@@ -38,12 +38,47 @@ struct UserService {
         }
     }
     
-    static func fetchUsers(completion: @escaping([User]) -> Void) {
-        CCConstant.COLLECTION_USERS.getDocuments { snapshot, _ in
+    static func fetchUsersBy(withIds uids: [String], completion: @escaping([User]) -> Void) {
+        
+        var count = 0
+        var userArray: [User] = []
+        
+        for uid in uids {
+            CCConstant.COLLECTION_USERS.document(uid).getDocument { snapshot, _ in
+                guard let dic = snapshot?.data() else { return }
+                let user = User(dic: dic)
+                
+                userArray.append(user)
+                count += 1
+                
+                if count == uids.count {
+                    completion(userArray)
+                }
+            }
+        }
+        
+    }
+    
+    static func fetchUsers(exceptCurrentUser: Bool, completion: @escaping([User]) -> Void) {
+        CCConstant.COLLECTION_USERS.limit(to: 500).getDocuments { snapshot, _ in
             guard let snapshot = snapshot else { return }
-            let users = snapshot.documents.map({
+            
+            var users: [User] = []
+            
+            let allUsers = snapshot.documents.map({
                 User(dic: $0.data())
             })
+            
+            for user in allUsers {
+                if exceptCurrentUser {
+                    if user.uid != LocalStorage.shared.getUid() {
+                        users.append(user)
+                    }
+                } else {
+                    users.append(user)
+                }
+            }
+            
             completion(users)
         }
     }

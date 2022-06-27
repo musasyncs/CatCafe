@@ -20,12 +20,25 @@ class RegistrationController: UIViewController {
 
     private let plusPhotoButton = UIButton(type: .system)
     private lazy var stackView = UIStackView(
-        arrangedSubviews: [emailTextField, passwordTextField, fullnameTextField, usernameTextField, signUpButton]
+        arrangedSubviews: [
+            emailContainerView, passwordContainerView,
+            fullnameContainerView, usernameContainerView, signUpButton
+        ]
     )
-    private let emailTextField = RegTextField(placeholder: "Email")
-    private let passwordTextField = RegTextField(placeholder: "Password")
-    private let fullnameTextField = RegTextField(placeholder: "Fullname")
-    private let usernameTextField = RegTextField(placeholder: "Username")
+    let emailTextField = RegTextField(placeholder: "Email")
+    let passwordTextField = RegTextField(placeholder: "Password")
+    let fullnameTextField = RegTextField(placeholder: "Full name")
+    let usernameTextField = RegTextField(placeholder: "User name")
+    
+    lazy var emailContainerView = InputContainerView(imageName: "mail",
+                                                     textField: emailTextField)
+    lazy var passwordContainerView = InputContainerView(imageName: "lock",
+                                                        textField: passwordTextField)
+    lazy var fullnameContainerView = InputContainerView(imageName: "user",
+                                                        textField: fullnameTextField)
+    lazy var usernameContainerView = InputContainerView(imageName: "user",
+                                                        textField: usernameTextField)
+
     private let signUpButton = UIButton(type: .system)
     private lazy var alreadyHaveAccountButton = UIButton(type: .system)
     
@@ -46,28 +59,33 @@ class RegistrationController: UIViewController {
         guard let password = passwordTextField.text else { return }
         guard let fullname = fullnameTextField.text else { return }
         guard let username = usernameTextField.text?.lowercased() else { return }
-        guard let profileImage = profileImage else { return }
+        guard let profileImage = profileImage else {
+            showMessage(withTitle: "Validate Failed", message: "請選擇大頭照")
+            return
+        }
         
-        let credentials = AuthCredentials(
-            email: email,
-            password: password,
-            fullname: fullname,
-            username: username,
-            profileImage: profileImage
-        )
+        let credentials = AuthCredentials(email: email,
+                                          password: password,
+                                          fullname: fullname,
+                                          username: username,
+                                          profileImage: profileImage)
         
+        show()
         AuthService.registerUser(withCredial: credentials) { [weak self] result in
             guard let self = self else { return }
             
             switch result {
             case .success(let authUser):
+                
                 ImageUplader.uploadImage(for: .profile, image: credentials.profileImage) { imageUrlString in
                     UserService.createUserProfile(
                         userId: authUser.uid,
                         profileImageUrlString: imageUrlString,
                         credentials: credentials
                     ) { error in
+                    
                         if let error = error {
+                            self.showFailure()
                             print("DEBUG: Failed to create user profile with error: \(error.localizedDescription)")
                             return
                         }
@@ -80,6 +98,7 @@ class RegistrationController: UIViewController {
                     }
                 }
             case .failure(let error):
+                self.showFailure()
                 print("DEBUG: Failed to create authUser with error: \(error.localizedDescription)")
             }
         }
@@ -109,6 +128,24 @@ class RegistrationController: UIViewController {
         present(picker, animated: true)
     }
     
+    @objc func keyboardWillShow(notification: NSNotification) {        
+        let distance = CGFloat(100)
+        let transform = CGAffineTransform(translationX: 0, y: -distance)
+        
+        UIView.animate(withDuration: 0.2, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: []) {
+            self.view.transform = transform
+        }
+    }
+    
+    @objc func keyboardWillHide() {
+        UIView.animate(withDuration: 0.2, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: []) {
+            self.view.transform = .identity
+        }
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        view.endEditing(true)
+    }
 }
 
 extension RegistrationController {
@@ -123,15 +160,26 @@ extension RegistrationController {
         view.backgroundColor = .white
         plusPhotoButton.setImage(UIImage(named: "plus_photo"), for: .normal)
         plusPhotoButton.tintColor = .lightGray
+        plusPhotoButton.imageView?.contentMode = .scaleAspectFill
         stackView.axis = .vertical
         stackView.spacing = 20
-        emailTextField.keyboardType = .emailAddress
         passwordTextField.isSecureTextEntry = true
         signUpButton.setTitle("Sign Up", for: .normal)
+        signUpButton.setTitleColor(.white, for: .normal)
         signUpButton.layer.cornerRadius = 5
         signUpButton.titleLabel?.font = .systemFont(ofSize: 15, weight: .medium)
-        signUpButton.backgroundColor = .systemPurple.withAlphaComponent(0.5)
+        signUpButton.backgroundColor = .systemBrown
         alreadyHaveAccountButton.attributedTitle(firstPart: "Already have an account?  ", secondPart: "Log In")
+        
+        // 防止 Strong password overlay 和 Emoji 輸入
+        emailTextField.textContentType = .oneTimeCode
+        passwordTextField.textContentType = .oneTimeCode
+        usernameTextField.textContentType = .oneTimeCode
+        fullnameTextField.textContentType = .oneTimeCode
+        emailTextField.keyboardType = .asciiCapable
+        passwordTextField.keyboardType = .asciiCapable
+        usernameTextField.keyboardType = .asciiCapable
+        fullnameTextField.keyboardType = .asciiCapable
     }
     
     func layout() {
@@ -147,10 +195,6 @@ extension RegistrationController {
             right: view.rightAnchor,
             paddingTop: 48, paddingLeft: 48, paddingRight: 48
         )
-        emailTextField.setHeight(36)
-        passwordTextField.setHeight(36)
-        fullnameTextField.setHeight(36)
-        usernameTextField.setHeight(36)
         signUpButton.setHeight(36)
         alreadyHaveAccountButton.centerX(inView: view)
         alreadyHaveAccountButton.anchor(bottom: view.safeAreaLayoutGuide.bottomAnchor)
@@ -161,6 +205,15 @@ extension RegistrationController {
         passwordTextField.addTarget(self, action: #selector(textDidChange), for: .editingChanged)
         fullnameTextField.addTarget(self, action: #selector(textDidChange), for: .editingChanged)
         usernameTextField.addTarget(self, action: #selector(textDidChange), for: .editingChanged)
+    
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(keyboardWillShow),
+                                               name: UIResponder.keyboardDidShowNotification,
+                                               object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(keyboardWillHide),
+                                               name: UIResponder.keyboardWillHideNotification,
+                                               object: nil)
     }
 }
 
@@ -182,14 +235,11 @@ extension RegistrationController: UIImagePickerControllerDelegate, UINavigationC
         _ picker: UIImagePickerController,
         didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]
     ) {
-        
         guard let selectedImage = info[.editedImage] as? UIImage else { return }
         profileImage = selectedImage
         
         plusPhotoButton.layer.cornerRadius = plusPhotoButton.frame.width / 2
         plusPhotoButton.layer.masksToBounds = true
-        plusPhotoButton.layer.borderColor = UIColor.white.cgColor
-        plusPhotoButton.layer.borderWidth = 2
         plusPhotoButton.setImage(selectedImage.withRenderingMode(.alwaysOriginal), for: .normal)
         self.dismiss(animated: true)
     }

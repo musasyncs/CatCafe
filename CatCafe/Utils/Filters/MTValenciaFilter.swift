@@ -22,11 +22,10 @@ class MTValenciaFilter: MTFilter {
         return "MTValenciaFragment"
     }
 
-   override var samplers: [String : String] {
+   override var samplers: [String: String] {
         return [
             "gradientMap": "valenciaGradientMap.png",
-            "map": "valenciaMap.png",
+            "map": "valenciaMap.png"
         ]
     }
-
 }

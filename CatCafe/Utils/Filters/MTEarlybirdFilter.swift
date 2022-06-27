@@ -22,14 +22,13 @@ class MTEarlybirdFilter: MTFilter {
         return "MTEarlybirdFragment"
     }
 
-   override var samplers: [String : String] {
+   override var samplers: [String: String] {
         return [
             "blowout": "earlybirdBlowout.png",
             "curves": "earlyBirdCurves.png",
             "earlybirdMap": "earlybirdMap.png",
             "overlayMap": "earlybirdOverlayMap.png",
-            "vignetteMap": "plusDarker.png",
+            "vignetteMap": "plusDarker.png"
         ]
     }
-
 }

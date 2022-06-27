@@ -94,8 +94,6 @@ class PreviewPhotoContainerView: UIView {
                     savedLabel.layer.transform = CATransform3DMakeScale(1, 1, 1)
                     
                 }, completion: { _ in
-                    print("Completed animation")
-
                     UIView.animate(withDuration: 0.5,
                                    delay: 0,
                                    usingSpringWithDamping: 0.5,

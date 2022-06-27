@@ -22,10 +22,9 @@ class MTAdenFilter: MTFilter {
         return "MTAdenFragment"
     }
 
-   override var samplers: [String : String] {
+   override var samplers: [String: String] {
         return [
-            "lookup": "aden_map.png",
+            "lookup": "aden_map.png"
         ]
     }
-
 }

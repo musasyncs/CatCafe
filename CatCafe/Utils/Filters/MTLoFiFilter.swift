@@ -22,11 +22,10 @@ class MTLoFiFilter: MTFilter {
         return "MTLoFiFragment"
     }
 
-   override var samplers: [String : String] {
+   override var samplers: [String: String] {
         return [
             "lomoMap": "lomoMap.png",
-            "vignetteMap": "blackOverlayMap.png",
+            "vignetteMap": "blackOverlayMap.png"
         ]
     }
-
 }

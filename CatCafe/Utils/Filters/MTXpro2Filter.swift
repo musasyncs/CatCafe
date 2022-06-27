@@ -22,11 +22,10 @@ class MTXpro2Filter: MTFilter {
         return "MTXpro2Fragment"
     }
 
-   override var samplers: [String : String] {
+   override var samplers: [String: String] {
         return [
             "vignetteMap": "plusDarker.png",
-            "xproMap": "xproMap.png",
+            "xproMap": "xproMap.png"
         ]
     }
-
 }

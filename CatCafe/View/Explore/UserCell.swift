@@ -24,6 +24,7 @@ final class UserCell: UITableViewCell {
         imageView.clipsToBounds = true
         imageView.backgroundColor = .lightGray
         imageView.image = UIImage(named: "riho")
+        imageView.layer.cornerRadius = 48 / 2
         return imageView
     }()
     
@@ -55,7 +56,6 @@ final class UserCell: UITableViewCell {
         addSubview(stack)
         
         profileImageView.setDimensions(height: 48, width: 48)
-        profileImageView.layer.cornerRadius = 48 / 2
         profileImageView.centerY(inView: self, leftAnchor: leftAnchor, paddingLeft: 12)
         stack.centerY(inView: profileImageView, leftAnchor: profileImageView.rightAnchor, paddingLeft: 8)
     }

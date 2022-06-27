@@ -22,10 +22,9 @@ class MTCharmesVideoFilter: MTFilter {
         return "MTCharmesVideoFragment"
     }
 
-   override var samplers: [String : String] {
+   override var samplers: [String: String] {
         return [
-            "map": "vogue_map.png",
+            "map": "vogue_map.png"
         ]
     }
-
 }

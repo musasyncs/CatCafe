@@ -97,6 +97,11 @@
 		BA1385C22866F648001B7FF1 /* FilterToolItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA1385C12866F648001B7FF1 /* FilterToolItem.swift */; };
 		BA1385C52866FA77001B7FF1 /* FilterPickerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA1385C42866FA77001B7FF1 /* FilterPickerCell.swift */; };
 		BA1385C72866FA8C001B7FF1 /* FilterControlView+HorizontalSliderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA1385C62866FA8C001B7FF1 /* FilterControlView+HorizontalSliderView.swift */; };
+		BA1385CA2867F8EF001B7FF1 /* ConversationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA1385C92867F8EF001B7FF1 /* ConversationController.swift */; };
+		BA1385CD28682943001B7FF1 /* InputContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA1385CC28682943001B7FF1 /* InputContainerView.swift */; };
+		BA1385CF28682BB4001B7FF1 /* CustomTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA1385CE28682BB4001B7FF1 /* CustomTextField.swift */; };
+		BA1385D3286892E8001B7FF1 /* NewMessageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA1385D2286892E8001B7FF1 /* NewMessageController.swift */; };
+		BA1385D52868B13B001B7FF1 /* ChatController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA1385D42868B13B001B7FF1 /* ChatController.swift */; };
 		BA44772E28587ED30045DDB8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA44772D28587ED30045DDB8 /* AppDelegate.swift */; };
 		BA44773028587ED30045DDB8 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA44772F28587ED30045DDB8 /* SceneDelegate.swift */; };
 		BA44773228587ED30045DDB8 /* SelectCafeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA44773128587ED30045DDB8 /* SelectCafeController.swift */; };
@@ -107,7 +112,7 @@
 		BA44774928588E720045DDB8 /* FeedController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA44774828588E720045DDB8 /* FeedController.swift */; };
 		BA44774B28588ECA0045DDB8 /* ExploreController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA44774A28588ECA0045DDB8 /* ExploreController.swift */; };
 		BA44774D28588F4B0045DDB8 /* MeetController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA44774C28588F4B0045DDB8 /* MeetController.swift */; };
-		BA44774F28588FE40045DDB8 /* CollectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA44774E28588FE40045DDB8 /* CollectionController.swift */; };
+		BA44774F28588FE40045DDB8 /* ReelsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA44774E28588FE40045DDB8 /* ReelsController.swift */; };
 		BA44775128588FFD0045DDB8 /* ProfileController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA44775028588FFD0045DDB8 /* ProfileController.swift */; };
 		BA4477542858A7A70045DDB8 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = BA4477532858A7A70045DDB8 /* GoogleService-Info.plist */; };
 		BA44778C285961A50045DDB8 /* FeedCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA44778B285961A50045DDB8 /* FeedCell.swift */; };
@@ -139,7 +144,6 @@
 		BA7BB718285A083D00465DEC /* NSLocalizedString+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA7BB704285A083D00465DEC /* NSLocalizedString+Extension.swift */; };
 		BA7BB719285A083D00465DEC /* NotoSansCJKtc-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = BA7BB706285A083D00465DEC /* NotoSansCJKtc-Medium.otf */; };
 		BA7BB71A285A083D00465DEC /* NotoSansCJKtc-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = BA7BB707285A083D00465DEC /* NotoSansCJKtc-Regular.otf */; };
-		BA7BB71B285A083D00465DEC /* JGProgressHUDWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA7BB709285A083D00465DEC /* JGProgressHUDWrapper.swift */; };
 		BA7BB71C285A083D00465DEC /* MJRefreshWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA7BB70A285A083D00465DEC /* MJRefreshWrapper.swift */; };
 		BA7BB71D285A083D00465DEC /* KingFisherWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA7BB70B285A083D00465DEC /* KingFisherWrapper.swift */; };
 		BA7BB71E285A083D00465DEC /* Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA7BB70C285A083D00465DEC /* Factory.swift */; };
@@ -289,6 +293,11 @@
 		BA1385C12866F648001B7FF1 /* FilterToolItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterToolItem.swift; sourceTree = "<group>"; };
 		BA1385C42866FA77001B7FF1 /* FilterPickerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterPickerCell.swift; sourceTree = "<group>"; };
 		BA1385C62866FA8C001B7FF1 /* FilterControlView+HorizontalSliderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FilterControlView+HorizontalSliderView.swift"; sourceTree = "<group>"; };
+		BA1385C92867F8EF001B7FF1 /* ConversationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationController.swift; sourceTree = "<group>"; };
+		BA1385CC28682943001B7FF1 /* InputContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputContainerView.swift; sourceTree = "<group>"; };
+		BA1385CE28682BB4001B7FF1 /* CustomTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTextField.swift; sourceTree = "<group>"; };
+		BA1385D2286892E8001B7FF1 /* NewMessageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewMessageController.swift; sourceTree = "<group>"; };
+		BA1385D42868B13B001B7FF1 /* ChatController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatController.swift; sourceTree = "<group>"; };
 		BA44772A28587ED30045DDB8 /* CatCafe.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CatCafe.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BA44772D28587ED30045DDB8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BA44772F28587ED30045DDB8 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -301,7 +310,7 @@
 		BA44774828588E720045DDB8 /* FeedController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedController.swift; sourceTree = "<group>"; };
 		BA44774A28588ECA0045DDB8 /* ExploreController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreController.swift; sourceTree = "<group>"; };
 		BA44774C28588F4B0045DDB8 /* MeetController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetController.swift; sourceTree = "<group>"; };
-		BA44774E28588FE40045DDB8 /* CollectionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionController.swift; sourceTree = "<group>"; };
+		BA44774E28588FE40045DDB8 /* ReelsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReelsController.swift; sourceTree = "<group>"; };
 		BA44775028588FFD0045DDB8 /* ProfileController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileController.swift; sourceTree = "<group>"; };
 		BA4477532858A7A70045DDB8 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		BA44778B285961A50045DDB8 /* FeedCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedCell.swift; sourceTree = "<group>"; };
@@ -333,7 +342,6 @@
 		BA7BB704285A083D00465DEC /* NSLocalizedString+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSLocalizedString+Extension.swift"; sourceTree = "<group>"; };
 		BA7BB706285A083D00465DEC /* NotoSansCJKtc-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NotoSansCJKtc-Medium.otf"; sourceTree = "<group>"; };
 		BA7BB707285A083D00465DEC /* NotoSansCJKtc-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NotoSansCJKtc-Regular.otf"; sourceTree = "<group>"; };
-		BA7BB709285A083D00465DEC /* JGProgressHUDWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JGProgressHUDWrapper.swift; sourceTree = "<group>"; };
 		BA7BB70A285A083D00465DEC /* MJRefreshWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MJRefreshWrapper.swift; sourceTree = "<group>"; };
 		BA7BB70B285A083D00465DEC /* KingFisherWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KingFisherWrapper.swift; sourceTree = "<group>"; };
 		BA7BB70C285A083D00465DEC /* Factory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Factory.swift; sourceTree = "<group>"; };
@@ -506,14 +514,14 @@
 			path = Filters;
 			sourceTree = "<group>";
 		};
-		BA1385BA2866F53B001B7FF1 /* CCFilter */ = {
+		BA1385BA2866F53B001B7FF1 /* MTFilter */ = {
 			isa = PBXGroup;
 			children = (
 				BA1385BB2866F558001B7FF1 /* MTFilter.swift */,
 				BA1385BD2866F56B001B7FF1 /* MTFilterManager.swift */,
 				BA1385C12866F648001B7FF1 /* FilterToolItem.swift */,
 			);
-			path = CCFilter;
+			path = MTFilter;
 			sourceTree = "<group>";
 		};
 		BA1385C32866FA66001B7FF1 /* PostFilter */ = {
@@ -523,6 +531,44 @@
 				BA1385C62866FA8C001B7FF1 /* FilterControlView+HorizontalSliderView.swift */,
 			);
 			path = PostFilter;
+			sourceTree = "<group>";
+		};
+		BA1385C82867F8B5001B7FF1 /* Chat */ = {
+			isa = PBXGroup;
+			children = (
+				BA1385C92867F8EF001B7FF1 /* ConversationController.swift */,
+				BA1385D2286892E8001B7FF1 /* NewMessageController.swift */,
+				BA1385D42868B13B001B7FF1 /* ChatController.swift */,
+			);
+			path = Chat;
+			sourceTree = "<group>";
+		};
+		BA1385CB28682933001B7FF1 /* Auth */ = {
+			isa = PBXGroup;
+			children = (
+				BA1385CC28682943001B7FF1 /* InputContainerView.swift */,
+			);
+			path = Auth;
+			sourceTree = "<group>";
+		};
+		BA1385D028682BF6001B7FF1 /* ArrangeMeet */ = {
+			isa = PBXGroup;
+			children = (
+				BADBFF772861F06400146D6F /* ImageHeaderView.swift */,
+				BADBFF752861A86200146D6F /* MeetTimeTileView.swift */,
+				BADBFF732861A84A00146D6F /* TileView.swift */,
+				BA1385CE28682BB4001B7FF1 /* CustomTextField.swift */,
+			);
+			path = ArrangeMeet;
+			sourceTree = "<group>";
+		};
+		BA1385D128682C0A001B7FF1 /* MeetDetail */ = {
+			isa = PBXGroup;
+			children = (
+				BADBFF7B28620C5D00146D6F /* MeetStretchyHeader.swift */,
+				BADBFF7D2862A78A00146D6F /* CommentSectionHeader.swift */,
+			);
+			path = MeetDetail;
 			sourceTree = "<group>";
 		};
 		BA44772128587ED30045DDB8 = {
@@ -582,7 +628,8 @@
 		BA44774228588C8C0045DDB8 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				BA44778A285961940045DDB8 /* Home */,
+				BA1385CB28682933001B7FF1 /* Auth */,
+				BA44778A285961940045DDB8 /* Feed */,
 				BA4477922859CE200045DDB8 /* Explore */,
 				BA44778D28597DAF0045DDB8 /* Profile */,
 				BA7BB72B285AEA7E00465DEC /* PostSelect */,
@@ -615,12 +662,12 @@
 			isa = PBXGroup;
 			children = (
 				BA44779C2859DE370045DDB8 /* Auth */,
-				BA44779D2859DE420045DDB8 /* Base */,
 				BA44774528588CA90045DDB8 /* Tabs */,
 				BA7BB726285AE68D00465DEC /* Post */,
 				BADF1F74285D7C21004CF329 /* Feed */,
 				BADF1F84285E786F004CF329 /* Notification */,
 				BADBFF6D28614DD900146D6F /* Meet */,
+				BA1385C82867F8B5001B7FF1 /* Chat */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -628,23 +675,24 @@
 		BA44774528588CA90045DDB8 /* Tabs */ = {
 			isa = PBXGroup;
 			children = (
+				BA44774628588D150045DDB8 /* MainTabController.swift */,
 				BA44774828588E720045DDB8 /* FeedController.swift */,
 				BA44774A28588ECA0045DDB8 /* ExploreController.swift */,
 				BA44774C28588F4B0045DDB8 /* MeetController.swift */,
 				BAD133AD2864A55C00B8015A /* MeetChild */,
-				BA44774E28588FE40045DDB8 /* CollectionController.swift */,
+				BA44774E28588FE40045DDB8 /* ReelsController.swift */,
 				BA44775028588FFD0045DDB8 /* ProfileController.swift */,
 			);
 			path = Tabs;
 			sourceTree = "<group>";
 		};
-		BA44778A285961940045DDB8 /* Home */ = {
+		BA44778A285961940045DDB8 /* Feed */ = {
 			isa = PBXGroup;
 			children = (
 				BA44778B285961A50045DDB8 /* FeedCell.swift */,
 				BA7BB722285AD90400465DEC /* DropDownCell.swift */,
 			);
-			path = Home;
+			path = Feed;
 			sourceTree = "<group>";
 		};
 		BA44778D28597DAF0045DDB8 /* Profile */ = {
@@ -673,14 +721,6 @@
 			path = Auth;
 			sourceTree = "<group>";
 		};
-		BA44779D2859DE420045DDB8 /* Base */ = {
-			isa = PBXGroup;
-			children = (
-				BA44774628588D150045DDB8 /* MainTabController.swift */,
-			);
-			path = Base;
-			sourceTree = "<group>";
-		};
 		BA4477A52859E0870045DDB8 /* User */ = {
 			isa = PBXGroup;
 			children = (
@@ -702,7 +742,7 @@
 		BA7BB6F6285A083D00465DEC /* Utils */ = {
 			isa = PBXGroup;
 			children = (
-				BA1385BA2866F53B001B7FF1 /* CCFilter */,
+				BA1385BA2866F53B001B7FF1 /* MTFilter */,
 				BA1385142866F4E9001B7FF1 /* Filters */,
 				BA7BB727285AE9DF00465DEC /* Custom Animation */,
 				BA7BB6F7285A083D00465DEC /* Constants */,
@@ -752,7 +792,6 @@
 		BA7BB708285A083D00465DEC /* Third Party Wrapper */ = {
 			isa = PBXGroup;
 			children = (
-				BA7BB709285A083D00465DEC /* JGProgressHUDWrapper.swift */,
 				BA7BB70A285A083D00465DEC /* MJRefreshWrapper.swift */,
 				BA7BB70B285A083D00465DEC /* KingFisherWrapper.swift */,
 			);
@@ -844,11 +883,8 @@
 			isa = PBXGroup;
 			children = (
 				BAD133A12863629B00B8015A /* MeetCell.swift */,
-				BADBFF772861F06400146D6F /* ImageHeaderView.swift */,
-				BADBFF752861A86200146D6F /* MeetTimeTileView.swift */,
-				BADBFF732861A84A00146D6F /* TileView.swift */,
-				BADBFF7B28620C5D00146D6F /* MeetStretchyHeader.swift */,
-				BADBFF7D2862A78A00146D6F /* CommentSectionHeader.swift */,
+				BA1385D028682BF6001B7FF1 /* ArrangeMeet */,
+				BA1385D128682C0A001B7FF1 /* MeetDetail */,
 				BAD133BA2865656100B8015A /* MeetPeople */,
 			);
 			path = Meet;
@@ -1117,7 +1153,6 @@
 				BAD133A428636B9400B8015A /* MeetViewModel.swift in Sources */,
 				BADBFF782861F06400146D6F /* ImageHeaderView.swift in Sources */,
 				BAD133B92865651800B8015A /* SnappyFlowLayout.swift in Sources */,
-				BA7BB71B285A083D00465DEC /* JGProgressHUDWrapper.swift in Sources */,
 				BA7BB70F285A083D00465DEC /* UIColor+Extension.swift in Sources */,
 				BA7BB713285A083D00465DEC /* UIImage+Extension.swift in Sources */,
 				BA1385B22866F52B001B7FF1 /* MTXpro2Filter.swift in Sources */,
@@ -1129,6 +1164,7 @@
 				BADF1F62285C4E2E004CF329 /* CafeService.swift in Sources */,
 				BADF1F65285C4F78004CF329 /* Cafe.swift in Sources */,
 				BA1385B12866F52B001B7FF1 /* MTWaldenFilter.metal in Sources */,
+				BA1385CF28682BB4001B7FF1 /* CustomTextField.swift in Sources */,
 				BA1385B32866F52B001B7FF1 /* MTEarlybirdFilter.metal in Sources */,
 				BA13856B2866F52A001B7FF1 /* MTReyesFilter.swift in Sources */,
 				BA4477A82859E0AD0045DDB8 /* AuthService.swift in Sources */,
@@ -1201,6 +1237,7 @@
 				BA1385822866F52B001B7FF1 /* MTBrannanFilter.metal in Sources */,
 				BA7BB712285A083D00465DEC /* UIView+Extension.swift in Sources */,
 				BAD133A22863629B00B8015A /* MeetCell.swift in Sources */,
+				BA1385D3286892E8001B7FF1 /* NewMessageController.swift in Sources */,
 				BA13850F2866C389001B7FF1 /* PostFilterController.swift in Sources */,
 				BA4477942859CE2F0045DDB8 /* UserCell.swift in Sources */,
 				BA13856F2866F52A001B7FF1 /* MTValenciaFilter.swift in Sources */,
@@ -1217,13 +1254,14 @@
 				BADF1F71285CBB99004CF329 /* PostViewModel.swift in Sources */,
 				BA44775128588FFD0045DDB8 /* ProfileController.swift in Sources */,
 				BADF1F80285DCAA1004CF329 /* CommentViewModel.swift in Sources */,
-				BA44774F28588FE40045DDB8 /* CollectionController.swift in Sources */,
+				BA44774F28588FE40045DDB8 /* ReelsController.swift in Sources */,
 				BA44774928588E720045DDB8 /* FeedController.swift in Sources */,
 				BA7BB725285AE4D000465DEC /* PostSelectController.swift in Sources */,
 				BA4477972859D0280045DDB8 /* UserService.swift in Sources */,
 				BA1385842866F52B001B7FF1 /* MTEarlybirdFilter.swift in Sources */,
 				BA4477AA2859E0DB0045DDB8 /* AuthCredentials.swift in Sources */,
 				BADBFF6F28614E1000146D6F /* SelectMeetPicController.swift in Sources */,
+				BA1385CD28682943001B7FF1 /* InputContainerView.swift in Sources */,
 				BA1385882866F52B001B7FF1 /* MTVesperVideoFilter.metal in Sources */,
 				BA7BB72F285AEAEA00465DEC /* GridScrollView.swift in Sources */,
 				BA1385952866F52B001B7FF1 /* MTHefeFilter.metal in Sources */,
@@ -1233,6 +1271,7 @@
 				BA7BB710285A083D00465DEC /* UILabel+Extension.swift in Sources */,
 				BAD133AC2864A26F00B8015A /* MyAttendController.swift in Sources */,
 				BADBFF71286164B700146D6F /* ArrangeMeetController.swift in Sources */,
+				BA1385CA2867F8EF001B7FF1 /* ConversationController.swift in Sources */,
 				BA44779F2859DE6C0045DDB8 /* RegistrationController.swift in Sources */,
 				BA13857A2866F52A001B7FF1 /* MTHudsonFilter.metal in Sources */,
 				BA1385792866F52A001B7FF1 /* MTMayfairFilter.swift in Sources */,
@@ -1243,6 +1282,7 @@
 				BA13857F2866F52B001B7FF1 /* MTLoFiFilter.swift in Sources */,
 				BAD1339E2863124C00B8015A /* Meet.swift in Sources */,
 				BA13856D2866F52A001B7FF1 /* MTCharmesVideoFilter.swift in Sources */,
+				BA1385D52868B13B001B7FF1 /* ChatController.swift in Sources */,
 				BADF1F8B285EC02C004CF329 /* NotificationService.swift in Sources */,
 				BA13858B2866F52B001B7FF1 /* MTGinzaVideoFilter.swift in Sources */,
 				BA13859C2866F52B001B7FF1 /* MTAdenFilter.swift in Sources */,
@@ -1414,16 +1454,19 @@
 				DEVELOPMENT_TEAM = CNCBQDYY2M;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = CatCafe/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "We would like to access the camera to take photos.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "We'd like access to your photos right now.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.1;
 				MTL_ENABLE_MODULES = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ethanchen.CatCafe;
@@ -1445,16 +1488,19 @@
 				DEVELOPMENT_TEAM = CNCBQDYY2M;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = CatCafe/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "We would like to access the camera to take photos.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "We'd like access to your photos right now.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.1;
 				MTL_ENABLE_MODULES = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ethanchen.CatCafe;

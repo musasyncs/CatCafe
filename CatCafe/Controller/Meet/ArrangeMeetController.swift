@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Firebase
 
 class ArrangeMeetController: UIViewController {
     
@@ -136,14 +137,16 @@ class ArrangeMeetController: UIViewController {
         
         // Uploading...
         navigationItem.rightBarButtonItem?.isEnabled = false
-        showLoader(true)
         
+        show()
         MeetService.uploadMeet(title: meetTitleText,
                                caption: meetDescription,
                                meetImage: selectedImage,
                                cafeId: selectedCafe.id,
-                               cafeName: selectedCafe.title) { error in
-            self.showLoader(false)
+                               cafeName: selectedCafe.title,
+                               meetDate: chosenDate
+        ) { error in
+            self.dismiss()
             
             if let error = error {
                 print("DEBUG: Failed to upload meet with error \(error.localizedDescription)")
@@ -157,14 +160,13 @@ class ArrangeMeetController: UIViewController {
 
         }
         
-        print("DEBUG: upload\(selectedImage) \(chosenDate) \(meetTitleText) \(selectedCafe.title) \(meetDescription)")
     }
     
     @objc func showSelectCafePage() {
         let controller = SelectCafeController()
         controller.delegate = self
         let navController = UINavigationController(rootViewController: controller)
-        navController.modalPresentationStyle = .fullScreen
+        navController.modalPresentationStyle = .overFullScreen
         present(navController, animated: true)
     }
     

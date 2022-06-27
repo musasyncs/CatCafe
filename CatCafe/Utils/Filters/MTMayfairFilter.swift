@@ -22,13 +22,12 @@ class MTMayfairFilter: MTFilter {
         return "MTMayfairFragment"
     }
 
-   override var samplers: [String : String] {
+   override var samplers: [String: String] {
         return [
             "colorOverlay": "mayfairColorOverlay.png",
             "glowField": "mayfairGlowField.png",
             "map": "mayfairColorGradient.png",
-            "overlay": "mayfairOverlayMap100.png",
+            "overlay": "mayfairOverlayMap100.png"
         ]
     }
-
 }

@@ -22,10 +22,9 @@ class MTJunoFilter: MTFilter {
         return "MTJunoFragment"
     }
 
-   override var samplers: [String : String] {
+   override var samplers: [String: String] {
         return [
-            "lookup": "juno_map.png",
+            "lookup": "juno_map.png"
         ]
     }
-
 }

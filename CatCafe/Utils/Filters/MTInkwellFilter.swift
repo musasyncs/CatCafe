@@ -22,10 +22,9 @@ class MTInkwellFilter: MTFilter {
         return "MTInkwellFragment"
     }
 
-   override var samplers: [String : String] {
+   override var samplers: [String: String] {
         return [
-            "map": "inkwellMap.png",
+            "map": "inkwellMap.png"
         ]
     }
-
 }

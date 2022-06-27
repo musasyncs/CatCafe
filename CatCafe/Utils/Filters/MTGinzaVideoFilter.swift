@@ -22,11 +22,10 @@ class MTGinzaVideoFilter: MTFilter {
         return "MTGinzaVideoFragment"
     }
 
-   override var samplers: [String : String] {
+   override var samplers: [String: String] {
         return [
             "map1": "chic_curves1.png",
-            "map2": "chic_curves2.png",
+            "map2": "chic_curves2.png"
         ]
     }
-
 }

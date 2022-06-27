@@ -22,11 +22,10 @@ class MTClarendonVideoFilter: MTFilter {
         return "MTClarendonVideoFragment"
     }
 
-   override var samplers: [String : String] {
+   override var samplers: [String: String] {
         return [
             "map": "Glacial1.png",
-            "map2": "Glacial2.png",
+            "map2": "Glacial2.png"
         ]
     }
-
 }

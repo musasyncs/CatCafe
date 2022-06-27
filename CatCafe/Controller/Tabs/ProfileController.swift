@@ -69,8 +69,9 @@ class ProfileController: UICollectionViewController {
     
     func setupBarButtonItem() {
         navigationItem.rightBarButtonItem = UIBarButtonItem(
-            image: UIImage(systemName: "arrow.uturn.up")?
-                .withTintColor(.systemBrown)
+            image: UIImage(named: "logout")?
+                .resize(to: .init(width: 20, height: 20))?
+                .withTintColor(.black)
                 .withRenderingMode(.alwaysOriginal),
             style: .plain,
             target: self,
@@ -94,25 +95,39 @@ class ProfileController: UICollectionViewController {
     // MARK: - Action
     
     @objc func handleLogout() {
-        
-        let result = AuthService.logoutUser()
-        switch result {
-        case .success:
+        let alert = UIAlertController(title: "是否登出？", message: "", preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "確定", style: .default) { _ in
             
-            // Clear uid / hasLogedIn = false
-            LocalStorage.shared.clearUid()
-            LocalStorage.shared.hasLogedIn = false
+            self.show()
+            let result = AuthService.logoutUser()
+            self.dismiss()
+            
+            switch result {
+            case .success:
+                // Clear uid / hasLogedIn = false
+                LocalStorage.shared.clearUid()
+                LocalStorage.shared.hasLogedIn = false
 
-            let controller = LoginController()
-            controller.delegate = self.tabBarController as? MainTabController
-            
-            let nav = UINavigationController(rootViewController: controller)
-            nav.modalPresentationStyle = .fullScreen
-            self.present(nav, animated: true, completion: nil)
-            
-        case .failure(let error):
-            print("DEBUG: Failed to signout with error: \(error.localizedDescription)")
+                let controller = LoginController()
+                controller.delegate = self.tabBarController as? MainTabController
+                
+                let nav = UINavigationController(rootViewController: controller)
+                nav.modalPresentationStyle = .fullScreen
+                self.present(nav, animated: true, completion: nil)
+                
+            case .failure(let error):
+                self.showFailure()
+                print("DEBUG: Failed to signout with error: \(error.localizedDescription)")
+            }
         }
+        okAction.setValue(UIColor.systemBrown, forKey: "titleTextColor")
+        alert.addAction(okAction)
+        
+        let cancelAction = UIAlertAction(title: "取消", style: .cancel) { _ in }
+        cancelAction.setValue(UIColor.systemBrown, forKey: "titleTextColor")
+        alert.addAction(cancelAction)
+        
+        present(alert, animated: true)
     }
     
     @objc func handleRefresh() {

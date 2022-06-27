@@ -82,6 +82,8 @@ extension SelectCafeController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        
         let cafe = inSearchMode ? filteredCafes[indexPath.row] : cafes[indexPath.row]
         delegate?.didSelectCafe(cafe)
         

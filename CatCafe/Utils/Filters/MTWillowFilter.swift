@@ -22,15 +22,14 @@ class MTWillowFilter: MTFilter {
         return "MTWillowFragment"
     }
 
-   override var samplers: [String : String] {
+   override var samplers: [String: String] {
         return [
             "borderTexture": "borderTexture.png",
             "glowMap": "glowField.png",
             "map": "willowMap.png",
             "overlayMap": "overlayMap81.png",
             "softLightMap": "willowSoftLight100.png",
-            "vignette": "willowVignette.png",
+            "vignette": "willowVignette.png"
         ]
     }
-
 }

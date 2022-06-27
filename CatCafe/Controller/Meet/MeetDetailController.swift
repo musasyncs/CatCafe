@@ -7,7 +7,7 @@
 
 import UIKit
 
-class MeetDetailController: UICollectionViewController {
+class MeetDetailController: UIViewController {
     
     private var meet: Meet {
         didSet {
@@ -19,6 +19,34 @@ class MeetDetailController: UICollectionViewController {
             collectionView.reloadData()
         }
     }
+    
+    private lazy var collectionView: UICollectionView = {
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: StretchyHeaderLayout())
+        
+        collectionView.delegate = self
+        collectionView.dataSource = self
+        
+        collectionView.register(
+            MeetStretchyHeader.self,
+            forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+            withReuseIdentifier: MeetStretchyHeader.identifier
+        )
+        collectionView.register(
+            CommentSectionHeader.self,
+            forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+            withReuseIdentifier: CommentSectionHeader.identifier
+        )
+        collectionView.register(
+            CommentCell.self,
+            forCellWithReuseIdentifier: CommentCell.identifier
+        )
+        collectionView.alwaysBounceVertical = true
+        collectionView.keyboardDismissMode = .interactive
+        
+        collectionView.backgroundColor = .white
+        collectionView.showsVerticalScrollIndicator = false
+        return collectionView
+    }()
     
     private lazy var commentInputView: CommentInputAccessoryView = {
         let frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 50)
@@ -40,7 +68,7 @@ class MeetDetailController: UICollectionViewController {
         
     init(meet: Meet) {
         self.meet = meet
-        super.init(collectionViewLayout: StretchyHeaderLayout())
+        super.init(nibName: nil, bundle: nil)
     }
     
     required init?(coder: NSCoder) {
@@ -49,8 +77,23 @@ class MeetDetailController: UICollectionViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupBackButton()
-        setupCollectionView()
+        view.backgroundColor = .white
+        
+        backButton.addTarget(self, action: #selector(goBack), for: .touchUpInside)
+        backButton.layer.cornerRadius = 40 / 2
+        backButton.clipsToBounds = true
+        
+        view.addSubview(collectionView)
+        view.addSubview(backButton)
+        backButton.anchor(top: view.safeAreaLayoutGuide.topAnchor,
+                          left: view.leftAnchor, paddingLeft: 24)
+        collectionView.anchor(top: view.topAnchor,
+                              left: view.leftAnchor,
+                              bottom: view.safeAreaLayoutGuide.bottomAnchor,
+                              right: view.rightAnchor,
+                              paddingBottom: 45)
+        backButton.setDimensions(height: 40, width: 40)
+        
         fetchMeetWithMeetId()
         checkIfCurrentUserLikedMeet()
         checkIfCurrentUserAttendedMeet()
@@ -96,55 +139,20 @@ class MeetDetailController: UICollectionViewController {
     // MARK: - Action
     
     @objc func goBack() {
-        dismiss(animated: true)
-    }
-    
-}
-
-extension MeetDetailController {
-
-    func setupBackButton() {
-        backButton.addTarget(self, action: #selector(goBack), for: .touchUpInside)
-        backButton.layer.cornerRadius = 40 / 2
-        backButton.clipsToBounds = true
-        view.addSubview(backButton)
-        backButton.anchor(top: view.safeAreaLayoutGuide.topAnchor,
-                          left: view.leftAnchor, paddingLeft: 24)
-        backButton.setDimensions(height: 40, width: 40)
+        dismiss(animated: false)
     }
 
-    func setupCollectionView() {
-        collectionView.register(
-            MeetStretchyHeader.self,
-            forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
-            withReuseIdentifier: MeetStretchyHeader.identifier
-        )
-        collectionView.register(
-            CommentSectionHeader.self,
-            forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
-            withReuseIdentifier: CommentSectionHeader.identifier
-        )
-        collectionView.register(
-            CommentCell.self,
-            forCellWithReuseIdentifier: CommentCell.identifier
-        )
-        collectionView.alwaysBounceVertical = true
-        collectionView.keyboardDismissMode = .interactive
-        
-        collectionView.backgroundColor = .white
-        collectionView.showsVerticalScrollIndicator = false
-    }
 }
 
 // MARK: - UICollectionViewDataSource / UICollectionViewDelegate
 
-extension MeetDetailController {
+extension MeetDetailController: UICollectionViewDataSource, UICollectionViewDelegate {
     
-    override func numberOfSections(in collectionView: UICollectionView) -> Int {
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 2
     }
     
-    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if section == 0 {
             return 0
         } else {
@@ -152,7 +160,7 @@ extension MeetDetailController {
         }
     }
     
-    override func collectionView(
+    func collectionView(
         _ collectionView: UICollectionView,
         cellForItemAt indexPath: IndexPath
     ) -> UICollectionViewCell {
@@ -168,11 +176,10 @@ extension MeetDetailController {
             cell.viewModel?.username = user.username
             cell.viewModel?.profileImageUrl = URL(string: user.profileImageUrlString)
         }
-        
         return cell
     }
     
-    override func collectionView(
+    func collectionView(
         _ collectionView: UICollectionView,
         viewForSupplementaryElementOfKind kind: String,
         at indexPath: IndexPath
@@ -209,7 +216,7 @@ extension MeetDetailController {
         }
     }
     
-    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 
     }
 }
@@ -221,11 +228,35 @@ extension MeetDetailController: UICollectionViewDelegateFlowLayout {
     func collectionView(
         _ collectionView: UICollectionView,
         layout collectionViewLayout: UICollectionViewLayout,
-        sizeForItemAt indexPath: IndexPath
-    ) -> CGSize {
-        CGSize(width: view.frame.width, height: 50)
+        minimumLineSpacingForSectionAt section: Int
+    ) -> CGFloat {
+        return 0
     }
     
+    func collectionView(
+        _ collectionView: UICollectionView,
+        layout collectionViewLayout: UICollectionViewLayout,
+        sizeForItemAt indexPath: IndexPath
+    ) -> CGSize {
+                
+        let approximateWidthOfTextArea = UIScreen.width - 8 - 24 - 8 - 8
+        let approximateSize = CGSize(width: approximateWidthOfTextArea, height: 100)
+        let attributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14, weight: .regular)]
+        
+        let estimatedHeight: CGFloat = 8 + (32)
+        
+        // Get an estimation of the height of cell based on comments[indexPath.item].comment
+        let estimatedFrame = String(describing: comments[indexPath.item].comment).boundingRect(
+            with: approximateSize,
+            options: .usesLineFragmentOrigin,
+            attributes: attributes,
+            context: nil)
+        return CGSize(
+            width: view.frame.width,
+            height: estimatedFrame.height + estimatedHeight
+        )
+    }
+
     func collectionView(
         _ collectionView: UICollectionView,
         layout collectionViewLayout: UICollectionViewLayout,
@@ -235,7 +266,6 @@ extension MeetDetailController: UICollectionViewDelegateFlowLayout {
             return CGSize(width: view.frame.width, height: 240)
             
         } else {
-            
             // Get the view for the first header
             let indexPath = IndexPath(row: 0, section: section)
             let headerView = self.collectionView(
@@ -278,8 +308,7 @@ extension MeetDetailController: CommentInputAccessoryViewDelegate {
         guard let currentUid = LocalStorage.shared.getUid() else { return }
         UserService.fetchUserBy(uid: currentUid, completion: { currentUser in
             
-            self.showLoader(true)
-            
+            self.show()
             CommentService.uploadMeetComment(
                 meetId: self.meet.meetId,
                 user: currentUser,
@@ -287,8 +316,7 @@ extension MeetDetailController: CommentInputAccessoryViewDelegate {
                 mediaUrlString: "",
                 comment: comment
             ) { error in
-                
-                self.showLoader(false)
+                self.dismiss()
                 
                 if let error = error {
                     print("DEBUG: Failed to upload comment with error \(error.localizedDescription)")

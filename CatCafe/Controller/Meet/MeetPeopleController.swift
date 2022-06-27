@@ -96,13 +96,13 @@ class MeetPeopleViewController: UIViewController {
     // MARK: - Helpers
     
     func dismissBriefInfoVC(person: Person?) {
-        UIView.animate(withDuration: 0.5, animations: {
+        UIView.animate(withDuration: 0.5) {
             self.visualEffectView.alpha = 0
             self.briefInfoView.alpha = 0
             self.briefInfoView.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
-        }) { _ in
-            self.briefInfoView.removeFromSuperview()            
             
+        } completion: { _ in
+            self.briefInfoView.removeFromSuperview()
             // go to profile
             guard let person = person else { return }
             print("DEBUG: \(person.uid)")
@@ -124,7 +124,7 @@ class MeetPeopleViewController: UIViewController {
     }
     
     @objc func handleLeave() {
-        dismiss(animated: true)
+        dismiss(animated: false)
     }
 
 }
@@ -177,7 +177,7 @@ extension MeetPeopleViewController: SnappyCellDelegate {
         briefInfoView.alpha = 0
         
         UIView.animate(withDuration: 0.5) {
-            self.visualEffectView.alpha = 1
+            self.visualEffectView.alpha = 0.7
             self.briefInfoView.transform = .identity
             self.briefInfoView.alpha = 1
         }

@@ -22,11 +22,10 @@ class MTHelenaVideoFilter: MTFilter {
         return "MTHelenaVideoFragment"
     }
 
-   override var samplers: [String : String] {
+    override var samplers: [String: String] {
         return [
             "map1": "epic_1.png",
-            "map2": "epic_2.png",
+            "map2": "epic_2.png"
         ]
     }
-
 }

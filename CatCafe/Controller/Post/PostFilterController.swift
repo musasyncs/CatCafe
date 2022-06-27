@@ -117,11 +117,11 @@ class PostFilterController: UIViewController {
     }
     
     // MARK: - Actions
-    @objc func cancelBarButtonTapped(_ sender: Any) {
+    @objc func cancelBarButtonTapped() {
         navigationController?.popViewController(animated: false)
     }
     
-    @objc func nextBarButtonTapped(_ sender: Any) {
+    @objc func nextBarButtonTapped() {
         guard let image = self.imageView.image,
               let uiImage = MTFilterManager.shared.generate(image: image) else { return }
         let postEditController = PostEditController()
@@ -135,16 +135,20 @@ extension PostFilterController {
     
     func setupNavigationButton() {
         let leftBarButton = UIBarButtonItem(
-            title: "Cancel",
+            image: UIImage(named: "Icons_24px_Back02")?
+                .withTintColor(.black)
+                .withRenderingMode(.alwaysOriginal),
             style: .plain,
             target: self,
-            action: #selector(cancelBarButtonTapped(_:))
+            action: #selector(cancelBarButtonTapped)
         )
         let rightBarButton = UIBarButtonItem(
-            title: "Next",
-            style: .done,
+            image: UIImage(systemName: "arrow.right")?
+                .withTintColor(.black)
+                .withRenderingMode(.alwaysOriginal),
+            style: .plain,
             target: self,
-            action: #selector(nextBarButtonTapped(_:))
+            action: #selector(nextBarButtonTapped)
         )
         self.navigationItem.leftBarButtonItem = leftBarButton
         self.navigationItem.rightBarButtonItem = rightBarButton

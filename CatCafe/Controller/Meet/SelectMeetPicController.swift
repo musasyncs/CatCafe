@@ -92,7 +92,7 @@ class SelectMeetPicController: UIViewController {
     // MARK: - Action
     
     @objc private func handleCancel() {
-        dismiss(animated: true, completion: nil)
+        dismiss(animated: false, completion: nil)
     }
 
     @objc private func handleNext() {
@@ -103,7 +103,7 @@ class SelectMeetPicController: UIViewController {
         let controller = ArrangeMeetController()
         controller.selectedImage = selectedImage
         let navController = UINavigationController(rootViewController: controller)
-        navController.modalPresentationStyle = .fullScreen
+        navController.modalPresentationStyle = .overFullScreen
         present(navController, animated: true)
     }
     

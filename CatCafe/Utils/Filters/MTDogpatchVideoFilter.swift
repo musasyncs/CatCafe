@@ -22,11 +22,10 @@ class MTDogpatchVideoFilter: MTFilter {
         return "MTDogpatchVideoFragment"
     }
 
-   override var samplers: [String : String] {
+   override var samplers: [String: String] {
         return [
             "map1": "bleach_reduction_curves1.png",
-            "mapLgg": "bleach_reduction_lgg.png",
+            "mapLgg": "bleach_reduction_lgg.png"
         ]
     }
-
 }

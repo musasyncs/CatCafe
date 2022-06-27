@@ -103,13 +103,13 @@ extension MeetCell {
         layer.shadowOpacity = 0.2
         layer.shadowRadius = 2
         
-        titleLabel.font = .systemFont(ofSize: 15, weight: .medium)
+        titleLabel.font = .systemFont(ofSize: 15, weight: .regular)
         timeTitleLabel.font = .systemFont(ofSize: 10, weight: .regular)
         timeTitleLabel.textColor = .systemGray
-        timeLabel.font = .systemFont(ofSize: 11, weight: .medium)
+        timeLabel.font = .systemFont(ofSize: 11, weight: .regular)
         placeTitleLabel.font = .systemFont(ofSize: 10, weight: .regular)
         placeTitleLabel.textColor = .systemGray
-        placeLabel.font = .systemFont(ofSize: 11, weight: .medium)
+        placeLabel.font = .systemFont(ofSize: 11, weight: .regular)
         
         timeStackView.axis = .horizontal
         timeStackView.alignment = .center
@@ -129,33 +129,30 @@ extension MeetCell {
     }
     
     fileprivate func layout() {
-        [
-            meetImageView,
-            titleLabel,
-            timeStackView,
-            placeStackView,
-            hostProfileImageView,
-            hostnameLabel,
-            infoLabel,
-            likeButton,
-            likesLabel
-        ].forEach {
-            addSubview($0)
-        }
+        [ meetImageView,
+          titleLabel,
+          timeStackView,
+          placeStackView,
+          hostProfileImageView,
+          hostnameLabel,
+          infoLabel,
+          likeButton,
+          likesLabel
+        ].forEach { addSubview($0) }
         
         meetImageView.centerY(inView: self, leftAnchor: leftAnchor, paddingLeft: 16)
         meetImageView.setDimensions(height: 112, width: 112)
         
         titleLabel.anchor(top: meetImageView.topAnchor,
-                          left: meetImageView.rightAnchor, paddingLeft: 8)
+                          left: meetImageView.rightAnchor,
+                          right: rightAnchor,
+                          paddingLeft: 8, paddingRight: 8)
         timeStackView.anchor(top: titleLabel.bottomAnchor,
                              left: meetImageView.rightAnchor,
-                             paddingTop: 8,
-                             paddingLeft: 8)
+                             paddingTop: 8, paddingLeft: 8)
         placeStackView.anchor(top: timeStackView.bottomAnchor,
                               left: meetImageView.rightAnchor,
-                              paddingTop: 8,
-                              paddingLeft: 8)
+                              paddingTop: 8, paddingLeft: 8)
         hostProfileImageView.anchor(top: placeStackView.bottomAnchor,
                                     left: placeStackView.leftAnchor,
                                     paddingTop: 8)
@@ -165,8 +162,7 @@ extension MeetCell {
                               paddingLeft: 8)
         likeButton.anchor(top: hostnameLabel.bottomAnchor,
                           right: rightAnchor,
-                          paddingTop: 8,
-                          paddingRight: 16)
+                          paddingTop: 8, paddingRight: 16)
         likesLabel.anchor(left: likeButton.rightAnchor,
                           bottom: likeButton.bottomAnchor,
                           paddingBottom: -4)

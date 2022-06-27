@@ -52,14 +52,11 @@ class SnappyCell: UICollectionViewCell {
         // style
         backgroundColor = .clear
         
-        layer.shadowOffset = CGSize(width: 0, height: 6)
+        layer.shadowOffset = CGSize(width: 0, height: 10)
         layer.shadowRadius = 16
-        layer.shadowOpacity = 0.5
-        layer.shadowColor = UIColor.init(white: 1, alpha: 0.5).cgColor
+        layer.shadowOpacity = 0.4
+        layer.shadowColor = UIColor.init(white: 1, alpha: 0.3).cgColor
         
-        superImageView.layer.cornerRadius = 16
-        superImageView.layer.masksToBounds = true
-
         timeLabel.textColor = .white
         timeLabel.font = .systemFont(ofSize: 10, weight: .regular)
         

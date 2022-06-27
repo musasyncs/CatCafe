@@ -22,14 +22,13 @@ class MTSierraFilter: MTFilter {
         return "MTSierraFragment"
     }
 
-   override var samplers: [String : String] {
+   override var samplers: [String: String] {
         return [
             "map": "sierraMap.png",
             "overlay": "overlayMap.png",
             "smoke": "sierraSmoke.png",
             "softLight": "softLight100.png",
-            "vignette": "sierraVignette.png",
+            "vignette": "sierraVignette.png"
         ]
     }
-
 }

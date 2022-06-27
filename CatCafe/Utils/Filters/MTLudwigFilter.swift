@@ -22,10 +22,9 @@ class MTLudwigFilter: MTFilter {
         return "MTLudwigFragment"
     }
 
-   override var samplers: [String : String] {
+   override var samplers: [String: String] {
         return [
-            "lookup": "ludwig_map.png",
+            "lookup": "ludwig_map.png"
         ]
     }
-
 }
