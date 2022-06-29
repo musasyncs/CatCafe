@@ -7,18 +7,19 @@
 
 import Foundation
 import Firebase
+import FirebaseFirestoreSwift
 
-struct User {
+struct User: Codable, Equatable {
     let email: String
     let fullname: String
     let profileImageUrlString: String
     let username: String
     let uid: String
-    
+
     var isFollowed = false
     var stats: UserStats!
     var isCurrentUser: Bool {
-        return LocalStorage.shared.getUid() == uid
+        LocalStorage.shared.getUid() == uid
     }
     
     init(dic: [String: Any]) {
@@ -30,9 +31,14 @@ struct User {
         
         self.stats = UserStats(followers: 0, following: 0, postCounts: 0)
     }
+    
+    static func == (lhs: User, rhs: User) -> Bool {
+        lhs.uid == rhs.uid
+    }
+    
 }
 
-struct UserStats {
+struct UserStats: Codable {
     let followers: Int
     let following: Int
     let postCounts: Int

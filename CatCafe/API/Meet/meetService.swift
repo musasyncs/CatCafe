@@ -24,7 +24,7 @@ struct MeetService {
     ) {
         guard let uid = LocalStorage.shared.getUid() else { return }
         
-        ImageUplader.uploadImage(for: .meet, image: meetImage) { imageUrlString in
+        FileStorage.uploadImage(for: .meet, image: meetImage, uid: uid) { imageUrlString in
             let dic: [String: Any] = [
                 "ownerUid": uid,
                 "mediaType": 0,
@@ -37,14 +37,14 @@ struct MeetService {
                 "title": title,
                 "peopleCount": 0
             ]
-            CCConstant.COLLECTION_MEETS.addDocument(data: dic, completion: completion)
+            firebaseReference(.meets).addDocument(data: dic, completion: completion)
         }
     }
     
     // MARK: - Fetch all meets / Fetch Meet with meet id / Fetch meets by uid / Fetch current user attended meets
     
     static func fetchMeets(completion: @escaping(([Meet]) -> Void)) {
-        CCConstant.COLLECTION_MEETS.order(by: "timestamp", descending: true).getDocuments { snapshot, _ in
+        firebaseReference(.meets).order(by: "timestamp", descending: true).getDocuments { snapshot, _ in
             guard let documents = snapshot?.documents else { return }
             
             let meets = documents.map { Meet(meetId: $0.documentID, dic: $0.data()) }
@@ -53,7 +53,7 @@ struct MeetService {
     }
     
     static func fetchMeet(withMeetId meetId: String, completion: @escaping(Meet) -> Void) {
-        CCConstant.COLLECTION_MEETS.document(meetId).getDocument { snapshot, _ in
+        firebaseReference(.meets).document(meetId).getDocument { snapshot, _ in
             guard let snapshot = snapshot else { return }
             guard let dic = snapshot.data() else { return }
             let meet = Meet(meetId: snapshot.documentID, dic: dic)
@@ -62,7 +62,7 @@ struct MeetService {
     }
     
     static func fetchMeets(forUser uid: String, completion: @escaping(([Meet]) -> Void)) {
-        let query = CCConstant.COLLECTION_MEETS.whereField("ownerUid", isEqualTo: uid)
+        let query = firebaseReference(.meets).whereField("ownerUid", isEqualTo: uid)
         
         query.getDocuments { snapshot, _ in
             guard let documents = snapshot?.documents else { return }
@@ -75,7 +75,10 @@ struct MeetService {
     static func fetchCurrentUserAttendMeets(completion: @escaping([Meet]) -> Void) {
         guard let currentUid = LocalStorage.shared.getUid() else { return }
         
-        CCConstant.COLLECTION_USERS.document(currentUid).collection("user-attend").getDocuments { snapshot, _ in
+        firebaseReference(.users)
+            .document(currentUid)
+            .collection("user-attend")
+            .getDocuments { snapshot, _ in
             
             var meets = [Meet]()
             snapshot?.documents.forEach({ document in
@@ -95,12 +98,18 @@ struct MeetService {
     static func likeMeet(meet: Meet, completion: @escaping(FirestoreCompletion)) {
         guard let currentUid = LocalStorage.shared.getUid() else { return }
         
-        CCConstant.COLLECTION_MEETS.document(meet.meetId).updateData(["likes": meet.likes + 1])
+        firebaseReference(.meets)
+            .document(meet.meetId)
+            .updateData(["likes": meet.likes + 1])
         
-        CCConstant.COLLECTION_MEETS.document(meet.meetId)
-            .collection("meet-likes").document(currentUid).setData([:]) { _ in
-                CCConstant.COLLECTION_USERS.document(currentUid)
-                    .collection("user-meet-likes").document(meet.meetId).setData([:], completion: completion)
+        firebaseReference(.meets)
+            .document(meet.meetId)
+            .collection("meet-likes")
+            .document(currentUid).setData([:]) { _ in
+                firebaseReference(.users)
+                    .document(currentUid)
+                    .collection("user-meet-likes")
+                    .document(meet.meetId).setData([:], completion: completion)
         }
     }
     
@@ -108,20 +117,30 @@ struct MeetService {
         guard let currentUid = LocalStorage.shared.getUid() else { return }
         guard meet.likes > 0 else { return }
         
-        CCConstant.COLLECTION_MEETS.document(meet.meetId).updateData(["likes": meet.likes - 1])
+        firebaseReference(.meets)
+            .document(meet.meetId)
+            .updateData(["likes": meet.likes - 1])
         
-        CCConstant.COLLECTION_MEETS.document(meet.meetId)
-            .collection("meet-likes").document(currentUid).delete { _ in
-                CCConstant.COLLECTION_USERS.document(currentUid)
-                    .collection("user-meet-likes").document(meet.meetId).delete(completion: completion)
+        firebaseReference(.meets)
+            .document(meet.meetId)
+            .collection("meet-likes")
+            .document(currentUid).delete { _ in
+                firebaseReference(.users)
+                    .document(currentUid)
+                    .collection("user-meet-likes")
+                    .document(meet.meetId)
+                    .delete(completion: completion)
             }
     }
     
     static func checkIfCurrentUserLikedMeet(meet: Meet, completion: @escaping(Bool) -> Void) {
         guard let currentUid = LocalStorage.shared.getUid() else { return }
         
-        CCConstant.COLLECTION_USERS.document(currentUid)
-            .collection("user-meet-likes").document(meet.meetId).getDocument { snapshot, _ in
+        firebaseReference(.users)
+            .document(currentUid)
+            .collection("user-meet-likes")
+            .document(meet.meetId)
+            .getDocument { snapshot, _ in
                 guard let isLiked = snapshot?.exists else { return }
                 completion(isLiked)
             }
@@ -136,7 +155,9 @@ struct MeetService {
     ) {
         guard let currentUid = LocalStorage.shared.getUid() else { return }
         
-        CCConstant.COLLECTION_MEETS.document(meet.meetId).updateData(["peopleCount": meet.peopleCount + 1])
+        firebaseReference(.meets)
+            .document(meet.meetId)
+            .updateData(["peopleCount": meet.peopleCount + 1])
         
         let dic: [String: Any] = [
             "uid": currentUid,
@@ -145,10 +166,13 @@ struct MeetService {
             "timestamp": Timestamp(date: Date())
         ]
         
-        CCConstant.COLLECTION_MEETS.document(meet.meetId)
-            .collection("people").document(currentUid).setData(dic) { _ in
+        firebaseReference(.meets)
+            .document(meet.meetId)
+            .collection("people")
+            .document(currentUid).setData(dic) { _ in
                 
-                CCConstant.COLLECTION_USERS.document(currentUid)
+                firebaseReference(.users)
+                    .document(currentUid)
                     .collection("user-attend").document(meet.meetId).setData([:], completion: completion)
         }
     }
@@ -156,7 +180,8 @@ struct MeetService {
     static func checkIfCurrentUserAttendedMeet(meet: Meet, completion: @escaping(Bool) -> Void) {
         guard let currentUid = LocalStorage.shared.getUid() else { return }
         
-        CCConstant.COLLECTION_USERS.document(currentUid)
+        firebaseReference(.users)
+            .document(currentUid)
             .collection("user-attend").document(meet.meetId).getDocument { snapshot, _ in
                 guard let isAttended = snapshot?.exists else { return }
                 completion(isAttended)
@@ -171,8 +196,10 @@ struct MeetService {
     ) {
         var people = [Person]()
         
-        let query = CCConstant.COLLECTION_MEETS.document(meetId)
-            .collection("people").order(by: "timestamp", descending: true)
+        let query = firebaseReference(.meets)
+            .document(meetId)
+            .collection("people")
+            .order(by: "timestamp", descending: true)
         
         query.addSnapshotListener { snapshot, _ in
             snapshot?.documentChanges.forEach({ change in

@@ -18,7 +18,7 @@ class BriefInfoView: UIView {
         didSet {
             guard let person = self.person else { return }
             
-            UserService.fetchUserBy(uid: person.uid) { user in
+            UserService.shared.fetchUserBy(uid: person.uid) { user in
                 self.titleLabel.text = user.fullname
             }
             

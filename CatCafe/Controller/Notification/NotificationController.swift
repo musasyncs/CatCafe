@@ -44,7 +44,7 @@ class NotificationController: UITableViewController {
         notifications.forEach { notification in
             guard notification.notiType == .follow else { return }
             
-            UserService.checkIfUserIsFollowed(uid: notification.fromUid) { userIsFollowed in
+            UserService.shared.checkIfUserIsFollowed(uid: notification.fromUid) { userIsFollowed in
                 if let index = self.notifications.firstIndex(where: { $0.notiId == notification.notiId }) {
                     self.notifications[index].userIsFollowed = userIsFollowed
                 }
@@ -105,7 +105,7 @@ extension NotificationController {
         cell.viewModel = NotificationViewModel(notification: notification)
         
         // profileImageUrl, username
-        UserService.fetchUserBy(uid: notification.fromUid) { user in
+        UserService.shared.fetchUserBy(uid: notification.fromUid) { user in
             cell.viewModel?.profileImageUrl = URL(string: user.profileImageUrlString)
             cell.viewModel?.username  = user.username
         }
@@ -133,7 +133,7 @@ extension NotificationController: NotificationCellDelegate {
     
     func cell(_ cell: NotificationCell, wantsToViewProfile uid: String) {
         show()
-        UserService.fetchUserBy(uid: uid) { user in
+        UserService.shared.fetchUserBy(uid: uid) { user in
             self.dismiss()
             let controller = ProfileController(user: user)
             self.navigationController?.pushViewController(controller, animated: true)

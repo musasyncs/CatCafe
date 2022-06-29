@@ -10,7 +10,7 @@ import UIKit
 
 let id = "cell"
 
-class ConversationController: UIViewController {
+class ChatlistController: UIViewController {
     
     let tableView = UITableView()
     private lazy var newMessageButton: UIButton = {
@@ -75,7 +75,7 @@ class ConversationController: UIViewController {
 }
 
 // MARK: - UITableViewDataSource, UITableViewDelegate
-extension ConversationController: UITableViewDataSource, UITableViewDelegate {
+extension ChatlistController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 2
@@ -95,9 +95,17 @@ extension ConversationController: UITableViewDataSource, UITableViewDelegate {
 }
 
 // MARK: - NewMessageControllerDelegate
-extension ConversationController: NewMessageControllerDelegate {
+extension ChatlistController: NewMessageControllerDelegate {
     func controller(_ controller: NewMessageController, wantsToStartChatWith user: User) {
-        let controller = ChatController(user: user)
-        self.navigationController?.pushViewController(controller, animated: true)
+        
+        guard let currentUser = UserService.shared.currentUser else {
+            print("DEBUG: Not getting current user")
+            return
+        }
+        let chatId = startChat(user1: currentUser, user2: user)
+        print("DEBUG: Start chatting chatroom id is ", chatId)
+        
+//        let controller = ChatController(user: user)
+//        self.navigationController?.pushViewController(controller, animated: true)
     }
 }

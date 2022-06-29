@@ -138,7 +138,7 @@ class FeedController: UICollectionViewController {
         if showMenu == true {
             handleDropDownMenu()
         }
-        let controller = ConversationController()
+        let controller = ChatlistController()
         navigationController?.pushViewController(controller, animated: true)
     }
     
@@ -174,7 +174,7 @@ class FeedController: UICollectionViewController {
 extension FeedController: FeedCellDelegate {
     
     func cell(_ cell: FeedCell, wantsToShowProfileFor uid: String) {
-        UserService.fetchUserBy(uid: uid) { user in
+        UserService.shared.fetchUserBy(uid: uid) { user in
             let controller = ProfileController(user: user)
             self.navigationController?.pushViewController(controller, animated: true)
         }
@@ -188,7 +188,7 @@ extension FeedController: FeedCellDelegate {
     func cell(_ cell: FeedCell, didLike post: Post) {
         
         guard let currentUid = LocalStorage.shared.getUid() else { return }
-        UserService.fetchUserBy(uid: currentUid, completion: { currentUser in
+        UserService.shared.fetchUserBy(uid: currentUid, completion: { currentUser in
         
             cell.viewModel?.post.isLiked.toggle()
             
@@ -237,7 +237,7 @@ extension FeedController {
         if let post = post {
             cell.viewModel = PostViewModel(post: post)
             
-            UserService.fetchUserBy(uid: post.ownerUid) { user in
+            UserService.shared.fetchUserBy(uid: post.ownerUid) { user in
                 cell.viewModel?.ownerUsername = user.username
                 cell.viewModel?.ownerImageUrl = URL(string: user.profileImageUrlString)
             }
@@ -245,7 +245,7 @@ extension FeedController {
         } else {
             cell.viewModel = PostViewModel(post: posts[indexPath.item])
             
-            UserService.fetchUserBy(uid: posts[indexPath.item].ownerUid) { user in
+            UserService.shared.fetchUserBy(uid: posts[indexPath.item].ownerUid) { user in
                 cell.viewModel?.ownerUsername = user.username
                 cell.viewModel?.ownerImageUrl = URL(string: user.profileImageUrlString)
             }

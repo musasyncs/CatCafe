@@ -12,6 +12,7 @@ target 'CatCafe' do
   pod 'Firebase/Firestore'
   pod 'Firebase/Storage'
   pod 'Firebase/Crashlytics'
+  pod 'FirebaseFirestoreSwift'
 
   pod 'MetalPetal', '~> 1.10.1'
 
@@ -19,6 +20,7 @@ target 'CatCafe' do
   pod 'SDWebImage' 
 
   pod 'JGProgressHUD'
+  pod 'ProgressHUD'
   pod 'MJRefresh'
 
   pod 'lottie-ios'

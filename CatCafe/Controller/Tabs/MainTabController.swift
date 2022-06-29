@@ -69,26 +69,30 @@ class MainTabController: UITabBarController {
     
     private func fetchCurrentUser() {
         guard let currentUid = LocalStorage.shared.getUid() else { return }
-        UserService.fetchUserBy(uid: currentUid, completion: { currentUser in
+        UserService.shared.fetchUserBy(uid: currentUid, completion: { currentUser in
             self.currentUser = currentUser
         })
     }
 }
 
 // MARK: - AuthenticationDelegate
-
 extension MainTabController: AuthenticationDelegate {
-    
     func authenticationDidComplete() {
         fetchCurrentUser()
-        self.dismiss(animated: true)
+        self.dismiss(animated: true) {
+            print("DEBUG: ", UserService.shared.currentUser?.profileImageUrlString)
+            
+            if UserService.shared.currentUser?.profileImageUrlString == "" {
+                let controller = SetProfileController()
+                controller.modalPresentationStyle = .fullScreen
+                self.present(controller, animated: true)
+            }
+        }
     }
 }
 
 // MARK: - UITabBarControllerDelegate
-
 extension MainTabController: UITabBarControllerDelegate {
-    
     func tabBarController(
         _ tabBarController: UITabBarController,
         shouldSelect viewController: UIViewController

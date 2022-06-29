@@ -143,7 +143,7 @@ extension MyArrangeController: UICollectionViewDataSource, UICollectionViewDeleg
         let meet = meets[indexPath.item]
         cell.viewModel = MeetViewModel(meet: meet)
         
-        UserService.fetchUserBy(uid: meet.ownerUid) { user in
+        UserService.shared.fetchUserBy(uid: meet.ownerUid) { user in
             cell.viewModel?.ownerUsername = user.username
             cell.viewModel?.ownerImageUrl = URL(string: user.profileImageUrlString)
         }

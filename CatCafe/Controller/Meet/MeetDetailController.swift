@@ -172,7 +172,7 @@ extension MeetDetailController: UICollectionViewDataSource, UICollectionViewDele
         let comment = comments[indexPath.item]
         cell.viewModel = CommentViewModel(comment: comment)
         
-        UserService.fetchUserBy(uid: comment.uid) { user in
+        UserService.shared.fetchUserBy(uid: comment.uid) { user in
             cell.viewModel?.username = user.username
             cell.viewModel?.profileImageUrl = URL(string: user.profileImageUrlString)
         }
@@ -204,7 +204,7 @@ extension MeetDetailController: UICollectionViewDataSource, UICollectionViewDele
             header.delegate = self
             header.viewModel = MeetViewModel(meet: meet)
                         
-            UserService.fetchUserBy(uid: meet.ownerUid) { user in
+            UserService.shared.fetchUserBy(uid: meet.ownerUid) { user in
                 header.viewModel?.ownerUsername = user.username
                 header.viewModel?.ownerImageUrl = URL(string: user.profileImageUrlString)
             }
@@ -306,7 +306,7 @@ extension MeetDetailController: CommentInputAccessoryViewDelegate {
     func inputView(_ inputView: CommentInputAccessoryView, wantsToUploadComment comment: String) {
         
         guard let currentUid = LocalStorage.shared.getUid() else { return }
-        UserService.fetchUserBy(uid: currentUid, completion: { currentUser in
+        UserService.shared.fetchUserBy(uid: currentUid, completion: { currentUser in
             
             self.show()
             CommentService.uploadMeetComment(

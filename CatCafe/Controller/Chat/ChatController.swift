@@ -9,6 +9,7 @@ import UIKit
 
 class ChatController: UIViewController {
     
+    private var chatId = ""
     private var recipientId = ""
     private var recipientName = ""
     
@@ -33,10 +34,11 @@ class ChatController: UIViewController {
     }()
     
     // MARK: - Inits
-    init(user: User) {
+    init(chatId: String, recipientId: String, recipientName: String) {
         super.init(nibName: nil, bundle: nil)
-        self.recipientId = user.uid
-        self.recipientName = user.username
+        self.chatId = chatId
+        self.recipientId = recipientId
+        self.recipientName = recipientName
     }
     
     required init?(coder: NSCoder) {

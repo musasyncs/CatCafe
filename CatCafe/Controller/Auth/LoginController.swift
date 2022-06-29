@@ -55,11 +55,16 @@ class LoginController: UIViewController {
             self.dismiss()
             
             switch result {
-            case .success(let authUser):
+            case .success(let user):
                 
                 // Save uid; hasLogedIn = true
-                LocalStorage.shared.saveUid(authUser.uid)
+                LocalStorage.shared.saveUid(user.uid)
                 LocalStorage.shared.hasLogedIn = true
+                
+                ///
+                guard let uid = LocalStorage.shared.getUid() else { return }
+                print("DEBUG: Currewnt uid is", uid)
+                ///
                                 
                 self.delegate?.authenticationDidComplete()
             case .failure(let error):

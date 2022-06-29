@@ -13,6 +13,7 @@ struct CCConstant {
     struct LocalStorageKey {
         static let userIdKey = "userIdKey"
         static let hasLogedIn = "hasLogedIn"
+        static let currentUser = "currentUser"
     }
     
     struct NotificationName {
@@ -20,11 +21,27 @@ struct CCConstant {
         static let updateMeetFeed = NSNotification.Name("updateMeetFeed")
     }
 
-    static let COLLECTION_USERS = Firestore.firestore().collection("users")
-    static let COLLECTION_FOLLOWERS = Firestore.firestore().collection("followers")
-    static let COLLECTION_FOLLOWING = Firestore.firestore().collection("following")
-    static let COLLECTION_CAFES = Firestore.firestore().collection("cafes")
-    static let COLLECTION_POSTS = Firestore.firestore().collection("posts")
-    static let COLLECTION_NOTIFICATIONS = Firestore.firestore().collection("notifications")
-    static let COLLECTION_MEETS = Firestore.firestore().collection("meets")
+    static let NUMBEROFMESSAGES = 12
+
+    static let STATUS = "status"
+    static let FIRSTRUN = "firstRUN"
+
+    static let CHATROOMID = "chatRoomId"
+    static let SENDERID = "senderId"
+
+    static let SENT = "Sent"
+    static let READ = "Read"
+
+    static let TEXT = "text"
+    static let PHOTO = "photo"
+    static let VIDEO = "video"
+    static let AUDIO = "audio"
+    static let LOCATION = "location"
+
+    static let DATE = "date"
+    static let READDATE = "date"
+
+    static let ADMINID = "adminId"
+    static let MEMBERIDS = "memberIds"
 }
+// swiftlint:enable identifier_name

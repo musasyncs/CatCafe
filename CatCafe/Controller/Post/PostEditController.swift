@@ -116,7 +116,7 @@ class PostEditController: UIViewController {
     func fetchProfilePic() {
         guard let currentUid = LocalStorage.shared.getUid() else { return }
         
-        UserService.fetchUserBy(uid: currentUid, completion: { user in
+        UserService.shared.fetchUserBy(uid: currentUid, completion: { user in
             self.profileImageView.sd_setImage(with: URL(string: user.profileImageUrlString))
         })
     }
