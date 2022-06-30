@@ -97,9 +97,9 @@ class ProfileController: UICollectionViewController {
         let alert = UIAlertController(title: "是否登出？", message: "", preferredStyle: .alert)
         let okAction = UIAlertAction(title: "確定", style: .default) { _ in
             
-            self.show()
+            CCProgressHUD.show()
             let result = AuthService.logoutUser()
-            self.dismiss()
+            CCProgressHUD.dismiss()
             
             switch result {
             case .success:
@@ -115,7 +115,7 @@ class ProfileController: UICollectionViewController {
                 self.present(nav, animated: true, completion: nil)
                 
             case .failure(let error):
-                self.showFailure()
+                CCProgressHUD.showFailure()
                 print("DEBUG: Failed to signout with error: \(error.localizedDescription)")
             }
         }

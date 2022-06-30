@@ -11,7 +11,6 @@ import Firebase
 struct PostService {
     
     // MARK: - Upload image post
-    
     static func uploadImagePost(
         caption: String,
         postImage: UIImage,
@@ -20,8 +19,9 @@ struct PostService {
         completion: @escaping(FirestoreCompletion)
     ) {
         guard let uid = LocalStorage.shared.getUid() else { return }
+        let directory = "Post/" + "_\(uid)" + ".jpg"
         
-        FileStorage.uploadImage(for: .post, image: postImage, uid: uid) { imageUrlString in
+        FileStorage.uploadImage(postImage, directory: directory) { imageUrlString in
             let dic: [String: Any] = [
                 "ownerUid": uid,
                 "mediaType": 0,
@@ -38,7 +38,6 @@ struct PostService {
     }
     
     // MARK: - Fetch all posts / Fetch posts by uid / Fetch post with post id / Fetch feed posts
-    
     static func fetchPosts(completion: @escaping(([Post]) -> Void)) {
         firebaseReference(.posts).order(by: "timestamp", descending: true).getDocuments { snapshot, _ in
             guard let documents = snapshot?.documents else { return }

@@ -2,7 +2,7 @@
 //  JGProgressHUDWrapper.swift
 //  CatCafe
 //
-//  Created by Ewen on 2022/6/14.
+//  Created by Ewen on 2022/7/1.
 //
 
 import JGProgressHUD
@@ -15,13 +15,17 @@ enum HUDType {
 class CCProgressHUD {
 
     static let shared = CCProgressHUD()
-
-    private init() { }
+    private init() {}
 
     let hud = JGProgressHUD(style: .dark)
 
     var view: UIView {
-        return SceneDelegate.shared.window!.rootViewController!.view
+        let scenes = UIApplication.shared.connectedScenes
+        let windowScene = scenes.first as? UIWindowScene
+        let window = windowScene?.windows.first
+        
+        let viewController = window!.rootViewController
+        return (viewController?.view)!
     }
 
     static func show(type: HUDType) {

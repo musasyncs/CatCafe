@@ -14,11 +14,8 @@ protocol AuthenticationDelegate: AnyObject {
 class RegistrationController: UIViewController {
     
     weak var delegate: AuthenticationDelegate?
-    
     private var viewModel = RegistrationViewModel()
-//    private var profileImage: UIImage?
 
-//    private let plusPhotoButton = UIButton(type: .system)
     private lazy var stackView = UIStackView(
         arrangedSubviews: [
             emailContainerView, passwordContainerView,
@@ -76,8 +73,7 @@ class RegistrationController: UIViewController {
                                           password: password,
                                           fullname: fullname,
                                           username: username)
-        
-        show()
+        CCProgressHUD.show()
         AuthService.registerUser(withCredial: credentials) { [weak self] result in
             guard let self = self else { return }
             
@@ -91,7 +87,7 @@ class RegistrationController: UIViewController {
                 ) { error in
                     
                     if let error = error {
-                        self.showFailure()
+                        CCProgressHUD.showFailure()
                         print("DEBUG: Failed to create user profile with error: \(error.localizedDescription)")
                         return
                     }
@@ -103,7 +99,7 @@ class RegistrationController: UIViewController {
                     self.delegate?.authenticationDidComplete()
                 }
             case .failure(let error):
-                self.showFailure()
+                CCProgressHUD.showFailure()
                 print("DEBUG: Failed to create authUser with error: \(error.localizedDescription)")
             }
         }
@@ -125,15 +121,8 @@ class RegistrationController: UIViewController {
         }
         updateForm()
     }
-    
-//    @objc func handleProfilePhotoSelect() {
-//        let picker = UIImagePickerController()
-//        picker.delegate = self
-//        picker.allowsEditing = true
-//        present(picker, animated: true)
-//    }
-    
-    @objc func keyboardWillShow(notification: NSNotification) {        
+
+    @objc func keyboardWillShow(notification: NSNotification) {
         let distance = CGFloat(100)
         let transform = CGAffineTransform(translationX: 0, y: -distance)
         
@@ -157,15 +146,11 @@ extension RegistrationController {
     
     func setup() {
         signUpButton.addTarget(self, action: #selector(handleSignUp), for: .touchUpInside)
-//        plusPhotoButton.addTarget(self, action: #selector(handleProfilePhotoSelect), for: .touchUpInside)
         alreadyHaveAccountButton.addTarget(self, action: #selector(handleShowLogin), for: .touchUpInside)
     }
     
     func style() {
         view.backgroundColor = .white
-//        plusPhotoButton.setImage(UIImage(named: "plus_photo"), for: .normal)
-//        plusPhotoButton.tintColor = .lightGray
-//        plusPhotoButton.imageView?.contentMode = .scaleAspectFill
         stackView.axis = .vertical
         stackView.spacing = 20
         passwordTextField.isSecureTextEntry = true
@@ -188,18 +173,14 @@ extension RegistrationController {
     }
     
     func layout() {
-//        view.addSubview(plusPhotoButton)
         view.addSubview(stackView)
         view.addSubview(alreadyHaveAccountButton)
-//        plusPhotoButton.centerX(inView: view)
-//        plusPhotoButton.setDimensions(height: 140, width: 140)
-//        plusPhotoButton.anchor(top: view.safeAreaLayoutGuide.topAnchor, paddingTop: 32)
         stackView.anchor(
-            top: view.safeAreaLayoutGuide.topAnchor,
             left: view.leftAnchor,
             right: view.rightAnchor,
-            paddingTop: 172, paddingLeft: 48, paddingRight: 48
+            paddingLeft: 48, paddingRight: 48
         )
+        stackView.center(inView: view)
         signUpButton.setHeight(36)
         alreadyHaveAccountButton.centerX(inView: view)
         alreadyHaveAccountButton.anchor(bottom: view.safeAreaLayoutGuide.bottomAnchor)
@@ -231,21 +212,3 @@ extension RegistrationController: FormViewModel {
         signUpButton.isEnabled = viewModel.formIsValid
     }
 }
-
-// MARK: - UIImagePickerControllerDelegate, UINavigationControllerDelegate
-
-//extension RegistrationController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-//
-//    func imagePickerController(
-//        _ picker: UIImagePickerController,
-//        didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]
-//    ) {
-//        guard let selectedImage = info[.editedImage] as? UIImage else { return }
-//        profileImage = selectedImage
-//
-//        plusPhotoButton.layer.cornerRadius = plusPhotoButton.frame.width / 2
-//        plusPhotoButton.layer.masksToBounds = true
-//        plusPhotoButton.setImage(selectedImage.withRenderingMode(.alwaysOriginal), for: .normal)
-//        self.dismiss(animated: true)
-//    }
-//}

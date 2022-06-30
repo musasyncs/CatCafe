@@ -37,15 +37,17 @@ class SetProfileController: UIViewController {
         }
         
         guard let currentUid = LocalStorage.shared.getUid() else { return }
-    
+        let directory = "Profile/" + "_\(currentUid)" + ".jpg"
+        
         ProgressHUD.show()
-        FileStorage.uploadImage(for: .profile,
-                                image: profileImage,
-                                uid: currentUid) { imageUrlString in
-            self.show()
-            UserService.shared.uploadProfileImage(userId: currentUid,
-                                           profileImageUrlString: imageUrlString) {error in
-                self.dismiss()
+        FileStorage.uploadImage(profileImage, directory: directory) { imageUrlString in
+            
+            CCProgressHUD.show()
+            UserService.shared.uploadProfileImage(
+                userId: currentUid,
+                profileImageUrlString: imageUrlString
+            ) {error in
+                CCProgressHUD.dismiss()
                 
                 if let error = error {
                     print("DEBUG: Failed to create profile image urlString with error: \(error.localizedDescription)")
@@ -83,8 +85,7 @@ extension SetProfileController {
     func layout() {
         view.addSubview(plusPhotoButton)
         view.addSubview(sendButton)
-        plusPhotoButton.centerX(inView: view)
-        plusPhotoButton.centerY(inView: view)
+        plusPhotoButton.center(inView: view)
         plusPhotoButton.setDimensions(height: 140, width: 140)
 
         sendButton.setDimensions(height: 36, width: 80)

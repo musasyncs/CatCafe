@@ -23,8 +23,9 @@ struct MeetService {
         completion: @escaping(FirestoreCompletion)
     ) {
         guard let uid = LocalStorage.shared.getUid() else { return }
+        let directory = "Meet/" + "_\(uid)" + ".jpg"
         
-        FileStorage.uploadImage(for: .meet, image: meetImage, uid: uid) { imageUrlString in
+        FileStorage.uploadImage(meetImage, directory: directory) { imageUrlString in
             let dic: [String: Any] = [
                 "ownerUid": uid,
                 "mediaType": 0,

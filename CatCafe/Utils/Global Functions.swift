@@ -11,7 +11,7 @@ import AVFoundation
 
 func removeCurrentUserFrom(userIds: [String]) -> [String] {
     var allIds = userIds
-
+    
     for id in allIds {
         if id == LocalStorage.shared.getUid() {
             allIds.remove(at: allIds.firstIndex(of: id)!)
@@ -27,26 +27,19 @@ func fileNameFrom(fileUrl: String) -> String {
 }
 
 func timeElapsed(_ date: Date) -> String {
-    
     let seconds = Date().timeIntervalSince(date)
-    
     var elapsed = ""
     
     if seconds < 60 {
         elapsed = "Just now"
-        
     } else if seconds < 60 * 60 {
-        
         let minutes = Int(seconds / 60)
         let minText = minutes > 1 ? "mins" : "min"
         elapsed = "\(minutes) \(minText)"
-        
     } else if seconds < 24 * 60 * 60 {
-        
         let hours = Int(seconds / (60 * 60))
         let hourText = hours > 1 ? "hours" : "hour"
         elapsed = "\(hours) \(hourText)"
-        
     } else {
         elapsed = date.longDate()
     }
@@ -55,7 +48,6 @@ func timeElapsed(_ date: Date) -> String {
 }
 
 func videoThumbnail(video: URL) -> UIImage {
-    
     let asset = AVURLAsset(url: video, options: nil)
     
     let imageGenerator = AVAssetImageGenerator(asset: asset)
@@ -68,7 +60,6 @@ func videoThumbnail(video: URL) -> UIImage {
     
     do {
         image = try imageGenerator.copyCGImage(at: time, actualTime: &actualTime)
-        
     } catch let error as NSError {
         print("error making thumbnail ", error.localizedDescription)
     }

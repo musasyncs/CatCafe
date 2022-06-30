@@ -20,7 +20,6 @@ class MainTabController: UITabBarController {
     private let tabs: [Tab] = [.home, .explore, .meet, .reels, .profile]
     
     // MARK: - Life Cycle
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -41,7 +40,6 @@ class MainTabController: UITabBarController {
     }
     
     // MARK: - Helpers
-    
     private func setTabBarApearance() {
         let tabBarAppearance = UITabBarAppearance()
         tabBarAppearance.configureWithOpaqueBackground()
@@ -80,8 +78,6 @@ extension MainTabController: AuthenticationDelegate {
     func authenticationDidComplete() {
         fetchCurrentUser()
         self.dismiss(animated: true) {
-            print("DEBUG: ", UserService.shared.currentUser?.profileImageUrlString)
-            
             if UserService.shared.currentUser?.profileImageUrlString == "" {
                 let controller = SetProfileController()
                 controller.modalPresentationStyle = .fullScreen

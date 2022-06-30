@@ -14,24 +14,22 @@ class RecentChatService {
     
     private init() {}
     
-    func downloadRecentChatsFromFireStore(
-        completion: @escaping (_ allRecents: [RecentChat]) ->Void
-    ) {
+    func downloadRecentChatsFromFireStore(completion: @escaping (_ allRecents: [RecentChat]) -> Void) {
         guard let currentUid = LocalStorage.shared.getUid() else { return }
         
         firebaseReference(.recent)
             .whereField(CCConstant.SENDERID, isEqualTo: currentUid)
-            .addSnapshotListener { (querySnapshot, _) in
+            .addSnapshotListener { (snapshot, _) in
             
             var recentChats: [RecentChat] = []
             
-            guard let documents = querySnapshot?.documents else {
+            guard let documents = snapshot?.documents else {
                 print("no documents for recent chats")
                 return
             }
             
-            let allRecents = documents.compactMap { (queryDocumentSnapshot) -> RecentChat? in
-                return try? queryDocumentSnapshot.data(as: RecentChat.self)
+            let allRecents = documents.compactMap { (snapshot) -> RecentChat? in
+                return try? snapshot.data(as: RecentChat.self)
             }
             
             for recent in allRecents {
@@ -51,15 +49,15 @@ class RecentChatService {
         firebaseReference(.recent)
             .whereField(CCConstant.CHATROOMID, isEqualTo: chatRoomId)
             .whereField(CCConstant.SENDERID, isEqualTo: currentUid)
-            .getDocuments { (querySnapshot, _) in
+            .getDocuments { (snapshot, _) in
             
-            guard let documents = querySnapshot?.documents else {
+            guard let documents = snapshot?.documents else {
                 print("no documents for recent")
                 return
             }
             
-            let allRecents = documents.compactMap { (queryDocumentSnapshot) -> RecentChat? in
-                return try? queryDocumentSnapshot.data(as: RecentChat.self)
+            let allRecents = documents.compactMap { (snapshot) -> RecentChat? in
+                return try? snapshot.data(as: RecentChat.self)
             }
             
             if allRecents.count > 0 {
@@ -69,7 +67,6 @@ class RecentChatService {
     }
     
     func updateRecents(chatRoomId: String, lastMessage: String) {
-        
         firebaseReference(.recent)
             .whereField(CCConstant.CHATROOMID, isEqualTo: chatRoomId)
             .getDocuments { (querySnapshot, _) in
@@ -90,10 +87,9 @@ class RecentChatService {
     }
     
     private func updateRecentItemWithNewMessage(recent: RecentChat, lastMessage: String) {
-        
         var tempRecent = recent
         
-        if tempRecent.senderId == LocalStorage.shared.getUid() {
+        if tempRecent.receiverId == LocalStorage.shared.getUid() {
             tempRecent.unreadCounter += 1
         }
         
@@ -104,7 +100,6 @@ class RecentChatService {
     }
     
     func clearUnreadCounter(recent: RecentChat) {
-        
         var newRecent = recent
         newRecent.unreadCounter = 0
         self.saveRecent(newRecent)

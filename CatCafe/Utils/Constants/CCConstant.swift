@@ -7,7 +7,6 @@
 
 import Firebase
 
-// swiftlint:disable identifier_name
 struct CCConstant {
     
     struct LocalStorageKey {
@@ -24,7 +23,6 @@ struct CCConstant {
     static let NUMBEROFMESSAGES = 12
 
     static let STATUS = "status"
-    static let FIRSTRUN = "firstRUN"
 
     static let CHATROOMID = "chatRoomId"
     static let SENDERID = "senderId"
@@ -35,13 +33,8 @@ struct CCConstant {
     static let TEXT = "text"
     static let PHOTO = "photo"
     static let VIDEO = "video"
-    static let AUDIO = "audio"
-    static let LOCATION = "location"
 
     static let DATE = "date"
     static let READDATE = "date"
 
-    static let ADMINID = "adminId"
-    static let MEMBERIDS = "memberIds"
 }
-// swiftlint:enable identifier_name

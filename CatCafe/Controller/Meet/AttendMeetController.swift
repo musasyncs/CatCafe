@@ -122,11 +122,11 @@ class AttendMeetController: UIViewController {
             return
         }
         
-        show()
+        CCProgressHUD.show()
         MeetService.attendMeet(meet: meet,
                                contact: contact,
                                remarks: remarks) { error in
-            self.dismiss()
+            CCProgressHUD.dismiss()
             
             if let error = error {
                 print("DEBUG: Failed to attend meet with error \(error.localizedDescription)")
@@ -141,7 +141,7 @@ class AttendMeetController: UIViewController {
         }
     }
     
-    @objc func keyboardWillShow(notification: NSNotification) {        
+    @objc func keyboardWillShow(notification: NSNotification) {
         let distance = CGFloat(100)
         let transform = CGAffineTransform(translationX: 0, y: -distance)
         

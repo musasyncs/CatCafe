@@ -9,21 +9,6 @@ import UIKit
 
 extension UIImage {
     
-    func resize(to goalSize: CGSize) -> UIImage? {
-        let widthRatio = goalSize.width / size.width
-        let heightRatio = goalSize.height / size.height
-        let ratio = widthRatio < heightRatio ? widthRatio : heightRatio
-        
-        let resizedSize = CGSize(width: size.width * ratio, height: size.height * ratio)
-        UIGraphicsBeginImageContextWithOptions(resizedSize, false, 0.0)
-        draw(in: CGRect(origin: .zero, size: resizedSize))
-        
-        let resizedImage = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        
-        return resizedImage
-    }
-    
     var isPortrait: Bool { return size.height > size.width }
     var isLandscape: Bool { return size.width > size.height }
     var breadth: CGFloat { return min(size.width, size.height) }
@@ -48,10 +33,24 @@ extension UIImage {
         return UIGraphicsGetImageFromCurrentImageContext()
     }
     
+    func resize(to goalSize: CGSize) -> UIImage? {
+        let widthRatio = goalSize.width / size.width
+        let heightRatio = goalSize.height / size.height
+        let ratio = widthRatio < heightRatio ? widthRatio : heightRatio
+        
+        let resizedSize = CGSize(width: size.width * ratio, height: size.height * ratio)
+        UIGraphicsBeginImageContextWithOptions(resizedSize, false, 0.0)
+        draw(in: CGRect(origin: .zero, size: resizedSize))
+        
+        let resizedImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        return resizedImage
+    }
+    
 }
 
 // swiftlint:enable identifier_name
-
 extension UIImage {
     static func asset(_ asset: ImageAsset) -> UIImage? {
         return UIImage(named: asset.rawValue)

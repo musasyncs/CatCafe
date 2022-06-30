@@ -308,7 +308,7 @@ extension MeetDetailController: CommentInputAccessoryViewDelegate {
         guard let currentUid = LocalStorage.shared.getUid() else { return }
         UserService.shared.fetchUserBy(uid: currentUid, completion: { currentUser in
             
-            self.show()
+            CCProgressHUD.show()
             CommentService.uploadMeetComment(
                 meetId: self.meet.meetId,
                 user: currentUser,
@@ -316,7 +316,7 @@ extension MeetDetailController: CommentInputAccessoryViewDelegate {
                 mediaUrlString: "",
                 comment: comment
             ) { error in
-                self.dismiss()
+                CCProgressHUD.dismiss()
                 
                 if let error = error {
                     print("DEBUG: Failed to upload comment with error \(error.localizedDescription)")

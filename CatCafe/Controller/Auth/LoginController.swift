@@ -49,10 +49,10 @@ class LoginController: UIViewController {
             return
         }
         
-        show()
+        CCProgressHUD.show()
         AuthService.loginUser(withEmail: email, password: password) { [weak self] result in
             guard let self = self else { return }
-            self.dismiss()
+            CCProgressHUD.dismiss()
             
             switch result {
             case .success(let user):
@@ -68,7 +68,7 @@ class LoginController: UIViewController {
                                 
                 self.delegate?.authenticationDidComplete()
             case .failure(let error):
-                self.showFailure()
+                CCProgressHUD.showFailure()
                 print("DEBUG: Failed to log user in \(error.localizedDescription)")
             }
         }

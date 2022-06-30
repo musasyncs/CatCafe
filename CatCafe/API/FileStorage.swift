@@ -11,18 +11,11 @@ import ProgressHUD
 
 struct FileStorage {
     
-    enum ImageCategory: String {
-        case profile
-        case post
-        case meet
-    }
-    
-    static func uploadImage(for category: ImageCategory,
-                            image: UIImage,
-                            uid: String,
+    // MARK: - Upload and download Image
+    static func uploadImage(_ image: UIImage,
+                            directory: String,
                             completion: @escaping(String) -> Void
     ) {
-        let directory = "\(category.rawValue)/" + "_\(uid)" + ".jpg"
         let ref = Storage.storage().reference(withPath: directory)
         
         guard let imageData = image.jpegData(compressionQuality: 0.8) else { return }
@@ -54,9 +47,7 @@ struct FileStorage {
         }
     }
     
-    static func downloadImage(imageUrl: String,
-                              completion: @escaping (_ image: UIImage?) -> Void
-    ) {
+    static func downloadImage(imageUrl: String, completion: @escaping (_ image: UIImage?) -> Void) {
         let imageFileName = fileNameFrom(fileUrl: imageUrl)
         
         if fileExistsAtPath(path: imageFileName) {
@@ -95,6 +86,132 @@ struct FileStorage {
                             completion(nil)
                         }
                     }
+                }
+            }
+        }
+    }
+    
+    // MARK: - Upload and download Video
+    static func uploadVideo(_ video: NSData,
+                            directory: String,
+                            completion: @escaping (_ videoLink: String?) -> Void
+    ) {
+        let ref = Storage.storage().reference(withPath: directory)
+        var task: StorageUploadTask!
+        
+        task = ref.putData(video as Data, metadata: nil, completion: { (_, error) in
+            task.removeAllObservers()
+            ProgressHUD.dismiss()
+            
+            if error != nil {
+                print("error uploading video \(error!.localizedDescription)")
+                return
+            }
+            
+            ref.downloadURL { (url, _) in
+                guard let downloadUrl = url  else {
+                    completion(nil)
+                    return
+                }
+                completion(downloadUrl.absoluteString)
+            }
+        })
+        
+        task.observe(StorageTaskStatus.progress) { (snapshot) in
+            let progress = snapshot.progress!.completedUnitCount / snapshot.progress!.totalUnitCount
+            ProgressHUD.showProgress(CGFloat(progress))
+        }
+    }
+
+    static func downloadVideo(
+        videoLink: String,
+        completion: @escaping (_ isReadyToPlay: Bool, _ videoFileName: String) -> Void
+    ) {
+        let videoUrl = URL(string: videoLink)
+        let videoFileName = fileNameFrom(fileUrl: videoLink) + ".mov"
+
+        if fileExistsAtPath(path: videoFileName) {
+            completion(true, videoFileName)
+        } else {
+            let downloadQueue = DispatchQueue(label: "VideoDownloadQueue")
+            
+            downloadQueue.async {
+                let data = NSData(contentsOf: videoUrl!)
+                if data != nil {
+                    // Save locally
+                    FileStorage.saveFileLocally(fileData: data!, fileName: videoFileName)
+                    
+                    DispatchQueue.main.async {
+                        completion(true, videoFileName)
+                    }
+                } else {
+                    print("no document in database")
+                }
+            }
+        }
+    }
+    
+    // MARK: - Upload and dowload Audio
+    static func uploadAudio(_ audioFileName: String,
+                            directory: String,
+                            completion: @escaping (_ audioLink: String?) -> Void
+    ) {
+        let fileName = audioFileName + ".m4a"
+        let ref = Storage.storage().reference(withPath: directory)
+                        
+        var task: StorageUploadTask!
+        
+        if fileExistsAtPath(path: fileName) {
+            if let audioData = NSData(contentsOfFile: fileInDocumentsDirectory(fileName: fileName)) {
+                
+                task = ref.putData(audioData as Data, metadata: nil, completion: { (_, error) in
+                    task.removeAllObservers()
+                    ProgressHUD.dismiss()
+                    
+                    if error != nil {
+                        print("error uploading audio \(error!.localizedDescription)")
+                        return
+                    }
+                    
+                    ref.downloadURL { (url, _) in
+                        guard let downloadUrl = url  else {
+                            completion(nil)
+                            return
+                        }
+                        completion(downloadUrl.absoluteString)
+                    }
+                })
+                
+                task.observe(StorageTaskStatus.progress) { (snapshot) in
+                    
+                    let progress = snapshot.progress!.completedUnitCount / snapshot.progress!.totalUnitCount
+                    ProgressHUD.showProgress(CGFloat(progress))
+                }
+            } else {
+                print("nothing to upload (audio)")
+            }
+        }
+    }
+
+    static func downloadAudio(audioLink: String, completion: @escaping (_ audioFileName: String) -> Void) {
+        let audioFileName = fileNameFrom(fileUrl: audioLink) + ".m4a"
+
+        if fileExistsAtPath(path: audioFileName) {
+            completion(audioFileName)
+        } else {
+            let downloadQueue = DispatchQueue(label: "AudioDownloadQueue")
+            
+            downloadQueue.async {
+                let data = NSData(contentsOf: URL(string: audioLink)!)
+                if data != nil {
+                    // Save locally
+                    FileStorage.saveFileLocally(fileData: data!, fileName: audioFileName)
+                    
+                    DispatchQueue.main.async {
+                        completion(audioFileName)
+                    }
+                } else {
+                    print("no document in database audio")
                 }
             }
         }

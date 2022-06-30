@@ -30,11 +30,11 @@ func getReceiverFrom(users: [User]) -> User {
 }
 
 // MARK: - RecentChats
-
 func createRecentItems(chatRoomId: String, users: [User]) {
     var memberIdsToCreateRecent = [users.first!.uid, users.last!.uid]
     
-    print("DEBUG: members to create recent is ", memberIdsToCreateRecent)
+    print("DEBUG: members to create recent are ", memberIdsToCreateRecent)
+    
     // does user have recent?
     firebaseReference(.recent)
         .whereField(CCConstant.CHATROOMID, isEqualTo: chatRoomId)
@@ -42,8 +42,11 @@ func createRecentItems(chatRoomId: String, users: [User]) {
             guard let snapshot = snapshot else { return }
             
             if !snapshot.isEmpty {
-                memberIdsToCreateRecent = removeMemberWhoHasRecent(snapshot: snapshot, memberIds: memberIdsToCreateRecent)
-                print("DEBUG: updated members to create recent is ", memberIdsToCreateRecent)
+                memberIdsToCreateRecent = removeMemberWhoHasRecent(
+                    snapshot: snapshot,
+                    memberIds: memberIdsToCreateRecent
+                )
+                print("DEBUG: updated members to create recent are ", memberIdsToCreateRecent)
             }
             
             for userId in memberIdsToCreateRecent {

@@ -100,7 +100,6 @@ func makeBarButtonItem(target: Any?,
     button.setAttributedTitle(attributedText, for: .normal)
     
     button.contentEdgeInsets = insets
-    
     let barButtonItem = UIBarButtonItem(customView: button)
     return barButtonItem
 }

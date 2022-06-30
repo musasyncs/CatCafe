@@ -42,13 +42,24 @@ class RecentChatCell: UITableViewCell {
         return label
     }()
     
-    private let unreadCounterBackgroundView = UIView()
-    private let unreadCounterLabel = UILabel()
+    private let unreadCounterBackgroundView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .systemGreen
+        view.layer.cornerRadius = 28 / 2
+        return view
+    }()
+        
+    private let unreadCounterLabel: UILabel = {
+        let label = UILabel()
+        label.font = .systemFont(ofSize: 11, weight: .medium)
+        label.textColor = .white
+        label.textAlignment = .center
+        return label
+    }()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         backgroundColor = .clear
-        unreadCounterBackgroundView.layer.cornerRadius = unreadCounterBackgroundView.frame.width / 2
         
         addSubview(avatarImageView)
         addSubview(usernameLabel)
@@ -78,9 +89,12 @@ class RecentChatCell: UITableViewCell {
         
         unreadCounterBackgroundView.anchor(bottom: bottomAnchor,
                                            right: rightAnchor,
-                                           paddingRight: 2)
-        unreadCounterBackgroundView.setDimensions(height: 50, width: 50)
-        unreadCounterLabel.fillSuperView()
+                                           paddingBottom: 8,
+                                           paddingRight: 16)
+        unreadCounterBackgroundView.setDimensions(height: 28, width: 28)
+        unreadCounterBackgroundView.centerX(inView: unreadCounterBackgroundView)
+        
+        unreadCounterLabel.center(inView: unreadCounterBackgroundView)
     }
     
     required init?(coder: NSCoder) {
