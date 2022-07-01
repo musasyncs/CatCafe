@@ -26,6 +26,22 @@ class ExploreController: UIViewController {
         return searchController.isActive && !searchController.searchBar.text!.isEmpty
     }
     private let searchController = UISearchController(searchResultsController: nil)
+    private lazy var backBarButtonItem = UIBarButtonItem(
+        image: UIImage(systemName: "arrow.left")?
+            .withTintColor(.black)
+            .withRenderingMode(.alwaysOriginal),
+        style: .plain,
+        target: self,
+        action: #selector(showCollectionView)
+    )
+    
+    let mapButton = makeIconButton(
+        imagename: "map",
+        imageColor: .black,
+        imageWidth: 24,
+        imageHeight: 24
+    )
+    lazy var mapBarButtonItem = UIBarButtonItem(customView: mapButton)
     
     private let tableView = UITableView()
     private lazy var collectionView: UICollectionView = {
@@ -39,7 +55,6 @@ class ExploreController: UIViewController {
     }()
     
     // MARK: - Life Cycle
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
@@ -58,7 +73,6 @@ class ExploreController: UIViewController {
     }
     
     // MARK: - API
-    
     func fetchUsers() {
         UserService.fetchUsers(exceptCurrentUser: true, completion: { users in
             self.users = users
@@ -74,7 +88,6 @@ class ExploreController: UIViewController {
     }
     
     // MARK: - Helpers
-    
     func configureUI() {
         view.backgroundColor = .white
         tableView.dataSource = self
@@ -90,18 +103,34 @@ class ExploreController: UIViewController {
     }
     
     func configureSearchController() {
+        navigationItem.rightBarButtonItem = mapBarButtonItem
+        mapButton.addTarget(self, action: #selector(showMap), for: .touchUpInside)
+
         searchController.searchResultsUpdater = self
-        searchController.obscuresBackgroundDuringPresentation = false
-        
-        searchController.searchBar.placeholder = "Search"
-        searchController.searchBar.delegate = self
-        
-        navigationItem.searchController = searchController
-        navigationItem.hidesSearchBarWhenScrolling = true
+        searchController.hidesNavigationBarDuringPresentation = false
         definesPresentationContext = true
+        searchController.searchBar.showsCancelButton = false
+        searchController.searchBar.placeholder = "搜尋"
+        searchController.searchBar.delegate = self
+        searchController.searchBar.sizeToFit()
+        searchController.searchBar.tintColor = .darkGray
+        navigationItem.titleView = searchController.searchBar
+        navigationItem.leftBarButtonItem = nil
     }
     
     // MARK: - Actions
+    @objc func showCollectionView() {
+        searchController.searchBar.endEditing(true)
+        searchController.searchBar.resignFirstResponder()
+        searchController.searchBar.text = nil
+        collectionView.isHidden = false
+        tableView.isHidden = true
+        navigationItem.leftBarButtonItem = nil
+    }
+    
+    @objc func showMap() {
+        print("did tap show map")
+    }
     
     @objc func handlePostRefresh() {
         fetchPosts()
@@ -114,7 +143,6 @@ class ExploreController: UIViewController {
 }
 
 // MARK: - UITableViewDataSource / UITableViewDelegate
-
 extension ExploreController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -140,7 +168,6 @@ extension ExploreController: UITableViewDataSource, UITableViewDelegate {
 }
 
 // MARK: - UISearchResultsUpdating
-
 extension ExploreController: UISearchResultsUpdating {
     
     func updateSearchResults(for searchController: UISearchController) {
@@ -153,26 +180,17 @@ extension ExploreController: UISearchResultsUpdating {
 }
 
 // MARK: - UISearchBarDelegate
-
 extension ExploreController: UISearchBarDelegate {
-    
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-        searchBar.showsCancelButton = true
+        searchBar.becomeFirstResponder()
         collectionView.isHidden = true
         tableView.isHidden = false
-    }
-    
-    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        searchBar.endEditing(true)
-        searchBar.showsCancelButton = false
-        searchBar.text = nil
-        collectionView.isHidden = false
-        tableView.isHidden = true
+        
+        navigationItem.leftBarButtonItem = backBarButtonItem
     }
 }
 
 // MARK: - UICollectionViewDataSource / UICollectionViewDelegate
-
 extension ExploreController: UICollectionViewDataSource, UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -195,7 +213,6 @@ extension ExploreController: UICollectionViewDataSource, UICollectionViewDelegat
 }
 
 // MARK: - UICollectionViewFlowLayout
-
 extension ExploreController: UICollectionViewDelegateFlowLayout {
     func collectionView(
         _ collectionView: UICollectionView,

@@ -170,3 +170,17 @@ func makeTabButton(imageName: String, unselectedImageName: String) -> UIButton {
     button.imageView?.contentMode = .scaleAspectFit
     return button
 }
+
+func makeProfileEditButton() -> UIButton {
+    let button = UIButton(type: .system)
+    button.setImage(UIImage(systemName: "square.and.pencil"), for: .normal)
+    button.imageView?.contentMode = .scaleToFill
+    
+    button.layer.cornerRadius = 36/2
+    button.layer.borderWidth = 0.3
+    button.layer.borderColor = UIColor.darkGray.cgColor
+    
+    button.backgroundColor = .white
+    button.tintColor = .darkGray
+    return button
+}

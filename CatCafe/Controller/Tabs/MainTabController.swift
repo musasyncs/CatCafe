@@ -17,7 +17,7 @@ class MainTabController: UITabBarController {
         }
     }
     
-    private let tabs: [Tab] = [.home, .explore, .meet, .reels, .profile]
+    private let tabs: [Tab] = [.home, .explore, .meet, .profile]
     
     // MARK: - Life Cycle
     override func viewDidLoad() {
@@ -30,6 +30,14 @@ class MainTabController: UITabBarController {
         
         // style
         setTabBarApearance()
+        
+        // add observer
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(refetchCurrentUser),
+            name: CCConstant.NotificationName.updateProfile,
+            object: nil
+        )
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -66,10 +74,23 @@ class MainTabController: UITabBarController {
     }
     
     private func fetchCurrentUser() {
-        guard let currentUid = LocalStorage.shared.getUid() else { return }
-        UserService.shared.fetchUserBy(uid: currentUid, completion: { currentUser in
+        UserService.shared.fetchCurrentUser { currentUser in
             self.currentUser = currentUser
-        })
+            
+            self.dismiss(animated: true)
+            
+            // 剛註冊
+            if UserService.shared.currentUser?.profileImageUrlString == "" {
+                let controller = SetProfileController()
+                controller.modalPresentationStyle = .fullScreen
+                self.present(controller, animated: true)
+            }
+        }
+    }
+    
+    // MARK: - Action
+    @objc func refetchCurrentUser() {
+        fetchCurrentUser()
     }
 }
 
@@ -77,13 +98,6 @@ class MainTabController: UITabBarController {
 extension MainTabController: AuthenticationDelegate {
     func authenticationDidComplete() {
         fetchCurrentUser()
-        self.dismiss(animated: true) {
-            if UserService.shared.currentUser?.profileImageUrlString == "" {
-                let controller = SetProfileController()
-                controller.modalPresentationStyle = .fullScreen
-                self.present(controller, animated: true)
-            }
-        }
     }
 }
 
@@ -115,7 +129,6 @@ private enum Tab: Int {
     case home
     case explore
     case meet
-    case reels
     case profile
     
     func setController(user: User?) -> UIViewController {
@@ -129,8 +142,6 @@ private enum Tab: Int {
             controller = makeNavigationController(rootViewController: ExploreController())
         case .meet:
             controller = makeNavigationController(rootViewController: MeetController())
-        case .reels:
-            controller = makeNavigationController(rootViewController: ReelsController())
         case .profile:
             if let user = user {
                 controller = makeNavigationController(rootViewController: ProfileController(user: user))
@@ -160,13 +171,6 @@ private enum Tab: Int {
                 title: nil,
                 image: UIImage(named: "speaker_unselected")!,
                 selectedImage: UIImage(named: "speaker_selected")!)
-        case .reels:
-            return setTabBarItem(
-                title: nil,
-                image: UIImage(named: "reels_unselected")?
-                    .resize(to: .init(width: 26, height: 26))!,
-                selectedImage: UIImage(named: "reels_selected")?
-                    .resize(to: .init(width: 26, height: 26))!)
         case .profile:
             return setTabBarItem(
                 title: nil,
@@ -205,7 +209,6 @@ private enum Tab: Int {
             String(describing: FeedController.self),
             String(describing: ExploreController.self),
             String(describing: MeetController.self),
-            String(describing: ReelsController.self),
             String(describing: ProfileController.self)
             
         ].forEach { name in

@@ -18,6 +18,7 @@ struct CCConstant {
     struct NotificationName {
         static let updateFeed = NSNotification.Name("updateFeed")
         static let updateMeetFeed = NSNotification.Name("updateMeetFeed")
+        static let updateProfile = NSNotification.Name("updateProfile")
     }
 
     static let NUMBEROFMESSAGES = 12

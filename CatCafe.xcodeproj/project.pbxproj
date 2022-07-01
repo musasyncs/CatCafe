@@ -112,7 +112,6 @@
 		BA44774928588E720045DDB8 /* FeedController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA44774828588E720045DDB8 /* FeedController.swift */; };
 		BA44774B28588ECA0045DDB8 /* ExploreController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA44774A28588ECA0045DDB8 /* ExploreController.swift */; };
 		BA44774D28588F4B0045DDB8 /* MeetController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA44774C28588F4B0045DDB8 /* MeetController.swift */; };
-		BA44774F28588FE40045DDB8 /* ReelsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA44774E28588FE40045DDB8 /* ReelsController.swift */; };
 		BA44775128588FFD0045DDB8 /* ProfileController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA44775028588FFD0045DDB8 /* ProfileController.swift */; };
 		BA4477542858A7A70045DDB8 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = BA4477532858A7A70045DDB8 /* GoogleService-Info.plist */; };
 		BA44778C285961A50045DDB8 /* FeedCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA44778B285961A50045DDB8 /* FeedCell.swift */; };
@@ -215,6 +214,8 @@
 		BADF1F8D285ECCCD004CF329 /* NotificationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BADF1F8C285ECCCD004CF329 /* NotificationViewModel.swift */; };
 		BADF1F90285ED0B6004CF329 /* NotificationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BADF1F8F285ED0B6004CF329 /* NotificationCell.swift */; };
 		BADF1F93285F1849004CF329 /* LocalStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = BADF1F92285F1849004CF329 /* LocalStorage.swift */; };
+		BAEBF612286E918F00DBA670 /* ProfileEditController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAEBF611286E918F00DBA670 /* ProfileEditController.swift */; };
+		BAEBF614286E999900DBA670 /* InfoCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAEBF613286E999900DBA670 /* InfoCollectionViewCell.swift */; };
 		BAF9BD1C28608C93000F9EEA /* PostCameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF9BD1B28608C93000F9EEA /* PostCameraController.swift */; };
 		BAF9BD2028608D72000F9EEA /* PreviewPhotoContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF9BD1F28608D72000F9EEA /* PreviewPhotoContainerView.swift */; };
 		F3CA363722C8C7AF9DC7484D /* Pods_CatCafe.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91DB69D591917799CE505D79 /* Pods_CatCafe.framework */; };
@@ -332,7 +333,6 @@
 		BA44774828588E720045DDB8 /* FeedController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedController.swift; sourceTree = "<group>"; };
 		BA44774A28588ECA0045DDB8 /* ExploreController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreController.swift; sourceTree = "<group>"; };
 		BA44774C28588F4B0045DDB8 /* MeetController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetController.swift; sourceTree = "<group>"; };
-		BA44774E28588FE40045DDB8 /* ReelsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReelsController.swift; sourceTree = "<group>"; };
 		BA44775028588FFD0045DDB8 /* ProfileController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileController.swift; sourceTree = "<group>"; };
 		BA4477532858A7A70045DDB8 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		BA44778B285961A50045DDB8 /* FeedCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedCell.swift; sourceTree = "<group>"; };
@@ -435,6 +435,8 @@
 		BADF1F8C285ECCCD004CF329 /* NotificationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationViewModel.swift; sourceTree = "<group>"; };
 		BADF1F8F285ED0B6004CF329 /* NotificationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationCell.swift; sourceTree = "<group>"; };
 		BADF1F92285F1849004CF329 /* LocalStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalStorage.swift; sourceTree = "<group>"; };
+		BAEBF611286E918F00DBA670 /* ProfileEditController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileEditController.swift; sourceTree = "<group>"; };
+		BAEBF613286E999900DBA670 /* InfoCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoCollectionViewCell.swift; sourceTree = "<group>"; };
 		BAF9BD1B28608C93000F9EEA /* PostCameraController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostCameraController.swift; sourceTree = "<group>"; };
 		BAF9BD1F28608D72000F9EEA /* PreviewPhotoContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewPhotoContainerView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -719,6 +721,7 @@
 				BADF1F84285E786F004CF329 /* Notification */,
 				BADBFF6D28614DD900146D6F /* Meet */,
 				BA1385C82867F8B5001B7FF1 /* Chat */,
+				BAEBF610286E916100DBA670 /* ProfileEdit */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -731,7 +734,6 @@
 				BA44774A28588ECA0045DDB8 /* ExploreController.swift */,
 				BA44774C28588F4B0045DDB8 /* MeetController.swift */,
 				BAD133AD2864A55C00B8015A /* MeetChild */,
-				BA44774E28588FE40045DDB8 /* ReelsController.swift */,
 				BA44775028588FFD0045DDB8 /* ProfileController.swift */,
 			);
 			path = Tabs;
@@ -1081,6 +1083,15 @@
 			path = LocalStorage;
 			sourceTree = "<group>";
 		};
+		BAEBF610286E916100DBA670 /* ProfileEdit */ = {
+			isa = PBXGroup;
+			children = (
+				BAEBF611286E918F00DBA670 /* ProfileEditController.swift */,
+				BAEBF613286E999900DBA670 /* InfoCollectionViewCell.swift */,
+			);
+			path = ProfileEdit;
+			sourceTree = "<group>";
+		};
 		BAF9BD1E28608D5B000F9EEA /* PostCamera */ = {
 			isa = PBXGroup;
 			children = (
@@ -1257,6 +1268,7 @@
 				BA1385A62866F52B001B7FF1 /* MTHelenaVideoFilter.swift in Sources */,
 				BA1385BE2866F56B001B7FF1 /* MTFilterManager.swift in Sources */,
 				BA13856A2866F52A001B7FF1 /* MTInkwellFilter.metal in Sources */,
+				BAEBF614286E999900DBA670 /* InfoCollectionViewCell.swift in Sources */,
 				BADBFF7A286202B100146D6F /* MeetDetailController.swift in Sources */,
 				BA13859B2866F52B001B7FF1 /* MTPerpetuaFilter.metal in Sources */,
 				BA44778C285961A50045DDB8 /* FeedCell.swift in Sources */,
@@ -1282,6 +1294,7 @@
 				BA1385AC2866F52B001B7FF1 /* MTClarendonVideoFilter.metal in Sources */,
 				BAD133B22864C7D200B8015A /* Person.swift in Sources */,
 				BADF1F86285E788A004CF329 /* NotificationController.swift in Sources */,
+				BAEBF612286E918F00DBA670 /* ProfileEditController.swift in Sources */,
 				BADF1F7E285DC535004CF329 /* Comment.swift in Sources */,
 				BA4477992859D0FD0045DDB8 /* User.swift in Sources */,
 				BA44774D28588F4B0045DDB8 /* MeetController.swift in Sources */,
@@ -1377,7 +1390,6 @@
 				BADF1F71285CBB99004CF329 /* PostViewModel.swift in Sources */,
 				BA44775128588FFD0045DDB8 /* ProfileController.swift in Sources */,
 				BADF1F80285DCAA1004CF329 /* CommentViewModel.swift in Sources */,
-				BA44774F28588FE40045DDB8 /* ReelsController.swift in Sources */,
 				BA44774928588E720045DDB8 /* FeedController.swift in Sources */,
 				BA7BB725285AE4D000465DEC /* PostSelectController.swift in Sources */,
 				BA4477972859D0280045DDB8 /* UserService.swift in Sources */,

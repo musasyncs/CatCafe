@@ -60,11 +60,6 @@ class LoginController: UIViewController {
                 // Save uid; hasLogedIn = true
                 LocalStorage.shared.saveUid(user.uid)
                 LocalStorage.shared.hasLogedIn = true
-                
-                ///
-                guard let uid = LocalStorage.shared.getUid() else { return }
-                print("DEBUG: Currewnt uid is", uid)
-                ///
                                 
                 self.delegate?.authenticationDidComplete()
             case .failure(let error):

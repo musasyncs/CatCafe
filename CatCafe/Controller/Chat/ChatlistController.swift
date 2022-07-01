@@ -12,8 +12,13 @@ class ChatlistController: UIViewController {
     
     var allRecents = [RecentChat]()
     var filteredRecents = [RecentChat]()
+    private var inSearchMode: Bool {
+        return searchController.isActive && !searchController.searchBar.text!.isEmpty
+    }
     
+    // MARK: - Views
     let tableView = UITableView()
+    
     private lazy var newMessageButton: UIButton = {
         let button = UIButton(type: .system)
         button.setImage(UIImage(systemName: "plus"), for: .normal)
@@ -24,6 +29,15 @@ class ChatlistController: UIViewController {
         button.addTarget(self, action: #selector(showNewMessage), for: .touchUpInside)
         return button
     }()
+    
+    private lazy var backBarButtonItem = UIBarButtonItem(
+        image: UIImage(systemName: "arrow.left")?
+            .withTintColor(.black)
+            .withRenderingMode(.alwaysOriginal),
+        style: .plain,
+        target: self,
+        action: #selector(showChatlist)
+    )
     
     let searchController = UISearchController(searchResultsController: nil)
     
@@ -40,7 +54,7 @@ class ChatlistController: UIViewController {
         // style
         view.backgroundColor = .white
         
-        configureNavigationBar(withTitle: "Messages",
+        configureNavigationBar(withTitle: "\(UserService.shared.currentUser?.username ?? "")",
                                prefersLargeTitles: false,
                                shouldHideUnderline: true,
                                interfaceStyle: .light)
@@ -64,13 +78,16 @@ class ChatlistController: UIViewController {
     
     // MARK: - Helper
     private func setupSearchController() {
-        navigationItem.searchController = searchController
-        navigationItem.hidesSearchBarWhenScrolling = true
-        
-        searchController.obscuresBackgroundDuringPresentation = false
-        searchController.searchBar.placeholder = "Search user"
         searchController.searchResultsUpdater = self
+        searchController.hidesNavigationBarDuringPresentation = false
         definesPresentationContext = true
+        searchController.searchBar.showsCancelButton = false
+        searchController.searchBar.placeholder = "搜尋"
+        searchController.searchBar.delegate = self
+        searchController.searchBar.sizeToFit()
+        searchController.searchBar.tintColor = .darkGray
+        navigationItem.searchController = searchController
+        navigationItem.hidesSearchBarWhenScrolling = false
     }
 
     private func filteredContentForSearchText(searchText: String) {
@@ -90,7 +107,6 @@ class ChatlistController: UIViewController {
     }
     
     private func goToChat(recent: RecentChat) {
-        
         // make sure we have 2 recents
         restartChat(chatRoomId: recent.chatRoomId, memberIds: recent.memberIds)
         
@@ -102,6 +118,14 @@ class ChatlistController: UIViewController {
     }
     
     // MARK: - Action
+    @objc func showChatlist() {
+        searchController.searchBar.endEditing(true)
+        searchController.searchBar.resignFirstResponder()
+        searchController.searchBar.text = nil
+
+        navigationItem.leftBarButtonItem = nil
+    }
+    
     @objc func showNewMessage() {
         let controller = NewMessageController()
         controller.delegate = self
@@ -113,7 +137,7 @@ class ChatlistController: UIViewController {
 extension ChatlistController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return searchController.isActive ? filteredRecents.count : allRecents.count
+        return inSearchMode ? filteredRecents.count : allRecents.count        
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -121,16 +145,14 @@ extension ChatlistController: UITableViewDataSource, UITableViewDelegate {
             withIdentifier: RecentChatCell.identifier,
             for: indexPath) as? RecentChatCell
         else { return UITableViewCell() }
-        
-        let recent = searchController.isActive ? filteredRecents[indexPath.row] : allRecents[indexPath.row]
+        let recent = inSearchMode ? filteredRecents[indexPath.row] : allRecents[indexPath.row]
         cell.configure(recent: recent)
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        
-        let recent = searchController.isActive ? filteredRecents[indexPath.row] : allRecents[indexPath.row]
+        let recent = inSearchMode ? filteredRecents[indexPath.row] : allRecents[indexPath.row]
         RecentChatService.shared.clearUnreadCounter(recent: recent)
         goToChat(recent: recent)
     }
@@ -182,4 +204,12 @@ extension ChatlistController: UISearchResultsUpdating {
         filteredContentForSearchText(searchText: searchController.searchBar.text!)
     }
     
+}
+
+// MARK: - UISearchBarDelegate
+extension ChatlistController: UISearchBarDelegate {
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        searchBar.becomeFirstResponder()
+        navigationItem.leftBarButtonItem = backBarButtonItem
+    }
 }

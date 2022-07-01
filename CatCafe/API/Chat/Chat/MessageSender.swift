@@ -12,6 +12,7 @@ import Gallery
 
 class MessageSender {
     
+    // swiftlint:disable:next function_parameter_count
     class func send(chatId: String,
                     text: String?,
                     photo: UIImage?,
