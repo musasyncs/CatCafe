@@ -176,7 +176,7 @@ func makeProfileEditButton() -> UIButton {
     button.setImage(UIImage(systemName: "square.and.pencil"), for: .normal)
     button.imageView?.contentMode = .scaleToFill
     
-    button.layer.cornerRadius = 40/2
+    button.layer.cornerRadius = 36/2
     button.layer.borderWidth = 0.3
     button.layer.borderColor = UIColor.darkGray.cgColor
     

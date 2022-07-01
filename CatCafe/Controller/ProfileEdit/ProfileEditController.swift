@@ -23,40 +23,45 @@ class ProfileEditController: UIViewController {
     private var fullname = ""
     private var email = ""
     
-    let leaveButton = makeTitleButton(withText: "離開",
-                                      font: .systemFont(ofSize: 13, weight: .regular),
-                                      kern: 0.8,
-                                      foregroundColor: .black,
-                                      backgroundColor: .clear)
-
+    let leaveButton = makeIconButton(imagename: "Icons_24px_Close",
+                                     imageColor: .white,
+                                     imageWidth: 20, imageHeight: 20,
+                                     backgroundColor: .darkGray,
+                                     cornerRadius: 36 / 2)
+    
     let profileEditButton = makeProfileEditButton()
     let profileImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(named: "no-Image")
         imageView.contentMode = .scaleAspectFill
-        imageView.layer.cornerRadius = 150/2
+        imageView.layer.cornerRadius = 120/2
         imageView.layer.masksToBounds = true
         return imageView
     }()
     
     let titleLabel = ProfileLabel()
     
-    lazy var infoColletionView: UICollectionView = {
+    lazy var colletionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
-        layout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize // cell展開
-        let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        cv.dataSource = self
-        cv.backgroundColor = .white
-        cv.isScrollEnabled = false
-        cv.register(InfoCollectionViewCell.self, forCellWithReuseIdentifier: InfoCollectionViewCell.identifier)
-        return cv
+        layout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.dataSource = self
+        collectionView.backgroundColor = .white
+        collectionView.isScrollEnabled = false
+        collectionView.register(
+            InfoCollectionViewCell.self,
+            forCellWithReuseIdentifier: InfoCollectionViewCell.identifier
+        )
+        return collectionView
     }()
     
     let saveButton = makeTitleButton(withText: "儲存",
-                                     font: .systemFont(ofSize: 13, weight: .regular),
+                                     font: .systemFont(ofSize: 17, weight: .regular),
                                      kern: 0.8,
-                                     foregroundColor: .black,
-                                     backgroundColor: .clear)
+                                     foregroundColor: .white,
+                                     backgroundColor: .systemBrown,
+                                     insets: .init(top: 5, left: 10, bottom: 5, right: 10),
+                                     cornerRadius: 8)
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -82,6 +87,8 @@ extension ProfileEditController {
     
     func style() {
         view.backgroundColor = .white
+        leaveButton.layer.cornerRadius = 36 / 2
+        leaveButton.clipsToBounds = true
     }
     
     func layout() {
@@ -89,33 +96,36 @@ extension ProfileEditController {
         view.addSubview(titleLabel)
         view.addSubview(profileImageView)
         view.addSubview(profileEditButton)
-        view.addSubview(infoColletionView)
+        view.addSubview(colletionView)
         view.addSubview(saveButton)
         
         leaveButton.anchor(top: view.topAnchor,
                            left: view.leftAnchor,
-                           paddingTop: 60, paddingLeft: 40)
+                           paddingTop: 56, paddingLeft: 24)
+        leaveButton.setDimensions(height: 36, width: 36)
         
         profileImageView.anchor(top: view.topAnchor, paddingTop: 80)
         profileImageView.centerX(inView: view)
-        profileImageView.setDimensions(height: 150, width: 150)
+        profileImageView.setDimensions(height: 120, width: 120)
         
         titleLabel.anchor(top: profileImageView.bottomAnchor, paddingTop: 20)
         titleLabel.centerX(inView: view)
         
         profileEditButton.anchor(top: profileImageView.topAnchor,
                                  right: profileImageView.rightAnchor,
-                                 width: 40, height: 40)
+                                 width: 36, height: 36)
         
-        infoColletionView.anchor(top: titleLabel.bottomAnchor,
-                                 left: view.leftAnchor,
-                                 right: view.rightAnchor,
-                                 paddingLeft: 40, paddingRight: 40)
-        infoColletionView.setHeight(250)
-        infoColletionView.backgroundColor = .systemGreen
+        colletionView.anchor(top: titleLabel.bottomAnchor,
+                             left: view.leftAnchor,
+                             right: view.rightAnchor,
+                             paddingTop: 32,
+                             paddingLeft: 40, paddingRight: 40)
+        colletionView.setHeight(250)
+        colletionView.backgroundColor = .clear
         
-        saveButton.anchor(top: infoColletionView.bottomAnchor, paddingTop: 30)
-        saveButton.centerX(inView: infoColletionView)
+        saveButton.anchor(top: colletionView.bottomAnchor, paddingTop: 30)
+        saveButton.centerX(inView: colletionView)
+        saveButton.setDimensions(height: 40, width: 80)
     }
 }
 
@@ -124,9 +134,12 @@ extension ProfileEditController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return 1
     }
-
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = infoColletionView.dequeueReusableCell(
+    
+    func collectionView(
+        _ collectionView: UICollectionView,
+        cellForItemAt indexPath: IndexPath
+    ) -> UICollectionViewCell {
+        guard let cell = colletionView.dequeueReusableCell(
             withReuseIdentifier: InfoCollectionViewCell.identifier,
             for: indexPath
         ) as? InfoCollectionViewCell else { return UICollectionViewCell() }
@@ -170,60 +183,12 @@ extension ProfileEditController {
     @objc func saveButtonTapped() {
         let alert = UIAlertController(title: "確定送出？", message: "", preferredStyle: .alert)
         let okAction = UIAlertAction(title: "確定", style: .default) { _ in
-            
-            // 更新個人資料 (除了 imageUrlString)
-            CCProgressHUD.show()
-            UserService.shared.updateCurrentUserInfo(
-                fullname: self.fullname,
-                username: self.username,
-                email: self.email
-            ) { error in
-                CCProgressHUD.dismiss()
-                
-                if let error = error {
-                    CCProgressHUD.showFailure()
-                    print("DEBUG: Failed to create profile(except imageUrlString) with error: \(error.localizedDescription)")
-                    return
-                }
-                
-                CCProgressHUD.showSuccess(text: "您的資料已更新")
-            }
+            self.updatePersonalData()
 
-            // 若用 image picker 換過頭貼了，就把該頭貼上傳 Storage，字典的 profileImageUrlString 也更新
             if self.hasChangedImage {
-                
-                guard let profileImage = self.profileImageView.image else {
-                    self.showMessage(withTitle: "請上傳大頭照", message: nil)
-                    return
-                }
-                
-                guard let currentUid = LocalStorage.shared.getUid() else { return }
-                let directory = "Profile/" + "_\(currentUid)" + ".jpg"
-                
-                ProgressHUD.show()
-                FileStorage.uploadImage(profileImage, directory: directory) { profileImageUrlString in
-                    
-                    CCProgressHUD.show()
-                    UserService.shared.uploadProfileImage(
-                        userId: currentUid,
-                        profileImageUrlString: profileImageUrlString
-                    ) { error in
-                        CCProgressHUD.dismiss()
-                        
-                        if let error = error {
-                            CCProgressHUD.showFailure()
-                            print("DEBUG: Failed to create profile image urlString with error: \(error.localizedDescription)")
-                            return
-                        }
-                        
-                        CCProgressHUD.showSuccess(text: "您的大頭照已更新")
-                        self.dismiss(animated: true)
-                    }
-                }
-                
+                self.updatePersonalImage()
             }
             
-            // 名字標題更改！
             self.titleLabel.text = self.fullname
                         
             // Call Tab bar controller to refetch current user
@@ -240,19 +205,71 @@ extension ProfileEditController {
         present(alert, animated: true)
     }
     
+    private func updatePersonalData() {
+        CCProgressHUD.show()
+        UserService.shared.updateCurrentUserInfo(
+            fullname: self.fullname,
+            username: self.username,
+            email: self.email
+        ) { error in
+            CCProgressHUD.dismiss()
+            
+            if let error = error {
+                CCProgressHUD.showFailure()
+                print("DEBUG: Failed to create profile with error: \(error.localizedDescription)")
+                return
+            }
+            
+            CCProgressHUD.showSuccess(text: "您的資料已更新")
+        }
+    }
+    
+    private func updatePersonalImage() {
+        guard let profileImage = self.profileImageView.image else {
+            self.showMessage(withTitle: "請上傳大頭照", message: nil)
+            return
+        }
+        
+        guard let currentUid = LocalStorage.shared.getUid() else { return }
+        let directory = "Profile/" + "_\(currentUid)" + ".jpg"
+        
+        ProgressHUD.show()
+        FileStorage.uploadImage(profileImage, directory: directory) { profileImageUrlString in
+            
+            CCProgressHUD.show()
+            UserService.shared.uploadProfileImage(
+                userId: currentUid,
+                profileImageUrlString: profileImageUrlString
+            ) { error in
+                CCProgressHUD.dismiss()
+                
+                if let error = error {
+                    CCProgressHUD.showFailure()
+                    print("DEBUG: Failed to create imageUrlString with error: \(error.localizedDescription)")
+                    return
+                }
+                
+                CCProgressHUD.showSuccess(text: "您的大頭照已更新")
+                self.dismiss(animated: true)
+            }
+        }
+    }
+    
     // 按頭貼編輯按鈕
     @objc func profileEditButtonTapped() {
-        let actionSheet = UIAlertController(title: "Add a Photo", message: "Select a source:", preferredStyle: .actionSheet)
+        let actionSheet = UIAlertController(title: "Add a Photo",
+                                            message: "Select a source:",
+                                            preferredStyle: .actionSheet)
         
         if UIImagePickerController.isSourceTypeAvailable(.camera) {
-            let cameraButton = UIAlertAction(title: "Camera", style: .default) { (action) in
+            let cameraButton = UIAlertAction(title: "Camera", style: .default) { _ in
                 self.showImagePickerController(mode: .camera)
             }
             actionSheet.addAction(cameraButton)
         }
         
         if UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
-            let libraryButton = UIAlertAction(title: "Photo Library", style: .default) { (action) in
+            let libraryButton = UIAlertAction(title: "Photo Library", style: .default) { _ in
                 self.showImagePickerController(mode: .photoLibrary)
             }
             actionSheet.addAction(libraryButton)
@@ -265,11 +282,11 @@ extension ProfileEditController {
     }
     
     private func showImagePickerController(mode: UIImagePickerController.SourceType) {
-        let imagePicker = UIImagePickerController()
-        imagePicker.delegate = self
-        imagePicker.sourceType = mode
-        imagePicker.allowsEditing = true
-        present(imagePicker, animated: true, completion: nil)
+        let picker = UIImagePickerController()
+        picker.delegate = self
+        picker.allowsEditing = true
+        picker.sourceType = mode
+        present(picker, animated: true, completion: nil)
     }
 
 }
@@ -281,11 +298,14 @@ extension ProfileEditController: UIImagePickerControllerDelegate, UINavigationCo
         picker.dismiss(animated: true)
     }
     
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        if let image = info[.editedImage] as? UIImage {
-            profileImageView.image = image.withRenderingMode(.alwaysOriginal)
-            self.hasChangedImage = true
-        }
+    func imagePickerController(
+        _ picker: UIImagePickerController,
+        didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]
+    ) {
+        guard let image = info[.editedImage] as? UIImage else { return }
+        profileImageView.image = image.withRenderingMode(.alwaysOriginal)
+        self.hasChangedImage = true
+        
         picker.dismiss(animated: true)
     }
 }

@@ -20,10 +20,9 @@ class InfoCollectionViewCell: UICollectionViewCell {
     let usernameLabel     = ProfileLabel(title: "帳號")
     let fullnameLabel     = ProfileLabel(title: "全名")
     let emailLabel        = ProfileLabel(title: "email")
-    let usernameTextField = ProfileTextField(placeholder: "帳號")
-    let fullnameTextField = ProfileTextField(placeholder: "全名")
+    let usernameTextField = ProfileTextField(placeholder: "請輸入帳號")
+    let fullnameTextField = ProfileTextField(placeholder: "請輸入全名")
     let emailTextField    = ProfileTextField(placeholder: "email")
-    
     
     override init(frame: CGRect) {
         super.init(frame: .zero)
@@ -68,7 +67,7 @@ class ProfileLabel: UILabel {
     // 名字大標題使用
     init() {
         super.init(frame: .zero)
-        font        = .systemFont(ofSize: 24, weight: .bold)
+        font        = .systemFont(ofSize: 20, weight: .bold)
         textColor   = .black
     }
     
@@ -92,13 +91,22 @@ class ProfileTextField: UITextField {
         super.init(frame: .zero)
         
         borderStyle = .roundedRect
-        self.placeholder = placeholder
+        
+        attributedPlaceholder = NSAttributedString(
+            string: placeholder,
+            attributes: [
+                NSAttributedString.Key.foregroundColor: UIColor.systemGray2,
+                NSAttributedString.Key.font: UIFont.systemFont(ofSize: 13, weight: .regular)
+            ]
+        )
+        
         if placeholder == "email" {
             isUserInteractionEnabled = false
             backgroundColor = .rgb(red: 233, green: 233, blue: 233)
         } else {
             backgroundColor = .rgb(red: 245, green: 245, blue: 245)
         }
+        
     }
     
     required init?(coder: NSCoder) {

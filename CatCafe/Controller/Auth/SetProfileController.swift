@@ -27,6 +27,7 @@ class SetProfileController: UIViewController {
         let picker = UIImagePickerController()
         picker.delegate = self
         picker.allowsEditing = true
+        picker.sourceType = .photoLibrary
         present(picker, animated: true)
     }
     

@@ -17,7 +17,7 @@ class MainTabController: UITabBarController {
         }
     }
     
-    private let tabs: [Tab] = [.home, .explore, .meet, .reels, .profile]
+    private let tabs: [Tab] = [.home, .explore, .meet, .profile]
     
     // MARK: - Life Cycle
     override func viewDidLoad() {
@@ -129,7 +129,6 @@ private enum Tab: Int {
     case home
     case explore
     case meet
-    case reels
     case profile
     
     func setController(user: User?) -> UIViewController {
@@ -143,8 +142,6 @@ private enum Tab: Int {
             controller = makeNavigationController(rootViewController: ExploreController())
         case .meet:
             controller = makeNavigationController(rootViewController: MeetController())
-        case .reels:
-            controller = makeNavigationController(rootViewController: ReelsController())
         case .profile:
             if let user = user {
                 controller = makeNavigationController(rootViewController: ProfileController(user: user))
@@ -174,13 +171,6 @@ private enum Tab: Int {
                 title: nil,
                 image: UIImage(named: "speaker_unselected")!,
                 selectedImage: UIImage(named: "speaker_selected")!)
-        case .reels:
-            return setTabBarItem(
-                title: nil,
-                image: UIImage(named: "reels_unselected")?
-                    .resize(to: .init(width: 26, height: 26))!,
-                selectedImage: UIImage(named: "reels_selected")?
-                    .resize(to: .init(width: 26, height: 26))!)
         case .profile:
             return setTabBarItem(
                 title: nil,
@@ -219,7 +209,6 @@ private enum Tab: Int {
             String(describing: FeedController.self),
             String(describing: ExploreController.self),
             String(describing: MeetController.self),
-            String(describing: ReelsController.self),
             String(describing: ProfileController.self)
             
         ].forEach { name in

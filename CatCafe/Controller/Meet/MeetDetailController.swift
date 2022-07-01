@@ -59,13 +59,13 @@ class MeetDetailController: UIViewController {
     override var canBecomeFirstResponder: Bool { return true }
     
     lazy var backButton = makeIconButton(imagename: "Icons_24px_Close",
-                                    imageColor: .white,
-                                    imageWidth: 24, imageHeight: 24,
-                                    backgroundColor: UIColor(white: 0.5, alpha: 0.7),
-                                    cornerRadius: 40 / 2)
-        
+                                         imageColor: .white,
+                                         imageWidth: 24, imageHeight: 24,
+                                         backgroundColor: UIColor(white: 0.5, alpha: 0.7),
+                                         cornerRadius: 40 / 2)
+    
     // MARK: - Life Cycle
-        
+    
     init(meet: Meet) {
         self.meet = meet
         super.init(nibName: nil, bundle: nil)
