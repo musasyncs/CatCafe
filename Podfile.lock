@@ -773,6 +773,12 @@ PODS:
   - nanopb/encode (2.30909.0)
   - ProgressHUD (13.6)
   - PromisesObjC (2.1.0)
+  - RxCocoa (6.5.0):
+    - RxRelay (= 6.5.0)
+    - RxSwift (= 6.5.0)
+  - RxRelay (6.5.0):
+    - RxSwift (= 6.5.0)
+  - RxSwift (6.5.0)
   - SDWebImage (5.12.5):
     - SDWebImage/Core (= 5.12.5)
   - SDWebImage/Core (5.12.5)
@@ -794,6 +800,8 @@ DEPENDENCIES:
   - MetalPetal (~> 1.10.1)
   - MJRefresh
   - ProgressHUD
+  - RxCocoa
+  - RxSwift
   - SDWebImage
   - SKPhotoBrowser
   - SwiftLint
@@ -834,6 +842,9 @@ SPEC REPOS:
     - nanopb
     - ProgressHUD
     - PromisesObjC
+    - RxCocoa
+    - RxRelay
+    - RxSwift
     - SDWebImage
     - SKPhotoBrowser
     - SwiftLint
@@ -873,10 +884,13 @@ SPEC CHECKSUMS:
   nanopb: b552cce312b6c8484180ef47159bc0f65a1f0431
   ProgressHUD: 4bdaa0d2ddf676b23324b199f9facffb5c3a1620
   PromisesObjC: 99b6f43f9e1044bd87a95a60beff28c2c44ddb72
+  RxCocoa: 94f817b71c07517321eb4f9ad299112ca8af743b
+  RxRelay: 1de1523e604c72b6c68feadedd1af3b1b4d0ecbd
+  RxSwift: 5710a9e6b17f3c3d6e40d6e559b9fa1e813b2ef8
   SDWebImage: 0905f1b7760fc8ac4198cae0036600d67478751e
   SKPhotoBrowser: 6aaa8f232752e87c7e76bace183bead0a137097d
   SwiftLint: f80f1be7fa96d30e0aa68e58d45d4ea1ccaac519
 
-PODFILE CHECKSUM: f23dc9efaef508f85d891b18ff1d70399107edbd
+PODFILE CHECKSUM: 2d54a6eb2d588bcf6ef6d1dbc81c6756ca5e200c
 
 COCOAPODS: 1.11.2

@@ -122,7 +122,7 @@ extension UIViewController {
     
     // MARK: - UIAlertController
 
-    func showMessage(withTitle title: String, message: String) {
+    func showMessage(withTitle title: String, message: String?) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "確定", style: .default) { _ in }
         okAction.setValue(UIColor.systemBrown, forKey: "titleTextColor")

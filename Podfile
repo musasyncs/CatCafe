@@ -15,6 +15,7 @@ target 'CatCafe' do
   pod 'FirebaseFirestoreSwift'
   
   pod 'lottie-ios'
+  
   pod 'MetalPetal', '~> 1.10.1'
   pod 'Kingfisher'
   pod 'SDWebImage'
@@ -27,5 +28,8 @@ target 'CatCafe' do
   pod 'InputBarAccessoryView'
   pod 'SKPhotoBrowser'
   pod 'Gallery'
+  
+  pod 'RxSwift'
+  pod 'RxCocoa'
   
 end

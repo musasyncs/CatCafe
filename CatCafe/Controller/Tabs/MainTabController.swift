@@ -30,6 +30,14 @@ class MainTabController: UITabBarController {
         
         // style
         setTabBarApearance()
+        
+        // add observer
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(refetchCurrentUser),
+            name: CCConstant.NotificationName.updateProfile,
+            object: nil
+        )
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -66,10 +74,23 @@ class MainTabController: UITabBarController {
     }
     
     private func fetchCurrentUser() {
-        guard let currentUid = LocalStorage.shared.getUid() else { return }
-        UserService.shared.fetchUserBy(uid: currentUid, completion: { currentUser in
+        UserService.shared.fetchCurrentUser { currentUser in
             self.currentUser = currentUser
-        })
+            
+            self.dismiss(animated: true)
+            
+            // 剛註冊
+            if UserService.shared.currentUser?.profileImageUrlString == "" {
+                let controller = SetProfileController()
+                controller.modalPresentationStyle = .fullScreen
+                self.present(controller, animated: true)
+            }
+        }
+    }
+    
+    // MARK: - Action
+    @objc func refetchCurrentUser() {
+        fetchCurrentUser()
     }
 }
 
@@ -77,13 +98,6 @@ class MainTabController: UITabBarController {
 extension MainTabController: AuthenticationDelegate {
     func authenticationDidComplete() {
         fetchCurrentUser()
-        self.dismiss(animated: true) {
-            if UserService.shared.currentUser?.profileImageUrlString == "" {
-                let controller = SetProfileController()
-                controller.modalPresentationStyle = .fullScreen
-                self.present(controller, animated: true)
-            }
-        }
     }
 }
 

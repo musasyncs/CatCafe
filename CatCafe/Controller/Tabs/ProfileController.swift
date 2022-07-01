@@ -13,8 +13,13 @@ class ProfileController: UICollectionViewController {
     private var user: User
     private var posts = [Post]()
     
+    let logoutButton = makeTitleButton(withText: "登出",
+                                       font: .systemFont(ofSize: 13, weight: .regular),
+                                       kern: 0.8,
+                                       foregroundColor: .black,
+                                       backgroundColor: .clear)
+        
     // MARK: - Initializer
-    
     init(user: User) {
         self.user = user
         super.init(collectionViewLayout: UICollectionViewFlowLayout())
@@ -25,7 +30,6 @@ class ProfileController: UICollectionViewController {
     }
     
     // MARK: - Life Cycle
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -41,7 +45,6 @@ class ProfileController: UICollectionViewController {
     }
     
     // MARK: - API
-    
     func checkIfUserIsFollowed() {
         UserService.shared.checkIfUserIsFollowed(uid: user.uid) { isFollowed in
             self.user.isFollowed = isFollowed
@@ -66,7 +69,6 @@ class ProfileController: UICollectionViewController {
     }
     
     // MARK: - Helpers
-    
     func setupBarButtonItem() {
         navigationItem.rightBarButtonItem = UIBarButtonItem(
             image: UIImage(named: "logout")?
@@ -93,6 +95,12 @@ class ProfileController: UICollectionViewController {
     }
     
     // MARK: - Action
+    @objc func handleRefresh() {
+        fetchUserPosts()
+        fetchUserStats()
+    }
+    
+    // 按登出按鈕
     @objc func handleLogout() {
         let alert = UIAlertController(title: "是否登出？", message: "", preferredStyle: .alert)
         let okAction = UIAlertAction(title: "確定", style: .default) { _ in
@@ -106,10 +114,10 @@ class ProfileController: UICollectionViewController {
                 // Clear uid / hasLogedIn = false
                 LocalStorage.shared.clearUid()
                 LocalStorage.shared.hasLogedIn = false
+                UserService.shared.currentUser = nil
                 
                 let controller = LoginController()
                 controller.delegate = self.tabBarController as? MainTabController
-                
                 let nav = UINavigationController(rootViewController: controller)
                 nav.modalPresentationStyle = .fullScreen
                 self.present(nav, animated: true, completion: nil)
@@ -127,11 +135,6 @@ class ProfileController: UICollectionViewController {
         alert.addAction(cancelAction)
         
         present(alert, animated: true)
-    }
-    
-    @objc func handleRefresh() {
-        fetchUserPosts()
-        fetchUserStats()
     }
 }
 
@@ -231,6 +234,10 @@ extension ProfileController: ProfileHeaderDelegate {
     func header(_ profileHeader: ProfileHeader, didTapActionButtonFor user: User) {
         if user.isCurrentUser {
             // Show edit profile
+            let controller = ProfileEditController()
+            controller.user = self.user
+            controller.modalPresentationStyle = .overFullScreen
+            present(controller, animated: true)
             
         } else if user.isFollowed {
             // Handle unfollow user

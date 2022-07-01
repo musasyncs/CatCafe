@@ -57,7 +57,6 @@ class SetProfileController: UIViewController {
                 self.dismiss(animated: true)
             }
         }
-    
     }
 
 }
