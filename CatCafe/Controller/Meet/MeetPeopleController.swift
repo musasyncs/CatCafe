@@ -184,8 +184,7 @@ extension MeetPeopleViewController: SnappyCellDelegate {
         
         view.addSubview(briefInfoView)
         briefInfoView.setDimensions(height: 350, width: view.frame.width - 64)
-        briefInfoView.centerX(inView: view)
-        briefInfoView.centerY(inView: view)
+        briefInfoView.center(inView: view)
     }
 }
 

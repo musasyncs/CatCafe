@@ -19,7 +19,7 @@ class SnappyCell: UICollectionViewCell {
         didSet {
             guard let person = person else { return }
             
-            UserService.fetchUserBy(uid: person.uid) { user in
+            UserService.shared.fetchUserBy(uid: person.uid) { user in
                 guard let url = URL(string: user.profileImageUrlString) else { return }
                 self.superImageView.sd_setImage(with: url)
             }

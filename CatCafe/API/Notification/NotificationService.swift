@@ -17,7 +17,8 @@ struct NotificationService {
     ) {
         guard fromUser.uid != uid else { return }
         
-        let docRef = CCConstant.COLLECTION_NOTIFICATIONS.document(uid)
+        let docRef = firebaseReference(.notifications)
+            .document(uid)
             .collection("user-notifications").document()
         
         var dic: [String: Any] = [
@@ -39,7 +40,8 @@ struct NotificationService {
     static func fetchNotifications(completion: @escaping([Notification]) -> Void) {
         guard let currentUid = LocalStorage.shared.getUid() else { return }
         
-        let query = CCConstant.COLLECTION_NOTIFICATIONS.document(currentUid)
+        let query = firebaseReference(.notifications)
+            .document(currentUid)
             .collection("user-notifications").order(by: "timestamp", descending: true)
         
         query.getDocuments { snapshot, _ in

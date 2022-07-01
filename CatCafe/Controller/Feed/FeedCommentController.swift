@@ -97,7 +97,7 @@ extension FeedCommentController {
         let comment = comments[indexPath.item]
         cell.viewModel = CommentViewModel(comment: comment)
         
-        UserService.fetchUserBy(uid: comment.uid) { user in
+        UserService.shared.fetchUserBy(uid: comment.uid) { user in
             cell.viewModel?.username = user.username
             cell.viewModel?.profileImageUrl = URL(string: user.profileImageUrlString)
         }
@@ -107,7 +107,7 @@ extension FeedCommentController {
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let uid = comments[indexPath.item].uid
-        UserService.fetchUserBy(uid: uid) { user in
+        UserService.shared.fetchUserBy(uid: uid) { user in
             let controller = ProfileController(user: user)
             self.navigationController?.pushViewController(controller, animated: true)
         }
@@ -135,9 +135,9 @@ extension FeedCommentController: CommentInputAccessoryViewDelegate {
     func inputView(_ inputView: CommentInputAccessoryView, wantsToUploadComment comment: String) {
         
         guard let currentUid = LocalStorage.shared.getUid() else { return }
-        UserService.fetchUserBy(uid: currentUid, completion: { currentUser in
+        UserService.shared.fetchUserBy(uid: currentUid, completion: { currentUser in
             
-            self.show()
+            CCProgressHUD.show()
             CommentService.uploadComment(
                 postId: self.post.postId,
                 user: currentUser,
@@ -145,7 +145,7 @@ extension FeedCommentController: CommentInputAccessoryViewDelegate {
                 mediaUrlString: "",
                 comment: comment
             ) { error in
-                self.dismiss()
+                CCProgressHUD.dismiss()
                 
                 if let error = error {
                     print("DEBUG: Failed to upload comment with error \(error.localizedDescription)")

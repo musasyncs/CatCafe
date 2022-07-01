@@ -49,21 +49,26 @@ class LoginController: UIViewController {
             return
         }
         
-        show()
+        CCProgressHUD.show()
         AuthService.loginUser(withEmail: email, password: password) { [weak self] result in
             guard let self = self else { return }
-            self.dismiss()
+            CCProgressHUD.dismiss()
             
             switch result {
-            case .success(let authUser):
+            case .success(let user):
                 
                 // Save uid; hasLogedIn = true
-                LocalStorage.shared.saveUid(authUser.uid)
+                LocalStorage.shared.saveUid(user.uid)
                 LocalStorage.shared.hasLogedIn = true
+                
+                ///
+                guard let uid = LocalStorage.shared.getUid() else { return }
+                print("DEBUG: Currewnt uid is", uid)
+                ///
                                 
                 self.delegate?.authenticationDidComplete()
             case .failure(let error):
-                self.showFailure()
+                CCProgressHUD.showFailure()
                 print("DEBUG: Failed to log user in \(error.localizedDescription)")
             }
         }

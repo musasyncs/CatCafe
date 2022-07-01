@@ -179,8 +179,7 @@ final class MeetPicView: UIView {
         super.init(frame: frame)
         
         addSubview(cameraImageView)
-        cameraImageView.centerX(inView: self)
-        cameraImageView.centerY(inView: self)
+        cameraImageView.center(inView: self)
         
         addSubview(placedImageView)
         placedImageView.fillSuperView()

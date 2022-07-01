@@ -56,6 +56,7 @@ struct AuthService {
     static func logoutUser() -> Result<Void, Error> {
         do {
             try Auth.auth().signOut()
+            UserService.shared.currentUser = nil
             return .success(())
         } catch {
             return .failure(error)
