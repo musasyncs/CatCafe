@@ -124,7 +124,12 @@ class SearchCell: UITableViewCell {
     public func animateButtonIn() {
         goButton.transform = CGAffineTransform(scaleX: 0.25, y: 0.25)
         
-        UIView.animate(withDuration: 0.6, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 0, options: .curveEaseInOut, animations: {
+        UIView.animate(withDuration: 0.6,
+                       delay: 0,
+                       usingSpringWithDamping: 1,
+                       initialSpringVelocity: 0,
+                       options: .curveEaseInOut,
+                       animations: {
             self.goButton.alpha = 1
             self.goButton.transform = CGAffineTransform(scaleX: 1.1, y: 1.1)
         }) { (_) in

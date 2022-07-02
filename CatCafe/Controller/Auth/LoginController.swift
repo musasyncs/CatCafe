@@ -22,7 +22,10 @@ class LoginController: UIViewController {
     lazy var passwordContainerView = InputContainerView(imageName: "lock",
                                                         textField: passwordTextField)
     private lazy var loginButton = UIButton(type: .system)
-    private let signInWithAppleButton = ASAuthorizationAppleIDButton(authorizationButtonType: .default, authorizationButtonStyle: .white)
+    private let signInWithAppleButton = ASAuthorizationAppleIDButton(
+        authorizationButtonType: .default,
+        authorizationButtonStyle: .white
+    )
     private lazy var stackView = UIStackView(
         arrangedSubviews: [
             emailContainerView,
