@@ -74,7 +74,9 @@ class RegistrationController: UIViewController {
                                           fullname: fullname,
                                           username: username)
         CCProgressHUD.show()
-        AuthService.registerUser(withCredial: credentials) { [weak self] result in
+        AuthService.shared.registerUser(withCredial: credentials) { [weak self] result in
+            CCProgressHUD.dismiss()
+            
             guard let self = self else { return }
             
             switch result {

@@ -183,10 +183,67 @@ extension ProfileEditController {
     @objc func saveButtonTapped() {
         let alert = UIAlertController(title: "確定送出？", message: "", preferredStyle: .alert)
         let okAction = UIAlertAction(title: "確定", style: .default) { _ in
-            self.updatePersonalData()
-
+            
+            let group = DispatchGroup()
+            
+            group.enter()
+            CCProgressHUD.show()
+            UserService.shared.updateCurrentUserInfo(
+                fullname: self.fullname,
+                username: self.username,
+                email: self.email
+            ) { error in
+                CCProgressHUD.dismiss()
+                
+                if let error = error {
+                    CCProgressHUD.showFailure()
+                    print("DEBUG: Failed to create profile with error: \(error.localizedDescription)")
+                    return
+                }
+                
+                CCProgressHUD.showSuccess(text: "資料已更新")
+                self.titleLabel.text = self.fullname
+                
+                group.leave()
+            }
+        
             if self.hasChangedImage {
-                self.updatePersonalImage()
+                guard let profileImage = self.profileImageView.image else {
+                    self.showMessage(withTitle: "請上傳大頭照", message: nil)
+                    return
+                }
+                
+                guard let currentUid = LocalStorage.shared.getUid() else { return }
+                let directory = "Profile/" + "_\(currentUid)" + ".jpg"
+                
+                ProgressHUD.show()
+                
+                group.enter()
+                FileStorage.uploadImage(profileImage, directory: directory) { profileImageUrlString in
+                    
+                    CCProgressHUD.show()
+                    UserService.shared.uploadProfileImage(
+                        userId: currentUid,
+                        profileImageUrlString: profileImageUrlString
+                    ) { error in
+                        CCProgressHUD.dismiss()
+                        
+                        if let error = error {
+                            CCProgressHUD.showFailure()
+                            print("DEBUG: Failed to create imageUrlString with error: \(error.localizedDescription)")
+                            return
+                        }
+                        
+                        CCProgressHUD.showSuccess(text: "頭貼已更新")
+                        
+                        group.leave()
+                    }
+                }
+            }
+            
+            group.notify(queue: .main) {
+                // Call Tab bar controller to refetch current user
+                NotificationCenter.default.post(name: CCConstant.NotificationName.updateProfile, object: nil)
             }
         }
         
@@ -198,62 +255,6 @@ extension ProfileEditController {
         alert.addAction(cancelAction)
         
         present(alert, animated: true)
-    }
-    
-    private func updatePersonalData() {
-        CCProgressHUD.show()
-        UserService.shared.updateCurrentUserInfo(
-            fullname: self.fullname,
-            username: self.username,
-            email: self.email
-        ) { error in
-            CCProgressHUD.dismiss()
-            
-            if let error = error {
-                CCProgressHUD.showFailure()
-                print("DEBUG: Failed to create profile with error: \(error.localizedDescription)")
-                return
-            }
-            
-            CCProgressHUD.showSuccess(text: "資料已更新")
-            
-            self.titleLabel.text = self.fullname
-        }
-    }
-    
-    private func updatePersonalImage() {
-        guard let profileImage = self.profileImageView.image else {
-            self.showMessage(withTitle: "請上傳大頭照", message: nil)
-            return
-        }
-        
-        guard let currentUid = LocalStorage.shared.getUid() else { return }
-        let directory = "Profile/" + "_\(currentUid)" + ".jpg"
-        
-        ProgressHUD.show()
-        FileStorage.uploadImage(profileImage, directory: directory) { profileImageUrlString in
-            
-            CCProgressHUD.show()
-            UserService.shared.uploadProfileImage(
-                userId: currentUid,
-                profileImageUrlString: profileImageUrlString
-            ) { error in
-                CCProgressHUD.dismiss()
-                
-                if let error = error {
-                    CCProgressHUD.showFailure()
-                    print("DEBUG: Failed to create imageUrlString with error: \(error.localizedDescription)")
-                    return
-                }
-                
-                CCProgressHUD.showSuccess(text: "頭貼已更新")
-                
-                // Call Tab bar controller to refetch current user
-                NotificationCenter.default.post(name: CCConstant.NotificationName.updateProfile, object: nil)
-                
-                self.dismiss(animated: true)
-            }
-        }
     }
     
     // 按頭貼編輯按鈕
