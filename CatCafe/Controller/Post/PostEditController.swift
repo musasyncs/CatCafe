@@ -122,7 +122,6 @@ class PostEditController: UIViewController {
     }
     
     // MARK: - Helpers
-    
     func setupBarButtonItem() {
         navigationItem.leftBarButtonItem = UIBarButtonItem(
             image: UIImage(systemName: "arrow.left")?
@@ -215,7 +214,6 @@ class PostEditController: UIViewController {
     }
 
     // MARK: - Actions
-    
     @objc func handleCancel() {
         navigationController?.popViewController(animated: false)
     }

@@ -2,12 +2,16 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>NSCameraUsageDescription</key>
-	<string>(PRODUCT_NAME) Would like to use your camera</string>
-	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>(PRODUCT_NAME) Would like to use your photo library</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Please enable location services so that we can track your movements</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Please enable location services so that we can track your movements</string>
 	<key>NSAppleMusicUsageDescription</key>
-	<string>(PRODUCT_NAME) Would like to use your media library</string>
+	<string>Would like to use your media library</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Would like to use your camera</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Would like to use your photo library</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>NotoSansCJKtc-Regular.otf</string>

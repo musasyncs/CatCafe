@@ -129,7 +129,8 @@ class ExploreController: UIViewController {
     }
     
     @objc func showMap() {
-        print("did tap show map")
+        let controller = MapController()
+        navigationController?.pushViewController(controller, animated: true)
     }
     
     @objc func handlePostRefresh() {

@@ -85,14 +85,15 @@ class MeetDetailController: UIViewController {
         
         view.addSubview(collectionView)
         view.addSubview(backButton)
-        backButton.anchor(top: view.safeAreaLayoutGuide.topAnchor,
-                          left: view.leftAnchor, paddingLeft: 24)
         collectionView.anchor(top: view.topAnchor,
                               left: view.leftAnchor,
                               bottom: view.safeAreaLayoutGuide.bottomAnchor,
                               right: view.rightAnchor,
                               paddingBottom: 45)
+        backButton.anchor(top: view.safeAreaLayoutGuide.topAnchor,
+                          left: view.leftAnchor, paddingLeft: 24)
         backButton.setDimensions(height: 40, width: 40)
+        
         
         fetchMeetWithMeetId()
         checkIfCurrentUserLikedMeet()

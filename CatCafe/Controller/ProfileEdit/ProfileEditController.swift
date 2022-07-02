@@ -188,11 +188,6 @@ extension ProfileEditController {
             if self.hasChangedImage {
                 self.updatePersonalImage()
             }
-            
-            self.titleLabel.text = self.fullname
-                        
-            // Call Tab bar controller to refetch current user
-            NotificationCenter.default.post(name: CCConstant.NotificationName.updateProfile, object: nil)
         }
         
         okAction.setValue(UIColor.systemBrown, forKey: "titleTextColor")
@@ -220,7 +215,9 @@ extension ProfileEditController {
                 return
             }
             
-            CCProgressHUD.showSuccess(text: "您的資料已更新")
+            CCProgressHUD.showSuccess(text: "資料已更新")
+            
+            self.titleLabel.text = self.fullname
         }
     }
     
@@ -249,7 +246,11 @@ extension ProfileEditController {
                     return
                 }
                 
-                CCProgressHUD.showSuccess(text: "您的大頭照已更新")
+                CCProgressHUD.showSuccess(text: "頭貼已更新")
+                
+                // Call Tab bar controller to refetch current user
+                NotificationCenter.default.post(name: CCConstant.NotificationName.updateProfile, object: nil)
+                
                 self.dismiss(animated: true)
             }
         }
