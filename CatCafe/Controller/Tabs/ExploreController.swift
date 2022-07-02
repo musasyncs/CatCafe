@@ -162,7 +162,8 @@ extension ExploreController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let controller = ProfileController(user: users[indexPath.row])
+        let user = inSearchMode ? filteredUsers[indexPath.row] : users[indexPath.row]
+        let controller = ProfileController(user: user)
         navigationController?.pushViewController(controller, animated: true)
     }
     

@@ -106,7 +106,7 @@ class ProfileController: UICollectionViewController {
         let okAction = UIAlertAction(title: "確定", style: .default) { _ in
             
             CCProgressHUD.show()
-            let result = AuthService.logoutUser()
+            let result = AuthService.shared.logoutUser()
             CCProgressHUD.dismiss()
             
             switch result {
