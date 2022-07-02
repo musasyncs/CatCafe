@@ -216,6 +216,11 @@
 		BADF1F93285F1849004CF329 /* LocalStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = BADF1F92285F1849004CF329 /* LocalStorage.swift */; };
 		BAEBF612286E918F00DBA670 /* ProfileEditController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAEBF611286E918F00DBA670 /* ProfileEditController.swift */; };
 		BAEBF614286E999900DBA670 /* InfoCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAEBF613286E999900DBA670 /* InfoCollectionViewCell.swift */; };
+		BAEBF617286F2AA200DBA670 /* MapController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAEBF616286F2AA200DBA670 /* MapController.swift */; };
+		BAEBF61A286F2B8600DBA670 /* SearchInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAEBF619286F2B8600DBA670 /* SearchInputView.swift */; };
+		BAEBF61C286F2BA200DBA670 /* SearchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAEBF61B286F2BA200DBA670 /* SearchCell.swift */; };
+		BAEBF620286FD9D300DBA670 /* CustomAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAEBF61F286FD9D300DBA670 /* CustomAlert.swift */; };
+		BAEBF622286FF84800DBA670 /* WebsiteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAEBF621286FF84800DBA670 /* WebsiteController.swift */; };
 		BAF9BD1C28608C93000F9EEA /* PostCameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF9BD1B28608C93000F9EEA /* PostCameraController.swift */; };
 		BAF9BD2028608D72000F9EEA /* PreviewPhotoContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF9BD1F28608D72000F9EEA /* PreviewPhotoContainerView.swift */; };
 		F3CA363722C8C7AF9DC7484D /* Pods_CatCafe.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91DB69D591917799CE505D79 /* Pods_CatCafe.framework */; };
@@ -437,6 +442,11 @@
 		BADF1F92285F1849004CF329 /* LocalStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalStorage.swift; sourceTree = "<group>"; };
 		BAEBF611286E918F00DBA670 /* ProfileEditController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileEditController.swift; sourceTree = "<group>"; };
 		BAEBF613286E999900DBA670 /* InfoCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoCollectionViewCell.swift; sourceTree = "<group>"; };
+		BAEBF616286F2AA200DBA670 /* MapController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapController.swift; sourceTree = "<group>"; };
+		BAEBF619286F2B8600DBA670 /* SearchInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchInputView.swift; sourceTree = "<group>"; };
+		BAEBF61B286F2BA200DBA670 /* SearchCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchCell.swift; sourceTree = "<group>"; };
+		BAEBF61F286FD9D300DBA670 /* CustomAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAlert.swift; sourceTree = "<group>"; };
+		BAEBF621286FF84800DBA670 /* WebsiteController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebsiteController.swift; sourceTree = "<group>"; };
 		BAF9BD1B28608C93000F9EEA /* PostCameraController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostCameraController.swift; sourceTree = "<group>"; };
 		BAF9BD1F28608D72000F9EEA /* PreviewPhotoContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewPhotoContainerView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -692,6 +702,7 @@
 				BADF1F8E285ED0A7004CF329 /* Notification */,
 				BADBFF722861A83200146D6F /* Meet */,
 				BA763736286B24F400D4EDFB /* Chat */,
+				BAEBF618286F2B7300DBA670 /* Map */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -722,6 +733,7 @@
 				BADBFF6D28614DD900146D6F /* Meet */,
 				BA1385C82867F8B5001B7FF1 /* Chat */,
 				BAEBF610286E916100DBA670 /* ProfileEdit */,
+				BAEBF615286F2A8D00DBA670 /* Map */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -853,7 +865,7 @@
 				BA7BB6F9285A083D00465DEC /* Extensions */,
 				BA7BB705285A083D00465DEC /* Font */,
 				BA7BB708285A083D00465DEC /* Third Party Wrapper */,
-				BA7BB72A285AEA6E00465DEC /* Factory */,
+				BA7BB70C285A083D00465DEC /* Factory.swift */,
 				BA763739286B2C4F00D4EDFB /* Global Functions.swift */,
 			);
 			path = Utils;
@@ -924,14 +936,6 @@
 				BA7BB728285AE9F700465DEC /* UIViewControllerAnimatedTransitioning.swift */,
 			);
 			path = "Custom Animation";
-			sourceTree = "<group>";
-		};
-		BA7BB72A285AEA6E00465DEC /* Factory */ = {
-			isa = PBXGroup;
-			children = (
-				BA7BB70C285A083D00465DEC /* Factory.swift */,
-			);
-			path = Factory;
 			sourceTree = "<group>";
 		};
 		BA7BB72B285AEA7E00465DEC /* PostSelect */ = {
@@ -1090,6 +1094,25 @@
 				BAEBF613286E999900DBA670 /* InfoCollectionViewCell.swift */,
 			);
 			path = ProfileEdit;
+			sourceTree = "<group>";
+		};
+		BAEBF615286F2A8D00DBA670 /* Map */ = {
+			isa = PBXGroup;
+			children = (
+				BAEBF616286F2AA200DBA670 /* MapController.swift */,
+				BAEBF621286FF84800DBA670 /* WebsiteController.swift */,
+			);
+			path = Map;
+			sourceTree = "<group>";
+		};
+		BAEBF618286F2B7300DBA670 /* Map */ = {
+			isa = PBXGroup;
+			children = (
+				BAEBF619286F2B8600DBA670 /* SearchInputView.swift */,
+				BAEBF61B286F2BA200DBA670 /* SearchCell.swift */,
+				BAEBF61F286FD9D300DBA670 /* CustomAlert.swift */,
+			);
+			path = Map;
 			sourceTree = "<group>";
 		};
 		BAF9BD1E28608D5B000F9EEA /* PostCamera */ = {
@@ -1260,6 +1283,7 @@
 				BA7BB715285A083D00465DEC /* String+Extension.swift in Sources */,
 				BA1385B72866F52B001B7FF1 /* MTStinsonVideoFilter.swift in Sources */,
 				BA1385902866F52B001B7FF1 /* MTHudsonFilter.swift in Sources */,
+				BAEBF61C286F2BA200DBA670 /* SearchCell.swift in Sources */,
 				BA76373A286B2C4F00D4EDFB /* Global Functions.swift in Sources */,
 				BA1385A02866F52B001B7FF1 /* MTRiseFilter.metal in Sources */,
 				BA44779128597ED00045DDB8 /* ProfileHeader.swift in Sources */,
@@ -1364,6 +1388,7 @@
 				BA13859F2866F52B001B7FF1 /* MTGinghamVideoFilter.swift in Sources */,
 				BADF1F8D285ECCCD004CF329 /* NotificationViewModel.swift in Sources */,
 				BA1385A32866F52B001B7FF1 /* MTToasterFilter.metal in Sources */,
+				BAEBF620286FD9D300DBA670 /* CustomAlert.swift in Sources */,
 				BAD133AF2864C66400B8015A /* MeetPeopleController.swift in Sources */,
 				BA1385C22866F648001B7FF1 /* FilterToolItem.swift in Sources */,
 				BA7BB6E72859E31500465DEC /* FileStorage.swift in Sources */,
@@ -1410,6 +1435,7 @@
 				BADBFF71286164B700146D6F /* ArrangeMeetController.swift in Sources */,
 				BA1385CA2867F8EF001B7FF1 /* ChatlistController.swift in Sources */,
 				BA44779F2859DE6C0045DDB8 /* RegistrationController.swift in Sources */,
+				BAEBF622286FF84800DBA670 /* WebsiteController.swift in Sources */,
 				BA13857A2866F52A001B7FF1 /* MTHudsonFilter.metal in Sources */,
 				BA1385792866F52A001B7FF1 /* MTMayfairFilter.swift in Sources */,
 				BAD133BC286565D200B8015A /* CardImageView.swift in Sources */,
@@ -1423,9 +1449,11 @@
 				BA1385D52868B13B001B7FF1 /* ChatController.swift in Sources */,
 				BADF1F8B285EC02C004CF329 /* NotificationService.swift in Sources */,
 				BA13858B2866F52B001B7FF1 /* MTGinzaVideoFilter.swift in Sources */,
+				BAEBF61A286F2B8600DBA670 /* SearchInputView.swift in Sources */,
 				BA13859C2866F52B001B7FF1 /* MTAdenFilter.swift in Sources */,
 				BADBFF7C28620C5D00146D6F /* MeetStretchyHeader.swift in Sources */,
 				BAD133A02863132300B8015A /* meetService.swift in Sources */,
+				BAEBF617286F2AA200DBA670 /* MapController.swift in Sources */,
 				BA1385852866F52B001B7FF1 /* MTMoonVideoFilter.metal in Sources */,
 				BA558F13286E238400A38602 /* LocalMessage.swift in Sources */,
 				BA1385722866F52A001B7FF1 /* MTLudwigFilter.swift in Sources */,
@@ -1594,7 +1622,9 @@
 				DEVELOPMENT_TEAM = CNCBQDYY2M;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = CatCafe/Info.plist;
-				INFOPLIST_KEY_NSCameraUsageDescription = "We would like to access the camera to take photos.";
+				INFOPLIST_KEY_NSAppleMusicUsageDescription = "(PRODUCT_NAME) Would like to use your media library";
+				INFOPLIST_KEY_NSCameraUsageDescription = "(PRODUCT_NAME) Would like to use your camera";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "(PRODUCT_NAME) Would like to use your photo library";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "We'd like access to your photos right now.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
@@ -1628,7 +1658,9 @@
 				DEVELOPMENT_TEAM = CNCBQDYY2M;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = CatCafe/Info.plist;
-				INFOPLIST_KEY_NSCameraUsageDescription = "We would like to access the camera to take photos.";
+				INFOPLIST_KEY_NSAppleMusicUsageDescription = "(PRODUCT_NAME) Would like to use your media library";
+				INFOPLIST_KEY_NSCameraUsageDescription = "(PRODUCT_NAME) Would like to use your camera";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "(PRODUCT_NAME) Would like to use your photo library";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "We'd like access to your photos right now.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;

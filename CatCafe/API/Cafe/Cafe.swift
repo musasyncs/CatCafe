@@ -13,6 +13,8 @@ struct Cafe {
     let phoneNumber: String
     let title: String
     let website: String
+    
+    var isSelected: Bool = false
         
     init(dic: [String: Any]) {
         self.address = dic["address"] as? String ?? ""
