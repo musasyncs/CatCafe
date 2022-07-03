@@ -138,7 +138,7 @@ class ArrangeMeetController: UIViewController {
         // Uploading...
         navigationItem.rightBarButtonItem?.isEnabled = false
         
-        show()
+        CCProgressHUD.show()
         MeetService.uploadMeet(title: meetTitleText,
                                caption: meetDescription,
                                meetImage: selectedImage,
@@ -146,7 +146,7 @@ class ArrangeMeetController: UIViewController {
                                cafeName: selectedCafe.title,
                                meetDate: chosenDate
         ) { error in
-            self.dismiss()
+            CCProgressHUD.dismiss()
             
             if let error = error {
                 print("DEBUG: Failed to upload meet with error \(error.localizedDescription)")

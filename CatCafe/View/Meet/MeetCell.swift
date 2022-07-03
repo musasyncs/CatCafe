@@ -104,12 +104,15 @@ extension MeetCell {
         layer.shadowRadius = 2
         
         titleLabel.font = .systemFont(ofSize: 15, weight: .regular)
+        titleLabel.textColor = .black
         timeTitleLabel.font = .systemFont(ofSize: 10, weight: .regular)
         timeTitleLabel.textColor = .systemGray
         timeLabel.font = .systemFont(ofSize: 11, weight: .regular)
+        timeLabel.textColor = .black
         placeTitleLabel.font = .systemFont(ofSize: 10, weight: .regular)
         placeTitleLabel.textColor = .systemGray
         placeLabel.font = .systemFont(ofSize: 11, weight: .regular)
+        placeLabel.textColor = .black
         
         timeStackView.axis = .horizontal
         timeStackView.alignment = .center
@@ -120,12 +123,14 @@ extension MeetCell {
         placeStackView.spacing = 8
         
         hostnameLabel.font = .systemFont(ofSize: 11, weight: .regular)
+        hostnameLabel.textColor = .black
         infoLabel.font = .systemFont(ofSize: 12, weight: .regular)
         infoLabel.textColor = .systemGray
         
         likeButton.setImage(UIImage(named: "like_unselected"), for: .normal)
         likeButton.tintColor = .black
         likesLabel.font = .systemFont(ofSize: 10, weight: .regular)
+        likesLabel.textColor = .black
     }
     
     fileprivate func layout() {

@@ -19,6 +19,7 @@ class CommentInputAccessoryView: UIView {
         let textView = InputTextView()
         textView.placeholderText = "新增留言..."
         textView.font = UIFont.systemFont(ofSize: 15)
+        textView.backgroundColor = .white
         textView.isScrollEnabled = false
         textView.delegate = self
         textView.placeholderShouldCenter = true

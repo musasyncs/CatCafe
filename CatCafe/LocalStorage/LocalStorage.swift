@@ -22,7 +22,7 @@ class LocalStorage {
     func saveUid(_ uid: String?) {
         UserDefaults.standard.set(uid, forKey: CCConstant.LocalStorageKey.userIdKey)
     }
-    
+
     func getUid() -> String? {
         return UserDefaults.standard.value(forKey: CCConstant.LocalStorageKey.userIdKey) as? String
     }

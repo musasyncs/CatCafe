@@ -32,27 +32,11 @@ final class MeetStretchyHeader: UICollectionReusableView {
     
         backgroundColor = .white
         addSubview(meetImageView)
-        meetImageView.fillSuperView()
-        
-        setupGradientView()
+        meetImageView.fillSuperView()        
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-    
-    // MARK: - Helpers
-
-    fileprivate func setupGradientView() {
-        let layer = CAGradientLayer()
-        layer.colors = [UIColor.clear.cgColor, UIColor.black.cgColor]
-        layer.locations = [0.5, 1.2]
-        
-        gradientView.layer.addSublayer(layer)
-        layer.frame = self.bounds
-        layer.frame.origin.y -= self.bounds.height
-        addSubview(gradientView)
-        gradientView.anchor(left: leftAnchor, bottom: bottomAnchor, right: rightAnchor)
     }
 }
 

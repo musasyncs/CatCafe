@@ -27,7 +27,7 @@ struct CommentService {
             "comment": comment,
             "timestamp": Timestamp(date: Date())
         ]
-        CCConstant.COLLECTION_POSTS
+        firebaseReference(.posts)
             .document(postId)
             .collection("comments")
             .addDocument(data: dic, completion: completion)
@@ -42,7 +42,7 @@ struct CommentService {
     ) {
         var comments = [Comment]()
         
-        let query = CCConstant.COLLECTION_POSTS.document(postId).collection("comments")
+        let query = firebaseReference(.posts).document(postId).collection("comments")
             .order(by: "timestamp", descending: false)
         
         query.addSnapshotListener { snapshot, _ in
@@ -76,7 +76,7 @@ struct CommentService {
             "comment": comment,
             "timestamp": Timestamp(date: Date())
         ]
-        CCConstant.COLLECTION_MEETS
+        firebaseReference(.meets)
             .document(meetId)
             .collection("comments")
             .addDocument(data: dic, completion: completion)
@@ -91,7 +91,7 @@ struct CommentService {
     ) {
         var comments = [Comment]()
         
-        let query = CCConstant.COLLECTION_MEETS
+        let query = firebaseReference(.meets)
             .document(meetId)
             .collection("comments")
             .order(by: "timestamp", descending: false)

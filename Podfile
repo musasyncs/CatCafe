@@ -12,15 +12,24 @@ target 'CatCafe' do
   pod 'Firebase/Firestore'
   pod 'Firebase/Storage'
   pod 'Firebase/Crashlytics'
-
+  pod 'FirebaseFirestoreSwift'
+  
+  pod 'lottie-ios'
+  
   pod 'MetalPetal', '~> 1.10.1'
-
   pod 'Kingfisher'
-  pod 'SDWebImage' 
+  pod 'SDWebImage'
 
   pod 'JGProgressHUD'
+  pod 'ProgressHUD'
   pod 'MJRefresh'
 
-  pod 'lottie-ios'
+  pod 'MessageKit'
+  pod 'InputBarAccessoryView'
+  pod 'SKPhotoBrowser'
+  pod 'Gallery'
+  
+  pod 'RxSwift'
+  pod 'RxCocoa'
   
 end

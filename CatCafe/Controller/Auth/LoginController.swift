@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import FirebaseAuth
+import AuthenticationServices
 
 class LoginController: UIViewController {
     
@@ -20,13 +22,16 @@ class LoginController: UIViewController {
     lazy var passwordContainerView = InputContainerView(imageName: "lock",
                                                         textField: passwordTextField)
     private lazy var loginButton = UIButton(type: .system)
-    private let forgotPasswordButton = UIButton(type: .system)
+    private let signInWithAppleButton = ASAuthorizationAppleIDButton(
+        authorizationButtonType: .default,
+        authorizationButtonStyle: .white
+    )
     private lazy var stackView = UIStackView(
         arrangedSubviews: [
             emailContainerView,
             passwordContainerView,
             loginButton,
-            forgotPasswordButton
+            signInWithAppleButton
         ]
     )
     
@@ -49,24 +54,32 @@ class LoginController: UIViewController {
             return
         }
         
-        show()
-        AuthService.loginUser(withEmail: email, password: password) { [weak self] result in
+        CCProgressHUD.show()
+        AuthService.shared.loginUser(withEmail: email, password: password) { [weak self] result in
             guard let self = self else { return }
-            self.dismiss()
+            CCProgressHUD.dismiss()
             
             switch result {
-            case .success(let authUser):
+            case .success(let user):
                 
                 // Save uid; hasLogedIn = true
-                LocalStorage.shared.saveUid(authUser.uid)
+                LocalStorage.shared.saveUid(user.uid)
                 LocalStorage.shared.hasLogedIn = true
-                                
+                
                 self.delegate?.authenticationDidComplete()
             case .failure(let error):
-                self.showFailure()
+                CCProgressHUD.showFailure()
                 print("DEBUG: Failed to log user in \(error.localizedDescription)")
             }
         }
+    }
+    
+    @objc func handleSignInWithAppleTapped() {
+        let request = AuthService.shared.createAppleIDRequest()
+        let controller = ASAuthorizationController(authorizationRequests: [request])
+        controller.delegate = self
+        controller.presentationContextProvider = self
+        controller.performRequests()
     }
     
     @objc func handleShowSignUp() {
@@ -108,6 +121,7 @@ extension LoginController {
     
     func setup() {
         loginButton.addTarget(self, action: #selector(handleLogin), for: .touchUpInside)
+        signInWithAppleButton.addTarget(self, action: #selector(handleSignInWithAppleTapped), for: .touchUpInside)
         dontHaveAccountButton.addTarget(self, action: #selector(handleShowSignUp), for: .touchUpInside)
         updateForm()
     }
@@ -122,7 +136,7 @@ extension LoginController {
         // 防止 Strong password overlay 和 Emoji 輸入
         emailTextField.textContentType = .emailAddress
         emailTextField.keyboardType = .asciiCapable
-       
+        
         passwordTextField.isSecureTextEntry = true
         passwordTextField.textContentType = .oneTimeCode
         passwordTextField.keyboardType = .asciiCapable
@@ -131,14 +145,16 @@ extension LoginController {
         loginButton.layer.cornerRadius = 5
         loginButton.titleLabel?.font = .systemFont(ofSize: 15, weight: .medium)
         
-        forgotPasswordButton.attributedTitle(firstPart: "Forgot your password?  ", secondPart: "Get help signing in.")
+        signInWithAppleButton.layer.borderWidth = 1
+        signInWithAppleButton.layer.borderColor = UIColor.black.cgColor
+        signInWithAppleButton.layer.cornerRadius = 45 / 2
         dontHaveAccountButton.attributedTitle(firstPart: "Don't have an account?  ", secondPart: "Sign Up")
     }
     
     func layout() {
         view.addSubview(stackView)
         view.addSubview(dontHaveAccountButton)
-
+        
         stackView.centerY(inView: view)
         stackView.anchor(
             left: view.leftAnchor,
@@ -147,8 +163,9 @@ extension LoginController {
         )
         
         loginButton.setHeight(36)
+        signInWithAppleButton.setHeight(45)
         dontHaveAccountButton.centerX(inView: view)
-        dontHaveAccountButton.anchor(bottom: view.safeAreaLayoutGuide.bottomAnchor)
+        dontHaveAccountButton.anchor(bottom: view.safeAreaLayoutGuide.bottomAnchor, paddingBottom: 16)
     }
     
     func configureNotificationObservers() {
@@ -167,11 +184,64 @@ extension LoginController {
 }
 
 // MARK: - FormViewModel
-
 extension LoginController: FormViewModel {
     func updateForm() {
         loginButton.backgroundColor = viewModel.buttonBackgroundColor
         loginButton.setTitleColor(viewModel.buttonTitleColor, for: .normal)
         loginButton.isEnabled = viewModel.formIsValid
+    }
+}
+
+// MARK: - ASAuthorizationControllerDelegate, ASAuthorizationControllerPresentationContextProviding
+extension LoginController: ASAuthorizationControllerDelegate, ASAuthorizationControllerPresentationContextProviding {
+    
+    func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
+        CCProgressHUD.showFailure(text: "Fail to sign in with Apple. Please try again.")
+    }
+    
+    func authorizationController(
+        controller: ASAuthorizationController,
+        didCompleteWithAuthorization authorization: ASAuthorization
+    ) {
+        CCProgressHUD.show()
+        AuthService.shared.authorizationController(
+            controller: controller,
+            didCompleteWithAuthorization: authorization
+        ) { authDataResult in
+            CCProgressHUD.dismiss()
+            
+            guard let authDataResult = authDataResult else {
+                return
+            }
+            
+            let credentials = AuthCredentials(email: authDataResult.user.email ?? "",
+                                              password: "",
+                                              fullname: "",
+                                              username: "")
+            
+            UserService.shared.createUserProfile(
+                userId: authDataResult.user.uid,
+                profileImageUrlString: "",
+                credentials: credentials
+            ) { error in
+                
+                if let error = error {
+                    CCProgressHUD.showFailure(text: "Failed to create user profile")
+                    print("DEBUG: Failed to create user profile with error: \(error.localizedDescription)")
+                    return
+                }
+                
+                // Save uid; hasLogedIn = true; save user
+                LocalStorage.shared.saveUid(authDataResult.user.uid)
+                LocalStorage.shared.hasLogedIn = true
+                
+                self.delegate?.authenticationDidComplete()
+            }
+            
+        }
+    }
+    
+    func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
+        return view.window!
     }
 }

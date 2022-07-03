@@ -46,7 +46,6 @@ class FeedController: UICollectionViewController {
     }
     
     // MARK: - API
-    
     func fetchPosts() {
         guard post == nil else {
             checkIfCurrentUserLikedPosts()
@@ -78,9 +77,10 @@ class FeedController: UICollectionViewController {
     }
     
     // MARK: - Helpers
-    
     private func setupRightNavItems() {
-        chatButton.setImage(UIImage(named: "send2")?.withRenderingMode(.alwaysOriginal), for: .normal)
+        chatButton.setImage(UIImage(named: "chat")?
+            .resize(to: .init(width: 21, height: 21))?
+            .withRenderingMode(.alwaysOriginal), for: .normal)
         chatButton.frame = CGRect(x: 0, y: 0, width: 34, height: 34)
         chatButton.addTarget(self, action: #selector(gotoConversations), for: .touchUpInside)
         
@@ -133,12 +133,11 @@ class FeedController: UICollectionViewController {
     }
     
     // MARK: - Actions
-    
     @objc func gotoConversations() {
         if showMenu == true {
             handleDropDownMenu()
         }
-        let controller = ConversationController()
+        let controller = ChatlistController()
         navigationController?.pushViewController(controller, animated: true)
     }
     
@@ -154,8 +153,7 @@ class FeedController: UICollectionViewController {
     
     @objc func handleDropDownMenu() {
         showMenu = !showMenu
-        let indexPaths = [IndexPath(row: 0, section: 0),
-                          IndexPath(row: 1, section: 0)]
+        let indexPaths = [IndexPath(row: 0, section: 0)]
         if showMenu {
             dropTableView.insertRows(at: indexPaths, with: .fade)
         } else {
@@ -174,7 +172,7 @@ class FeedController: UICollectionViewController {
 extension FeedController: FeedCellDelegate {
     
     func cell(_ cell: FeedCell, wantsToShowProfileFor uid: String) {
-        UserService.fetchUserBy(uid: uid) { user in
+        UserService.shared.fetchUserBy(uid: uid) { user in
             let controller = ProfileController(user: user)
             self.navigationController?.pushViewController(controller, animated: true)
         }
@@ -188,7 +186,7 @@ extension FeedController: FeedCellDelegate {
     func cell(_ cell: FeedCell, didLike post: Post) {
         
         guard let currentUid = LocalStorage.shared.getUid() else { return }
-        UserService.fetchUserBy(uid: currentUid, completion: { currentUser in
+        UserService.shared.fetchUserBy(uid: currentUid, completion: { currentUser in
         
             cell.viewModel?.post.isLiked.toggle()
             
@@ -214,8 +212,7 @@ extension FeedController: FeedCellDelegate {
     
 }
 
-// MARK: - UICollectionViewDataSource / UICollectionViewDelegate
-
+// MARK: - UICollectionViewDataSource, UICollectionViewDelegate
 extension FeedController {
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -237,7 +234,7 @@ extension FeedController {
         if let post = post {
             cell.viewModel = PostViewModel(post: post)
             
-            UserService.fetchUserBy(uid: post.ownerUid) { user in
+            UserService.shared.fetchUserBy(uid: post.ownerUid) { user in
                 cell.viewModel?.ownerUsername = user.username
                 cell.viewModel?.ownerImageUrl = URL(string: user.profileImageUrlString)
             }
@@ -245,7 +242,7 @@ extension FeedController {
         } else {
             cell.viewModel = PostViewModel(post: posts[indexPath.item])
             
-            UserService.fetchUserBy(uid: posts[indexPath.item].ownerUid) { user in
+            UserService.shared.fetchUserBy(uid: posts[indexPath.item].ownerUid) { user in
                 cell.viewModel?.ownerUsername = user.username
                 cell.viewModel?.ownerImageUrl = URL(string: user.profileImageUrlString)
             }
@@ -255,7 +252,6 @@ extension FeedController {
 }
 
 // MARK: - UICollectionViewDelegateFlowLayout
-
 extension FeedController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(
@@ -304,7 +300,6 @@ extension FeedController: UICollectionViewDelegateFlowLayout {
 }
 
 // MARK: - UIViewControllerTransitioningDelegate
-
 extension FeedController: UIViewControllerTransitioningDelegate {
     
     func animationController(forPresented presented: UIViewController,
@@ -319,11 +314,10 @@ extension FeedController: UIViewControllerTransitioningDelegate {
 }
 
 // MARK: - UITableViewDelegate, UITableViewDataSource - Drop down menu
-
 extension FeedController: UITableViewDelegate, UITableViewDataSource {
         
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return showMenu ? 2 : 0
+        return showMenu ? 1 : 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -331,13 +325,9 @@ extension FeedController: UITableViewDelegate, UITableViewDataSource {
             withIdentifier: DropDownCell.identifier,
             for: indexPath
         ) as? DropDownCell else { return UITableViewCell() }
-                
         if indexPath.row == 0 {
             cell.titleLabel.text = "發佈"
-        } else {
-            cell.titleLabel.text = "限時動態"
         }
-        
         return cell
     }
     
@@ -357,9 +347,6 @@ extension FeedController: UITableViewDelegate, UITableViewDataSource {
             present(navController, animated: true, completion: { [weak self] in
                 self?.presentTransition = nil
             })
-            
-        } else {
-            
         }
     }
 }

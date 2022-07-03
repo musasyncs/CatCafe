@@ -21,17 +21,15 @@ class NewMessageController: UIViewController {
         }
     }
     private var filteredUsers = [User]()
-    
-    // MARK: - Views
-    
-    private let tableView = UITableView()
     private var inSearchMode: Bool {
         return searchController.isActive && !searchController.searchBar.text!.isEmpty
     }
+    
+    // MARK: - Views
+    private let tableView = UITableView()
     private let searchController = UISearchController(searchResultsController: nil)
     
     // MARK: - Life Cycle
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -76,13 +74,13 @@ class NewMessageController: UIViewController {
     func configureSearchController() {
         searchController.searchResultsUpdater = self
         searchController.obscuresBackgroundDuringPresentation = false
-        
-        searchController.searchBar.placeholder = "Search"
-        searchController.searchBar.delegate = self
-        
-        navigationItem.searchController = searchController
-        navigationItem.hidesSearchBarWhenScrolling = true
         definesPresentationContext = true
+        searchController.searchBar.placeholder = "搜尋"
+        searchController.searchBar.delegate = self
+        searchController.searchBar.sizeToFit()
+        searchController.searchBar.tintColor = .darkGray
+        navigationItem.searchController = searchController
+        navigationItem.hidesSearchBarWhenScrolling = false
     }
     
     // MARK: - Actions
@@ -94,7 +92,6 @@ class NewMessageController: UIViewController {
 }
 
 // MARK: - UITableViewDataSource / UITableViewDelegate
-
 extension NewMessageController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -113,7 +110,7 @@ extension NewMessageController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        navigationController?.popViewController(animated: false)
+        navigationController?.popViewController(animated: true)
         delegate?.controller(self, wantsToStartChatWith: users[indexPath.item])
     }
     

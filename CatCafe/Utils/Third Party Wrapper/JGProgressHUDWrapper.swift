@@ -2,7 +2,7 @@
 //  JGProgressHUDWrapper.swift
 //  CatCafe
 //
-//  Created by Ewen on 2022/6/14.
+//  Created by Ewen on 2022/7/1.
 //
 
 import JGProgressHUD
@@ -14,14 +14,15 @@ enum HUDType {
 
 class CCProgressHUD {
 
-    static let shared = CCProgressHUD()
+    static let hud = JGProgressHUD(style: .dark)
 
-    private init() { }
-
-    let hud = JGProgressHUD(style: .dark)
-
-    var view: UIView {
-        return SceneDelegate.shared.window!.rootViewController!.view
+    static var view: UIView {
+        let scenes = UIApplication.shared.connectedScenes
+        let windowScene = scenes.first as? UIWindowScene
+        let window = windowScene?.windows.first
+        
+        let viewController = window!.rootViewController
+        return (viewController?.view)!
     }
 
     static func show(type: HUDType) {
@@ -40,10 +41,10 @@ class CCProgressHUD {
             }
             return
         }
-        shared.hud.textLabel.text = text
-        shared.hud.indicatorView = JGProgressHUDSuccessIndicatorView()
-        shared.hud.show(in: shared.view)
-        shared.hud.dismiss(afterDelay: 1.5)
+        hud.textLabel.text = text
+        hud.indicatorView = JGProgressHUDSuccessIndicatorView()
+        hud.show(in: view)
+        hud.dismiss(afterDelay: 1.5)
     }
 
     static func showFailure(text: String = "Failure") {
@@ -53,10 +54,10 @@ class CCProgressHUD {
             }
             return
         }
-        shared.hud.textLabel.text = text
-        shared.hud.indicatorView = JGProgressHUDErrorIndicatorView()
-        shared.hud.show(in: shared.view)
-        shared.hud.dismiss(afterDelay: 1.5)
+        hud.textLabel.text = text
+        hud.indicatorView = JGProgressHUDErrorIndicatorView()
+        hud.show(in: view)
+        hud.dismiss(afterDelay: 1.5)
     }
 
     static func show() {
@@ -66,9 +67,9 @@ class CCProgressHUD {
             }
             return
         }
-        shared.hud.indicatorView = JGProgressHUDIndeterminateIndicatorView()
-        shared.hud.textLabel.text = "Loading"
-        shared.hud.show(in: shared.view)
+        hud.indicatorView = JGProgressHUDIndeterminateIndicatorView()
+        hud.textLabel.text = "Loading"
+        hud.show(in: view)
     }
 
     static func dismiss() {
@@ -78,6 +79,6 @@ class CCProgressHUD {
             }
             return
         }
-        shared.hud.dismiss()
+        hud.dismiss()
     }
 }

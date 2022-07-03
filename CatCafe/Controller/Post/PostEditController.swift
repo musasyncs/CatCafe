@@ -116,13 +116,12 @@ class PostEditController: UIViewController {
     func fetchProfilePic() {
         guard let currentUid = LocalStorage.shared.getUid() else { return }
         
-        UserService.fetchUserBy(uid: currentUid, completion: { user in
+        UserService.shared.fetchUserBy(uid: currentUid, completion: { user in
             self.profileImageView.sd_setImage(with: URL(string: user.profileImageUrlString))
         })
     }
     
     // MARK: - Helpers
-    
     func setupBarButtonItem() {
         navigationItem.leftBarButtonItem = UIBarButtonItem(
             image: UIImage(systemName: "arrow.left")?
@@ -215,7 +214,6 @@ class PostEditController: UIViewController {
     }
 
     // MARK: - Actions
-    
     @objc func handleCancel() {
         navigationController?.popViewController(animated: false)
     }
@@ -241,12 +239,12 @@ class PostEditController: UIViewController {
         
         navigationItem.rightBarButtonItem?.isEnabled = false
         
-        show()
+        CCProgressHUD.show()
         PostService.uploadImagePost(caption: caption,
                                     postImage: postImage,
                                     cafeId: selectedCafe.id,
                                     cafeName: selectedCafe.title) { error in
-            self.dismiss()
+            CCProgressHUD.dismiss()
             
             if let error = error {
                 print("DEBUG: Failed to upload post with error \(error.localizedDescription)")
