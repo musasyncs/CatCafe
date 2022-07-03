@@ -125,14 +125,18 @@ extension CommentSectionHeader {
         
         titleLabel.font = .systemFont(ofSize: 15, weight: .regular)
         titleLabel.numberOfLines = 0
+        titleLabel.textColor = .black
         descriptionLabel.font = .systemFont(ofSize: 11, weight: .regular)
         descriptionLabel.numberOfLines = 0
+        descriptionLabel.textColor = .black
         timeTitleLabel.font = .systemFont(ofSize: 11, weight: .regular)
         timeTitleLabel.textColor = .systemGray
         timeLabel.font = .systemFont(ofSize: 11, weight: .regular)
+        timeLabel.textColor = .black
         placeTitleLabel.font = .systemFont(ofSize: 11, weight: .regular)
         placeTitleLabel.textColor = .systemGray
         placeLabel.font = .systemFont(ofSize: 11, weight: .regular)
+        placeLabel.textColor = .black
         
         timeStackView.axis = .horizontal
         timeStackView.alignment = .center
@@ -143,12 +147,14 @@ extension CommentSectionHeader {
         placeStackView.spacing = 16
         
         hostnameLabel.font = .systemFont(ofSize: 11, weight: .regular)
+        hostnameLabel.textColor = .black
         infoLabel.font = .systemFont(ofSize: 12, weight: .regular)
         infoLabel.textColor = .systemGray
         
         likeButton.setImage(UIImage(named: "like_unselected"), for: .normal)
         likeButton.tintColor = .black
         likesLabel.font = .systemFont(ofSize: 10, weight: .regular)
+        likesLabel.textColor = .black
         
         publicCommentLabel.font = .systemFont(ofSize: 12, weight: .medium)
         publicCommentLabel.textColor = .greyishBrown

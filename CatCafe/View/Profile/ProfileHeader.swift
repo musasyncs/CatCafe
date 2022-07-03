@@ -41,15 +41,15 @@ final class ProfileHeader: UICollectionReusableView {
     }()
     
     private let nameLabel: UILabel = {
-       let label = UILabel()
+        let label = UILabel()
         label.font = .systemFont(ofSize: 14, weight: .medium)
         label.textAlignment = .left
+        label.textColor = .black
         return label
     }()
     
     private lazy var editProfileFollowButton: UIButton = {
         let button = UIButton(type: .system)
-//        button.setTitle("", for: .normal)
         button.setTitleColor(UIColor.black, for: .normal)
         button.layer.cornerRadius = 3
         button.layer.borderColor = UIColor.lightGray.cgColor
@@ -61,28 +61,28 @@ final class ProfileHeader: UICollectionReusableView {
     }()
     
     private lazy var postsLabel: UILabel = {
-       let label = UILabel()
+        let label = UILabel()
         label.numberOfLines = 0
         label.textAlignment = .center
         return label
     }()
     
     private lazy var followersLabel: UILabel = {
-       let label = UILabel()
+        let label = UILabel()
         label.numberOfLines = 0
         label.textAlignment = .center
         return label
     }()
     
     private lazy var followingLabel: UILabel = {
-       let label = UILabel()
+        let label = UILabel()
         label.numberOfLines = 0
         label.textAlignment = .center
         return label
     }()
     
     lazy var stack = UIStackView(arrangedSubviews: [postsLabel, followersLabel, followingLabel])
-
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         configureUI()

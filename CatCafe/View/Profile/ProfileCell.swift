@@ -18,7 +18,6 @@ final class ProfileCell: UICollectionViewCell {
     
     private let postImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "cutecat")
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         return imageView
@@ -27,7 +26,7 @@ final class ProfileCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        backgroundColor = .lightGray
+        backgroundColor = UIColor.lightGray
         addSubview(postImageView)
         postImageView.fillSuperView()
     }

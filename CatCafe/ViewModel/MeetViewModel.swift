@@ -83,10 +83,10 @@ struct MeetViewModel {
     var attendButtonBackgroundColor: UIColor {
         let currentUid = LocalStorage.shared.getUid()
         if meet.ownerUid == currentUid {
-            return .systemGray5
+            return .lightGray
         } else {
             if meet.isAttended {
-                return .systemGray5
+                return .lightGray
             } else {
                 return .systemBrown
             }

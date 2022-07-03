@@ -46,7 +46,6 @@ class FeedController: UICollectionViewController {
     }
     
     // MARK: - API
-    
     func fetchPosts() {
         guard post == nil else {
             checkIfCurrentUserLikedPosts()
@@ -78,9 +77,10 @@ class FeedController: UICollectionViewController {
     }
     
     // MARK: - Helpers
-    
     private func setupRightNavItems() {
-        chatButton.setImage(UIImage(named: "send2")?.withRenderingMode(.alwaysOriginal), for: .normal)
+        chatButton.setImage(UIImage(named: "chat")?
+            .resize(to: .init(width: 21, height: 21))?
+            .withRenderingMode(.alwaysOriginal), for: .normal)
         chatButton.frame = CGRect(x: 0, y: 0, width: 34, height: 34)
         chatButton.addTarget(self, action: #selector(gotoConversations), for: .touchUpInside)
         
@@ -133,7 +133,6 @@ class FeedController: UICollectionViewController {
     }
     
     // MARK: - Actions
-    
     @objc func gotoConversations() {
         if showMenu == true {
             handleDropDownMenu()
@@ -154,8 +153,7 @@ class FeedController: UICollectionViewController {
     
     @objc func handleDropDownMenu() {
         showMenu = !showMenu
-        let indexPaths = [IndexPath(row: 0, section: 0),
-                          IndexPath(row: 1, section: 0)]
+        let indexPaths = [IndexPath(row: 0, section: 0)]
         if showMenu {
             dropTableView.insertRows(at: indexPaths, with: .fade)
         } else {
@@ -214,8 +212,7 @@ extension FeedController: FeedCellDelegate {
     
 }
 
-// MARK: - UICollectionViewDataSource / UICollectionViewDelegate
-
+// MARK: - UICollectionViewDataSource, UICollectionViewDelegate
 extension FeedController {
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -255,7 +252,6 @@ extension FeedController {
 }
 
 // MARK: - UICollectionViewDelegateFlowLayout
-
 extension FeedController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(
@@ -304,7 +300,6 @@ extension FeedController: UICollectionViewDelegateFlowLayout {
 }
 
 // MARK: - UIViewControllerTransitioningDelegate
-
 extension FeedController: UIViewControllerTransitioningDelegate {
     
     func animationController(forPresented presented: UIViewController,
@@ -319,11 +314,10 @@ extension FeedController: UIViewControllerTransitioningDelegate {
 }
 
 // MARK: - UITableViewDelegate, UITableViewDataSource - Drop down menu
-
 extension FeedController: UITableViewDelegate, UITableViewDataSource {
         
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return showMenu ? 2 : 0
+        return showMenu ? 1 : 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -331,13 +325,9 @@ extension FeedController: UITableViewDelegate, UITableViewDataSource {
             withIdentifier: DropDownCell.identifier,
             for: indexPath
         ) as? DropDownCell else { return UITableViewCell() }
-                
         if indexPath.row == 0 {
             cell.titleLabel.text = "發佈"
-        } else {
-            cell.titleLabel.text = "限時動態"
         }
-        
         return cell
     }
     
@@ -357,9 +347,6 @@ extension FeedController: UITableViewDelegate, UITableViewDataSource {
             present(navController, animated: true, completion: { [weak self] in
                 self?.presentTransition = nil
             })
-            
-        } else {
-            
         }
     }
 }
