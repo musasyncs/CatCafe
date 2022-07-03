@@ -347,7 +347,17 @@ extension MapController: MKMapViewDelegate {
         }
         
         annotationView?.canShowCallout = true
-        annotationView?.rightCalloutAccessoryView = UIButton(type: .detailDisclosure)
+        
+        let rightButton = UIButton(type: .detailDisclosure)
+        rightButton.setImage(
+            UIImage(named: "info")?
+                .resize(to: .init(width: 17, height: 17))?
+                .withRenderingMode(.alwaysOriginal)
+                .withTintColor(.systemBrown),
+            for: .normal
+        )
+        annotationView?.rightCalloutAccessoryView = rightButton
+        
         annotationView?.image = UIImage(named: "catAnno")?
             .resize(to: .init(width: 22, height: 22))
         

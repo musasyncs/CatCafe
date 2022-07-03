@@ -64,12 +64,17 @@ struct ProfileHeaderViewModel {
     func attributedStatText(value: Int, label: String) -> NSAttributedString {
         let attributedText = NSMutableAttributedString(
             string: "\(value)\n",
-            attributes: [.font: UIFont.systemFont(ofSize: 14, weight: .regular)])
+            attributes: [
+                .font: UIFont.systemFont(ofSize: 14, weight: .regular),
+                .foregroundColor: UIColor.black
+            ])
         
         attributedText.append(NSAttributedString(
             string: label,
-            attributes: [.font: UIFont.systemFont(ofSize: 14, weight: .regular),
-                         .foregroundColor: UIColor.lightGray]))
+            attributes: [
+                .font: UIFont.systemFont(ofSize: 14, weight: .regular),
+                .foregroundColor: UIColor.lightGray
+            ]))
         return attributedText
     }
 }

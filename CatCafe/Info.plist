@@ -3,15 +3,15 @@
 <plist version="1.0">
 <dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Please enable location services so that we can track your movements</string>
+	<string>We&apos;d like to track your movements</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Please enable location services so that we can track your movements</string>
+	<string>We&apos;d like to track your movements</string>
 	<key>NSAppleMusicUsageDescription</key>
-	<string>Would like to use your media library</string>
+	<string>We&apos;d like to use your media library</string>
 	<key>NSCameraUsageDescription</key>
-	<string>Would like to use your camera</string>
+	<string>We&apos;d like to use your camera</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>Would like to use your photo library</string>
+	<string>We&apos;d like to use your photo library</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>NotoSansCJKtc-Regular.otf</string>

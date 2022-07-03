@@ -56,69 +56,69 @@ extension UIViewController {
     
     // MARK: - JGProgressHUD
     
-    //    static let hud = JGProgressHUD(style: .dark)
-    //
-    //    enum HUDType {
-    //        case success(String)
-    //        case failure(String)
-    //    }
-    //
-    //    func show(type: HUDType) {
-    //        switch type {
-    //        case .success(let text):
-    //            showSuccess(text: text)
-    //        case .failure(let text):
-    //            showFailure(text: text)
-    //        }
-    //    }
-    //
-    //    func show() {
-    //        if !Thread.isMainThread {
-    //            DispatchQueue.main.async {
-    //                self.show()
-    //            }
-    //            return
-    //        }
-    //        UIViewController.hud.indicatorView = JGProgressHUDIndeterminateIndicatorView()
-    //        UIViewController.hud.textLabel.text = "Loading"
-    //        UIViewController.hud.show(in: view)
-    //    }
-    //
-    //    func dismiss() {
-    //        if !Thread.isMainThread {
-    //            DispatchQueue.main.async {
-    //                self.dismiss()
-    //            }
-    //            return
-    //        }
-    //        UIViewController.hud.dismiss()
-    //    }
-    //
-    //    func showSuccess(text: String = "success") {
-    //        if !Thread.isMainThread {
-    //            DispatchQueue.main.async {
-    //                self.showSuccess(text: text)
-    //            }
-    //            return
-    //        }
-    //        UIViewController.hud.textLabel.text = text
-    //        UIViewController.hud.indicatorView = JGProgressHUDSuccessIndicatorView()
-    //        UIViewController.hud.show(in: view)
-    //        UIViewController.hud.dismiss(afterDelay: 1.5)
-    //    }
-    //
-    //    func showFailure(text: String = "Failure") {
-    //        if !Thread.isMainThread {
-    //            DispatchQueue.main.async {
-    //                self.showFailure(text: text)
-    //            }
-    //            return
-    //        }
-    //        UIViewController.hud.textLabel.text = text
-    //        UIViewController.hud.indicatorView = JGProgressHUDErrorIndicatorView()
-    //        UIViewController.hud.show(in: view)
-    //        UIViewController.hud.dismiss(afterDelay: 1.5)
-    //    }
+        static let hud = JGProgressHUD(style: .dark)
+    
+        enum HUDType {
+            case success(String)
+            case failure(String)
+        }
+    
+        func show(type: HUDType) {
+            switch type {
+            case .success(let text):
+                showSuccess(text: text)
+            case .failure(let text):
+                showFailure(text: text)
+            }
+        }
+    
+        func show() {
+            if !Thread.isMainThread {
+                DispatchQueue.main.async {
+                    self.show()
+                }
+                return
+            }
+            UIViewController.hud.indicatorView = JGProgressHUDIndeterminateIndicatorView()
+            UIViewController.hud.textLabel.text = "Loading"
+            UIViewController.hud.show(in: view)
+        }
+    
+        func dismiss() {
+            if !Thread.isMainThread {
+                DispatchQueue.main.async {
+                    self.dismiss()
+                }
+                return
+            }
+            UIViewController.hud.dismiss()
+        }
+    
+        func showSuccess(text: String = "success") {
+            if !Thread.isMainThread {
+                DispatchQueue.main.async {
+                    self.showSuccess(text: text)
+                }
+                return
+            }
+            UIViewController.hud.textLabel.text = text
+            UIViewController.hud.indicatorView = JGProgressHUDSuccessIndicatorView()
+            UIViewController.hud.show(in: view)
+            UIViewController.hud.dismiss(afterDelay: 1.5)
+        }
+    
+        func showFailure(text: String = "Failure") {
+            if !Thread.isMainThread {
+                DispatchQueue.main.async {
+                    self.showFailure(text: text)
+                }
+                return
+            }
+            UIViewController.hud.textLabel.text = text
+            UIViewController.hud.indicatorView = JGProgressHUDErrorIndicatorView()
+            UIViewController.hud.show(in: view)
+            UIViewController.hud.dismiss(afterDelay: 1.5)
+        }
     
     // MARK: - UIAlertController
     

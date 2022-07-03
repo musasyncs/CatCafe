@@ -20,12 +20,14 @@ struct CommentViewModel {
         let attrString = NSMutableAttributedString(
             string: "\(username)\n",
             attributes: [
-                .font: UIFont.systemFont(ofSize: 14, weight: .medium)
+                .font: UIFont.systemFont(ofSize: 14, weight: .medium),
+                .foregroundColor: UIColor.black
             ])
         attrString.append(NSAttributedString(
             string: comment.comment,
             attributes: [
-                .font: UIFont.systemFont(ofSize: 13, weight: .regular)
+                .font: UIFont.systemFont(ofSize: 13, weight: .regular),
+                .foregroundColor: UIColor.black
             ]))
         
         return attrString

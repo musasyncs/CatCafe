@@ -104,7 +104,7 @@ extension ProfileEditController {
                            paddingTop: 56, paddingLeft: 24)
         leaveButton.setDimensions(height: 36, width: 36)
         
-        profileImageView.anchor(top: view.topAnchor, paddingTop: 80)
+        profileImageView.anchor(top: view.topAnchor, paddingTop: 96)
         profileImageView.centerX(inView: view)
         profileImageView.setDimensions(height: 120, width: 120)
         

@@ -31,8 +31,8 @@ class LoadingViewController: UIViewController {
     }
     
     private func animate() {
-        UIView.animate(withDuration: 1, animations: {
-            let size = self.view.frame.size.width * 2
+        UIView.animate(withDuration: 0.5, animations: {
+            let size = self.view.frame.size.width * 1.3
             let diffX = size - self.view.frame.size.width
             let diffY = self.view.frame.size.height - size
             
@@ -40,7 +40,7 @@ class LoadingViewController: UIViewController {
             self.loadingImageView.alpha = 0
         })
         
-        UIView.animate(withDuration: 1.5, animations: {
+        UIView.animate(withDuration: 0.5, animations: {
             self.loadingImageView.alpha = 0
         }, completion: { done in
             if done {

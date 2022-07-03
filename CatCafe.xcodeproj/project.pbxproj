@@ -1606,9 +1606,9 @@
 				DEVELOPMENT_TEAM = CNCBQDYY2M;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = CatCafe/Info.plist;
-				INFOPLIST_KEY_NSAppleMusicUsageDescription = "(PRODUCT_NAME) Would like to use your media library";
-				INFOPLIST_KEY_NSCameraUsageDescription = "(PRODUCT_NAME) Would like to use your camera";
-				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "(PRODUCT_NAME) Would like to use your photo library";
+				INFOPLIST_KEY_NSAppleMusicUsageDescription = "We'd like to use your media library";
+				INFOPLIST_KEY_NSCameraUsageDescription = "We'd like to use your camera";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "We'd like to use your photo library";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "We'd like access to your photos right now.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
@@ -1642,9 +1642,9 @@
 				DEVELOPMENT_TEAM = CNCBQDYY2M;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = CatCafe/Info.plist;
-				INFOPLIST_KEY_NSAppleMusicUsageDescription = "(PRODUCT_NAME) Would like to use your media library";
-				INFOPLIST_KEY_NSCameraUsageDescription = "(PRODUCT_NAME) Would like to use your camera";
-				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "(PRODUCT_NAME) Would like to use your photo library";
+				INFOPLIST_KEY_NSAppleMusicUsageDescription = "We'd like to use your media library";
+				INFOPLIST_KEY_NSCameraUsageDescription = "We'd like to use your camera";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "We'd like to use your photo library";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "We'd like access to your photos right now.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;

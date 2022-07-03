@@ -10,6 +10,7 @@ import AVFoundation
 
 class PostCameraController: UIViewController {
     
+    var session: AVCaptureSession?
     let output = AVCapturePhotoOutput()
     
     override var prefersStatusBarHidden: Bool { return true }
@@ -39,11 +40,31 @@ class PostCameraController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupCaptureSession()
+        checkCameraPermissions()
         setupCaptureButton()
     }
     
     // MARK: - Functions
+    private func checkCameraPermissions() {
+        switch AVCaptureDevice.authorizationStatus(for: .video) {
+        case .notDetermined:
+            AVCaptureDevice.requestAccess(for: .video) { [weak self] granted in
+                guard granted else { return }
+                DispatchQueue.main.async {
+                    self?.setupCaptureSession()
+                }
+                return
+            }
+        case .restricted:
+            break
+        case .denied:
+            break
+        case .authorized:
+            setupCaptureSession()
+        @unknown default:
+            break
+        }
+    }
     
     fileprivate func setupCaptureSession() {
         let captureSession = AVCaptureSession()
@@ -71,6 +92,7 @@ class PostCameraController: UIViewController {
         previewLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
         view.layer.addSublayer(previewLayer)
         captureSession.startRunning()
+        self.session = captureSession
     }
     
     private func setupCaptureButton() {
@@ -88,7 +110,6 @@ class PostCameraController: UIViewController {
     }
     
     // MARK: - Actions
-    
     @objc func handleDismiss() {
         dismiss(animated: true)
     }
@@ -106,7 +127,6 @@ class PostCameraController: UIViewController {
 }
 
 // MARK: - AVCapturePhotoCaptureDelegate
-
 extension PostCameraController: AVCapturePhotoCaptureDelegate {
     
     func photoOutput(
@@ -116,6 +136,7 @@ extension PostCameraController: AVCapturePhotoCaptureDelegate {
     ) {
         let imageData = photo.fileDataRepresentation()
         let previewImage = UIImage(data: imageData!)
+        session?.stopRunning()
         
         let containerView = PreviewPhotoContainerView()
         containerView.previewImageView.image = previewImage

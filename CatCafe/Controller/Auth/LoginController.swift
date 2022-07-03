@@ -145,10 +145,9 @@ extension LoginController {
         loginButton.layer.cornerRadius = 5
         loginButton.titleLabel?.font = .systemFont(ofSize: 15, weight: .medium)
         
-        signInWithAppleButton.layer.borderWidth = 2
+        signInWithAppleButton.layer.borderWidth = 1
         signInWithAppleButton.layer.borderColor = UIColor.black.cgColor
-        signInWithAppleButton.layer.cornerRadius = 25
-        signInWithAppleButton.cornerRadius = 25
+        signInWithAppleButton.layer.cornerRadius = 45 / 2
         dontHaveAccountButton.attributedTitle(firstPart: "Don't have an account?  ", secondPart: "Sign Up")
     }
     
@@ -164,9 +163,9 @@ extension LoginController {
         )
         
         loginButton.setHeight(36)
-        signInWithAppleButton.setHeight(50)
+        signInWithAppleButton.setHeight(45)
         dontHaveAccountButton.centerX(inView: view)
-        dontHaveAccountButton.anchor(bottom: view.safeAreaLayoutGuide.bottomAnchor)
+        dontHaveAccountButton.anchor(bottom: view.safeAreaLayoutGuide.bottomAnchor, paddingBottom: 16)
     }
     
     func configureNotificationObservers() {
