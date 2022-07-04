@@ -168,12 +168,18 @@ class CustomAlert {
     }
     
     @objc func makePhoneCall() {
-        guard let phoneNumber = phoneNumber else { return }
-        if let phoneCallURL = URL(string: "tel://" + phoneNumber) {
-            let application: UIApplication = UIApplication.shared
-            if application.canOpenURL(phoneCallURL) {
-                application.open(phoneCallURL, options: [:], completionHandler: nil)
+        guard let phoneNumber = phoneNumber,
+              let viewController = viewController else { return }
+        if !phoneNumber.isEmpty {
+            if let phoneCallURL = URL(string: "tel://" + phoneNumber) {
+                let application: UIApplication = UIApplication.shared
+                if application.canOpenURL(phoneCallURL) {
+                    application.open(phoneCallURL, options: [:], completionHandler: nil)
+                }
             }
+            return
+        } else {
+            viewController.showMessage(withTitle: "Oops", message: "無電話")
         }
     }
     
@@ -190,7 +196,6 @@ class CustomAlert {
         } else {
             viewController.showMessage(withTitle: "Oops", message: "無網站")
         }
-        
     }
     
 }
