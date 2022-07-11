@@ -1,11 +1,11 @@
 {
   "images" : [
     {
+      "filename" : "loud-speaker.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "icons8-voice-50.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
