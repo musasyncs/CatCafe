@@ -12,7 +12,7 @@ final class ProfileCell: UICollectionViewCell {
     var viewModel: PostViewModel? {
         didSet {
             guard let viewModel = viewModel else { return }
-            postImageView.sd_setImage(with: viewModel.mediaUrl)
+            postImageView.loadImage(viewModel.mediaUrlString, placeHolder: UIImage.asset(.no_image))
         }
     }
     

@@ -10,15 +10,27 @@ import Photos
 
 class SelectMeetPicController: UIViewController {
         
-    var selectedImage: UIImage? {
+    private var selectedImage: UIImage? {
         didSet {
             guard let selectedImage = selectedImage else { return }
             meetPicView.placedImageView.image = selectedImage
         }
     }
-
-    let titleLabel = UILabel()
-    let subtitleLabel = UILabel()
+    
+    private let titleLabel: UILabel = {
+        let label = UILabel()
+        label.text = "設定封面"
+        label.font = .systemFont(ofSize: 15, weight: .medium)
+        label.textColor = .ccGrey
+        return label
+    }()
+    private let subtitleLabel: UILabel = {
+        let label = UILabel()
+        label.text = "請上傳一張照片作為封面"
+        label.font = .systemFont(ofSize: 13, weight: .regular)
+        label.textColor = .ccGrey
+        return label
+    }()
     
     private lazy var meetPicView: MeetPicView = {
         let view = MeetPicView()
@@ -26,7 +38,7 @@ class SelectMeetPicController: UIViewController {
         view.clipsToBounds = true
         view.layer.cornerRadius = 16
         view.layer.borderWidth = 1
-        view.layer.borderColor = UIColor.black.cgColor
+        view.layer.borderColor = UIColor.ccGrey.cgColor
         
         let recognizer = UITapGestureRecognizer(target: self, action: #selector(selectMeetImage))
         view.isUserInteractionEnabled = true
@@ -34,18 +46,36 @@ class SelectMeetPicController: UIViewController {
         return view
     }()
     
+    // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        // style
         view.backgroundColor = .white
-        titleLabel.text = "設定封面"
-        titleLabel.font = .systemFont(ofSize: 15, weight: .medium)
-        subtitleLabel.text = "請上傳一張照片作為封面"
-        subtitleLabel.font = .systemFont(ofSize: 13, weight: .regular)
         setupNavigationButtons()
+        setupLayout()
+    }
+    
+    private func setupNavigationButtons() {
+        navigationController?.navigationBar.tintColor = .ccGrey
         
-        // layout
+        navigationItem.leftBarButtonItem = UIBarButtonItem(
+            image: UIImage.asset(.Icons_24px_Close)?
+                .withTintColor(.ccGrey)
+                .withRenderingMode(.alwaysOriginal),
+            style: .plain,
+            target: self,
+            action: #selector(handleCancel)
+        )
+        navigationItem.rightBarButtonItem = UIBarButtonItem(
+            image: UIImage(systemName: "arrow.right")?
+                .withTintColor(.ccGrey)
+                .withRenderingMode(.alwaysOriginal),
+            style: .plain,
+            target: self,
+            action: #selector(handleNext)
+        )
+    }
+    
+    private func setupLayout() {
         view.addSubview(titleLabel)
         view.addSubview(subtitleLabel)
         view.addSubview(meetPicView)
@@ -59,29 +89,7 @@ class SelectMeetPicController: UIViewController {
     }
     
     // MARK: - Helpers
-    
-    func setupNavigationButtons() {
-        navigationController?.navigationBar.tintColor = .black
-        
-        navigationItem.leftBarButtonItem = UIBarButtonItem(
-            image: UIImage(named: "Icons_24px_Close")?
-                .withTintColor(.black)
-                .withRenderingMode(.alwaysOriginal),
-            style: .plain,
-            target: self,
-            action: #selector(handleCancel)
-        )
-        navigationItem.rightBarButtonItem = UIBarButtonItem(
-            image: UIImage(systemName: "arrow.right")?
-                .withTintColor(.black)
-                .withRenderingMode(.alwaysOriginal),
-            style: .plain,
-            target: self,
-            action: #selector(handleNext)
-        )
-    }
-    
-    func showImagePicker(mode: UIImagePickerController.SourceType) {
+    private func showImagePicker(mode: UIImagePickerController.SourceType) {
         let imagePicker = UIImagePickerController()
         imagePicker.allowsEditing = true
         imagePicker.sourceType = mode
@@ -90,7 +98,6 @@ class SelectMeetPicController: UIViewController {
     }
     
     // MARK: - Action
-    
     @objc private func handleCancel() {
         dismiss(animated: false, completion: nil)
     }
@@ -102,22 +109,24 @@ class SelectMeetPicController: UIViewController {
         }
         let controller = ArrangeMeetController()
         controller.selectedImage = selectedImage
-        let navController = UINavigationController(rootViewController: controller)
+        let navController = makeNavigationController(rootViewController: controller)
         navController.modalPresentationStyle = .overFullScreen
         present(navController, animated: true)
     }
     
     @objc func selectMeetImage() {
-        let actionSheet = UIAlertController(title: "Add a Photo",
-                                            message: "Select a source:",
-                                            preferredStyle: .actionSheet)
+        let actionSheet = UIAlertController(
+            title: "Add a Photo",
+            message: "Select a source:",
+            preferredStyle: .actionSheet
+        )
         
         // Only add the camera button if it's available
         if UIImagePickerController.isSourceTypeAvailable(.camera) {
             let cameraAction = UIAlertAction(title: "Camera", style: .default) { _ in
                 self.showImagePicker(mode: .camera)
             }
-            cameraAction.setValue(UIColor.systemBrown, forKey: "titleTextColor")
+            cameraAction.setValue(UIColor.ccPrimary, forKey: "titleTextColor")
             actionSheet.addAction(cameraAction)
         }
         
@@ -126,12 +135,12 @@ class SelectMeetPicController: UIViewController {
             let libraryAction = UIAlertAction(title: "Photo Library", style: .default) { _ in
                 self.showImagePicker(mode: .photoLibrary)
             }
-            libraryAction.setValue(UIColor.systemBrown, forKey: "titleTextColor")
+            libraryAction.setValue(UIColor.ccPrimary, forKey: "titleTextColor")
             actionSheet.addAction(libraryAction)
         }
         
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
-        cancelAction.setValue(UIColor.systemBrown, forKey: "titleTextColor")
+        cancelAction.setValue(UIColor.ccPrimary, forKey: "titleTextColor")
         actionSheet.addAction(cancelAction)
         
         present(actionSheet, animated: true, completion: nil)
@@ -165,11 +174,11 @@ final class MeetPicView: UIView {
         return imageView
     }()
     
-    lazy var cameraImageView: UIImageView = {
+    private lazy var cameraImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
-        imageView.image  = UIImage(named: "meet-camera")?
+        imageView.image  = UIImage.asset(.meet_camera)?
             .withRenderingMode(.alwaysOriginal)
             .resize(to: .init(width: 60, height: 60))
         return imageView
@@ -177,10 +186,8 @@ final class MeetPicView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
         addSubview(cameraImageView)
         cameraImageView.center(inView: self)
-        
         addSubview(placedImageView)
         placedImageView.fillSuperView()
     }

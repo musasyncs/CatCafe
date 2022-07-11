@@ -27,7 +27,8 @@ class MessageSender {
         message.chatRoomId = chatId
         message.senderId = currentUser.uid
         message.senderName = currentUser.username
-        message.senderinitials = String(currentUser.username.first!)
+        message.senderinitials = String(currentUser.username.first ?? "\u{7E}")
+        
         message.date = Date()
         message.status = CCConstant.SENT
         

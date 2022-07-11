@@ -12,7 +12,7 @@ final class CommentCell: UICollectionViewCell {
     var viewModel: CommentViewModel? {
         didSet {
             guard let viewModel = viewModel else { return }
-            profileImageView.sd_setImage(with: viewModel.profileImageUrl)
+            profileImageView.loadImage(viewModel.profileImageUrlString, placeHolder: UIImage.asset(.avatar))
             commentLabel.attributedText = viewModel.makeCommentLabelText()
         }
     }

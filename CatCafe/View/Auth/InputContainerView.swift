@@ -15,7 +15,7 @@ class InputContainerView: UIView {
         let imageView = UIImageView()
         imageView.image = UIImage(named: imageName)?
             .withRenderingMode(.alwaysOriginal)
-            .withTintColor(.systemBrown)
+            .withTintColor(.ccGreyVariant)
         imageView.alpha = 0.87
         imageView.contentMode = .scaleAspectFit
         
@@ -33,13 +33,13 @@ class InputContainerView: UIView {
                          paddingBottom: -8, paddingRight: 8)
         
         let dividerView = UIView()
-        dividerView.backgroundColor = .black
+        dividerView.backgroundColor = .ccGreyVariant
         addSubview(dividerView)
         dividerView.anchor(left: leftAnchor,
                            bottom: bottomAnchor,
                            right: rightAnchor,
                            paddingLeft: 8, paddingRight: 8,
-                           height: 0.6)
+                           height: 0.5)
         
     }
     
@@ -57,16 +57,16 @@ class RegTextField: UITextField {
         autocapitalizationType = .none
         
         borderStyle = .none
-        textColor = .black
-        font = .systemFont(ofSize: 13, weight: .regular)
+        textColor = .white
+        font = .systemFont(ofSize: 14, weight: .regular)
         keyboardAppearance = .light
         backgroundColor = .clear
         
         attributedPlaceholder = NSAttributedString(
             string: placeholder,
             attributes: [
-                .foregroundColor: UIColor.lightGray,
-                .font: UIFont.systemFont(ofSize: 13, weight: .regular)
+                .foregroundColor: UIColor.ccGreyVariant,
+                .font: UIFont.systemFont(ofSize: 14, weight: .regular)
             ]
         )
         

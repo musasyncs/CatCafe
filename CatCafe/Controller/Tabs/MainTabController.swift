@@ -13,25 +13,23 @@ class MainTabController: UITabBarController {
     var currentUser: User? {
         didSet {
             guard let currentUser = currentUser else { return }
-            self.viewControllers = self.tabs.map({ $0.setController(user: currentUser) })
+            self.viewControllers = self.tabs.map({
+                $0.setController(user: currentUser)
+            })
         }
     }
     
-    private let tabs: [Tab] = [.home, .explore, .meet, .profile]
+    private let tabs: [Tab] = [.feed, .explore, .meet, .profile]
     
     // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        // setup
         viewControllers = self.tabs.map({ $0.setController(user: nil) })
         selectedIndex = Tab.explore.rawValue
         delegate = self
         
-        // style
         setTabBarApearance()
         
-        // add observer
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(refetchCurrentUser),
@@ -47,7 +45,6 @@ class MainTabController: UITabBarController {
         }
     }
     
-    // MARK: - Helpers
     private func setTabBarApearance() {
         let tabBarAppearance = UITabBarAppearance()
         tabBarAppearance.configureWithOpaqueBackground()
@@ -60,10 +57,10 @@ class MainTabController: UITabBarController {
         tabBarAppearance.stackedLayoutAppearance.normal.badgeBackgroundColor = .brown
         
         // titleTextAttributes
-        tabBarAppearance.stackedLayoutAppearance.normal.iconColor = .black
+        tabBarAppearance.stackedLayoutAppearance.normal.iconColor = .ccGrey
         
         let attrs = [
-            NSAttributedString.Key.foregroundColor: UIColor.systemBrown,
+            NSAttributedString.Key.foregroundColor: UIColor.ccPrimary,
             NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20, weight: .medium)
         ]
         tabBarAppearance.stackedLayoutAppearance.normal.titleTextAttributes = attrs
@@ -73,19 +70,37 @@ class MainTabController: UITabBarController {
         tabBar.scrollEdgeAppearance = tabBarAppearance
     }
     
+    // MARK: - API
     private func fetchCurrentUser() {
+        
+        let group = DispatchGroup()
+        
+        group.enter()
         UserService.shared.fetchCurrentUser { currentUser in
             self.currentUser = currentUser
-            
+            group.leave()
+        }
+        
+        group.notify(queue: .main) {
             self.dismiss(animated: true)
             
             // 剛註冊
             if UserService.shared.currentUser?.profileImageUrlString == "" {
-                let controller = SetProfileController()
-                controller.modalPresentationStyle = .fullScreen
-                self.present(controller, animated: true)
+                if UserService.shared.currentUser?.username == "" {
+                    // Apple sign in
+                    let controller = AppleSigninProfileEditController()
+                    controller.modalPresentationStyle = .fullScreen
+                    self.present(controller, animated: true)
+                } else {
+                    // native sign in
+                    let controller = SetProfilePictureController()
+                    controller.modalPresentationStyle = .fullScreen
+                    self.present(controller, animated: true)
+                }
+                
             }
         }
+        
     }
     
     // MARK: - Action
@@ -96,6 +111,7 @@ class MainTabController: UITabBarController {
 
 // MARK: - AuthenticationDelegate
 extension MainTabController: AuthenticationDelegate {
+    
     func authenticationDidComplete() {
         fetchCurrentUser()
     }
@@ -103,6 +119,7 @@ extension MainTabController: AuthenticationDelegate {
 
 // MARK: - UITabBarControllerDelegate
 extension MainTabController: UITabBarControllerDelegate {
+    
     func tabBarController(
         _ tabBarController: UITabBarController,
         shouldSelect viewController: UIViewController
@@ -114,7 +131,7 @@ extension MainTabController: UITabBarControllerDelegate {
             guard LocalStorage.shared.hasLogedIn else {
                 let loginVC = LoginController()
                 loginVC.delegate = self
-                let loginNav = UINavigationController(rootViewController: loginVC)
+                let loginNav = makeNavigationController(rootViewController: loginVC)
                 present(loginNav, animated: true)
                 return false
             }
@@ -126,18 +143,17 @@ extension MainTabController: UITabBarControllerDelegate {
 }
 
 private enum Tab: Int {
-    case home
+    case feed
     case explore
     case meet
     case profile
     
     func setController(user: User?) -> UIViewController {
         var controller: UIViewController
-        let layout = UICollectionViewFlowLayout()
         
         switch self {
-        case .home:
-            controller = makeNavigationController(rootViewController: FeedController(collectionViewLayout: layout))
+        case .feed:
+            controller = makeNavigationController(rootViewController: FeedController())
         case .explore:
             controller = makeNavigationController(rootViewController: ExploreController())
         case .meet:
@@ -154,79 +170,34 @@ private enum Tab: Int {
         return controller
     }
     
-    func setTabBarItem() -> UITabBarItem {
+    private func setTabBarItem() -> UITabBarItem {
         switch self {
-        case .home:
+        case .feed:
             return setTabBarItem(
                 title: nil,
-                image: UIImage(named: "home_unselected")!,
-                selectedImage: UIImage(named: "home_selected")!)
+                image: UIImage.asset(.home_unselected)!,
+                selectedImage: UIImage.asset(.home_selected)!)
         case .explore:
             return setTabBarItem(
                 title: nil,
-                image: UIImage(named: "search_unselected")!,
-                selectedImage: UIImage(named: "search_selected")!)
+                image: UIImage.asset(.search_unselected)!,
+                selectedImage: UIImage.asset(.search_selected)!)
         case .meet:
             return setTabBarItem(
                 title: nil,
-                image: UIImage(named: "speaker_unselected")!,
-                selectedImage: UIImage(named: "speaker_selected")!)
+                image: UIImage.asset(.speaker_unselected)!
+                    .resize(to: .init(width: 25, height: 25)),
+                selectedImage: UIImage.asset(.speaker_selected)!
+                    .resize(to: .init(width: 25, height: 25))
+            )
         case .profile:
             return setTabBarItem(
                 title: nil,
-                image: UIImage(named: "profile_unselected")!,
-                selectedImage: UIImage(named: "profile_selected")!)
+                image: UIImage.asset(.profile_unselected)!,
+                selectedImage: UIImage.asset(.profile_selected)!)
         }
     }
-    
-    // nav bar appearance
-    private func makeNavigationController(rootViewController: UIViewController) -> UINavigationController {
-        let navC = UINavigationController(rootViewController: rootViewController)
-        
-        let navBarAppearance = UINavigationBarAppearance()
-        navBarAppearance.configureWithDefaultBackground()
-        navBarAppearance.backgroundColor = .white
-        
-        // navbar 標題顏色跟字型
-        let attrs = [
-            NSAttributedString.Key.foregroundColor: UIColor.black,
-            NSAttributedString.Key.font: UIFont.systemFont(ofSize: 15, weight: .medium)
-        ]
-        navBarAppearance.titleTextAttributes = attrs
-        
-        // navbar 返回按鈕自訂圖片("arrow.backward")
-        let backIndicatorImage = UIImage(named: "Icons_24px_Back02")?.withRenderingMode(.alwaysOriginal)
-        navBarAppearance.setBackIndicatorImage(backIndicatorImage, transitionMaskImage: backIndicatorImage)
-        
-        // 返回按鈕 字型樣式(clear color)
-        let backButtonAppearance = UIBarButtonItemAppearance()
-        backButtonAppearance.normal.titleTextAttributes = [.foregroundColor: UIColor.clear]
-        navBarAppearance.backButtonAppearance = backButtonAppearance
-        
-        // Hide navigation bar underline
-        let controllerName = String(describing: type(of: rootViewController.self))
-        [
-            String(describing: FeedController.self),
-            String(describing: ExploreController.self),
-            String(describing: MeetController.self),
-            String(describing: ProfileController.self)
-            
-        ].forEach { name in
-            if name == controllerName {
-                navBarAppearance.shadowColor = .clear
-            }
-        }
-        
-        // Status bar style
-        navC.navigationBar.overrideUserInterfaceStyle = .light
-        
-        navC.navigationBar.standardAppearance = navBarAppearance
-        navC.navigationBar.compactAppearance = navBarAppearance
-        navC.navigationBar.scrollEdgeAppearance = navBarAppearance
-        return navC
-    }
-    
-    // tab bar item style
+
     private func setTabBarItem(
         title: String?,
         image: UIImage?,

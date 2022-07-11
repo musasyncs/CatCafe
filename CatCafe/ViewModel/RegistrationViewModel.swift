@@ -26,7 +26,7 @@ struct LoginViewModel: AuthenticationViewModel {
     }
     
     var buttonBackgroundColor: UIColor {
-        return formIsValid ? .systemBrown : .systemBrown.withAlphaComponent(0.5)
+        return formIsValid ? .ccPrimary : .ccPrimary.withAlphaComponent(0.5)
     }
     
     var buttonTitleColor: UIColor {
@@ -48,7 +48,7 @@ struct RegistrationViewModel: AuthenticationViewModel {
     }
     
     var buttonBackgroundColor: UIColor {
-        return formIsValid ? .systemBrown : .systemBrown.withAlphaComponent(0.5)
+        return formIsValid ? .ccPrimary : .ccPrimary.withAlphaComponent(0.5)
     }
     
     var buttonTitleColor: UIColor {

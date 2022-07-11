@@ -22,7 +22,6 @@ class MeetDetailController: UIViewController {
     
     private lazy var collectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: StretchyHeaderLayout())
-        
         collectionView.delegate = self
         collectionView.dataSource = self
         
@@ -54,18 +53,18 @@ class MeetDetailController: UIViewController {
         inputView.delegate = self
         return inputView
     }()
-    
     override var inputAccessoryView: UIView? { return commentInputView }
     override var canBecomeFirstResponder: Bool { return true }
     
-    lazy var backButton = makeIconButton(imagename: "Icons_24px_Close",
-                                         imageColor: .white,
-                                         imageWidth: 24, imageHeight: 24,
-                                         backgroundColor: UIColor(white: 0.5, alpha: 0.7),
-                                         cornerRadius: 40 / 2)
+    private lazy var backButton = makeIconButton(
+        imagename: "Icons_24px_Close",
+        imageColor: .white,
+        imageWidth: 24, imageHeight: 24,
+        backgroundColor: UIColor(white: 0.5, alpha: 0.7),
+        cornerRadius: 40 / 2
+    )
     
     // MARK: - Life Cycle
-    
     init(meet: Meet) {
         self.meet = meet
         super.init(nibName: nil, bundle: nil)
@@ -78,23 +77,9 @@ class MeetDetailController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        
-        backButton.addTarget(self, action: #selector(goBack), for: .touchUpInside)
-        backButton.layer.cornerRadius = 40 / 2
-        backButton.clipsToBounds = true
-        
-        view.addSubview(collectionView)
-        view.addSubview(backButton)
-        collectionView.anchor(top: view.topAnchor,
-                              left: view.leftAnchor,
-                              bottom: view.safeAreaLayoutGuide.bottomAnchor,
-                              right: view.rightAnchor,
-                              paddingBottom: 45)
-        backButton.anchor(top: view.safeAreaLayoutGuide.topAnchor,
-                          left: view.leftAnchor, paddingLeft: 24)
-        backButton.setDimensions(height: 40, width: 40)
-        
-        
+        setupCollectionView()
+        setupBackButton()
+    
         fetchMeetWithMeetId()
         checkIfCurrentUserLikedMeet()
         checkIfCurrentUserAttendedMeet()
@@ -110,43 +95,63 @@ class MeetDetailController: UIViewController {
         super.viewWillDisappear(animated)
         tabBarController?.tabBar.isHidden = false
     }
+
+    private func setupCollectionView() {
+        view.addSubview(collectionView)
+        collectionView.anchor(
+            top: view.topAnchor,
+            left: view.leftAnchor,
+            bottom: view.safeAreaLayoutGuide.bottomAnchor,
+            right: view.rightAnchor,
+            paddingBottom: 45
+        )
+    }
+    
+    private func setupBackButton() {
+        backButton.addTarget(self, action: #selector(goBack), for: .touchUpInside)
+        backButton.layer.cornerRadius = 40 / 2
+        backButton.clipsToBounds = true
+        view.addSubview(backButton)
+        backButton.anchor(
+            top: view.safeAreaLayoutGuide.topAnchor,
+            left: view.leftAnchor,
+            paddingLeft: 24)
+        backButton.setDimensions(height: 40, width: 40)
+    }
     
     // MARK: - API
-
-    func fetchMeetWithMeetId() {
+    private func fetchMeetWithMeetId() {
         MeetService.fetchMeet(withMeetId: meet.meetId) { meet in
             self.meet.likes = meet.likes
         }
     }
     
-    func checkIfCurrentUserLikedMeet() {
+    private func checkIfCurrentUserLikedMeet() {
         MeetService.checkIfCurrentUserLikedMeet(meet: meet) { isLiked in
             self.meet.isLiked = isLiked
         }
     }
 
-    func checkIfCurrentUserAttendedMeet() {
+    private func checkIfCurrentUserAttendedMeet() {
         MeetService.checkIfCurrentUserAttendedMeet(meet: meet) { isAttended in
             self.meet.isAttended = isAttended
         }
     }
     
-    func fetchComments() {
+    private func fetchComments() {
         CommentService.fetchMeetComments(forMeet: meet.meetId) { comments in
             self.comments = comments
         }
     }
     
     // MARK: - Action
-    
     @objc func goBack() {
         dismiss(animated: false)
     }
 
 }
 
-// MARK: - UICollectionViewDataSource / UICollectionViewDelegate
-
+// MARK: - UICollectionViewDataSource, UICollectionViewDelegate
 extension MeetDetailController: UICollectionViewDataSource, UICollectionViewDelegate {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -175,7 +180,7 @@ extension MeetDetailController: UICollectionViewDataSource, UICollectionViewDele
         
         UserService.shared.fetchUserBy(uid: comment.uid) { user in
             cell.viewModel?.username = user.username
-            cell.viewModel?.profileImageUrl = URL(string: user.profileImageUrlString)
+            cell.viewModel?.profileImageUrlString = user.profileImageUrlString
         }
         return cell
     }
@@ -207,7 +212,7 @@ extension MeetDetailController: UICollectionViewDataSource, UICollectionViewDele
                         
             UserService.shared.fetchUserBy(uid: meet.ownerUid) { user in
                 header.viewModel?.ownerUsername = user.username
-                header.viewModel?.ownerImageUrl = URL(string: user.profileImageUrlString)
+                header.viewModel?.ownerImageUrlString = user.profileImageUrlString
             }
             
             // comments count
@@ -217,13 +222,9 @@ extension MeetDetailController: UICollectionViewDataSource, UICollectionViewDele
         }
     }
     
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-
-    }
 }
 
 // MARK: - UICollectionViewDelegateFlowlayout
-
 extension MeetDetailController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(
@@ -239,7 +240,6 @@ extension MeetDetailController: UICollectionViewDelegateFlowLayout {
         layout collectionViewLayout: UICollectionViewLayout,
         sizeForItemAt indexPath: IndexPath
     ) -> CGSize {
-                
         let approximateWidthOfTextArea = UIScreen.width - 8 - 24 - 8 - 8
         let approximateSize = CGSize(width: approximateWidthOfTextArea, height: 100)
         let attributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14, weight: .regular)]
@@ -264,7 +264,7 @@ extension MeetDetailController: UICollectionViewDelegateFlowLayout {
         referenceSizeForHeaderInSection section: Int
     ) -> CGSize {
         if section == 0 {
-            return CGSize(width: view.frame.width, height: 240)
+            return CGSize(width: view.frame.width, height: 300)
             
         } else {
             // Get the view for the first header
@@ -286,12 +286,13 @@ extension MeetDetailController: UICollectionViewDelegateFlowLayout {
 }
  
 // MARK: - CommentSectionHeaderDelegate
-
 extension MeetDetailController: CommentSectionHeaderDelegate {
+    
     func didTapSeeAllPeopleButton(_ header: CommentSectionHeader) {
         let controller = MeetPeopleViewController(meet: meet)
-        controller.modalPresentationStyle = .overFullScreen
-        present(controller, animated: true)
+        let navController = makeNavigationController(rootViewController: controller)
+        navController.modalPresentationStyle = .overFullScreen
+        present(navController, animated: true)
     }
     
     func didTapAttendButton(_ header: CommentSectionHeader) {
@@ -299,17 +300,18 @@ extension MeetDetailController: CommentSectionHeaderDelegate {
         controller.modalPresentationStyle = .overFullScreen
         present(controller, animated: true)
     }
+    
 }
 
 // MARK: - CommentInputAccessoryViewDelegate
-
 extension MeetDetailController: CommentInputAccessoryViewDelegate {
+    
     func inputView(_ inputView: CommentInputAccessoryView, wantsToUploadComment comment: String) {
         
         guard let currentUid = LocalStorage.shared.getUid() else { return }
         UserService.shared.fetchUserBy(uid: currentUid, completion: { currentUser in
             
-            CCProgressHUD.show()
+            self.show()
             CommentService.uploadMeetComment(
                 meetId: self.meet.meetId,
                 user: currentUser,
@@ -317,13 +319,14 @@ extension MeetDetailController: CommentInputAccessoryViewDelegate {
                 mediaUrlString: "",
                 comment: comment
             ) { error in
-                CCProgressHUD.dismiss()
                 
-                if let error = error {
-                    print("DEBUG: Failed to upload comment with error \(error.localizedDescription)")
+                if error != nil {
+                    self.dismiss()
+                    self.showFailure(text: "Failed to upload comment")
                     return
                 }
                 
+                self.dismiss()
                 inputView.clearCommentTextView()
                 
                 // 通知被留言的人

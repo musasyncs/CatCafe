@@ -10,8 +10,15 @@ import Firebase
 
 struct PostService {
     
+    static let shared = PostService()
+    private init() {}
+    
+    enum PostError: Error {
+        case unknownError
+    }
+    
     // MARK: - Upload image post
-    static func uploadImagePost(
+    func uploadImagePost(
         caption: String,
         postImage: UIImage,
         cafeId: String,
@@ -33,86 +40,191 @@ struct PostService {
                 "cafeName": cafeName
             ]
             let docRef = firebaseReference(.posts).addDocument(data: dic, completion: completion)
-            self.updateFeedAfterPost(postId: docRef.documentID)
+            PostService.shared.updateFeedAfterPost(postId: docRef.documentID)
         }
     }
     
     // MARK: - Fetch all posts / Fetch posts by uid / Fetch post with post id / Fetch feed posts
-    static func fetchPosts(completion: @escaping(([Post]) -> Void)) {
+    func fetchPosts(completion: @escaping (Result<[Post], Error>) -> Void) {
         firebaseReference(.posts).order(by: "timestamp", descending: true).getDocuments { snapshot, _ in
-            guard let documents = snapshot?.documents else { return }
-            
-            let posts = documents.map { Post(postId: $0.documentID, dic: $0.data()) }
-            completion(posts)
-        }
-    }
-    
-    static func fetchPosts(forUser uid: String, completion: @escaping(([Post]) -> Void)) {
-        let query = firebaseReference(.posts).whereField("ownerUid", isEqualTo: uid)
-        
-        query.getDocuments { snapshot, _ in
-            guard let documents = snapshot?.documents else { return }
-            var posts = documents.map { Post(postId: $0.documentID, dic: $0.data()) }
-            posts.sort(by: { $0.timestamp.seconds > $1.timestamp.seconds })
-            completion(posts)
-        }
-    }
-    
-    static func fetchPost(withPostId postId: String, completion: @escaping(Post) -> Void) {
-        firebaseReference(.posts).document(postId).getDocument { snapshot, _ in
-            guard let snapshot = snapshot else { return }
-            guard let dic = snapshot.data() else { return }
-            let post = Post(postId: snapshot.documentID, dic: dic)
-            completion(post)
-        }
-    }
-    
-    static func fetchFeedPosts(completion: @escaping([Post]) -> Void) {
-        guard let uid = LocalStorage.shared.getUid() else { return }
-        
-        firebaseReference(.users).document(uid).collection("user-feed").getDocuments { snapshot, _ in
-            
             var posts = [Post]()
-            snapshot?.documents.forEach({ document in
-                fetchPost(withPostId: document.documentID) { post in
+            let group = DispatchGroup()
+            
+            snapshot?.documents.forEach({ snapshot in
+                let postId = snapshot.documentID
+                let dic = snapshot.data()
+                guard let uid = dic["ownerUid"] as? String else {
+                    completion(.failure(PostError.unknownError))
+                    return
+                }
+                
+                group.enter()
+                UserService.shared.fetchUserBy(uid: uid) { user in
+                    let post = Post(user: user, postId: postId, dic: dic)
                     posts.append(post)
-                    posts.sort(by: { $0.timestamp.seconds > $1.timestamp.seconds })
-                    completion(posts)
+                    group.leave()
                 }
             })
             
-            completion([Post]())
+            group.notify(queue: DispatchQueue.main) {
+                posts.sort(by: { $0.timestamp.seconds > $1.timestamp.seconds })
+                completion(.success(posts))
+            }
+            
         }
     }
     
-    // MARK: - Like a post / UnLike a post / Check if current user like a post
-    
-    static func likePost(post: Post, completion: @escaping(FirestoreCompletion)) {
-        guard let uid = LocalStorage.shared.getUid() else { return }
+    func fetchPosts(forUser uid: String, completion: @escaping (Result<[Post], Error>) -> Void) {
+        let query = firebaseReference(.posts).whereField("ownerUid", isEqualTo: uid)
         
-        firebaseReference(.posts).document(post.postId).updateData(["likes": post.likes + 1])
-        
-        firebaseReference(.posts).document(post.postId)
-            .collection("post-likes").document(uid).setData([:]) { _ in
-                firebaseReference(.users).document(uid)
-                    .collection("user-post-likes").document(post.postId).setData([:], completion: completion)
+        query.getDocuments { snapshot, _ in
+            
+            var posts = [Post]()
+            let group = DispatchGroup()
+            
+            snapshot?.documents.forEach({ snapshot in
+                
+                let postId = snapshot.documentID
+                let dic = snapshot.data()
+                guard let uid = dic["ownerUid"] as? String else {
+                    completion(.failure(PostError.unknownError))
+                    return
+                }
+                
+                group.enter()
+                UserService.shared.fetchUserBy(uid: uid) { user in
+                    let post = Post(user: user, postId: postId, dic: dic)
+                    posts.append(post)
+                    group.leave()
+                }
+            })
+            
+            group.notify(queue: DispatchQueue.main) {
+                posts.sort(by: { $0.timestamp.seconds > $1.timestamp.seconds })
+                completion(.success(posts))
+            }
+            
         }
     }
     
-    static func unlikePost(post: Post, completion: @escaping(FirestoreCompletion)) {
+    func fetchPost(withPostId postId: String, completion: @escaping (Result<Post, Error>) -> Void) {
+        firebaseReference(.posts).document(postId).getDocument { snapshot, error in
+            if let error = error {
+                completion(.failure(error))
+            } else {
+                guard let snapshot = snapshot,
+                      let dic = snapshot.data(),
+                      let uid = dic["ownerUid"] as? String else {
+                          completion(.failure(PostError.unknownError))
+                          return
+                      }
+                UserService.shared.fetchUserBy(uid: uid) { user in
+                    let post = Post(user: user, postId: snapshot.documentID, dic: dic)
+                    completion(.success(post))
+                }
+
+            }
+            
+        }
+    }
+    
+    func fetchFeedPosts(completion: @escaping ([Post]) -> Void) {
+        guard let currentUid = LocalStorage.shared.getUid() else { return }
+        
+        firebaseReference(.users).document(currentUid).collection("user-feed").getDocuments { snapshot, _ in
+            var posts = [Post]()
+            snapshot?.documents.forEach({ snapshot in
+                
+                fetchPost(withPostId: snapshot.documentID) { result in
+                    switch result {
+                    case .success(let post):
+                        posts.append(post)
+                        posts.sort(by: {
+                            $0.timestamp.seconds > $1.timestamp.seconds
+                        })
+                        completion(posts)
+                    case .failure:
+                        completion([Post]())
+                    }
+                    
+                }
+            })
+        }
+    }
+    
+    // MARK: - Fetch Like Count / Like a post / UnLike a post / Check if current user like a post
+    func fetchLikeCount(post: Post, completion: @escaping ((Int) -> Void)) {
+        PostService.shared.fetchPost(withPostId: post.postId) { result in
+            switch result {
+            case .success(let post):
+                completion(post.likes)
+            case .failure(let error):
+                print(error)
+            }
+        }
+    }
+    
+    func likePost(post: Post, completion: @escaping ((Int) -> Void)) {
         guard let uid = LocalStorage.shared.getUid() else { return }
+        
+        PostService.shared.fetchLikeCount(post: post) { likeCount in
+                    
+            firebaseReference(.posts).document(post.postId).updateData(["likes": likeCount + 1]) { error in
+                
+                if let error = error {
+                    print(error.localizedDescription)
+                }
+                
+                firebaseReference(.posts).document(post.postId)
+                    .collection("post-likes").document(uid).setData([:]) { _ in
+                        firebaseReference(.users).document(uid)
+                            .collection("user-post-likes").document(post.postId).setData([:]) { error in
+                                
+                                if let error = error {
+                                    print(error.localizedDescription)
+                                }
+                                
+                                completion(likeCount + 1)
+                            }
+                    }
+            }
+
+        }
+                
+    }
+    
+    func unlikePost(post: Post, completion: @escaping ((Int) -> Void)) {
+        guard let currentUid = LocalStorage.shared.getUid() else { return }
         guard post.likes > 0 else { return }
         
-        firebaseReference(.posts).document(post.postId).updateData(["likes": post.likes - 1])
+        PostService.shared.fetchLikeCount(post: post) { likeCount in
         
-        firebaseReference(.posts).document(post.postId)
-            .collection("post-likes").document(uid).delete { _ in
-                firebaseReference(.users).document(uid)
-                    .collection("user-post-likes").document(post.postId).delete(completion: completion)
+            firebaseReference(.posts).document(post.postId).updateData(["likes": likeCount - 1]) { error in
+                
+                if let error = error {
+                    print(error.localizedDescription)
+                }
+                
+                firebaseReference(.posts).document(post.postId)
+                    .collection("post-likes").document(currentUid).delete { _ in
+                        
+                        firebaseReference(.users).document(currentUid)
+                            .collection("user-post-likes").document(post.postId).delete { error in
+                                
+                                if let error = error {
+                                    print(error.localizedDescription)
+                                }
+                                
+                                completion(likeCount - 1)
+                            }
+                    }
             }
+            
+        }
+        
     }
     
-    static func checkIfCurrentUserLikedPost(post: Post, completion: @escaping(Bool) -> Void) {
+    func checkIfCurrentUserLikedPost(post: Post, completion: @escaping(Bool) -> Void) {
         guard let uid = LocalStorage.shared.getUid() else { return }
         
         firebaseReference(.users).document(uid)
@@ -122,9 +234,11 @@ struct PostService {
             }
     }
     
-    // MARK: - Update feed after following or unfollowing / Update followers's feed after current user post
-    
-    static func updateUserFeedAfterFollowing(user: User, didFollow: Bool) {
+    // MARK: - Update feed
+    // After following or unfollowing
+    // After current user post an article
+    // After delete
+    func updateUserFeedAfterFollowing(user: User, didFollow: Bool) {
         guard let uid = LocalStorage.shared.getUid() else { return }
         
         let query = firebaseReference(.posts).whereField("ownerUid", isEqualTo: user.uid)
@@ -143,10 +257,9 @@ struct PostService {
         }
     }
     
-    private static func updateFeedAfterPost(postId: String) {
-        guard let uid = LocalStorage.shared.getUid() else { return }
-        
-        firebaseReference(.followers).document(uid)
+    private func updateFeedAfterPost(postId: String) {
+        guard let currentUid = LocalStorage.shared.getUid() else { return }
+        firebaseReference(.followers).document(currentUid)
             .collection("user-followers").getDocuments { snapshot, _ in
                 guard let documents = snapshot?.documents else { return }
                 
@@ -157,7 +270,23 @@ struct PostService {
                 }
                 
                 // 給自己
-                firebaseReference(.users).document(uid).collection("user-feed").document(postId).setData([:])
+                firebaseReference(.users).document(currentUid).collection("user-feed").document(postId).setData([:])
+            }
+    }
+    
+    private func updateFeedAfterDelete(postId: String) {
+        guard let currentUid = LocalStorage.shared.getUid() else { return }
+        firebaseReference(.followers).document(currentUid)
+            .collection("user-followers").getDocuments { snapshot, _ in
+                guard let documents = snapshot?.documents else { return }
+                
+                // 追蹤者feed上要消失我的貼文
+                documents.forEach { snapshot in
+                    firebaseReference(.users).document(snapshot.documentID)
+                        .collection("user-feed").document(postId).delete()
+                }
+                // 自己feed上要消失我的貼文
+                firebaseReference(.users).document(currentUid).collection("user-feed").document(postId).delete()
             }
     }
     

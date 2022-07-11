@@ -19,8 +19,9 @@ struct Post {
     
     var postId: String
     var isLiked = false
+    var user: User
         
-    init(postId: String, dic: [String: Any]) {
+    init(user: User, postId: String, dic: [String: Any]) {
         self.cafeId = dic["cafeId"] as? String ?? ""
         self.cafeName = dic["cafeName"] as? String ?? ""
         self.caption = dic["caption"] as? String ?? ""
@@ -30,6 +31,7 @@ struct Post {
         self.ownerUid = dic["ownerUid"] as? String ?? ""
         self.timestamp = dic["timestamp"] as? Timestamp ?? Timestamp(date: Date())
         
+        self.user = user
         self.postId = postId
     }
     

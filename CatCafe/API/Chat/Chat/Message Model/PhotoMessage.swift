@@ -17,7 +17,7 @@ class PhotoMessage: NSObject, MediaItem {
     
     init(path: String) {
         self.url = URL(fileURLWithPath: path)
-        self.placeholderImage = UIImage(named: "photoPlaceholder")!
+        self.placeholderImage = UIImage.asset(.photoPlaceholder)!
         self.size = CGSize(width: 240, height: 240)
     }
     

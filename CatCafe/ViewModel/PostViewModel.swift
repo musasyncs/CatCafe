@@ -10,38 +10,66 @@ import UIKit
 struct PostViewModel {
     
     var post: Post
-    
-    var ownerImageUrl: URL?
-    var ownerUsername: String?
+    var comments = [Comment]()
+
+    var ownerImageUrlString: String? {
+        return post.user.profileImageUrlString
+    }
+    var ownerUsername: String? {
+        return post.user.username
+    }
     
     var locationText: String? {
         return post.cafeName
     }
     
-    var mediaUrl: URL? {
-        return URL(string: post.mediaUrlString)
+    var mediaUrlString: String {
+        return post.mediaUrlString
     }
     
-    var caption: String {
-        return post.caption
+    func makeCaptionText() -> NSAttributedString {
+        guard let ownerUsername = ownerUsername else {
+            return NSAttributedString(string: "")
+        }
+        
+        let attrString = NSMutableAttributedString(
+            string: "\(ownerUsername) ",
+            attributes: [
+                .font: UIFont.systemFont(ofSize: 14, weight: .medium),
+                .foregroundColor: UIColor.ccGrey
+            ])
+        attrString.append(NSAttributedString(
+            string: post.caption,
+            attributes: [
+                .font: UIFont.systemFont(ofSize: 13, weight: .regular),
+                .foregroundColor: UIColor.ccGrey
+            ]))
+        
+        return attrString
     }
     
     var likes: Int {
         return post.likes
     }
     var likesLabelText: String {
-        if post.likes == 1 {
-            return "\(post.likes) like"
-        } else {
-            return "\(post.likes) likes"
-        }
+        return "\(post.likes)"
     }
     var likeButtonImage: UIImage? {
-        let imageName = post.isLiked ? "like_selected" : "like_unselected"
+        let imageName = post.isLiked
+        ? ImageAsset.like_selected.rawValue
+        : ImageAsset.like_unselected.rawValue        
         return UIImage(named: imageName)
     }
     var likeButtonTintColor: UIColor {
-        return post.isLiked ? .systemRed : .black
+        return post.isLiked ? .systemRed : .ccGrey
+    }
+    
+    var commentCount: Int {
+        return comments.count
+    }
+    
+    var commentCountText: String? {
+        return "\(commentCount)"
     }
     
     var timestampText: String? {

@@ -106,4 +106,27 @@ extension UIView {
             right: view.rightAnchor
         )
     }
+    
+    enum GlowEffect: Float {
+        case small = 15, normal = 20, mid = 25, big = 30
+    }
+
+    func doGlowAnimation(withColor color: UIColor, withEffect effect: GlowEffect = .normal) {
+        layer.masksToBounds = false
+        layer.shadowColor = color.cgColor
+        layer.shadowRadius = 0
+        layer.shadowOpacity = 0.8
+        layer.shadowOffset = .zero
+
+        let glowAnimation = CABasicAnimation(keyPath: "shadowRadius")
+        glowAnimation.fromValue = 0
+        glowAnimation.toValue = effect.rawValue
+        glowAnimation.fillMode = .removed
+        glowAnimation.repeatCount = .infinity
+        glowAnimation.duration = 2
+        glowAnimation.autoreverses = true
+        layer.removeAllAnimations()
+
+        layer.add(glowAnimation, forKey: "shadowGlowingAnimation")
+    }
 }

@@ -10,19 +10,20 @@ import UIKit
 
 class ChatlistController: UIViewController {
     
-    var allRecents = [RecentChat]()
-    var filteredRecents = [RecentChat]()
+    private var allRecents = [RecentChat]()
+    private var filteredRecents = [RecentChat]()
     private var inSearchMode: Bool {
         return searchController.isActive && !searchController.searchBar.text!.isEmpty
     }
+    let searchController = UISearchController(searchResultsController: nil)
     
-    // MARK: - Views
-    let tableView = UITableView()
+    // MARK: - View
+    private let tableView = UITableView(frame: .zero, style: .grouped)
     
     private lazy var newMessageButton: UIButton = {
         let button = UIButton(type: .system)
         button.setImage(UIImage(systemName: "plus"), for: .normal)
-        button.backgroundColor = .systemBrown
+        button.backgroundColor = .ccPrimary
         button.tintColor = .white
         button.imageView?.setDimensions(height: 24, width: 24)
         button.layer.cornerRadius = 56 / 2
@@ -32,71 +33,37 @@ class ChatlistController: UIViewController {
     
     private lazy var backBarButtonItem = UIBarButtonItem(
         image: UIImage(systemName: "arrow.left")?
-            .withTintColor(.black)
+            .withTintColor(.ccGrey)
             .withRenderingMode(.alwaysOriginal),
         style: .plain,
         target: self,
         action: #selector(showChatlist)
     )
     
-    let searchController = UISearchController(searchResultsController: nil)
-    
     // MARK: - LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        // setup
-        tableView.register(RecentChatCell.self, forCellReuseIdentifier: RecentChatCell.identifier)
-        tableView.tableFooterView = UIView()
-        tableView.delegate = self
-        tableView.dataSource = self
-        
-        // style
         view.backgroundColor = .white
+        title = UserService.shared.currentUser?.username ?? ""
         
-        configureNavigationBar(withTitle: "\(UserService.shared.currentUser?.username ?? "")",
-                               prefersLargeTitles: false,
-                               shouldHideUnderline: true,
-                               interfaceStyle: .light)
-        tableView.backgroundColor = .white
-        tableView.rowHeight = 80
+        setupCustomNavBar(
+            backgroundType: .transparentBackground,
+            shouldSetCustomBackImage: true,
+            backIndicatorImage: UIImage.asset(.Icons_24px_Back02)
+        )
+        setupTableView()
         setupSearchController()
-    
-        // layout
-        view.addSubview(tableView)
-        view.addSubview(newMessageButton)
-        tableView.frame = view.bounds
-        newMessageButton.anchor(bottom: view.safeAreaLayoutGuide.bottomAnchor,
-                                right: view.rightAnchor,
-                                paddingBottom: 16,
-                                paddingRight: 24)
-        newMessageButton.setDimensions(height: 56, width: 56)
+        setupNewMessageButton()
         
-        // fetch
         downloadRecentChats()
     }
     
-    // MARK: - Helper
-    private func setupSearchController() {
-        searchController.searchResultsUpdater = self
-        searchController.hidesNavigationBarDuringPresentation = false
-        definesPresentationContext = true
-        searchController.searchBar.showsCancelButton = false
-        searchController.searchBar.placeholder = "搜尋"
-        searchController.searchBar.delegate = self
-        searchController.searchBar.sizeToFit()
-        searchController.searchBar.tintColor = .darkGray
-        navigationItem.searchController = searchController
-        navigationItem.hidesSearchBarWhenScrolling = false
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        createGradientBackground()
     }
-
-    private func filteredContentForSearchText(searchText: String) {
-        filteredRecents = allRecents.filter({ (recent) -> Bool in
-            return recent.receiverName.lowercased().contains(searchText.lowercased())
-        })
-        tableView.reloadData()
-    }
-
+    
+    // MARK: - API
     private func downloadRecentChats() {
         RecentChatService.shared.downloadRecentChatsFromFireStore { (allChats) in
             self.allRecents = allChats
@@ -105,24 +72,12 @@ class ChatlistController: UIViewController {
             }
         }
     }
-    
-    private func goToChat(recent: RecentChat) {
-        // make sure we have 2 recents
-        restartChat(chatRoomId: recent.chatRoomId, memberIds: recent.memberIds)
-        
-        let controller = ChatController(chatId: recent.chatRoomId,
-                                        recipientId: recent.receiverId,
-                                        recipientName: recent.receiverName)
-        controller.hidesBottomBarWhenPushed = true
-        navigationController?.pushViewController(controller, animated: true)
-    }
-    
+
     // MARK: - Action
     @objc func showChatlist() {
         searchController.searchBar.endEditing(true)
         searchController.searchBar.resignFirstResponder()
         searchController.searchBar.text = nil
-
         navigationItem.leftBarButtonItem = nil
     }
     
@@ -131,6 +86,52 @@ class ChatlistController: UIViewController {
         controller.delegate = self
         navigationController?.pushViewController(controller, animated: true)
     }
+}
+
+extension ChatlistController {
+    
+    private func setupTableView() {
+        tableView.register(RecentChatCell.self, forCellReuseIdentifier: RecentChatCell.identifier)
+        tableView.register(
+            MessageSectionHeader.self,
+            forHeaderFooterViewReuseIdentifier: MessageSectionHeader.identifier
+        )
+        tableView.delegate = self
+        tableView.dataSource = self
+        
+        tableView.backgroundColor = .clear
+        tableView.tableFooterView = UIView()
+        tableView.separatorStyle = .none
+        tableView.bounces = false
+        tableView.rowHeight = 80
+        view.addSubview(tableView)
+        tableView.fillSuperView()
+    }
+    
+    private func setupNewMessageButton() {
+        view.addSubview(newMessageButton)
+        newMessageButton.anchor(
+            bottom: view.safeAreaLayoutGuide.bottomAnchor,
+            right: view.rightAnchor,
+            paddingBottom: 16,
+            paddingRight: 16
+        )
+        newMessageButton.setDimensions(height: 56, width: 56)
+    }
+    
+    private func setupSearchController() {
+        searchController.searchResultsUpdater = self
+        searchController.hidesNavigationBarDuringPresentation = false
+        definesPresentationContext = true
+        searchController.searchBar.showsCancelButton = false
+        searchController.searchBar.placeholder = "搜尋"
+        searchController.searchBar.delegate = self
+        searchController.searchBar.sizeToFit()
+        searchController.searchBar.tintColor = .ccPrimary
+        navigationItem.searchController = searchController
+        navigationItem.hidesSearchBarWhenScrolling = false
+    }
+    
 }
 
 // MARK: - UITableViewDataSource, UITableViewDelegate
@@ -152,9 +153,19 @@ extension ChatlistController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        
         let recent = inSearchMode ? filteredRecents[indexPath.row] : allRecents[indexPath.row]
         RecentChatService.shared.clearUnreadCounter(recent: recent)
-        goToChat(recent: recent)
+        
+        // make sure we have 2 recents
+        restartChat(chatRoomId: recent.chatRoomId, memberIds: recent.memberIds)
+        
+        let controller = ChatController(
+            chatId: recent.chatRoomId,
+            recipientId: recent.receiverId,
+            recipientName: recent.receiverName
+        )
+        navigationController?.pushViewController(controller, animated: true)
     }
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
@@ -171,45 +182,60 @@ extension ChatlistController: UITableViewDataSource, UITableViewDelegate {
             RecentChatService.shared.deleteRecent(recent)
             
             searchController.isActive
-            ? self.filteredRecents.remove(at: indexPath.row)
+            ? filteredRecents.remove(at: indexPath.row)
             : allRecents.remove(at: indexPath.row)
             
             tableView.deleteRows(at: [indexPath], with: .automatic)
         }
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        guard let headerView = tableView.dequeueReusableHeaderFooterView(
+            withIdentifier: MessageSectionHeader.identifier
+        ) as? MessageSectionHeader else { return nil }
+        headerView.titleLabel.text = "訊息"
+        return headerView
+    }
+
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 32
     }
         
 }
 
 // MARK: - NewMessageControllerDelegate
 extension ChatlistController: NewMessageControllerDelegate {
+    
     func controller(_ controller: NewMessageController, wantsToStartChatWith user: User) {
-        
-        guard let currentUser = UserService.shared.currentUser else {
-            print("DEBUG: Not getting current user")
-            return
-        }
+        guard let currentUser = UserService.shared.currentUser else { return }
         let chatId = startChat(user1: currentUser, user2: user)
-        print("DEBUG: Start chatting chatroom id is ", chatId)
         
-        // go to chat
         let controller = ChatController(chatId: chatId, recipientId: user.uid, recipientName: user.username)
         controller.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(controller, animated: true)
     }
+    
 }
 
 // MARK: - UISearchResultsUpdating
 extension ChatlistController: UISearchResultsUpdating {
+    
     func updateSearchResults(for searchController: UISearchController) {
-        filteredContentForSearchText(searchText: searchController.searchBar.text!)
+        guard let searchText = searchController.searchBar.text?.lowercased() else { return }
+        filteredRecents = allRecents.filter({
+            $0.receiverName.lowercased().contains(searchText)
+        })
+        tableView.reloadData()
     }
     
 }
 
 // MARK: - UISearchBarDelegate
 extension ChatlistController: UISearchBarDelegate {
+    
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
         searchBar.becomeFirstResponder()
         navigationItem.leftBarButtonItem = backBarButtonItem
     }
+    
 }

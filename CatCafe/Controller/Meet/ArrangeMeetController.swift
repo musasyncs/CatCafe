@@ -16,93 +16,55 @@ class ArrangeMeetController: UIViewController {
             imageHeaderView.picView.placedImageView.image = selectedImage
         }
     }
-    var chosenDate: Date?
-    var meetTitleText: String? {
+    private var chosenDate: Date?
+    private var meetTitleText: String? {
         titleTileView.textField.text
     }
-    var selectedCafe: Cafe? {
+    private var selectedCafe: Cafe? {
         didSet {
             placeTileView.textField.text = selectedCafe?.title
         }
     }
-    var meetDescription: String? {
+    private var meetDescription: String? {
         descriptionTileView.textField.text
     }
     
-    let scrollView = UIScrollView()
-    let stackView = UIStackView()
-    let imageHeaderView = ImageHeaderView()
-    let meetTimeTileView = MeetTimeTileView()
-    let titleTileView = TileView(
+    var keyboardIsPresent = false
+    
+    // MARK: - View
+    private let scrollView = UIScrollView()
+    private let stackView = UIStackView()
+    private let imageHeaderView = ImageHeaderView()
+    private let titleTileView = TileView(
         title: "聚會主題",
         placeholder: "開啟你想討論的話題，或是找伴一起參加"
     )
-    let placeTileView = TileView(
+    private let placeTileView = TileView(
         title: "聚會地點",
         placeholder: "選擇咖啡廳"
     )
-    let descriptionTileView = TileView(
+    private let meetTimeTileView = MeetTimeTileView()
+    private let descriptionTileView = TileView(
         title: "聚會描述",
         placeholder: "描述你想要聚會的原因，讓大家更能夠了解這場聚會的目的"
     )
     
+    // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        setup()
-        style()
-        layout()
-    }
-    
-    fileprivate func setup() {
-        meetTimeTileView.delegate = self
-        [
-            imageHeaderView,
-            titleTileView,
-            placeTileView,
-            meetTimeTileView,
-            descriptionTileView
-        ].forEach {
-            stackView.addArrangedSubview($0)
-        }
-        
-        placeTileView.textField.inputView = UIView()
-        placeTileView.textField.tintColor = .white
-        placeTileView.textField.addTarget(self, action: #selector(showSelectCafePage), for: .editingDidBegin)
-    }
-    
-    fileprivate func style() {
-        setupNavigationButtons()
         view.backgroundColor = .white
-        scrollView.showsVerticalScrollIndicator = false
-        stackView.axis = .vertical
-        stackView.distribution = .equalSpacing
-        stackView.spacing = 24
-        stackView.backgroundColor = .clear
+        setupNavigationButtons()
+        setupScrollView()
+        setupStackView()
+        setupChildViews()
     }
     
-    fileprivate func layout() {
-        view.addSubview(scrollView)
-        scrollView.anchor(top: view.safeAreaLayoutGuide.topAnchor,
-                          left: view.leftAnchor,
-                          bottom: view.bottomAnchor,
-                          right: view.rightAnchor,
-                          paddingTop: 8, paddingLeft: 8, paddingBottom: 16, paddingRight: 8)
-        
-        scrollView.addSubview(stackView)
-        stackView.fillSuperView()
-        stackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
-        
-        imageHeaderView.setHeight(104)
-    }
-    
-    // MARK: - Helpers
-    
-    func setupNavigationButtons() {
-        navigationController?.navigationBar.tintColor = .black
+    private func setupNavigationButtons() {
+        navigationController?.navigationBar.tintColor = .ccGrey
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(
-            image: UIImage(named: "Icons_24px_Back02")?
-                .withTintColor(.black)
+            image: UIImage.asset(.Icons_24px_Back02)?
+                .withTintColor(.ccGrey)
                 .withRenderingMode(.alwaysOriginal),
             style: .plain,
             target: self,
@@ -110,7 +72,7 @@ class ArrangeMeetController: UIViewController {
         )
         navigationItem.rightBarButtonItem = UIBarButtonItem(
             image: UIImage(systemName: "arrow.right")?
-                .withTintColor(.black)
+                .withTintColor(.ccGrey)
                 .withRenderingMode(.alwaysOriginal),
             style: .plain,
             target: self,
@@ -118,8 +80,48 @@ class ArrangeMeetController: UIViewController {
         )
     }
     
-    // MARK: - Action
+    private func setupScrollView() {
+        scrollView.showsVerticalScrollIndicator = false
+        view.addSubview(scrollView)
+        scrollView.anchor(
+            top: view.safeAreaLayoutGuide.topAnchor,
+            left: view.leftAnchor,
+            bottom: view.bottomAnchor,
+            right: view.rightAnchor,
+            paddingTop: 8, paddingLeft: 8, paddingBottom: 16, paddingRight: 8
+        )
+    }
     
+    private func setupStackView() {
+        stackView.axis = .vertical
+        stackView.distribution = .equalSpacing
+        stackView.spacing = 24
+        stackView.backgroundColor = .clear
+        scrollView.addSubview(stackView)
+        stackView.fillSuperView()
+//        stackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
+    }
+    
+    private func setupChildViews() {
+        stackView.addArrangedSubview(imageHeaderView)
+        stackView.addArrangedSubview(titleTileView)
+        stackView.addArrangedSubview(placeTileView)
+        stackView.addArrangedSubview(meetTimeTileView)
+        stackView.addArrangedSubview(descriptionTileView)
+        
+        imageHeaderView.setHeight(104)
+        
+        let tap = UITapGestureRecognizer(target: self, action: #selector(showSelectCafePage))
+        placeTileView.textField.addGestureRecognizer(tap)
+        placeTileView.textField.isUserInteractionEnabled = true
+        
+        meetTimeTileView.delegate = self
+        
+        descriptionTileView.textField.tag = 2
+        descriptionTileView.delegate = self
+    }
+
+    // MARK: - Action
     @objc private func handleCancel() {
         dismiss(animated: true, completion: nil)
     }
@@ -135,21 +137,21 @@ class ArrangeMeetController: UIViewController {
             return
         }
         
-        // Uploading...
         navigationItem.rightBarButtonItem?.isEnabled = false
         
-        CCProgressHUD.show()
-        MeetService.uploadMeet(title: meetTitleText,
-                               caption: meetDescription,
-                               meetImage: selectedImage,
-                               cafeId: selectedCafe.id,
-                               cafeName: selectedCafe.title,
-                               meetDate: chosenDate
+        show()
+        MeetService.uploadMeet(
+            title: meetTitleText,
+            caption: meetDescription,
+            meetImage: selectedImage,
+            cafeId: selectedCafe.id,
+            cafeName: selectedCafe.title,
+            meetDate: chosenDate
         ) { error in
-            CCProgressHUD.dismiss()
-            
-            if let error = error {
-                print("DEBUG: Failed to upload meet with error \(error.localizedDescription)")
+        
+            if error != nil {
+                self.dismiss()
+                self.showFailure(text: "Failed to upload meet")
                 self.navigationItem.rightBarButtonItem?.isEnabled = true
                 return
             }
@@ -157,7 +159,7 @@ class ArrangeMeetController: UIViewController {
             self.presentingViewController?.presentingViewController?.dismiss(animated: true, completion: {
                 NotificationCenter.default.post(name: CCConstant.NotificationName.updateMeetFeed, object: nil)
             })
-
+            
         }
         
     }
@@ -165,13 +167,13 @@ class ArrangeMeetController: UIViewController {
     @objc func showSelectCafePage() {
         let controller = SelectCafeController()
         controller.delegate = self
-        let navController = UINavigationController(rootViewController: controller)
+        let navController = makeNavigationController(rootViewController: controller)
         navController.modalPresentationStyle = .overFullScreen
         present(navController, animated: true)
     }
-    
 }
 
+// MARK: - SelectCafeControllerDelegate, MeetTimeTileViewDelegate
 extension ArrangeMeetController: SelectCafeControllerDelegate {
     func didSelectCafe(_ cafe: Cafe) {
         self.selectedCafe = cafe
@@ -182,4 +184,19 @@ extension ArrangeMeetController: MeetTimeTileViewDelegate {
     func didChooseDate(_ selector: MeetTimeTileView, date: Date) {
         self.chosenDate = date
     }
+}
+
+// MARK: - TileViewDelegate
+extension ArrangeMeetController: TileViewDelegate {
+    
+    func scrollToOriginalPlace() {
+        scrollView.contentOffset.y = 0
+    }
+    
+    func tileView(_ tileView: TileView, wantsToScrollToTextField textField: UITextField) {
+        if tileView.textField.tag == 2 {
+            scrollView.contentOffset.y = (tileView.frame.minY) + CGFloat(-250)
+        }
+    }
+
 }

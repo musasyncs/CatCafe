@@ -14,15 +14,19 @@ final class DropDownCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
-        backgroundColor = UIColor.rgb(hex: "FAFAFA")
+        backgroundColor = .clear
         selectionStyle = .none
         titleLabel.font = .systemFont(ofSize: 12, weight: .regular)
         titleLabel.textAlignment = .left
-        titleLabel.textColor = .black
+        titleLabel.textColor = .ccGrey
         
         addSubview(titleLabel)
-        titleLabel.anchor(top: topAnchor, left: leftAnchor, bottom: bottomAnchor,
-                          paddingTop: 8, paddingLeft: 8, paddingBottom: 8)
+        titleLabel.anchor(
+            top: topAnchor,
+            left: leftAnchor,
+            bottom: bottomAnchor,
+            paddingTop: 8, paddingLeft: 8, paddingBottom: 8
+        )
     }
     
     required init?(coder aDecoder: NSCoder) {

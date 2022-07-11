@@ -6,19 +6,20 @@
 //
 
 import UIKit
-import SDWebImage
 
 class MeetPeopleViewController: UIViewController {
     
-    let meet: Meet
+    private let meet: Meet
+    private var hasAnimated = false
         
-    var people = [Person]() {
+    private var people = [Person]() {
         didSet {
             collectionView.reloadData()
         }
     }
     
-    lazy var collectionView: UICollectionView = {
+    // MARK: - View
+    private lazy var collectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: SnappyFlowLayout())
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.backgroundColor = .clear
@@ -26,9 +27,9 @@ class MeetPeopleViewController: UIViewController {
         return collectionView
     }()
     
-    let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
-    let briefInfoView = BriefInfoView()
-    let leaveButton = makeTitleButton(
+    private let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
+    private let briefInfoView = BriefInfoView()
+    private let leaveButton = makeTitleButton(
         withText: "離開",
         font: .systemFont(ofSize: 15, weight: .regular),
         kern: 1,
@@ -39,8 +40,7 @@ class MeetPeopleViewController: UIViewController {
         borderColor: .white
     )
     
-    // MARK: - Life Cycle
-    
+    // MARK: - Initializer
     init(meet: Meet) {
         self.meet = meet
         super.init(nibName: nil, bundle: nil)
@@ -50,67 +50,81 @@ class MeetPeopleViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        leaveButton.addTarget(self, action: #selector(handleLeave), for: .touchUpInside)
-        visualEffectView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(dismissBriefView)))
-        collectionView.delegate = self
-        collectionView.dataSource = self
-        
-        view.backgroundColor = .clear
-        collectionView.showsHorizontalScrollIndicator = false
-        visualEffectView.alpha = 0
+        setupCollectionView()
+        setupLeaveButton()
+        setupVisualEffectView()
         briefInfoView.layer.cornerRadius = 8
-        
-        view.addSubview(collectionView)
-        view.addSubview(leaveButton)
-        view.addSubview(visualEffectView)
-        
-        visualEffectView.anchor(top: view.topAnchor,
-                                left: view.leftAnchor,
-                                bottom: view.bottomAnchor,
-                                right: view.rightAnchor)
-        
-        collectionView.centerY(inView: view)
-        collectionView.setHeight(UIScreen.height * 0.6)
-        collectionView.anchor(left: view.leftAnchor, right: view.rightAnchor)
-        
-        leaveButton.centerX(inView: view)
-        leaveButton.anchor(bottom: view.bottomAnchor, paddingBottom: 64)
-        
+    
         fetchPeople()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.navigationBar.isHidden = true
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
-        view.backgroundColor = .black.withAlphaComponent(0)
-        
-        UIView.animate(withDuration: 0.3, animations: {
-            self.view.backgroundColor = .black.withAlphaComponent(0.7)
-            self.view.layoutIfNeeded()
-        })
+        if !hasAnimated {
+            view.backgroundColor = .black.withAlphaComponent(0)
+            UIView.animate(withDuration: 0.3, animations: {
+                self.view.backgroundColor = .black.withAlphaComponent(0.6)
+                self.view.layoutIfNeeded()
+                self.hasAnimated = true
+            })
+        }
     }
     
-    // MARK: - Helpers
+    private func setupCollectionView() {
+        collectionView.delegate = self
+        collectionView.dataSource = self
+        collectionView.showsHorizontalScrollIndicator = false
+        view.addSubview(collectionView)
+        collectionView.centerY(inView: view)
+        collectionView.setHeight(UIScreen.height * 0.6)
+        collectionView.anchor(left: view.leftAnchor, right: view.rightAnchor)
+    }
     
-    func dismissBriefInfoVC(person: Person?) {
+    private func setupLeaveButton() {
+        leaveButton.addTarget(self, action: #selector(handleLeave), for: .touchUpInside)
+        view.addSubview(leaveButton)
+        leaveButton.centerX(inView: view)
+        leaveButton.anchor(bottom: view.bottomAnchor, paddingBottom: 64)
+    }
+    
+    private func setupVisualEffectView() {
+        visualEffectView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(dismissBriefView)))
+        visualEffectView.alpha = 0
+        view.addSubview(visualEffectView)
+        visualEffectView.anchor(
+            top: view.topAnchor,
+            left: view.leftAnchor,
+            bottom: view.bottomAnchor,
+            right: view.rightAnchor
+        )
+    }
+
+    // MARK: - Helper
+    private func dismissBriefInfoVC(person: Person?) {
         UIView.animate(withDuration: 0.5) {
             self.visualEffectView.alpha = 0
             self.briefInfoView.alpha = 0
             self.briefInfoView.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
-            
         } completion: { _ in
             self.briefInfoView.removeFromSuperview()
-            // go to profile
-            guard let person = person else { return }
-            print("DEBUG: \(person.uid)")
+            guard let uid = person?.uid else { return }
+
+            UserService.shared.fetchUserBy(uid: uid) { user in
+                let controller = ProfileController(user: user)
+                self.navigationController?.pushViewController(controller, animated: true)
+            }
         }
     }
     
     // MARK: - API
-    
     private func fetchPeople() {
         MeetService.fetchPeople(forMeet: meet.meetId) { people in
             self.people = people
@@ -118,7 +132,6 @@ class MeetPeopleViewController: UIViewController {
     }
     
     // MARK: - Action
-
     @objc func dismissBriefView() {
         dismissBriefInfoVC(person: nil)
     }
@@ -130,7 +143,6 @@ class MeetPeopleViewController: UIViewController {
 }
 
 // MARK: - UICollectionViewDelegate, UICollectionViewDataSource
-
 extension MeetPeopleViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -141,7 +153,6 @@ extension MeetPeopleViewController: UICollectionViewDelegate, UICollectionViewDa
         _ collectionView: UICollectionView,
         cellForItemAt indexPath: IndexPath
     ) -> UICollectionViewCell {
-        
         guard let cell = collectionView.dequeueReusableCell(
             withReuseIdentifier: SnappyCell.identifier,
             for: indexPath
@@ -153,20 +164,9 @@ extension MeetPeopleViewController: UICollectionViewDelegate, UICollectionViewDa
         return cell
     }
     
-    func collectionView(
-        _ collectionView: UICollectionView,
-        didSelectItemAt indexPath: IndexPath
-    ) {
-        collectionView.deselectItem(at: indexPath, animated: true)
-//        let person = people[indexPath.item]
-        // go to profile
-      
-    }
-
 }
 
 // MARK: - SnappyCellDelegate (long press)
-
 extension MeetPeopleViewController: SnappyCellDelegate {
     
     func presentInfoView(withPerson person: Person) {
@@ -189,7 +189,6 @@ extension MeetPeopleViewController: SnappyCellDelegate {
 }
 
 // MARK: - BriefInfoViewDelegate
-
 extension MeetPeopleViewController: BriefInfoViewDelegate {
     func dismissInfoView(withPerson person: Person?) {
         dismissBriefInfoVC(person: person)

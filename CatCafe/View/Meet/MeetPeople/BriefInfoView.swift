@@ -22,8 +22,8 @@ class BriefInfoView: UIView {
                 self.titleLabel.text = user.fullname
             }
             
-            configureLabel(label: contactLabel, title: "聯絡方式", details: person.contact)
-            configureLabel(label: remarksLabel, title: "想說的話", details: person.remarks)
+            setupLabel(label: contactLabel, title: "聯絡方式", details: person.contact)
+            setupLabel(label: remarksLabel, title: "想說的話", details: person.remarks)
         }
     }
     
@@ -37,7 +37,7 @@ class BriefInfoView: UIView {
         let button = UIButton(type: .system)
         button.addTarget(self, action: #selector(profileButtonTapped), for: .touchUpInside)
         button.setTitle("查看個人頁面", for: .normal)
-        button.backgroundColor = .systemBrown
+        button.backgroundColor = .ccPrimary
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 13)
         button.layer.cornerRadius = 5
@@ -56,15 +56,14 @@ class BriefInfoView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    // MARK: - Helpers
-    
-    func configureLabel(label: UILabel, title: String, details: String) {
+    // MARK: - Helper
+    func setupLabel(label: UILabel, title: String, details: String) {
         let attributedText = NSMutableAttributedString(
             attributedString: NSAttributedString(
                 string: "\(title):  ",
                 attributes: [
                     NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 13),
-                    NSAttributedString.Key.foregroundColor: UIColor.systemBrown
+                    NSAttributedString.Key.foregroundColor: UIColor.ccPrimary
                 ]
             )
         )
@@ -79,7 +78,7 @@ class BriefInfoView: UIView {
     }
     
     func forLongPressView() {
-        topView.backgroundColor = .systemBrown
+        topView.backgroundColor = .ccPrimary
         topView.layer.cornerRadius = 5
         titleLabel.textColor = .white
         titleLabel.font = UIFont.boldSystemFont(ofSize: 16)

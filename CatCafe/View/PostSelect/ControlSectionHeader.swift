@@ -8,7 +8,6 @@
 import UIKit
 
 protocol ControlViewDelegate: AnyObject {
-    func didTapGallery(_ view: ControlView)
     func didTapCamera(_ view: ControlView)
 }
 
@@ -20,21 +19,19 @@ final class ControlView: UIView {
         withText: "圖庫",
         font: .systemFont(ofSize: 17, weight: .regular),
         kern: 1,
-        foregroundColor: .black
+        foregroundColor: .ccGrey
     )
     lazy var cameraButton = makeIconButton(
-        imagename: "camera",
+        imagename: ImageAsset.camera.rawValue,
         imageColor: .white,
         imageWidth: 15,
         imageHeight: 15,
         backgroundColor: .systemGray,
-        borderColor: .black
+        borderColor: .ccGrey
     )
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-
-        galleryButton.addTarget(self, action: #selector(handleGallery), for: .touchUpInside)
         cameraButton.addTarget(self, action: #selector(handleCamera), for: .touchUpInside)
         cameraButton.layer.cornerRadius = 30 / 2
 
@@ -50,11 +47,6 @@ final class ControlView: UIView {
     }
     
     // MARK: - Action
-    
-    @objc func handleGallery() {
-        delegate?.didTapGallery(self)
-    }
-    
     @objc func handleCamera() {
         delegate?.didTapCamera(self)
     }

@@ -17,7 +17,7 @@ class CustomAlert {
     var website: String?
     var viewController: UIViewController?
 
-    // MARK: - Views
+    // MARK: - View
     private var mytargetView: UIView?
     
     private let bgView: UIView = {
@@ -38,47 +38,51 @@ class CustomAlert {
     lazy var titleLabel = UILabel()
     
     lazy var phoneButton = makeIconButton(
-        imagename: "Icons_24px_RegisterCellphone",
-        imageColor: .black,
+        imagename: ImageAsset.Icons_24px_RegisterCellphone.rawValue,
+        imageColor: .ccGrey,
         imageWidth: 15,
         imageHeight: 15,
-        backgroundColor: .systemGray5
+        backgroundColor: .gray5
     )
-    lazy var phoneLabel = makeLabel(withTitle: "撥打電話",
-                                    font: .systemFont(ofSize: 10, weight: .regular),
-                                    textColor: .darkGray)
+    lazy var phoneLabel = makeLabel(
+        withTitle: "撥打電話",
+        font: .systemFont(ofSize: 10, weight: .regular),
+        textColor: .darkGray
+    )
     lazy var phoneStack = UIStackView(arrangedSubviews: [phoneButton, phoneLabel])
     
     lazy var websiteButton = makeIconButton(
-        imagename: "website",
-        imageColor: .black,
+        imagename: ImageAsset.website.rawValue,
+        imageColor: .ccGrey,
         imageWidth: 15,
         imageHeight: 15,
-        backgroundColor: .systemGray5
+        backgroundColor: .gray5
     )
-    lazy var websiteLabel = makeLabel(withTitle: "網站",
-                                      font: .systemFont(ofSize: 10, weight: .regular),
-                                      textColor: .darkGray)
+    lazy var websiteLabel = makeLabel(
+        withTitle: "網站",
+        font: .systemFont(ofSize: 10, weight: .regular),
+        textColor: .darkGray
+    )
     lazy var websiteStack = UIStackView(arrangedSubviews: [websiteButton, websiteLabel])
-    
     lazy var baseStackView = UIStackView(arrangedSubviews: [phoneStack, websiteStack])
 
     lazy var button = makeTitleButton(
         withText: "確定",
         font: .systemFont(ofSize: 13, weight: .regular),
         kern: 1,
-        foregroundColor: .systemBrown,
+        foregroundColor: .ccPrimary,
         backgroundColor: .white,
         insets: .init(top: 5, left: 16, bottom: 5, right: 16),
         cornerRadius: 5,
         borderWidth: 1,
-        borderColor: .systemBrown
+        borderColor: .ccPrimary
     )
-        
-    func showAlert(with title: String?,
-                   phoneNumber: String,
-                   website: String,
-                   on viewController: UIViewController
+    
+    func showAlert(
+        with title: String?,
+        phoneNumber: String,
+        website: String,
+        on viewController: UIViewController
     ) {
         guard let targetView = viewController.view else { return }
         mytargetView = targetView
@@ -101,6 +105,7 @@ class CustomAlert {
         titleLabel.textAlignment = .center
         titleLabel.numberOfLines = 1
         titleLabel.font = .systemFont(ofSize: 17, weight: .semibold)
+        titleLabel.textColor = .ccGrey
         alertView.addSubview(titleLabel)
         titleLabel.anchor(top: self.alertView.topAnchor,
                           left: self.alertView.leftAnchor,
@@ -168,12 +173,18 @@ class CustomAlert {
     }
     
     @objc func makePhoneCall() {
-        guard let phoneNumber = phoneNumber else { return }
-        if let phoneCallURL = URL(string: "tel://" + phoneNumber) {
-            let application: UIApplication = UIApplication.shared
-            if application.canOpenURL(phoneCallURL) {
-                application.open(phoneCallURL, options: [:], completionHandler: nil)
+        guard let phoneNumber = phoneNumber,
+              let viewController = viewController else { return }
+        if !phoneNumber.isEmpty {
+            if let phoneCallURL = URL(string: "tel://" + phoneNumber) {
+                let application: UIApplication = UIApplication.shared
+                if application.canOpenURL(phoneCallURL) {
+                    application.open(phoneCallURL, options: [:], completionHandler: nil)
+                }
             }
+            return
+        } else {
+            viewController.showMessage(withTitle: "Oops", message: "無電話")
         }
     }
     
@@ -184,13 +195,12 @@ class CustomAlert {
         if !website.isEmpty {
             let controller = WebsiteController()
             controller.website = website
-            let navController = UINavigationController(rootViewController: controller)
+            let navController = makeNavigationController(rootViewController: controller)
             navController.modalPresentationStyle = .overFullScreen
             viewController.present(navController, animated: true)
         } else {
             viewController.showMessage(withTitle: "Oops", message: "無網站")
         }
-        
     }
     
 }

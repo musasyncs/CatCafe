@@ -26,18 +26,20 @@ class ExploreController: UIViewController {
         return searchController.isActive && !searchController.searchBar.text!.isEmpty
     }
     private let searchController = UISearchController(searchResultsController: nil)
+    
+    // MARK: - View
     private lazy var backBarButtonItem = UIBarButtonItem(
         image: UIImage(systemName: "arrow.left")?
-            .withTintColor(.black)
+            .withTintColor(.ccGrey)
             .withRenderingMode(.alwaysOriginal),
         style: .plain,
         target: self,
         action: #selector(showCollectionView)
     )
-    
+
     let mapButton = makeIconButton(
         imagename: "map",
-        imageColor: .black,
+        imageColor: .ccGrey,
         imageWidth: 24,
         imageHeight: 24
     )
@@ -57,68 +59,47 @@ class ExploreController: UIViewController {
     // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        configureUI()
-        configureSearchController()
-        
+        view.backgroundColor = .white
+        setupTableView()
+        setupCollectionView()
+        setupSearchController()
+        setupPullToRefresh()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         fetchUsers()
         fetchPosts()
-        
-        // setup pull to refresh
-        let postRefresher = UIRefreshControl()
-        let userRefresher = UIRefreshControl()
-        postRefresher.addTarget(self, action: #selector(handlePostRefresh), for: .valueChanged)
-        userRefresher.addTarget(self, action: #selector(handleUserRefresh), for: .valueChanged)
-        collectionView.refreshControl = postRefresher
-        tableView.refreshControl = userRefresher
     }
     
     // MARK: - API
-    func fetchUsers() {
+    private func fetchUsers() {
         UserService.fetchUsers(exceptCurrentUser: true, completion: { users in
             self.users = users
             self.tableView.refreshControl?.endRefreshing()
         })
     }
     
-    func fetchPosts() {
-        PostService.fetchPosts { posts in
-            self.posts = posts
-            self.collectionView.refreshControl?.endRefreshing()
+    private func fetchPosts() {
+        PostService.shared.fetchPosts { result in
+            switch result {
+            case .success(let posts):
+                
+                // 過濾出封鎖名單以外的 posts
+                guard let currentUser = UserService.shared.currentUser else { return }
+                let filteredPosts = posts.filter { !currentUser.blockedUsers.contains($0.user.uid) }
+                self.posts = filteredPosts
+                
+                self.collectionView.refreshControl?.endRefreshing()
+                self.collectionView.reloadData()
+            case .failure:
+                self.collectionView.refreshControl?.endRefreshing()
+                self.showFailure(text: "網路異常")
+            }
         }
     }
-    
-    // MARK: - Helpers
-    func configureUI() {
-        view.backgroundColor = .white
-        tableView.dataSource = self
-        tableView.delegate = self
-        tableView.register(UserCell.self, forCellReuseIdentifier: UserCell.identifier)
-        tableView.rowHeight = 64
-        tableView.isHidden = true
-        view.addSubview(tableView)
-        tableView.fillSuperView()
-        
-        view.addSubview(collectionView)
-        collectionView.fillSuperView()
-    }
-    
-    func configureSearchController() {
-        navigationItem.rightBarButtonItem = mapBarButtonItem
-        mapButton.addTarget(self, action: #selector(showMap), for: .touchUpInside)
 
-        searchController.searchResultsUpdater = self
-        searchController.hidesNavigationBarDuringPresentation = false
-        definesPresentationContext = true
-        searchController.searchBar.showsCancelButton = false
-        searchController.searchBar.placeholder = "搜尋"
-        searchController.searchBar.delegate = self
-        searchController.searchBar.sizeToFit()
-        searchController.searchBar.tintColor = .darkGray
-        navigationItem.titleView = searchController.searchBar
-        navigationItem.leftBarButtonItem = nil
-    }
-    
-    // MARK: - Actions
+    // MARK: - Action
     @objc func showCollectionView() {
         searchController.searchBar.endEditing(true)
         searchController.searchBar.resignFirstResponder()
@@ -140,10 +121,58 @@ class ExploreController: UIViewController {
     @objc func handleUserRefresh() {
         fetchUsers()
     }
-        
+            
 }
 
-// MARK: - UITableViewDataSource / UITableViewDelegate
+extension ExploreController {
+    
+    private func setupTableView() {
+        tableView.backgroundColor = .white
+        tableView.dataSource = self
+        tableView.delegate = self
+        tableView.register(UserCell.self, forCellReuseIdentifier: UserCell.identifier)
+        
+        tableView.separatorStyle = .none
+        tableView.keyboardDismissMode = .onDrag
+        tableView.rowHeight = 64
+        tableView.isHidden = true
+        
+        view.addSubview(tableView)
+        tableView.fillSuperView()
+    }
+    
+    private func setupCollectionView() {
+        view.addSubview(collectionView)
+        collectionView.fillSuperView()
+    }
+    
+    private func setupSearchController() {
+        navigationItem.rightBarButtonItem = mapBarButtonItem
+        mapButton.addTarget(self, action: #selector(showMap), for: .touchUpInside)
+        
+        searchController.searchResultsUpdater = self
+        searchController.hidesNavigationBarDuringPresentation = false
+        definesPresentationContext = true
+        searchController.searchBar.showsCancelButton = false
+        searchController.searchBar.placeholder = "搜尋"
+        searchController.searchBar.delegate = self
+        searchController.searchBar.sizeToFit()
+        searchController.searchBar.tintColor = .ccGreyVariant
+        navigationItem.titleView = searchController.searchBar
+        navigationItem.leftBarButtonItem = nil
+    }
+    
+    private func setupPullToRefresh() {
+        let postRefresher = UIRefreshControl()
+        let userRefresher = UIRefreshControl()
+        postRefresher.addTarget(self, action: #selector(handlePostRefresh), for: .valueChanged)
+        userRefresher.addTarget(self, action: #selector(handleUserRefresh), for: .valueChanged)
+        collectionView.refreshControl = postRefresher
+        tableView.refreshControl = userRefresher
+    }
+}
+
+// MARK: - UITableViewDataSource, UITableViewDelegate
 extension ExploreController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -153,10 +182,8 @@ extension ExploreController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: UserCell.identifier, for: indexPath) as? UserCell
         else { return UITableViewCell() }
-        
         let user = inSearchMode ? filteredUsers[indexPath.row] : users[indexPath.row]
         cell.viewModel = UserCellViewModel(user: user)
-        
         return cell
     }
     
@@ -183,11 +210,11 @@ extension ExploreController: UISearchResultsUpdating {
 
 // MARK: - UISearchBarDelegate
 extension ExploreController: UISearchBarDelegate {
+    
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
         searchBar.becomeFirstResponder()
         collectionView.isHidden = true
         tableView.isHidden = false
-        
         navigationItem.leftBarButtonItem = backBarButtonItem
     }
 }
@@ -205,23 +232,35 @@ extension ExploreController: UICollectionViewDataSource, UICollectionViewDelegat
     ) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(
             withReuseIdentifier: ProfileCell.identifier,
-            for: indexPath) as? ProfileCell else {
-                return UICollectionViewCell()
-            }
+            for: indexPath) as? ProfileCell
+        else {
+            return UICollectionViewCell()
+        }
         cell.viewModel = PostViewModel(post: posts[indexPath.item])
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let flowLayout = UICollectionViewFlowLayout()
+        flowLayout.scrollDirection = .vertical
+        let controller = FeedController()
+        controller.post = posts[indexPath.item]
+        
+        let navController = makeNavigationController(rootViewController: controller)
+        present(navController, animated: true)
     }
     
 }
 
 // MARK: - UICollectionViewFlowLayout
 extension ExploreController: UICollectionViewDelegateFlowLayout {
+    
     func collectionView(
         _ collectionView: UICollectionView,
         layout collectionViewLayout: UICollectionViewLayout,
         minimumInteritemSpacingForSectionAt section: Int
     ) -> CGFloat {
-        return 1
+        return 5
     }
     
     func collectionView(
@@ -229,7 +268,7 @@ extension ExploreController: UICollectionViewDelegateFlowLayout {
         layout collectionViewLayout: UICollectionViewLayout,
         minimumLineSpacingForSectionAt section: Int
     ) -> CGFloat {
-        return 1
+        return 5
     }
     
     func collectionView(
@@ -237,8 +276,16 @@ extension ExploreController: UICollectionViewDelegateFlowLayout {
         layout collectionViewLayout: UICollectionViewLayout,
         sizeForItemAt indexPath: IndexPath
     ) -> CGSize {
-        let width =  (view.frame.width - 2) / 3
+        let width = (view.frame.width - 36 - 5 * 2) / 3
         return CGSize(width: width, height: width)
+    }
+    
+    func collectionView(
+        _ collectionView: UICollectionView,
+        layout collectionViewLayout: UICollectionViewLayout,
+        insetForSectionAt section: Int
+    ) -> UIEdgeInsets {
+        return .init(top: 0, left: 18, bottom: 0, right: 18)
     }
 
 }

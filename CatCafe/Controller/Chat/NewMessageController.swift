@@ -12,7 +12,7 @@ protocol NewMessageControllerDelegate: AnyObject {
 }
 
 class NewMessageController: UIViewController {
-     
+    
     weak var delegate: NewMessageControllerDelegate?
     
     private var users = [User]() {
@@ -24,74 +24,84 @@ class NewMessageController: UIViewController {
     private var inSearchMode: Bool {
         return searchController.isActive && !searchController.searchBar.text!.isEmpty
     }
-    
-    // MARK: - Views
-    private let tableView = UITableView()
     private let searchController = UISearchController(searchResultsController: nil)
+    
+    // MARK: - View
+    private let tableView = UITableView(frame: .zero, style: .grouped)
     
     // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        configureNavigationBar(withTitle: "New Messages",
-                               prefersLargeTitles: false,
-                               shouldHideUnderline: true,
-                               interfaceStyle: .light)
-        
-        configureTableView()
-        configureSearchController()
+        title = "新訊息"
+        setupTableView()
+        setupSearchController()
+        setupPullToRefresh()
         
         fetchUsers()
-        
-        // setup pull to refresh
-        let userRefresher = UIRefreshControl()
-        userRefresher.addTarget(self, action: #selector(handleUserRefresh), for: .valueChanged)
-        tableView.refreshControl = userRefresher
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        createGradientBackground()
     }
     
     // MARK: - API
-    
-    func fetchUsers() {
+    private func fetchUsers() {
         UserService.fetchUsers(exceptCurrentUser: true, completion: { users in
             self.users = users
             self.tableView.refreshControl?.endRefreshing()
         })
     }
-
-    // MARK: - Helpers
     
-    func configureTableView() {
+    // MARK: - Action
+    @objc func handleUserRefresh() {
+        fetchUsers()
+    }
+    
+}
+
+extension NewMessageController {
+    
+    private func setupTableView() {
+        tableView.register(UserCell.self, forCellReuseIdentifier: UserCell.identifier)
+        tableView.register(
+            MessageSectionHeader.self,
+            forHeaderFooterViewReuseIdentifier: MessageSectionHeader.identifier
+        )
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.register(UserCell.self, forCellReuseIdentifier: UserCell.identifier)
         
+        tableView.backgroundColor = .clear
         tableView.tableFooterView = UIView()
-        tableView.rowHeight = 64
+        tableView.separatorStyle = .none
+        tableView.bounces = false
+        tableView.rowHeight = 80
         view.addSubview(tableView)
         tableView.fillSuperView()
     }
     
-    func configureSearchController() {
+    private func setupSearchController() {
         searchController.searchResultsUpdater = self
         searchController.obscuresBackgroundDuringPresentation = false
         definesPresentationContext = true
         searchController.searchBar.placeholder = "搜尋"
         searchController.searchBar.delegate = self
         searchController.searchBar.sizeToFit()
-        searchController.searchBar.tintColor = .darkGray
+        searchController.searchBar.tintColor = .ccPrimary
         navigationItem.searchController = searchController
         navigationItem.hidesSearchBarWhenScrolling = false
     }
     
-    // MARK: - Actions
-    
-    @objc func handleUserRefresh() {
-        fetchUsers()
+    private func setupPullToRefresh() {
+        let userRefresher = UIRefreshControl()
+        userRefresher.addTarget(self, action: #selector(handleUserRefresh), for: .valueChanged)
+        tableView.refreshControl = userRefresher
     }
-        
+
 }
 
-// MARK: - UITableViewDataSource / UITableViewDelegate
+// MARK: - UITableViewDataSource, UITableViewDelegate
 extension NewMessageController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -115,33 +125,33 @@ extension NewMessageController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let header = UIView()
-        header.backgroundColor = UIColor.white
-        return header
+        guard let headerView = tableView.dequeueReusableHeaderFooterView(
+            withIdentifier: MessageSectionHeader.identifier
+        ) as? MessageSectionHeader else { return nil }
+        headerView.titleLabel.text = "建議"
+        return headerView
     }
-    
+
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 5
+        return 32
     }
     
 }
 
 // MARK: - UISearchResultsUpdating
-
 extension NewMessageController: UISearchResultsUpdating {
     
     func updateSearchResults(for searchController: UISearchController) {
         guard let searchText = searchController.searchBar.text?.lowercased() else { return }
         filteredUsers = users.filter({
-            $0.username.lowercased().contains(searchText.lowercased()) ||
-            $0.fullname.lowercased().contains(searchText.lowercased())
+            $0.username.lowercased().contains(searchText) ||
+            $0.fullname.lowercased().contains(searchText)
         })
         self.tableView.reloadData()
     }
 }
 
 // MARK: - UISearchBarDelegate
-
 extension NewMessageController: UISearchBarDelegate {
     
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
@@ -155,4 +165,5 @@ extension NewMessageController: UISearchBarDelegate {
         searchBar.text = nil
         tableView.isHidden = true
     }
+    
 }

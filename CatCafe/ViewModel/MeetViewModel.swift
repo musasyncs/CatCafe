@@ -12,8 +12,72 @@ struct MeetViewModel {
     
     var meet: Meet
     var comments = [Comment]()
+        
+    var ownerImageUrlString: String?
+    var ownerUsername: String?
+    
+    var locationText: String? {
+        return meet.cafeName
+    }
+    
+    var mediaUrlString: String {
+        return meet.mediaUrlString
+    }
+    
+    var caption: String {
+        return meet.caption
+    }
+    
+    var likes: Int {
+        return meet.likes
+    }
+    var likesLabelText: String {
+        return "\(likes)"
+    }
+    var likeButtonImage: UIImage? {
+        let imageName = meet.isLiked
+        ? ImageAsset.like_selected.rawValue
+        : ImageAsset.like_unselected.rawValue
+        return UIImage(named: imageName)
+    }
+    var likeButtonTintColor: UIColor {
+        return meet.isLiked ? .systemRed : .ccGrey
+    }
+    
+    var timestampText: String? {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MM/dd HH:mm"
+        return formatter.string(from: meet.timestamp.dateValue())
+    }
+    
+    var attendButtonBackgroundColor: UIColor {
+        let currentUid = LocalStorage.shared.getUid()
+        if meet.ownerUid == currentUid {
+            return .lightGray
+        } else {
+            if meet.isAttended {
+                return .lightGray
+            } else {
+                return .ccPrimary
+            }
+        }
+    }
+    
+    var attendButtonEnabled: Bool {
+        let currentUid = LocalStorage.shared.getUid()
+        if meet.ownerUid == currentUid {
+            return false
+        } else {
+            if meet.isAttended {
+                return false
+            } else {
+                return true
+            }
+        }
+    }
     
     // ===
+    
     var titleText: String? {
         return meet.title
     }
@@ -44,67 +108,6 @@ struct MeetViewModel {
     }
     
     // ===
-    
-    var ownerImageUrl: URL?
-    var ownerUsername: String?
-    
-    var locationText: String? {
-        return meet.cafeName
-    }
-    
-    var mediaUrl: URL? {
-        return URL(string: meet.mediaUrlString)
-    }
-    
-    var caption: String {
-        return meet.caption
-    }
-    
-    var likes: Int {
-        return meet.likes
-    }
-    var likesLabelText: String {
-        return "\(likes)"
-    }
-    var likeButtonImage: UIImage? {
-        let imageName = meet.isLiked ? "like_selected" : "like_unselected"
-        return UIImage(named: imageName)
-    }
-    var likeButtonTintColor: UIColor {
-        return meet.isLiked ? .systemRed : .black
-    }
-    
-    var timestampText: String? {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "MM/dd HH:mm"
-        return formatter.string(from: meet.timestamp.dateValue())
-    }
-    
-    var attendButtonBackgroundColor: UIColor {
-        let currentUid = LocalStorage.shared.getUid()
-        if meet.ownerUid == currentUid {
-            return .lightGray
-        } else {
-            if meet.isAttended {
-                return .lightGray
-            } else {
-                return .systemBrown
-            }
-        }
-    }
-    
-    var attendButtonEnabled: Bool {
-        let currentUid = LocalStorage.shared.getUid()
-        if meet.ownerUid == currentUid {
-            return false
-        } else {
-            if meet.isAttended {
-                return false
-            } else {
-                return true
-            }
-        }
-    }
 
     init(meet: Meet) {
         self.meet = meet
