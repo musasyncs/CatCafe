@@ -20,8 +20,7 @@ class SnappyCell: UICollectionViewCell {
             guard let person = person else { return }
             
             UserService.shared.fetchUserBy(uid: person.uid) { user in
-                guard let url = URL(string: user.profileImageUrlString) else { return }
-                self.superImageView.sd_setImage(with: url)
+                self.superImageView.loadImage(user.profileImageUrlString, placeHolder: nil)
             }
             
             let formatter = DateFormatter()
@@ -45,7 +44,6 @@ class SnappyCell: UICollectionViewCell {
     }
     
     func setupView() {
-        
         let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress))
         self.addGestureRecognizer(longPressGestureRecognizer)
         
@@ -63,12 +61,14 @@ class SnappyCell: UICollectionViewCell {
         // layout
         contentView.addSubview(superImageView)
         contentView.addSubview(timeLabel)
-            
+        
         superImageView.fillSuperView()
-        timeLabel.anchor(left: contentView.leftAnchor,
-                         bottom: contentView.bottomAnchor,
-                         paddingLeft: 12,
-                         paddingBottom: 12)
+        timeLabel.anchor(
+            left: contentView.leftAnchor,
+            bottom: contentView.bottomAnchor,
+            paddingLeft: 12,
+            paddingBottom: 12
+        )
     }
     
     @objc func handleLongPress(sender: UILongPressGestureRecognizer) {

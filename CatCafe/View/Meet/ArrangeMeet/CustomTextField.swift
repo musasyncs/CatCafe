@@ -35,7 +35,7 @@ class CustomTextField: UITextField {
         let underline = UIView()
         addSubview(underline)
         underline.anchor(left: leftAnchor, bottom: bottomAnchor, right: rightAnchor, height: 0.5)
-        underline.backgroundColor = .black
+        underline.backgroundColor = .ccGrey
     }
     
     required init?(coder: NSCoder) {

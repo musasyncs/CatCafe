@@ -13,6 +13,7 @@ class FeedCommentController: UICollectionViewController {
     private let post: Post
     private var comments = [Comment]()
     
+    // MARK: - View
     private lazy var commentInputView: CommentInputAccessoryView = {
         let frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 50)
         let inputView = CommentInputAccessoryView(frame: frame)
@@ -28,8 +29,7 @@ class FeedCommentController: UICollectionViewController {
         return true
     }
     
-    // MARK: - Life Cycle
-    
+    // MARK: - Initializer
     init(post: Post) {
         self.post = post
         super.init(collectionViewLayout: UICollectionViewFlowLayout())
@@ -39,8 +39,10 @@ class FeedCommentController: UICollectionViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupCustomNavBar(backgroundType: .opaqueBackground, shouldSetCustomBackImage: true, backIndicatorImage: UIImage.asset(.Icons_24px_Back02))
         setupCollectionView()
         fetchComments()
     }
@@ -55,11 +57,8 @@ class FeedCommentController: UICollectionViewController {
         tabBarController?.tabBar.isHidden = false
     }
     
-    // MARK: - Helpers
-    
     // MARK: - API
-    
-    func fetchComments() {
+    private func fetchComments() {
         CommentService.fetchComments(forPost: post.postId) { comments in
             self.comments = comments
             self.collectionView.reloadData()
@@ -70,17 +69,18 @@ class FeedCommentController: UICollectionViewController {
 
 extension FeedCommentController {
     
-    func setupCollectionView() {
+    private func setupCollectionView() {
         collectionView.backgroundColor = .white
         collectionView.register(CommentCell.self, forCellWithReuseIdentifier: CommentCell.identifier)
         collectionView.alwaysBounceVertical = true
         collectionView.keyboardDismissMode = .interactive
     }
+    
 }
 
-// MARK: - UICollectionViewDataSource / UICollectionViewDelegate
-
+// MARK: - UICollectionViewDataSource, UICollectionViewDelegate
 extension FeedCommentController {
+    
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return comments.count
     }
@@ -99,7 +99,7 @@ extension FeedCommentController {
         
         UserService.shared.fetchUserBy(uid: comment.uid) { user in
             cell.viewModel?.username = user.username
-            cell.viewModel?.profileImageUrl = URL(string: user.profileImageUrlString)
+            cell.viewModel?.profileImageUrlString = user.profileImageUrlString
         }
         
         return cell
@@ -115,7 +115,6 @@ extension FeedCommentController {
 }
 
 // MARK: - UICollectionViewDelegateFlowlayout
-
 extension FeedCommentController: UICollectionViewDelegateFlowLayout {
     func collectionView(
         _ collectionView: UICollectionView,
@@ -130,14 +129,13 @@ extension FeedCommentController: UICollectionViewDelegateFlowLayout {
 }
 
 // MARK: - CommentInputAccessoryViewDelegate
-
 extension FeedCommentController: CommentInputAccessoryViewDelegate {
+    
     func inputView(_ inputView: CommentInputAccessoryView, wantsToUploadComment comment: String) {
-        
         guard let currentUid = LocalStorage.shared.getUid() else { return }
         UserService.shared.fetchUserBy(uid: currentUid, completion: { currentUser in
             
-            CCProgressHUD.show()
+            self.show()
             CommentService.uploadComment(
                 postId: self.post.postId,
                 user: currentUser,
@@ -145,13 +143,14 @@ extension FeedCommentController: CommentInputAccessoryViewDelegate {
                 mediaUrlString: "",
                 comment: comment
             ) { error in
-                CCProgressHUD.dismiss()
                 
-                if let error = error {
-                    print("DEBUG: Failed to upload comment with error \(error.localizedDescription)")
+                if error != nil {
+                    self.dismiss()
+                    self.showFailure(text: "Failed to upload comment")
                     return
                 }
                 
+                self.dismiss()
                 inputView.clearCommentTextView()
                 
                 // 通知被留言的人

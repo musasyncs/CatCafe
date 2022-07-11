@@ -17,7 +17,7 @@ class VideoMessage: NSObject, MediaItem {
     
     init(url: URL?) {
         self.url = url
-        self.placeholderImage = UIImage(named: "photoPlaceholder")!
+        self.placeholderImage = UIImage.asset(.photoPlaceholder)!
         self.size = CGSize(width: 240, height: 240)
     }
     

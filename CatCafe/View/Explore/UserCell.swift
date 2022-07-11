@@ -12,7 +12,7 @@ final class UserCell: UITableViewCell {
     var viewModel: UserCellViewModel? {
         didSet {
             guard let viewModel = viewModel else { return }
-            profileImageView.sd_setImage(with: viewModel.profileImageUrl)
+            profileImageView.loadImage(viewModel.profileImageUrl, placeHolder: UIImage.asset(.avatar))
             usernameLabel.text = viewModel.username
             fullnameLabel.text = viewModel.fullname
         }
@@ -20,25 +20,24 @@ final class UserCell: UITableViewCell {
         
     private let profileImageView: UIImageView = {
         let imageView = UIImageView()
+        imageView.image = UIImage.asset(.no_image)
+        imageView.layer.cornerRadius = 48 / 2
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         imageView.backgroundColor = .lightGray
-        imageView.image = UIImage(named: "riho")
-        imageView.layer.cornerRadius = 48 / 2
         return imageView
     }()
     
     private let usernameLabel: UILabel = {
        let label = UILabel()
         label.font = .systemFont(ofSize: 14, weight: .medium)
-        label.text = "riho123"
+        label.textColor = .ccGrey
         return label
     }()
     
     private let fullnameLabel: UILabel = {
        let label = UILabel()
         label.font = .systemFont(ofSize: 12, weight: .medium)
-        label.text = "Riho Yoshioka"
         label.textColor = .lightGray
         return label
     }()
@@ -47,6 +46,8 @@ final class UserCell: UITableViewCell {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        backgroundColor = .clear
+        selectionStyle = .none
         
         stack.axis = .vertical
         stack.spacing = 4

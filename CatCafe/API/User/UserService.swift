@@ -5,7 +5,8 @@
 //  Created by Ewen on 2022/6/15.
 //
 
-import Firebase
+import FirebaseFirestore
+import FirebaseFirestoreSwift
 
 typealias FirestoreCompletion = (Error?) -> Void
 
@@ -17,41 +18,59 @@ class UserService {
     
     var currentUser: User?
     
-    // MARK: - Create user profile / Upload profile image
+    // MARK: - Check if user exists
+    func checkIfUserExistOnFirebase(uid: String, completion: @escaping (Result<Bool, Error>) -> Void) {
+        firebaseReference(.users).document(uid).getDocument { snapshot, error in
+            if let error = error {
+                completion(.failure(error))
+            } else if snapshot?.data() == nil {
+                completion(.success(false))
+            } else {
+                completion(.success(true))
+            }
+        }
+    }
     
+    // MARK: - Create user profile / Upload profile image
     // 創建個人檔案
     func createUserProfile(
-        userId: String,
+        uid: String,
+        email: String,
+        username: String,
+        fullname: String,
         profileImageUrlString: String,
-        credentials: AuthCredentials,
+        bioText: String,
+        blockedUsers: [String],
         completion: @escaping(FirestoreCompletion)
     ) {
         let dic: [String: Any] = [
-            "email": credentials.email,
-            "fullname": credentials.fullname,
+            "uid": uid,
+            "email": email,
+            "username": username,
+            "fullname": fullname,
             "profileImageUrlString": profileImageUrlString,
-            "uid": userId,
-            "username": credentials.username
+            "bioText": bioText,
+            "blockedUsers": blockedUsers
         ]
         
         firebaseReference(.users)
-            .document(userId)
+            .document(uid)
             .setData(dic, completion: completion)
     }
-        
+    
     // 個人檔案資料更新 (除了頭貼 urlString )
     func updateCurrentUserInfo(
         fullname: String,
         username: String,
-        email: String,
+        bioText: String,
         completion: @escaping(FirestoreCompletion)
     ) {
         guard let currentUid = LocalStorage.shared.getUid() else { return }
         let dic: [String: Any] = [
-            "email": email,
-            "fullname": fullname,
             "uid": currentUid,
-            "username": username
+            "fullname": fullname,
+            "username": username,
+            "bioText": bioText
         ]
         
         firebaseReference(.users)
@@ -194,6 +213,90 @@ class UserService {
                     }
             }
         }
+    }
+    
+    // MARK: - Block / Unblock User / Check if a user is blocked
+    func block(uid: String, completion: @escaping(FirestoreCompletion)) {
+        guard let currentUid = LocalStorage.shared.getUid() else { return }
+        
+        firebaseReference(.users)
+            .document(currentUid)
+            .getDocument { snapshot, error in
+                if let error = error {
+                    completion(error)
+                }
+                
+                guard let snapshot = snapshot,
+                      let dic = snapshot.data(),
+                      let blockedUsers = dic["blockedUsers"] as? [String] else { return }
+                
+                if !blockedUsers.contains(uid) {
+                    firebaseReference(.users)
+                        .document(currentUid)
+                        .updateData([
+                            "blockedUsers": FieldValue.arrayUnion([uid])
+                        ]) { error in
+                            if let error = error {
+                                completion(error)
+                            } else {
+                                completion(nil)
+                            }
+                        }
+                }
+            }
+    }
+    
+    func unblock(uid: String, completion: @escaping(FirestoreCompletion)) {
+        guard let currentUid = LocalStorage.shared.getUid() else { return }
+        
+        firebaseReference(.users)
+            .document(currentUid)
+            .getDocument { snapshot, error in
+                if let error = error {
+                    completion(error)
+                }
+                
+                guard let snapshot = snapshot,
+                      let dic = snapshot.data(),
+                      let blockedUsers = dic["blockedUsers"] as? [String] else { return }
+                
+                if blockedUsers.contains(uid) {
+                    firebaseReference(.users)
+                        .document(currentUid)
+                        .updateData([
+                            "blockedUsers": FieldValue.arrayRemove([uid])
+                        ]) { error in
+                            if let error = error {
+                                completion(error)
+                            } else {
+                                completion(nil)
+                            }
+                        }
+                }
+            }
+    }
+    
+    func checkIfUserIsBlocked(uid: String, completion: @escaping(Bool) -> Void) {
+        guard let currentUid = LocalStorage.shared.getUid() else { return }
+        
+        firebaseReference(.users)
+            .document(currentUid)
+            .getDocument { snapshot, error in
+                if let error = error {
+                    print("Error getting user data: \(error)")
+                    return
+                }
+                
+                guard let snapshot = snapshot,
+                      let dic = snapshot.data(),
+                      let blockedUsers = dic["blockedUsers"] as? [String] else { return }
+                
+                if blockedUsers.contains(uid) {
+                    completion(true)
+                } else {
+                    completion(false)
+                }
+            }
     }
     
 }

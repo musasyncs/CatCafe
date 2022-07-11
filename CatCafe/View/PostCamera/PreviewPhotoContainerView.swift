@@ -15,25 +15,29 @@ class PreviewPhotoContainerView: UIView {
         imageView.contentMode = .scaleAspectFill
         return imageView
     }()
-
+    
     lazy var cancelButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setImage(UIImage(named: "cancel_shadow")?
-                            .withRenderingMode(.alwaysOriginal),
-                        for: .normal)
+        button.setImage(
+            UIImage.asset(.cancel_shadow)?
+                .withRenderingMode(.alwaysOriginal),
+            for: .normal
+        )
         button.addTarget(self, action: #selector(handleCancel), for: .touchUpInside)
         return button
     }()
 
     lazy var saveButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setImage(UIImage(named: "save_shadow")?
-                            .withRenderingMode(.alwaysOriginal),
-                        for: .normal)
+        button.setImage(
+            UIImage.asset(.save_shadow)?
+                .withRenderingMode(.alwaysOriginal),
+            for: .normal
+        )
         button.addTarget(self, action: #selector(handleSave), for: .touchUpInside)
         return button
     }()
-
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         addSubview(previewImageView)

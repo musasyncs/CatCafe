@@ -22,9 +22,11 @@ class SelectCafeController: UITableViewController {
         return searchController.isActive && !searchController.searchBar.text!.isEmpty
     }
     private let searchController = UISearchController(searchResultsController: nil)
+    
+    // MARK: - View
     private lazy var backBarButtonItem = UIBarButtonItem(
         image: UIImage(systemName: "arrow.left")?
-            .withTintColor(.black)
+            .withTintColor(.ccGrey)
             .withRenderingMode(.alwaysOriginal),
         style: .plain,
         target: self,
@@ -32,31 +34,41 @@ class SelectCafeController: UITableViewController {
     )
     
     // MARK: - Life Cycle
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
         setupTableView()
-        configureSearchController()
+        setupSearchController()
         
         fetchCafes()
     }
     
     // MARK: - API
-    func fetchCafes() {
+    private func fetchCafes() {
         CafeService.fetchAllCafes { cafes in
             self.cafes = cafes
             self.tableView.reloadData()
         }
     }
     
-    // MARK: - Helpers
-    func setupTableView() {
+    // MARK: - Action
+    @objc func dismissSelectCafe() {
+        dismiss(animated: true)
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        view.endEditing(true)
+    }
+}
+
+extension SelectCafeController {
+
+    private func setupTableView() {
         tableView.register(PlaceCell.self, forCellReuseIdentifier: PlaceCell.identifier)
         tableView.rowHeight = 64
     }
     
-    func configureSearchController() {
+    private func setupSearchController() {
         searchController.searchResultsUpdater = self
         searchController.hidesNavigationBarDuringPresentation = false
         definesPresentationContext = true
@@ -67,15 +79,9 @@ class SelectCafeController: UITableViewController {
         navigationItem.titleView = searchController.searchBar
         navigationItem.leftBarButtonItem = backBarButtonItem
     }
-    
-    // MARK: - Action
-    @objc func dismissSelectCafe() {
-        dismiss(animated: true)
-    }
 }
 
-// MARK: - UITableViewDataSource / UITableViewDelegate
-
+// MARK: - UITableViewDataSource, UITableViewDelegate
 extension SelectCafeController {
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -86,8 +92,10 @@ extension SelectCafeController {
         guard let cell = tableView.dequeueReusableCell(
             withIdentifier: PlaceCell.identifier,
             for: indexPath) as? PlaceCell
-        else { return UITableViewCell() }
-        
+        else {
+            return UITableViewCell()
+        }
+
         let cafe = inSearchMode ? filteredCafes[indexPath.row] : cafes[indexPath.row]
         cell.viewModel = PlaceCellViewModel(cafe: cafe)
         
@@ -107,7 +115,6 @@ extension SelectCafeController {
 }
 
 // MARK: - UISearchResultsUpdating
-
 extension SelectCafeController: UISearchResultsUpdating {
     
     func updateSearchResults(for searchController: UISearchController) {
@@ -117,4 +124,5 @@ extension SelectCafeController: UISearchResultsUpdating {
         })
         self.tableView.reloadData()
     }
+    
 }

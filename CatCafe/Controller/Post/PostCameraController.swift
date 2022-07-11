@@ -10,16 +10,18 @@ import AVFoundation
 
 class PostCameraController: UIViewController {
     
-    var session: AVCaptureSession?
-    let output = AVCapturePhotoOutput()
-    
+    private var session: AVCaptureSession?
+    private let output = AVCapturePhotoOutput()
     override var prefersStatusBarHidden: Bool { return true }
     
+    // MARK: - View
     lazy var dismissButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setImage(UIImage(named: "right_arrow_shadow")?
-                            .withRenderingMode(.alwaysOriginal),
-                        for: .normal)
+        button.setImage(
+            UIImage.asset(.right_arrow)?
+                .withRenderingMode(.alwaysOriginal),
+            for: .normal
+        )
         button.addTarget(self, action: #selector(handleDismiss), for: .touchUpInside)
         return button
     }()
@@ -27,7 +29,7 @@ class PostCameraController: UIViewController {
     lazy var capturePhotoButton: UIButton = {
         let button = UIButton(type: .system)
         button.setImage(
-            UIImage(named: "capture_photo")?
+            UIImage.asset(.capture_photo)?
                 .resize(to: CGSize(width: 96, height: 96))?
                 .withRenderingMode(.alwaysOriginal),
             for: .normal
@@ -37,14 +39,29 @@ class PostCameraController: UIViewController {
     }()
     
     // MARK: - Life Cycle
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         checkCameraPermissions()
         setupCaptureButton()
     }
     
-    // MARK: - Functions
+    private func setupCaptureButton() {
+        view.addSubview(capturePhotoButton)
+        capturePhotoButton.anchor(bottom: view.bottomAnchor, paddingBottom: 24)
+        capturePhotoButton.setDimensions(height: 96, width: 96)
+        capturePhotoButton.centerX(inView: view)
+        
+        view.addSubview(dismissButton)
+        dismissButton.anchor(
+            top: view.topAnchor,
+            right: view.rightAnchor,
+            paddingTop: 24,
+            paddingRight: 12
+        )
+        dismissButton.setDimensions(height: 50, width: 50)
+    }
+    
+    // MARK: - Helper
     private func checkCameraPermissions() {
         switch AVCaptureDevice.authorizationStatus(for: .video) {
         case .notDetermined:
@@ -66,7 +83,7 @@ class PostCameraController: UIViewController {
         }
     }
     
-    fileprivate func setupCaptureSession() {
+    private func setupCaptureSession() {
         let captureSession = AVCaptureSession()
         
         // 1. Setup inputs
@@ -94,32 +111,15 @@ class PostCameraController: UIViewController {
         captureSession.startRunning()
         self.session = captureSession
     }
-    
-    private func setupCaptureButton() {
-        view.addSubview(capturePhotoButton)
-        capturePhotoButton.anchor(bottom: view.bottomAnchor, paddingBottom: 24)
-        capturePhotoButton.setDimensions(height: 96, width: 96)
-        capturePhotoButton.centerX(inView: view)
         
-        view.addSubview(dismissButton)
-        dismissButton.anchor(top: view.topAnchor,
-                             right: view.rightAnchor,
-                             paddingTop: 24,
-                             paddingRight: 12)
-        dismissButton.setDimensions(height: 50, width: 50)
-    }
-    
-    // MARK: - Actions
+    // MARK: - Action
     @objc func handleDismiss() {
         dismiss(animated: true)
     }
     
     @objc func handleCapturePhoto() {
-        print("Capturing photo")
         let settings = AVCapturePhotoSettings()
-        guard let previewFormatType = settings.availablePreviewPhotoPixelFormatTypes.first else {
-            return
-        }
+        guard let previewFormatType = settings.availablePreviewPhotoPixelFormatTypes.first else { return }
         settings.previewPhotoFormat = [kCVPixelBufferPixelFormatTypeKey as String: previewFormatType]
         output.capturePhoto(with: settings, delegate: self)
     }
@@ -141,9 +141,7 @@ extension PostCameraController: AVCapturePhotoCaptureDelegate {
         let containerView = PreviewPhotoContainerView()
         containerView.previewImageView.image = previewImage
         view.addSubview(containerView)
-        containerView.fillSuperView()
-        
-        print("Finish processing photo sample buffer...")
+        containerView.fillSuperView()        
     }
     
 }

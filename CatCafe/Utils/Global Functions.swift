@@ -67,6 +67,6 @@ func videoThumbnail(video: URL) -> UIImage {
     if image != nil {
         return UIImage(cgImage: image!)
     } else {
-        return UIImage(named: "photoPlaceholder")!
+        return UIImage.asset(.photoPlaceholder)!
     }
 }

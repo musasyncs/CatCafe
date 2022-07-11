@@ -25,7 +25,7 @@ class CardImageView: UIImageView {
     }
     
     override func layoutSubviews() {
-        gradientLayer.colors = [UIColor.clear.cgColor, UIColor.black.cgColor]
+        gradientLayer.colors = [UIColor.clear.cgColor, UIColor.ccGrey.cgColor]
         gradientLayer.locations = [0.5, 1.0]
         layer.addSublayer(gradientLayer)
         gradientLayer.frame = self.bounds

@@ -15,7 +15,7 @@ struct PlaceCellViewModel {
         let attributedText = NSAttributedString(
             string: cafe.title,
             attributes: [
-                .foregroundColor: UIColor.black,
+                .foregroundColor: UIColor.ccGrey,
                 .font: UIFont.systemFont(ofSize: 14, weight: .medium) as Any
             ]
         )

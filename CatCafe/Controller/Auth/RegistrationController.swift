@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import AVFoundation
+import Combine
 
 protocol AuthenticationDelegate: AnyObject {
     func authenticationDidComplete()
@@ -15,42 +17,94 @@ class RegistrationController: UIViewController {
     
     weak var delegate: AuthenticationDelegate?
     private var viewModel = RegistrationViewModel()
+    
+    private var player: AVPlayer?
+    private var playerLayer: AVPlayerLayer?
+    private let notificationCenter = NotificationCenter.default
+    private var appEventSubscribers = [AnyCancellable]()
 
+    // MARK: - View
+    private lazy var darkView = UIView()
+    private lazy var logoTextImageView = UIImageView()
+    private lazy var subtitleLabel = makeLabel(
+        withTitle: "雙北貓咪咖啡廳聚會＆社群",
+        font: .monospacedSystemFont(ofSize: 16, weight: .medium),
+        textColor: .ccGreyVariant
+    )
     private lazy var stackView = UIStackView(
         arrangedSubviews: [
             emailContainerView, passwordContainerView,
             fullnameContainerView, usernameContainerView, signUpButton
         ]
     )
-    let emailTextField = RegTextField(placeholder: "Email")
-    let passwordTextField = RegTextField(placeholder: "Password")
-    let fullnameTextField = RegTextField(placeholder: "Full name")
-    let usernameTextField = RegTextField(placeholder: "User name")
+    private let emailTextField = RegTextField(placeholder: "Email")
+    private let passwordTextField = RegTextField(placeholder: "Password")
+    private let fullnameTextField = RegTextField(placeholder: "Full name")
+    private let usernameTextField = RegTextField(placeholder: "User name")
     
-    lazy var emailContainerView = InputContainerView(imageName: "mail",
-                                                     textField: emailTextField)
-    lazy var passwordContainerView = InputContainerView(imageName: "lock",
-                                                        textField: passwordTextField)
-    lazy var fullnameContainerView = InputContainerView(imageName: "user",
-                                                        textField: fullnameTextField)
-    lazy var usernameContainerView = InputContainerView(imageName: "user",
-                                                        textField: usernameTextField)
-
+    lazy var emailContainerView = InputContainerView(
+        imageName: "mail",
+        textField: emailTextField
+    )
+    lazy var passwordContainerView = InputContainerView(
+        imageName: "lock",
+        textField: passwordTextField
+    )
+    lazy var fullnameContainerView = InputContainerView(
+        imageName: "user",
+        textField: fullnameTextField
+    )
+    lazy var usernameContainerView = InputContainerView(
+        imageName: "user",
+        textField: usernameTextField
+    )
+    
     private let signUpButton = UIButton(type: .system)
     private lazy var alreadyHaveAccountButton = UIButton(type: .system)
+    private lazy var logoImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
     
+    // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        setup()
-        style()
-        layout()
-        configureNotificationObservers()
+        view.backgroundColor = .black
+        setupDarkView()
+        setupLogoText()
+        setupSubtitleLabel()
+        setupSignUpButton()
+        setupStackView()
+        setupTextFields()
+        setupLogo()
+        setupAlreadyHaveAccountButton()
         
         updateForm()
+        
+        setupNotificationObservers()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        observeAppEvents()
+        setupPlayerIfNeeded()
+        restartVideo()
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        navigationController?.setNavigationBarHidden(false, animated: animated)
+        removeAppEventsSubscribers()
+        removePlayer()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        playerLayer?.frame = view.bounds
+    }
+    
+    override var prefersStatusBarHidden: Bool {
+        return true
     }
     
     // MARK: - Action
-    
     @objc func handleSignUp() {
         guard let email = emailTextField.text else {
             showMessage(withTitle: "Validate Failed", message: "欄位不可留白")
@@ -68,41 +122,43 @@ class RegistrationController: UIViewController {
             showMessage(withTitle: "Validate Failed", message: "欄位不可留白")
             return
         }
-        
-        let credentials = AuthCredentials(email: email,
-                                          password: password,
-                                          fullname: fullname,
-                                          username: username)
-        CCProgressHUD.show()
-        AuthService.shared.registerUser(withCredial: credentials) { [weak self] result in
-            CCProgressHUD.dismiss()
             
+        show()
+        AuthService.shared.registerUser(
+            withEmail: email,
+            password: password
+        ) { [weak self] result in
             guard let self = self else { return }
             
             switch result {
             case .success(let authUser):
+                self.dismiss()
                 
+                self.show()
                 UserService.shared.createUserProfile(
-                    userId: authUser.uid,
+                    uid: authUser.uid,
+                    email: email,
+                    username: username,
+                    fullname: fullname,
                     profileImageUrlString: "",
-                    credentials: credentials
+                    bioText: "",
+                    blockedUsers: []
                 ) { error in
-                    
-                    if let error = error {
-                        CCProgressHUD.showFailure()
-                        print("DEBUG: Failed to create user profile with error: \(error.localizedDescription)")
+                
+                    if error != nil {
+                        self.dismiss()
+                        self.showFailure(text: "無法建立使用者")
                         return
                     }
                     
-                    // Save uid; hasLogedIn = true; save user
                     LocalStorage.shared.saveUid(authUser.uid)
                     LocalStorage.shared.hasLogedIn = true
 
                     self.delegate?.authenticationDidComplete()
                 }
-            case .failure(let error):
-                CCProgressHUD.showFailure()
-                print("DEBUG: Failed to create authUser with error: \(error.localizedDescription)")
+            case .failure:
+                self.dismiss()
+                self.showFailure(text: "Failed to create auth user")
             }
         }
     }
@@ -128,13 +184,25 @@ class RegistrationController: UIViewController {
         let distance = CGFloat(100)
         let transform = CGAffineTransform(translationX: 0, y: -distance)
         
-        UIView.animate(withDuration: 0.2, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: []) {
+        UIView.animate(
+            withDuration: 0.2,
+            delay: 0,
+            usingSpringWithDamping: 1,
+            initialSpringVelocity: 1,
+            options: []
+        ) {
             self.view.transform = transform
         }
     }
     
     @objc func keyboardWillHide() {
-        UIView.animate(withDuration: 0.2, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: []) {
+        UIView.animate(
+            withDuration: 0.2,
+            delay: 0,
+            usingSpringWithDamping: 1,
+            initialSpringVelocity: 1,
+            options: []
+        ) {
             self.view.transform = .identity
         }
     }
@@ -146,71 +214,190 @@ class RegistrationController: UIViewController {
 
 extension RegistrationController {
     
-    func setup() {
-        signUpButton.addTarget(self, action: #selector(handleSignUp), for: .touchUpInside)
-        alreadyHaveAccountButton.addTarget(self, action: #selector(handleShowLogin), for: .touchUpInside)
+    private func setupDarkView() {
+        darkView.backgroundColor = .black.withAlphaComponent(0.5)
+        view.addSubview(darkView)
+        darkView.fillSuperView()
     }
     
-    func style() {
-        view.backgroundColor = .white
-        stackView.axis = .vertical
-        stackView.spacing = 20
-        passwordTextField.isSecureTextEntry = true
-        signUpButton.setTitle("Sign Up", for: .normal)
+    private func setupLogoText() {
+        logoTextImageView.image = UIImage.asset(.logo_text)?.withTintColor(.white)
+        logoTextImageView.contentMode = .scaleAspectFit
+        view.addSubview(logoTextImageView)
+        logoTextImageView.anchor(
+            top: view.topAnchor,
+            left: view.leftAnchor,
+            right: view.rightAnchor,
+            paddingTop: 64, paddingLeft: 104, paddingRight: 104,
+            height: 84
+        )
+    }
+    
+    private func setupSubtitleLabel() {
+        view.addSubview(subtitleLabel)
+        subtitleLabel.anchor(
+            top: logoTextImageView.bottomAnchor,
+            left: view.leftAnchor,
+            right: view.rightAnchor,
+            paddingTop: 4, paddingLeft: 101, paddingRight: 101,
+            height: 20
+        )
+    }
+    
+    private func setupSignUpButton() {
+        signUpButton.addTarget(self, action: #selector(handleSignUp), for: .touchUpInside)
+        signUpButton.setTitle("Sign up", for: .normal)
         signUpButton.setTitleColor(.white, for: .normal)
         signUpButton.layer.cornerRadius = 5
         signUpButton.titleLabel?.font = .systemFont(ofSize: 15, weight: .medium)
-        signUpButton.backgroundColor = .systemBrown
-        alreadyHaveAccountButton.attributedTitle(firstPart: "Already have an account?  ", secondPart: "Log In")
-        
-        // 防止 Strong password overlay 和 Emoji 輸入
-        emailTextField.textContentType = .oneTimeCode
-        passwordTextField.textContentType = .oneTimeCode
-        usernameTextField.textContentType = .oneTimeCode
-        fullnameTextField.textContentType = .oneTimeCode
-        emailTextField.keyboardType = .asciiCapable
-        passwordTextField.keyboardType = .asciiCapable
-        usernameTextField.keyboardType = .asciiCapable
-        fullnameTextField.keyboardType = .asciiCapable
+        signUpButton.backgroundColor = .ccPrimary
+        signUpButton.setHeight(36)
     }
     
-    func layout() {
+    private func setupStackView() {
+        stackView.axis = .vertical
+        stackView.spacing = 20
         view.addSubview(stackView)
-        view.addSubview(alreadyHaveAccountButton)
         stackView.anchor(
             left: view.leftAnchor,
             right: view.rightAnchor,
             paddingLeft: 48, paddingRight: 48
         )
-        stackView.center(inView: view)
-        signUpButton.setHeight(36)
-        alreadyHaveAccountButton.centerX(inView: view)
-        alreadyHaveAccountButton.anchor(bottom: view.safeAreaLayoutGuide.bottomAnchor)
+        stackView.centerY(inView: view)
     }
     
-    func configureNotificationObservers() {
+    private func setupTextFields() {
         emailTextField.addTarget(self, action: #selector(textDidChange), for: .editingChanged)
+        emailTextField.textContentType = .oneTimeCode
+        emailTextField.keyboardType = .asciiCapable
+        
         passwordTextField.addTarget(self, action: #selector(textDidChange), for: .editingChanged)
-        fullnameTextField.addTarget(self, action: #selector(textDidChange), for: .editingChanged)
+        passwordTextField.textContentType = .oneTimeCode
+        passwordTextField.keyboardType = .asciiCapable
+        passwordTextField.isSecureTextEntry = true
+        
         usernameTextField.addTarget(self, action: #selector(textDidChange), for: .editingChanged)
+        usernameTextField.textContentType = .oneTimeCode
+        usernameTextField.keyboardType = .asciiCapable
+        
+        fullnameTextField.addTarget(self, action: #selector(textDidChange), for: .editingChanged)
+        fullnameTextField.textContentType = .oneTimeCode
+        fullnameTextField.keyboardType = .asciiCapable
+    }
     
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(keyboardWillShow),
-                                               name: UIResponder.keyboardDidShowNotification,
-                                               object: nil)
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(keyboardWillHide),
-                                               name: UIResponder.keyboardWillHideNotification,
-                                               object: nil)
+    private func setupLogo() {
+        logoImageView.image = UIImage.asset(.logo)?
+            .resize(to: .init(width: 40, height: 40))?
+            .withRenderingMode(.alwaysOriginal)
+        view.addSubview(logoImageView)
+        logoImageView.centerX(inView: view)
+        logoImageView.anchor(
+            bottom: view.safeAreaLayoutGuide.bottomAnchor, paddingBottom: 32
+        )
+    }
+    
+    private func setupAlreadyHaveAccountButton() {
+        alreadyHaveAccountButton.addTarget(self, action: #selector(handleShowLogin), for: .touchUpInside)
+        alreadyHaveAccountButton.attributedTitle(firstPart: "Already have an account?  ", secondPart: "Log In")
+        view.addSubview(alreadyHaveAccountButton)
+        alreadyHaveAccountButton.centerX(inView: view)
+        alreadyHaveAccountButton.anchor(
+            bottom: logoImageView.topAnchor,
+            paddingBottom: 28
+        )
+    }
+    
+    private func setupNotificationObservers() {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardWillShow),
+            name: UIResponder.keyboardDidShowNotification,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardWillHide),
+            name: UIResponder.keyboardWillHideNotification,
+            object: nil
+        )
     }
 }
 
 // MARK: - FormViewModel
-
 extension RegistrationController: FormViewModel {
     func updateForm() {
         signUpButton.backgroundColor = viewModel.buttonBackgroundColor
         signUpButton.setTitleColor(viewModel.buttonTitleColor, for: .normal)
         signUpButton.isEnabled = viewModel.formIsValid
+    }
+}
+
+// MARK: - Player
+extension RegistrationController {
+    
+    private func buildPlayer() -> AVPlayer? {
+        guard let filePath = Bundle.main.path(forResource: "reg_bg_video", ofType: "mp4") else { return nil }
+        let url = URL(fileURLWithPath: filePath)
+        let player = AVPlayer(url: url)
+        player.actionAtItemEnd = .none
+        player.isMuted = true
+        return player
+    }
+    
+    private func buildPlayerLayer() -> AVPlayerLayer? {
+        let layer = AVPlayerLayer(player: player)
+        layer.videoGravity = .resizeAspectFill
+        return layer
+    }
+    
+    private func playVideo() {
+        player?.play()
+    }
+    
+    private func restartVideo() {
+        player?.seek(to: .zero)
+        playVideo()
+    }
+    
+    private func pauseVideo() {
+        player?.pause()
+    }
+    
+    private func setupPlayerIfNeeded() {
+        player = buildPlayer()
+        playerLayer = buildPlayerLayer()
+        
+        if let layer = self.playerLayer,
+            view.layer.sublayers?.contains(layer) == false {
+            view.layer.insertSublayer(layer, at: 0)
+        }
+    }
+    
+    private func removePlayer() {
+        player?.pause()
+        player = nil
+        playerLayer?.removeFromSuperlayer()
+        playerLayer = nil
+    }
+    
+    private func observeAppEvents() {
+        
+        notificationCenter.publisher(for: .AVPlayerItemDidPlayToEndTime).sink { [weak self] _ in
+            self?.restartVideo()
+        }.store(in: &appEventSubscribers)
+        
+        notificationCenter.publisher(for: UIApplication.willResignActiveNotification).sink { [weak self] _ in
+            self?.pauseVideo()
+        }.store(in: &appEventSubscribers)
+        
+        notificationCenter.publisher(for: UIApplication.didBecomeActiveNotification).sink { [weak self] _ in
+            self?.playVideo()
+        }.store(in: &appEventSubscribers)
+    }
+    
+    private func removeAppEventsSubscribers() {
+        appEventSubscribers.forEach { subscriber in
+            subscriber.cancel()
+        }
     }
 }

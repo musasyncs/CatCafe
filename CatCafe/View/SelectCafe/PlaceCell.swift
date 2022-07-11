@@ -13,17 +13,17 @@ final class PlaceCell: UITableViewCell {
         didSet {
             guard let viewModel = viewModel else { return }
             titleLabel.attributedText = viewModel.titleAttrString
-            subtitleLabel.attributedText = viewModel.subtitleAttrString
+            addressLabel.attributedText = viewModel.subtitleAttrString
         }
     }
     
     private let titleLabel = UILabel()
-    private let subtitleLabel = UILabel()
-    lazy var stack = UIStackView(arrangedSubviews: [titleLabel, subtitleLabel])
+    private let addressLabel = UILabel()
+    lazy var stack = UIStackView(arrangedSubviews: [titleLabel, addressLabel])
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        
+        backgroundColor = .white
         selectionStyle = .none
         
         stack.axis = .vertical

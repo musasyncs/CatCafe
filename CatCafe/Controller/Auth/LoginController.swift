@@ -8,23 +8,41 @@
 import UIKit
 import FirebaseAuth
 import AuthenticationServices
+import AVFoundation
+import Combine
 
 class LoginController: UIViewController {
     
     weak var delegate: AuthenticationDelegate?
-    
     private var viewModel = LoginViewModel()
     
-    let emailTextField = RegTextField(placeholder: "Email")
-    let passwordTextField = RegTextField(placeholder: "Password")
-    lazy var emailContainerView = InputContainerView(imageName: "mail",
-                                                     textField: emailTextField)
-    lazy var passwordContainerView = InputContainerView(imageName: "lock",
-                                                        textField: passwordTextField)
+    private var player: AVPlayer?
+    private var playerLayer: AVPlayerLayer?
+    private let notificationCenter = NotificationCenter.default
+    private var appEventSubscribers = [AnyCancellable]()
+    
+    // MARK: - View
+    private lazy var darkView = UIView()
+    private lazy var logoTextImageView = UIImageView()
+    private lazy var subtitleLabel = makeLabel(
+        withTitle: "雙北貓咪咖啡廳聚會＆社群",
+        font: .monospacedSystemFont(ofSize: 16, weight: .medium),
+        textColor: .ccGreyVariant
+    )
+    private lazy var emailTextField = RegTextField(placeholder: "Email")
+    private lazy var passwordTextField = RegTextField(placeholder: "Password")
+    private lazy var emailContainerView = InputContainerView(
+        imageName: ImageAsset.mail.rawValue,
+        textField: emailTextField
+    )
+    private lazy var passwordContainerView = InputContainerView(
+        imageName: ImageAsset.lock.rawValue,
+        textField: passwordTextField
+    )
     private lazy var loginButton = UIButton(type: .system)
-    private let signInWithAppleButton = ASAuthorizationAppleIDButton(
+    private lazy var signInWithAppleButton = ASAuthorizationAppleIDButton(
         authorizationButtonType: .default,
-        authorizationButtonStyle: .white
+        authorizationButtonStyle: .black
     )
     private lazy var stackView = UIStackView(
         arrangedSubviews: [
@@ -36,17 +54,52 @@ class LoginController: UIViewController {
     )
     
     private lazy var dontHaveAccountButton = UIButton(type: .system)
+    private lazy var logoImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
     
+    // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        setup()
-        style()
-        layout()
-        configureNotificationObservers()
+        view.backgroundColor = .black
+        setupDarkView()
+        setupNavBar()
+        setupLogoText()
+        setupSubtitleLabel()
+        setupSignInButton()
+        setupSignInWithAppleButton()
+        setupStackView()
+        setupTextFields()
+        setupLogo()
+        setupNotHaveAccountButton()
+        
+        updateForm()
+        
+        setupNotificationObservers()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        observeAppEvents()
+        setupPlayerIfNeeded()
+        restartVideo()
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        navigationController?.setNavigationBarHidden(false, animated: animated)
+        removeAppEventsSubscribers()
+        removePlayer()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        playerLayer?.frame = view.bounds
+    }
+    
+    override var prefersStatusBarHidden: Bool {
+        return true
     }
     
     // MARK: - Action
-    
     @objc func handleLogin() {
         guard let email = emailTextField.text, !email.isEmpty,
               let password = passwordTextField.text, !password.isEmpty else {
@@ -54,22 +107,22 @@ class LoginController: UIViewController {
             return
         }
         
-        CCProgressHUD.show()
+        show()
         AuthService.shared.loginUser(withEmail: email, password: password) { [weak self] result in
             guard let self = self else { return }
-            CCProgressHUD.dismiss()
             
             switch result {
             case .success(let user):
+                self.dismiss()
                 
                 // Save uid; hasLogedIn = true
                 LocalStorage.shared.saveUid(user.uid)
                 LocalStorage.shared.hasLogedIn = true
                 
                 self.delegate?.authenticationDidComplete()
-            case .failure(let error):
-                CCProgressHUD.showFailure()
-                print("DEBUG: Failed to log user in \(error.localizedDescription)")
+            case .failure(_):
+                self.dismiss()
+                self.showFailure(text: "失敗")
             }
         }
     }
@@ -98,7 +151,7 @@ class LoginController: UIViewController {
     }
     
     @objc func keyboardWillShow(notification: NSNotification) {
-        let distance = CGFloat(30)
+        let distance = CGFloat(50)
         let transform = CGAffineTransform(translationX: 0, y: -distance)
         
         UIView.animate(withDuration: 0.2, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: []) {
@@ -119,68 +172,117 @@ class LoginController: UIViewController {
 
 extension LoginController {
     
-    func setup() {
-        loginButton.addTarget(self, action: #selector(handleLogin), for: .touchUpInside)
-        signInWithAppleButton.addTarget(self, action: #selector(handleSignInWithAppleTapped), for: .touchUpInside)
-        dontHaveAccountButton.addTarget(self, action: #selector(handleShowSignUp), for: .touchUpInside)
-        updateForm()
+    private func setupDarkView() {
+        darkView.backgroundColor = .black.withAlphaComponent(0.5)
+        view.addSubview(darkView)
+        darkView.fillSuperView()
     }
     
-    func style() {
-        view.backgroundColor = .white
+    private func setupNavBar() {
         navigationController?.navigationBar.isHidden = true
         navigationController?.navigationBar.barStyle = .black
-        stackView.axis = .vertical
-        stackView.spacing = 20
-        
-        // 防止 Strong password overlay 和 Emoji 輸入
-        emailTextField.textContentType = .emailAddress
-        emailTextField.keyboardType = .asciiCapable
-        
-        passwordTextField.isSecureTextEntry = true
-        passwordTextField.textContentType = .oneTimeCode
-        passwordTextField.keyboardType = .asciiCapable
-        
-        loginButton.setTitle("Log In", for: .normal)
+    }
+    
+    private func setupLogoText() {
+        logoTextImageView.image = UIImage.asset(.logo_text)?.withTintColor(.white)
+        logoTextImageView.contentMode = .scaleAspectFit
+        view.addSubview(logoTextImageView)
+        logoTextImageView.anchor(
+            top: view.topAnchor,
+            left: view.leftAnchor,
+            right: view.rightAnchor,
+            paddingTop: 64, paddingLeft: 104, paddingRight: 104,
+            height: 84
+        )
+    }
+    
+    private func setupSubtitleLabel() {
+        view.addSubview(subtitleLabel)
+        subtitleLabel.anchor(
+            top: logoTextImageView.bottomAnchor,
+            left: view.leftAnchor,
+            right: view.rightAnchor,
+            paddingTop: 4, paddingLeft: 101, paddingRight: 101,
+            height: 20
+        )
+    }
+    
+    private func setupSignInButton() {
+        loginButton.addTarget(self, action: #selector(handleLogin), for: .touchUpInside)
+        loginButton.setTitle("Log in", for: .normal)
         loginButton.layer.cornerRadius = 5
         loginButton.titleLabel?.font = .systemFont(ofSize: 15, weight: .medium)
-        
+        loginButton.setHeight(36)
+    }
+    
+    private func setupSignInWithAppleButton() {
+        signInWithAppleButton.addTarget(self, action: #selector(handleSignInWithAppleTapped), for: .touchUpInside)
         signInWithAppleButton.layer.borderWidth = 1
         signInWithAppleButton.layer.borderColor = UIColor.black.cgColor
         signInWithAppleButton.layer.cornerRadius = 45 / 2
-        dontHaveAccountButton.attributedTitle(firstPart: "Don't have an account?  ", secondPart: "Sign Up")
+        signInWithAppleButton.setHeight(45)
     }
     
-    func layout() {
+    private func setupStackView() {
+        stackView.axis = .vertical
+        stackView.spacing = 20
         view.addSubview(stackView)
-        view.addSubview(dontHaveAccountButton)
-        
-        stackView.centerY(inView: view)
         stackView.anchor(
             left: view.leftAnchor,
             right: view.rightAnchor,
             paddingLeft: 48, paddingRight: 48
         )
-        
-        loginButton.setHeight(36)
-        signInWithAppleButton.setHeight(45)
-        dontHaveAccountButton.centerX(inView: view)
-        dontHaveAccountButton.anchor(bottom: view.safeAreaLayoutGuide.bottomAnchor, paddingBottom: 16)
+        stackView.centerY(inView: view)
     }
     
-    func configureNotificationObservers() {
+    private func setupTextFields() {
         emailTextField.addTarget(self, action: #selector(textDidChange), for: .editingChanged)
-        passwordTextField.addTarget(self, action: #selector(textDidChange), for: .editingChanged)
+        emailTextField.textContentType = .emailAddress
+        emailTextField.keyboardType = .asciiCapable
         
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(keyboardWillShow),
-                                               name: UIResponder.keyboardDidShowNotification,
-                                               object: nil)
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(keyboardWillHide),
-                                               name: UIResponder.keyboardWillHideNotification,
-                                               object: nil)
+        passwordTextField.addTarget(self, action: #selector(textDidChange), for: .editingChanged)
+        passwordTextField.isSecureTextEntry = true
+        passwordTextField.textContentType = .oneTimeCode
+        passwordTextField.keyboardType = .asciiCapable
     }
+    
+    private func setupLogo() {
+        logoImageView.image = UIImage.asset(.logo)?
+            .resize(to: .init(width: 40, height: 40))?
+            .withRenderingMode(.alwaysOriginal)
+        view.addSubview(logoImageView)
+        logoImageView.centerX(inView: view)
+        logoImageView.anchor(
+            bottom: view.safeAreaLayoutGuide.bottomAnchor, paddingBottom: 32
+        )
+    }
+    
+    private func setupNotHaveAccountButton() {
+        dontHaveAccountButton.addTarget(self, action: #selector(handleShowSignUp), for: .touchUpInside)
+        dontHaveAccountButton.attributedTitle(firstPart: "Not a member? ", secondPart: "Sign Up now")
+        view.addSubview(dontHaveAccountButton)
+        dontHaveAccountButton.centerX(inView: view)
+        dontHaveAccountButton.anchor(
+            bottom: logoImageView.topAnchor,
+            paddingBottom: 28
+        )
+    }
+    
+    private func setupNotificationObservers() {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardWillShow),
+            name: UIResponder.keyboardDidShowNotification,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardWillHide),
+            name: UIResponder.keyboardWillHideNotification,
+            object: nil
+        )
+    }
+    
 }
 
 // MARK: - FormViewModel
@@ -196,52 +298,199 @@ extension LoginController: FormViewModel {
 extension LoginController: ASAuthorizationControllerDelegate, ASAuthorizationControllerPresentationContextProviding {
     
     func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
-        CCProgressHUD.showFailure(text: "Fail to sign in with Apple. Please try again.")
+        showFailure(text: "失敗")
     }
     
     func authorizationController(
         controller: ASAuthorizationController,
         didCompleteWithAuthorization authorization: ASAuthorization
     ) {
-        CCProgressHUD.show()
+        show()
         AuthService.shared.authorizationController(
             controller: controller,
             didCompleteWithAuthorization: authorization
         ) { authDataResult in
-            CCProgressHUD.dismiss()
             
             guard let authDataResult = authDataResult else {
+                self.dismiss()
+                self.showFailure(text: "失敗")
                 return
             }
+            self.dismiss() // 登入成功
             
-            let credentials = AuthCredentials(email: authDataResult.user.email ?? "",
-                                              password: "",
-                                              fullname: "",
-                                              username: "")
+            // 拿currentUid和userEmail
+            let currentUid = authDataResult.user.uid
+            let userEmail = authDataResult.user.email
+ 
+            let semaphore = DispatchSemaphore(value: 0)
+            let dispatchQueue = DispatchQueue.global(qos: .background)
             
-            UserService.shared.createUserProfile(
-                userId: authDataResult.user.uid,
-                profileImageUrlString: "",
-                credentials: credentials
-            ) { error in
+            UserService.shared.checkIfUserExistOnFirebase(uid: currentUid) { result in
                 
-                if let error = error {
-                    CCProgressHUD.showFailure(text: "Failed to create user profile")
-                    print("DEBUG: Failed to create user profile with error: \(error.localizedDescription)")
-                    return
+                switch result {
+                case .success(let isExist):
+                    
+                    // 已註冊過
+                    if isExist {
+                        self.show()
+                        
+                        dispatchQueue.async {
+                            var userEmail: String?
+                            var username: String?
+                            var fullname: String?
+                            var profileImageUrlString: String?
+                            var bioText: String?
+                            var blockedUsers = [String]()
+                            
+                            UserService.shared.fetchUserBy(uid: currentUid) { user in
+                                userEmail = user.email
+                                username = user.username
+                                fullname = user.fullname
+                                profileImageUrlString = user.profileImageUrlString
+                                bioText = user.bioText
+                                blockedUsers = user.blockedUsers
+                                semaphore.signal()
+                            }
+                            semaphore.wait()
+                            
+                            UserService.shared.createUserProfile(
+                                uid: currentUid,
+                                email: userEmail ?? "",
+                                username: username ?? "",
+                                fullname: fullname ?? "",
+                                profileImageUrlString: profileImageUrlString ?? "",
+                                bioText: bioText ?? "",
+                                blockedUsers: blockedUsers
+                            ) { error in
+                                if error != nil {
+                                    self.dismiss()
+                                    self.showFailure(text: "失敗")
+                                    return
+                                }
+                                LocalStorage.shared.saveUid(currentUid)
+                                LocalStorage.shared.hasLogedIn = true
+                                semaphore.signal()
+                            }
+                            semaphore.wait()
+                            
+                            DispatchQueue.main.async {
+                                self.dismiss()
+                                self.delegate?.authenticationDidComplete()
+                            }
+                            
+                        }
+                    } else {
+                        // 尚未註冊
+                             
+                        self.show()
+                        
+                        dispatchQueue.async {
+                            UserService.shared.createUserProfile(
+                                uid: currentUid,
+                                email: userEmail ?? "",
+                                username: "",
+                                fullname: "",
+                                profileImageUrlString: "",
+                                bioText: "",
+                                blockedUsers: []
+                            ) { error in
+                                if error != nil {
+                                    self.dismiss()
+                                    self.showFailure(text: "失敗")
+                                    return
+                                }
+                                LocalStorage.shared.saveUid(currentUid)
+                                LocalStorage.shared.hasLogedIn = true
+                                semaphore.signal()
+                            }
+                            semaphore.wait()
+                            
+                            DispatchQueue.main.async {
+                                self.dismiss()
+                                self.delegate?.authenticationDidComplete()
+                            }
+                        }
+                    }
+                    
+                case .failure(let error):
+                    print(error)
                 }
-                
-                // Save uid; hasLogedIn = true; save user
-                LocalStorage.shared.saveUid(authDataResult.user.uid)
-                LocalStorage.shared.hasLogedIn = true
-                
-                self.delegate?.authenticationDidComplete()
             }
-            
+
         }
     }
     
     func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
         return view.window!
+    }
+}
+
+// MARK: - Player
+extension LoginController {
+    
+    private func buildPlayer() -> AVPlayer? {
+        guard let filePath = Bundle.main.path(forResource: "login_bg_video", ofType: "mp4") else { return nil }
+        let url = URL(fileURLWithPath: filePath)
+        let player = AVPlayer(url: url)
+        player.actionAtItemEnd = .none
+        player.isMuted = true
+        return player
+    }
+    
+    private func buildPlayerLayer() -> AVPlayerLayer? {
+        let layer = AVPlayerLayer(player: player)
+        layer.videoGravity = .resizeAspectFill
+        return layer
+    }
+    
+    private func playVideo() {
+        player?.play()
+    }
+    
+    private func restartVideo() {
+        player?.seek(to: .zero)
+        playVideo()
+    }
+    
+    private func pauseVideo() {
+        player?.pause()
+    }
+    
+    private func setupPlayerIfNeeded() {
+        player = buildPlayer()
+        playerLayer = buildPlayerLayer()
+        
+        if let layer = self.playerLayer,
+            view.layer.sublayers?.contains(layer) == false {
+            view.layer.insertSublayer(layer, at: 0)
+        }
+    }
+    
+    private func removePlayer() {
+        player?.pause()
+        player = nil
+        playerLayer?.removeFromSuperlayer()
+        playerLayer = nil
+    }
+    
+    private func observeAppEvents() {
+        
+        notificationCenter.publisher(for: .AVPlayerItemDidPlayToEndTime).sink { [weak self] _ in
+            self?.restartVideo()
+        }.store(in: &appEventSubscribers)
+        
+        notificationCenter.publisher(for: UIApplication.willResignActiveNotification).sink { [weak self] _ in
+            self?.pauseVideo()
+        }.store(in: &appEventSubscribers)
+        
+        notificationCenter.publisher(for: UIApplication.didBecomeActiveNotification).sink { [weak self] _ in
+            self?.playVideo()
+        }.store(in: &appEventSubscribers)
+    }
+    
+    private func removeAppEventsSubscribers() {
+        appEventSubscribers.forEach { subscriber in
+            subscriber.cancel()
+        }
     }
 }

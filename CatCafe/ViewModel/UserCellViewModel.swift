@@ -11,8 +11,8 @@ struct UserCellViewModel {
     
     private let user: User
     
-    var profileImageUrl: URL? {
-        return URL(string: user.profileImageUrlString)
+    var profileImageUrl: String {
+        return user.profileImageUrlString
     }
     
     var username: String {

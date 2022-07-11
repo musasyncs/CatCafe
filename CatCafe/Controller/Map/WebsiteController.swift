@@ -12,21 +12,22 @@ class WebsiteController: UIViewController, WKNavigationDelegate, WKScriptMessage
     
     var website: String?
     
-    var textField: UITextField!
-    var webView: WKWebView!
-    var activityIndicator: UIActivityIndicatorView!
+    private var textField: UITextField!
+    private var webView: WKWebView!
+    private var activityIndicator: UIActivityIndicatorView!
     
-    lazy var backButton = makeIconButton(imagename: "Icons_24px_Back02",
-                                         imageColor: .black,
-                                         imageWidth: 24, imageHeight: 24,
-                                         backgroundColor: .clear,
-                                         cornerRadius: 40 / 2)
+    private lazy var backButton = makeIconButton(imagename: "Icons_24px_Back02",
+                                                 imageColor: .ccGrey,
+                                                 imageWidth: 24, imageHeight: 24,
+                                                 backgroundColor: .clear,
+                                                 cornerRadius: 40 / 2)
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
         
         webView = WKWebView()
+        webView.backgroundColor = .white
         webView.scrollView.bounces = false
         webView.navigationDelegate = self
         view.addSubview(webView)
@@ -36,8 +37,8 @@ class WebsiteController: UIViewController, WKNavigationDelegate, WKScriptMessage
                        right: view.rightAnchor)
         
         let leftBarButton = UIBarButtonItem(
-            image: UIImage(named: "Icons_24px_Back02")?
-                .withTintColor(.black)
+            image: UIImage.asset(.Icons_24px_Back02)?
+                .withTintColor(.ccGrey)
                 .withRenderingMode(.alwaysOriginal),
             style: .plain,
             target: self,
@@ -86,7 +87,6 @@ class WebsiteController: UIViewController, WKNavigationDelegate, WKScriptMessage
         print("finish to load")
     }
     
-    // Callback webView function
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         print(message.body)
     }

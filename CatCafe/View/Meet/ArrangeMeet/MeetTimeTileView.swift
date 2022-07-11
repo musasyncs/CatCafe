@@ -20,10 +20,12 @@ class MeetTimeTileView: UIView {
     let noticeLabel = UILabel()
     
     let timeSelectorView = TimeSelectorView()
-    lazy var textField = CustomTextField(placeholder: "聚會會維持公開直到聚會時間，如果要提早關閉，可以使用刪除功能",
-                                         textColor: .black,
-                                         fgColor: .systemBrown,
-                                         font: .systemFont(ofSize: 11, weight: .regular))
+    lazy var textField = CustomTextField(
+        placeholder: "目前暫無刪除功能",
+        textColor: .ccGrey,
+        fgColor: .ccPrimary,
+        font: .systemFont(ofSize: 11, weight: .regular)
+    )
     
     var heightConstraint: NSLayoutConstraint?
     
@@ -32,7 +34,7 @@ class MeetTimeTileView: UIView {
         
         titleLabel.text = "聚會時間"
         titleLabel.font = .systemFont(ofSize: 15, weight: .medium)
-        titleLabel.textColor = .black
+        titleLabel.textColor = .ccGrey
         
         makeOpenButton()
         
@@ -93,7 +95,7 @@ class MeetTimeTileView: UIView {
         let image = UIImage(systemName: "chevron.down", withConfiguration: configuration)
         openButton.setImage(image, for: .normal)
         
-        openButton.imageView?.tintColor = .label
+        openButton.imageView?.tintColor = .ccGrey
         openButton.imageView?.contentMode = .scaleAspectFit
     }
     
@@ -166,7 +168,7 @@ final class TimeSelectorView: UIView {
         
         backgroundColor = .white
         layer.cornerRadius = 8
-        layer.borderColor = UIColor.black.cgColor
+        layer.borderColor = UIColor.ccGrey.cgColor
         layer.borderWidth = 1
         
         datePicker = UIDatePicker(frame: CGRect(x: 0, y: 0, width: 96, height: 24))
@@ -182,8 +184,8 @@ final class TimeSelectorView: UIView {
         datePicker.datePickerMode = .dateAndTime
         datePicker.minuteInterval = 15
         
-        datePicker.tintColor = .systemBrown
-        
+        datePicker.tintColor = .ccPrimary
+        datePicker.overrideUserInterfaceStyle = .light
         addSubview(datePicker)
         datePicker.centerY(inView: self, leftAnchor: leftAnchor, paddingLeft: 16)
     }
@@ -193,7 +195,6 @@ final class TimeSelectorView: UIView {
     }
     
     // MARK: - Actions
-    
     @objc func datePickerChanged(datePicker: UIDatePicker) {
         delegate?.didChooseDate(self, date: datePicker.date)
     }
