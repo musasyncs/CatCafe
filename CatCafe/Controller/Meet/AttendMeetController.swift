@@ -9,18 +9,18 @@ import UIKit
 
 class AttendMeetController: UIViewController {
     
-    let meet: Meet
+    private let meet: Meet
     
-    let bottomView = UIView()
-    let titleLabel = UILabel()
-    let topDivider = UIView()
-    
-    let contactLabel = UILabel()
+    // MARK: - View
+    private let popupView = UIView()
+    private let titleLabel = UILabel()
+    private let topDivider = UIView()
+    private let contactLabel = UILabel()
     
     override var inputAccessoryView: UIView? { return nil }
     override var canBecomeFirstResponder: Bool { return true }
 
-    lazy var contactTextView: InputTextView = {
+    private lazy var contactTextView: InputTextView = {
         let textView = InputTextView()
         textView.placeholderText = "輸入您最常用的聯絡方式"
         textView.font = .systemFont(ofSize: 13, weight: .regular)
@@ -31,7 +31,7 @@ class AttendMeetController: UIViewController {
         return textView
     }()
     
-    let contactCountLabel: UILabel = {
+    private let contactCountLabel: UILabel = {
         let label = UILabel()
         label.textColor = .lightGray
         label.font = .systemFont(ofSize: 8, weight: .regular)
@@ -40,9 +40,9 @@ class AttendMeetController: UIViewController {
         return label
     }()
     
-    let remarkLabel = UILabel()
+    private let remarkLabel = UILabel()
 
-    lazy var remarkTextView: InputTextView = {
+    private lazy var remarkTextView: InputTextView = {
         let textView = InputTextView()
         textView.placeholderText = "輸入想對聚會主說的話"
         textView.font = .systemFont(ofSize: 13, weight: .regular)
@@ -53,7 +53,7 @@ class AttendMeetController: UIViewController {
         return textView
     }()
     
-    let remarkCountLabel: UILabel = {
+    private let remarkCountLabel: UILabel = {
         let label = UILabel()
         label.textColor = .lightGray
         label.font = .systemFont(ofSize: 8, weight: .regular)
@@ -62,24 +62,23 @@ class AttendMeetController: UIViewController {
         return label
     }()
     
-    let descriptionLabel = UILabel()
-    let bottomDivider = UIView()
-    let centerDivider = UIView()
-    let cancelButton = makeTitleButton(
+    private let descriptionLabel = UILabel()
+    private let bottomDivider = UIView()
+    private let centerDivider = UIView()
+    private let cancelButton = makeTitleButton(
         withText: "取消",
         font: .systemFont(ofSize: 12, weight: .regular),
         foregroundColor: .systemRed
     )
-    let sendButton = makeTitleButton(
+    private let sendButton = makeTitleButton(
         withText: "送出",
         font: .systemFont(ofSize: 12, weight: .regular)
     )
     
-    var bottomConstraint: NSLayoutConstraint?
-    var popupOffset: CGFloat = UIScreen.height *  0.7
+    private var bottomConstraint: NSLayoutConstraint?
+    private var popupOffset: CGFloat = UIScreen.height *  0.7
 
-    // MARK: - Life Cycle
-    
+    // MARK: - Initializer
     init(meet: Meet) {
         self.meet = meet
         super.init(nibName: nil, bundle: nil)
@@ -89,11 +88,24 @@ class AttendMeetController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        setup()
-        style()
-        layout()
+        setupBottomView()
+        setupTitleLabel()
+        setupTopDivider()
+        setupContactLabel()
+        setupContactTextView()
+        setupContactCountLabel()
+        setupRemarkLabel()
+        setupRemarkTextView()
+        setupRemarkCountLabel()
+        setupDescriptionLabel()
+        setupCenterDivider()
+        setupCancelButton()
+        setupSendButton()
+        setupBottomDivider()
+        setupObservers()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -109,7 +121,6 @@ class AttendMeetController: UIViewController {
     }
     
     // MARK: - Action
-    
     @objc func cancelTapped() {
         self.dismiss(animated: true)
     }
@@ -122,17 +133,18 @@ class AttendMeetController: UIViewController {
             return
         }
         
-        CCProgressHUD.show()
+        show()
         MeetService.attendMeet(meet: meet,
                                contact: contact,
                                remarks: remarks) { error in
-            CCProgressHUD.dismiss()
-            
-            if let error = error {
-                print("DEBUG: Failed to attend meet with error \(error.localizedDescription)")
+            if error != nil {
+                self.dismiss()
+                self.showFailure(text: "Failed to attend meet")
                 return
             }
-
+            
+            self.dismiss()
+            
             // dismiss
             self.presentingViewController?.presentingViewController?.dismiss(animated: true, completion: nil)
 
@@ -164,137 +176,186 @@ class AttendMeetController: UIViewController {
 
 extension AttendMeetController {
     
-    fileprivate func setup() {
-        cancelButton.addTarget(self, action: #selector(cancelTapped), for: .touchUpInside)
-        sendButton.addTarget(self, action: #selector(sendTapped), for: .touchUpInside)
-        
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(keyboardWillShow),
-                                               name: UIResponder.keyboardDidShowNotification,
-                                               object: nil)
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(keyboardWillHide),
-                                               name: UIResponder.keyboardWillHideNotification,
-                                               object: nil)
+    private func setupBottomView() {
+        popupView.backgroundColor = .white
+        popupView.layer.cornerRadius = 12
+        popupView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+        popupView.layer.shadowColor = UIColor.ccGrey.cgColor
+        popupView.layer.shadowOffset = CGSize(width: 0, height: 5)
+        popupView.layer.shadowOpacity = 0.7
+        popupView.layer.shadowRadius = 10
+        view.addSubview(popupView)
+        popupView.anchor(
+            left: view.leftAnchor,
+            right: view.rightAnchor,
+            height: popupOffset
+        )
+        bottomConstraint = popupView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: popupOffset)
+        bottomConstraint?.isActive = true
     }
-    
-    fileprivate func style() {
-        bottomView.backgroundColor = .white
-        bottomView.layer.cornerRadius = 12
-        bottomView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
-        bottomView.layer.shadowColor = UIColor.black.cgColor
-        bottomView.layer.shadowOffset = CGSize(width: 0, height: 5)
-        bottomView.layer.shadowOpacity = 0.7
-        bottomView.layer.shadowRadius = 10
-
+        
+    private func setupTitleLabel() {
         titleLabel.text = "報名聚會"
         titleLabel.textColor = UIColor.rgb(red: 63, green: 58, blue: 58)
         titleLabel.font = .systemFont(ofSize: 15, weight: .medium)
-        
+        view.addSubview(titleLabel)
+        titleLabel.anchor(top: popupView.topAnchor, paddingTop: 24)
+        titleLabel.centerX(inView: popupView)
+    }
+    
+    private func setupTopDivider() {
+        topDivider.backgroundColor = .lightGray
+        view.addSubview(topDivider)
+        topDivider.anchor(
+            top: titleLabel.bottomAnchor,
+            left: popupView.leftAnchor,
+            right: popupView.rightAnchor,
+            paddingTop: 24,
+            paddingLeft: 16,
+            paddingRight: 16
+        )
+        topDivider.setHeight(1)
+    }
+    
+    private func setupContactLabel() {
         contactLabel.text = "聯絡方式"
         contactLabel.textColor = .systemRed
         contactLabel.font = .systemFont(ofSize: 15, weight: .regular)
-        contactTextView.backgroundColor = .systemGray6
-        
+        view.addSubview(contactLabel)
+        contactLabel.anchor(
+            top: topDivider.bottomAnchor,
+            left: popupView.leftAnchor,
+            paddingTop: 16,
+            paddingLeft: 16
+        )
+    }
+    
+    private func setupContactTextView() {
+        contactTextView.backgroundColor = .gray6
+        view.addSubview(contactTextView)
+        contactTextView.anchor(
+            top: contactLabel.bottomAnchor,
+            left: popupView.leftAnchor,
+            right: popupView.rightAnchor,
+            paddingTop: 8,
+            paddingLeft: 16,
+            paddingRight: 16
+        )
+        contactTextView.setHeight(50)
+    }
+    
+    private func setupContactCountLabel() {
+        view.addSubview(contactCountLabel)
+        contactCountLabel.anchor(bottom: contactTextView.topAnchor, right: contactTextView.rightAnchor)
+    }
+    
+    private func setupRemarkLabel() {
         remarkLabel.text = "想對聚會主說的話"
-        remarkLabel.textColor = .black
+        remarkLabel.textColor = .ccGrey
         remarkLabel.font = .systemFont(ofSize: 15, weight: .regular)
-        remarkTextView.backgroundColor = .systemGray6
-        
+        view.addSubview(remarkLabel)
+        remarkLabel.anchor(
+            top: contactTextView.bottomAnchor,
+            left: popupView.leftAnchor,
+            paddingTop: 16,
+            paddingLeft: 16
+        )
+    }
+    
+    private func setupRemarkTextView() {
+        remarkTextView.backgroundColor = .gray6
+        view.addSubview(remarkTextView)
+        remarkTextView.anchor(
+            top: remarkLabel.bottomAnchor,
+            left: popupView.leftAnchor,
+            right: popupView.rightAnchor,
+            paddingTop: 8,
+            paddingLeft: 16,
+            paddingRight: 16
+        )
+        remarkTextView.setHeight(50)
+    }
+    
+    private func setupRemarkCountLabel() {
+        view.addSubview(remarkCountLabel)
+        remarkCountLabel.anchor(bottom: remarkTextView.topAnchor, right: contactTextView.rightAnchor)
+    }
+    
+    private func setupDescriptionLabel() {
         descriptionLabel.text = "收到您的報名資訊，聚會主會決定是否透過上述資訊聯絡您。"
         descriptionLabel.textColor = .lightGray
         descriptionLabel.font = .systemFont(ofSize: 11, weight: .regular)
-        topDivider.backgroundColor = .lightGray
-        bottomDivider.backgroundColor = .lightGray
-        centerDivider.backgroundColor = .lightGray
+        view.addSubview(descriptionLabel)
+        descriptionLabel.anchor(
+            top: remarkTextView.bottomAnchor,
+            left: popupView.leftAnchor,
+            right: popupView.rightAnchor,
+            paddingTop: 24,
+            paddingLeft: 16,
+            paddingRight: 16
+        )
     }
     
-    // swiftlint:disable all
-    fileprivate func layout() {
-        [bottomView, titleLabel, topDivider,
-         contactLabel, contactTextView, contactCountLabel,
-         remarkLabel, remarkTextView, remarkCountLabel,
-         descriptionLabel,
-         bottomDivider,
-         cancelButton, centerDivider, sendButton].forEach {
-            view.addSubview($0)
-        }
-        
-        bottomView.anchor(left: view.leftAnchor,
-                          right: view.rightAnchor,
-                          height: popupOffset)
-        bottomConstraint = bottomView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: popupOffset)
-        bottomConstraint?.isActive = true
-
-        titleLabel.anchor(top: bottomView.topAnchor, paddingTop: 24)
-        titleLabel.centerX(inView: bottomView)
-        
-        topDivider.anchor(top: titleLabel.bottomAnchor,
-                          left: bottomView.leftAnchor,
-                          right: bottomView.rightAnchor,
-                          paddingTop: 24,
-                          paddingLeft: 16,
-                          paddingRight: 16)
-        topDivider.setHeight(1)
-        
-        contactLabel.anchor(top: topDivider.bottomAnchor,
-                            left: bottomView.leftAnchor,
-                            paddingTop: 16,
-                            paddingLeft: 16)
-        contactTextView.anchor(top: contactLabel.bottomAnchor,
-                               left: bottomView.leftAnchor,
-                               right: bottomView.rightAnchor,
-                               paddingTop: 8,
-                               paddingLeft: 16,
-                               paddingRight: 16)
-        contactTextView.setHeight(50)
-        contactCountLabel.anchor(bottom: contactTextView.topAnchor, right: contactTextView.rightAnchor)
-        
-        remarkLabel.anchor(top: contactTextView.bottomAnchor,
-                            left: bottomView.leftAnchor,
-                            paddingTop: 16,
-                            paddingLeft: 16)
-        remarkTextView.anchor(top: remarkLabel.bottomAnchor,
-                               left: bottomView.leftAnchor,
-                               right: bottomView.rightAnchor,
-                               paddingTop: 8,
-                               paddingLeft: 16,
-                               paddingRight: 16)
-        remarkTextView.setHeight(50)
-        remarkCountLabel.anchor(bottom: remarkTextView.topAnchor, right: contactTextView.rightAnchor)
-        
-        descriptionLabel.anchor(top: remarkTextView.bottomAnchor,
-                                left: bottomView.leftAnchor,
-                                right: bottomView.rightAnchor,
-                                paddingTop: 24,
-                                paddingLeft: 16,
-                                paddingRight: 16)
-        
-        bottomDivider.anchor(left: bottomView.leftAnchor,
-                             right: bottomView.rightAnchor,
-                             paddingTop: 24,
-                             paddingLeft: 16,
-                             paddingRight: 16)
-        bottomDivider.setHeight(1)
-        
-        cancelButton.anchor(top: bottomDivider.bottomAnchor,
-                            left: bottomView.leftAnchor,
-                            paddingLeft: UIScreen.width / 5)
-        cancelButton.setHeight(48)
-        sendButton.anchor(top: bottomDivider.bottomAnchor,
-                          bottom: bottomView.bottomAnchor,
-                          right: bottomView.rightAnchor,
-                          paddingRight: UIScreen.width / 5)
-        sendButton.setHeight(48)
+    private func setupCenterDivider() {
+        centerDivider.backgroundColor = .lightGray
+        view.addSubview(centerDivider)
+        centerDivider.anchor(bottom: popupView.bottomAnchor, paddingBottom: 24)
         centerDivider.setDimensions(height: 20, width: 1)
         centerDivider.centerX(inView: view)
-        centerDivider.centerY(inView: cancelButton)
     }
-    // swiftlint:enable all
+    
+    private func setupCancelButton() {
+        cancelButton.addTarget(self, action: #selector(cancelTapped), for: .touchUpInside)
+        view.addSubview(cancelButton)
+        cancelButton.anchor(
+            left: popupView.leftAnchor,
+            paddingLeft: UIScreen.width / 5
+        )
+        cancelButton.centerY(inView: centerDivider)
+    }
+    
+    private func setupSendButton() {
+        sendButton.addTarget(self, action: #selector(sendTapped), for: .touchUpInside)
+        view.addSubview(sendButton)
+        sendButton.anchor(
+            bottom: popupView.bottomAnchor,
+            right: popupView.rightAnchor,
+            paddingRight: UIScreen.width / 5
+        )
+        sendButton.centerY(inView: centerDivider)
+    }
+    
+    private func setupBottomDivider() {
+        bottomDivider.backgroundColor = .lightGray
+        view.addSubview(bottomDivider)
+        bottomDivider.anchor(
+            left: popupView.leftAnchor,
+            bottom: centerDivider.topAnchor,
+            right: popupView.rightAnchor,
+            paddingLeft: 16,
+            paddingBottom: 16,
+            paddingRight: 16
+        )
+        bottomDivider.setHeight(1)
+    }
+
+    private func setupObservers() {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardWillShow),
+            name: UIResponder.keyboardDidShowNotification,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardWillHide),
+            name: UIResponder.keyboardWillHideNotification,
+            object: nil
+        )
+    }
 }
 
 // MARK: - UITextViewDelegate
-
 extension AttendMeetController: UITextViewDelegate {
     
     func textViewDidChange(_ textView: UITextView) {
@@ -311,7 +372,7 @@ extension AttendMeetController: UITextViewDelegate {
             remarkCountLabel.text  = "\(textView.text.count)/150"
         }
             
-        let size = CGSize(width: bottomView.frame.width - 32, height: .infinity)
+        let size = CGSize(width: popupView.frame.width - 32, height: .infinity)
         let estimatedSize = textView.sizeThatFits(size)
         
         textView.constraints.forEach { (constraint) in

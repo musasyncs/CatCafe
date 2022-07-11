@@ -9,7 +9,18 @@ import UIKit
 
 extension UIColor {
     
-    static let greyishBrown = UIColor.rgb(red: 63, green: 58, blue: 58)
+    static let ccBackground = UIColor.rgb(hex: "#E5E5E5")
+    static let ccGrey = UIColor.rgb(hex: "#262628")
+    static let ccGreyVariant = UIColor.rgb(hex: "#9797BD")
+    static let ccPrimary = UIColor.rgb(hex: "#43A2FA")
+    static let ccRed = UIColor.rgb(hex: "#FD1D1D")
+    static let ccSecondary = UIColor.rgb(hex: "#E1306C")
+    
+    static let gray2 = UIColor.rgb(red: 174, green: 174, blue: 178)
+    static let gray3 = UIColor.rgb(red: 199, green: 199, blue: 204)
+    static let gray4 = UIColor.rgb(red: 209, green: 209, blue: 214)
+    static let gray5 = UIColor.rgb(red: 229, green: 229, blue: 234)
+    static let gray6 = UIColor.rgb(red: 242, green: 242, blue: 247)
 
     static func rgb(red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat = 1) -> UIColor {
         return .init(red: red / 255, green: green / 255, blue: blue / 255, alpha: alpha)

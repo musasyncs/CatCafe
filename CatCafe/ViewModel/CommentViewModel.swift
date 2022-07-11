@@ -11,7 +11,7 @@ struct CommentViewModel {
     
     private let comment: Comment
     
-    var profileImageUrl: URL?
+    var profileImageUrlString: String?
     var username: String?
     
     func makeCommentLabelText() -> NSAttributedString {
@@ -21,13 +21,13 @@ struct CommentViewModel {
             string: "\(username)\n",
             attributes: [
                 .font: UIFont.systemFont(ofSize: 14, weight: .medium),
-                .foregroundColor: UIColor.black
+                .foregroundColor: UIColor.ccGrey
             ])
         attrString.append(NSAttributedString(
             string: comment.comment,
             attributes: [
                 .font: UIFont.systemFont(ofSize: 13, weight: .regular),
-                .foregroundColor: UIColor.black
+                .foregroundColor: UIColor.ccGrey
             ]))
         
         return attrString

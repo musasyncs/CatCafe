@@ -12,43 +12,39 @@ import CoreLocation
 class MapController: UIViewController {
     
     private var cafes = [Cafe]()
-    var route: MKRoute?
-    var selectedAnnotation: MKAnnotation?
-    var inputViewBottomConstraint: NSLayoutConstraint?
-
-    // MARK: - Views
-    lazy var backButton = makeIconButton(imagename: "Icons_24px_Close",
-                                         imageColor: .white,
-                                         imageWidth: 24, imageHeight: 24,
-                                         backgroundColor: UIColor(white: 0.5, alpha: 0.7),
-                                         cornerRadius: 40 / 2)
+    private var selectedAnnotation: MKAnnotation?
+    private var menuViewBottomConstraint: NSLayoutConstraint?
     
-    var mapView = MKMapView()
-    var locationManager = CLLocationManager()
-    var searchInputView = SearchInputView()
-    let customAlert = CustomAlert()
+    // MARK: - View
+    private lazy var backButton = makeIconButton(
+        imagename: ImageAsset.Icons_24px_Close.rawValue,
+        imageColor: .white,
+        imageWidth: 24, imageHeight: 24,
+        backgroundColor: UIColor(white: 0.5, alpha: 0.7),
+        cornerRadius: 40 / 2
+    )
     
-    lazy var centerMapButton: UIButton = {
+    private let mapView = MKMapView()
+    private let locationManager = CLLocationManager()
+    private let menuView = MenuView()
+    private let customAlert = CustomAlert()
+    
+    private lazy var centerMapButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setImage(#imageLiteral(resourceName: "location-arrow-flat").withRenderingMode(.alwaysOriginal), for: .normal)
+        button.setImage(#imageLiteral(resourceName: "location_arrow_flat").withRenderingMode(.alwaysOriginal), for: .normal)
         button.addTarget(self, action: #selector(handleCenterLocation), for: .touchUpInside)
         return button
     }()
-    
-    lazy var removeOverlaysButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setImage(#imageLiteral(resourceName: "baseline_clear_white_36pt_1x").withRenderingMode(.alwaysOriginal), for: .normal)
-        button.backgroundColor = .red
-        button.addTarget(self, action: #selector(handleRemoveOverlays), for: .touchUpInside)
-        button.alpha = 0
-        return button
-    }()
-    
-    // MARK: - Init
+
+    // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        locationManager.delegate = self
-        configureViewComponents()
+        view.backgroundColor = .white
+        setupMapView()
+        setupMenuView()
+        setupBackButton()
+        setupCenterMapButton()
+        
         enableLocationServices()
         
         fetchCafes()
@@ -68,7 +64,7 @@ class MapController: UIViewController {
     }
     
     // MARK: - API
-    func fetchCafes() {
+    private func fetchCafes() {
         CafeService.fetchAllCafes { cafes in
             self.cafes = cafes
             
@@ -82,28 +78,16 @@ class MapController: UIViewController {
                 )
                 self.mapView.addAnnotation(annotation)
             }
-            self.searchInputView.cafes = self.cafes
+            self.menuView.cafes = self.cafes
         }
     }
     
-    // MARK: - Selectors
+    // MARK: - Action
     @objc func goBack() {
         navigationController?.popViewController(animated: true)
         navigationController?.navigationBar.isHidden = false
     }
-    
-    @objc func handleRemoveOverlays() {
-        UIView.animate(withDuration: 0.5) {
-            self.removeOverlaysButton.alpha = 0
-            self.centerMapButton.alpha = 1
-        }
-
-        centerMapOnUserLocation()
         
-        guard let selectedAnno = self.selectedAnnotation else { return }
-        mapView.deselectAnnotation(selectedAnno, animated: true)
-    }
-    
     @objc func handleCenterLocation() {
         centerMapOnUserLocation()
     }
@@ -120,14 +104,31 @@ class MapController: UIViewController {
         customAlert.gotoWebsite()
     }
     
-    // MARK: - Helper Functions
-    func configureViewComponents() {
-        view.backgroundColor = .white
-        
-        configureMapView()
-        searchInputView.delegate = self
-        searchInputView.mapController = self
-        
+}
+
+extension MapController {
+
+    private func setupMapView() {
+        mapView.delegate = self
+        mapView.showsUserLocation = true
+        mapView.userTrackingMode = .follow
+        view.addSubview(mapView)
+        mapView.fillSuperView()
+    }
+    
+    private func setupMenuView() {
+        menuView.delegate = self
+        menuView.mapController = self
+        view.addSubview(menuView)
+        menuView.anchor(left: view.leftAnchor, right: view.rightAnchor, height: height2)
+        menuViewBottomConstraint = menuView.bottomAnchor.constraint(
+            equalTo: view.bottomAnchor,
+            constant: (height2 - 88)
+        )
+        menuViewBottomConstraint?.isActive = true
+    }
+    
+    private func setupBackButton() {
         backButton.addTarget(self, action: #selector(goBack), for: .touchUpInside)
         backButton.layer.cornerRadius = 40 / 2
         backButton.clipsToBounds = true
@@ -136,43 +137,20 @@ class MapController: UIViewController {
                           left: view.leftAnchor,
                           paddingTop: 4, paddingLeft: 24)
         backButton.setDimensions(height: 40, width: 40)
-        
-        view.addSubview(searchInputView)
-        searchInputView.anchor(left: view.leftAnchor, right: view.rightAnchor, height: height2)
-        inputViewBottomConstraint = searchInputView.bottomAnchor.constraint(
-            equalTo: view.bottomAnchor,
-            constant: (height2 - 88)
-        )
-        inputViewBottomConstraint?.isActive = true
-        
+    }
+    
+    private func setupCenterMapButton() {
         view.addSubview(centerMapButton)
-        centerMapButton.anchor(bottom: searchInputView.topAnchor,
+        centerMapButton.anchor(bottom: menuView.topAnchor,
                                right: view.rightAnchor,
                                paddingBottom: 16, paddingRight: 16,
                                width: 50, height: 50)
-        
-        view.addSubview(removeOverlaysButton)
-        let dimension: CGFloat = 50
-        removeOverlaysButton.anchor(left: view.leftAnchor,
-                                    bottom: searchInputView.topAnchor,
-                                    paddingLeft: 16, paddingBottom: 16,
-                                    width: dimension, height: dimension)
-        removeOverlaysButton.layer.cornerRadius = dimension / 2
-    }
-    
-    func configureMapView() {
-        mapView.delegate = self
-        mapView.showsUserLocation = true
-        mapView.userTrackingMode = .follow
-        view.addSubview(mapView)
-        mapView.fillSuperView()
     }
 }
 
-// MARK: - MapKit Helper Functions
 extension MapController {
     
-    func centerMapOnUserLocation() {
+    private func centerMapOnUserLocation() {
         guard let coordinate = locationManager.location?.coordinate else { return }
         let coordinateRegion = MKCoordinateRegion(
             center: coordinate,
@@ -182,7 +160,7 @@ extension MapController {
         mapView.setRegion(coordinateRegion, animated: true)
     }
     
-    func zoomToFocus(coordinate: CLLocationCoordinate2D) {
+    private func zoomToFocus(coordinate: CLLocationCoordinate2D) {
         let region = MKCoordinateRegion(
             center: CLLocationCoordinate2DMake(
                 coordinate.latitude,
@@ -193,7 +171,7 @@ extension MapController {
         safeSetRegion(region)
     }
     
-    func zoomToFit(selectedAnnotation: MKAnnotation?) {
+    private func zoomToFit(selectedAnnotation: MKAnnotation?) {
         if mapView.annotations.count == 0 {
             return
         }
@@ -206,15 +184,24 @@ extension MapController {
                 if let userAnno = annotation as? MKUserLocation {
                     topLeftCoordinate.longitude = fmin(topLeftCoordinate.longitude, userAnno.coordinate.longitude)
                     topLeftCoordinate.latitude = fmax(topLeftCoordinate.latitude, userAnno.coordinate.latitude)
-                    bottomRightCoordinate.longitude = fmax(bottomRightCoordinate.longitude, userAnno.coordinate.longitude)
+                    bottomRightCoordinate.longitude = fmax(
+                        bottomRightCoordinate.longitude,
+                        userAnno.coordinate.longitude
+                    )
                     bottomRightCoordinate.latitude = fmin(bottomRightCoordinate.latitude, userAnno.coordinate.latitude)
                 }
                 
                 if annotation.title == selectedAnnotation.title {
                     topLeftCoordinate.longitude = fmin(topLeftCoordinate.longitude, annotation.coordinate.longitude)
                     topLeftCoordinate.latitude = fmax(topLeftCoordinate.latitude, annotation.coordinate.latitude)
-                    bottomRightCoordinate.longitude = fmax(bottomRightCoordinate.longitude, annotation.coordinate.longitude)
-                    bottomRightCoordinate.latitude = fmin(bottomRightCoordinate.latitude, annotation.coordinate.latitude)
+                    bottomRightCoordinate.longitude = fmax(
+                        bottomRightCoordinate.longitude,
+                        annotation.coordinate.longitude
+                    )
+                    bottomRightCoordinate.latitude = fmin(
+                        bottomRightCoordinate.latitude,
+                        annotation.coordinate.latitude
+                    )
                 }
             }
             
@@ -265,8 +252,8 @@ extension MapController: SearchCellDelegate {
     }
 }
 
-// MARK: - SearchInputViewDelegate
-extension MapController: SearchInputViewDelegate {
+// MARK: - MenuViewDelegate
+extension MapController: MenuViewDelegate {
     
     func shouldHideCenterButton(_ shouldHide: Bool) {
         UIView.animate(withDuration: 0.25) {
@@ -274,12 +261,17 @@ extension MapController: SearchInputViewDelegate {
         }
     }
     func animateBottomConstraint(constant: CGFloat, goalState: ExpansionState) {
-        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 0, options: .curveEaseOut) {
-            self.inputViewBottomConstraint?.constant = constant
-            self.view.layoutIfNeeded()
-        } completion: { _ in
-            self.searchInputView.expansionState = goalState
-        }
+        UIView.animate(
+            withDuration: 0.5,
+            delay: 0,
+            usingSpringWithDamping: 1,
+            initialSpringVelocity: 0,
+            options: .curveEaseOut) {
+                self.menuViewBottomConstraint?.constant = constant
+                self.view.layoutIfNeeded()
+            } completion: { _ in
+                self.menuView.expansionState = goalState
+            }
     }
     
     func selectedAnnotation(withCafe cafe: Cafe) {
@@ -288,11 +280,6 @@ extension MapController: SearchInputViewDelegate {
                 self.mapView.selectAnnotation(annotation, animated: true)
                 self.zoomToFit(selectedAnnotation: annotation)
                 self.selectedAnnotation = annotation
-                
-                UIView.animate(withDuration: 0.5, animations: {
-                    self.removeOverlaysButton.alpha = 1
-                    self.centerMapButton.alpha = 0
-                })
             }
         }
     }
@@ -303,6 +290,8 @@ extension MapController: SearchInputViewDelegate {
 extension MapController: CLLocationManagerDelegate {
     
     func enableLocationServices() {
+        locationManager.delegate = self
+        
         switch locationManager.authorizationStatus {
         case .notDetermined:
             print("Location auth status is NOT DETERMINED")
@@ -332,9 +321,7 @@ extension MapController: CLLocationManagerDelegate {
 // MARK: - MKMapViewDelegate
 extension MapController: MKMapViewDelegate {
     
-    // 自訂 annotation
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        
         guard annotation is CafeAnnotation else { return nil }
         let annotationIdentifier = "cafe"
         
@@ -346,20 +333,20 @@ extension MapController: MKMapViewDelegate {
             annotationView?.annotation = annotation
         }
         
-        annotationView?.canShowCallout = true
+        annotationView?.image = UIImage.asset(.catAnno)?.resize(to: .init(width: 24, height: 24))
         
+        annotationView?.canShowCallout = true
         let rightButton = UIButton(type: .detailDisclosure)
         rightButton.setImage(
-            UIImage(named: "info")?
+            UIImage.asset(.info)?
                 .resize(to: .init(width: 17, height: 17))?
                 .withRenderingMode(.alwaysOriginal)
-                .withTintColor(.systemBrown),
+                .withTintColor(.ccPrimary),
             for: .normal
         )
         annotationView?.rightCalloutAccessoryView = rightButton
         
-        annotationView?.image = UIImage(named: "catAnno")?
-            .resize(to: .init(width: 22, height: 22))
+        annotationView?.doGlowAnimation(withColor: .ccGrey.withAlphaComponent(0.3), withEffect: .small)
         
         return annotationView
     }

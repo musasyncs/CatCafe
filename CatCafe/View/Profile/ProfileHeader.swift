@@ -6,10 +6,12 @@
 //
 
 import UIKit
-import SDWebImage
+import Lottie
 
 protocol ProfileHeaderDelegate: AnyObject {
     func header(_ profileHeader: ProfileHeader, didTapActionButtonFor user: User)
+    func header(_ profileHeader: ProfileHeader, wantToChatWith user: User)
+    func header(_ profileHeader: ProfileHeader, didTapBlock user: User)
 }
 
 final class ProfileHeader: UICollectionReusableView {
@@ -19,53 +21,32 @@ final class ProfileHeader: UICollectionReusableView {
     var viewModel: ProfileHeaderViewModel? {
         didSet {
             guard let viewModel = viewModel else { return }
-            nameLabel.text = viewModel.fullname
-            profileImageView.sd_setImage(with: viewModel.profileImageUrl)
             
-            editProfileFollowButton.setTitle(viewModel.followButtonText, for: .normal)
-            editProfileFollowButton.backgroundColor = viewModel.followButtonBackgroundColor
-            editProfileFollowButton.setTitleColor(viewModel.followButtonTextColor, for: .normal )
-            
-            postsLabel.attributedText = viewModel.numberOfPostsAttrString
             followersLabel.attributedText = viewModel.numberOfFollowersAttrString
             followingLabel.attributedText = viewModel.numberOfFollowingAttrString
+            
+            nameLabel.text = viewModel.fullname
+            bioLabel.text = viewModel.bioText
+        
+            editProfileFollowButton.setTitle(viewModel.followButtonText, for: .normal)
+            editProfileFollowButton.backgroundColor = viewModel.followButtonBackgroundColor
+            editProfileFollowButton.setTitleColor(viewModel.followButtonTextColor, for: .normal)
+            editProfileFollowButton.layer.borderColor = viewModel.borderLineColor
+            
+            blockButton.setTitle(viewModel.blockButtonText, for: .normal)
+            blockButton.backgroundColor = viewModel.blockButtonBackgroundColor
+            blockButton.setTitleColor(viewModel.blockButtonTextColor, for: .normal)
+            blockButton.layer.borderColor = viewModel.blockButtonBorderLineColor
+            
+            if viewModel.user == UserService.shared.currentUser {
+                buttonStackView.addArrangedSubview(editProfileFollowButton)
+            } else {
+                buttonStackView.addArrangedSubview(editProfileFollowButton)
+                buttonStackView.addArrangedSubview(goChatButton)
+                buttonStackView.addArrangedSubview(blockButton)
+            }
         }
     }
-    
-    private let profileImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFill
-        imageView.clipsToBounds = true
-        imageView.backgroundColor = .lightGray
-        return imageView
-    }()
-    
-    private let nameLabel: UILabel = {
-        let label = UILabel()
-        label.font = .systemFont(ofSize: 14, weight: .medium)
-        label.textAlignment = .left
-        label.textColor = .black
-        return label
-    }()
-    
-    private lazy var editProfileFollowButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitleColor(UIColor.black, for: .normal)
-        button.layer.cornerRadius = 3
-        button.layer.borderColor = UIColor.lightGray.cgColor
-        button.layer.borderWidth = 0.5
-        button.titleLabel?.font = .systemFont(ofSize: 14, weight: .medium)
-        button.setTitleColor(.black, for: .normal)
-        button.addTarget(self, action: #selector(handleEditProfileFollowTapped), for: .touchUpInside)
-        return button
-    }()
-    
-    private lazy var postsLabel: UILabel = {
-        let label = UILabel()
-        label.numberOfLines = 0
-        label.textAlignment = .center
-        return label
-    }()
     
     private lazy var followersLabel: UILabel = {
         let label = UILabel()
@@ -81,11 +62,78 @@ final class ProfileHeader: UICollectionReusableView {
         return label
     }()
     
-    lazy var stack = UIStackView(arrangedSubviews: [postsLabel, followersLabel, followingLabel])
+    private let nameLabel: UILabel = {
+        let label = UILabel()
+        label.font = .systemFont(ofSize: 20, weight: .bold)
+        label.textAlignment = .center
+        label.numberOfLines = 1
+        label.textColor = .ccGrey
+        return label
+    }()
+    
+    private let bioLabel: UILabel = {
+        let label = UILabel()
+        label.font = .systemFont(ofSize: 11, weight: .regular)
+        label.textAlignment = .center
+        label.numberOfLines = 0
+        label.textColor = .ccGreyVariant
+        return label
+    }()
+    
+    private lazy var editProfileFollowButton = makeTitleButton(
+        withText: "",
+        font: .systemFont(ofSize: 14, weight: .medium),
+        kern: 0,
+        foregroundColor: .white,
+        backgroundColor: .ccPrimary,
+        insets: .init(top: 12, left: 30, bottom: 12, right: 30),
+        cornerRadius: 40 / 2,
+        borderWidth: 1, borderColor: .ccPrimary
+    )
+    
+    private lazy var goChatButton = makeTitleButton(
+        withText: "發訊息",
+        font: .systemFont(ofSize: 14, weight: .medium),
+        kern: 0,
+        foregroundColor: .ccGrey,
+        backgroundColor: .white,
+        insets: .init(top: 12, left: 30, bottom: 12, right: 30),
+        cornerRadius: 40 / 2,
+        borderWidth: 1, borderColor: .white
+    )
+    
+    private lazy var blockButton = makeTitleButton(
+        withText: "",
+        font: .systemFont(ofSize: 14, weight: .medium),
+        kern: 0,
+        foregroundColor: .white,
+        backgroundColor: .ccSecondary,
+        insets: .init(top: 12, left: 10, bottom: 12, right: 10),
+        cornerRadius: 40 / 2,
+        borderWidth: 1, borderColor: .ccSecondary
+    )
+    
+    private lazy var buttonStackView = UIStackView()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        configureUI()
+        backgroundColor = .white
+        
+        editProfileFollowButton.addTarget(self, action: #selector(handleEditProfileFollowTapped), for: .touchUpInside)
+        
+        goChatButton.addTarget(self, action: #selector(goChat), for: .touchUpInside)
+        goChatButton.layer.shadowColor = UIColor.ccGrey.cgColor
+        goChatButton.layer.shadowOffset = CGSize(width: 0, height: 2)
+        goChatButton.layer.shadowOpacity = 0.05
+        goChatButton.layer.shadowRadius = 2
+        goChatButton.layer.masksToBounds = false
+        
+        blockButton.addTarget(self, action: #selector(handleBlockUser), for: .touchUpInside)
+        
+        buttonStackView.alignment = .center
+        buttonStackView.distribution = .equalSpacing
+        buttonStackView.alignment = .center
+        
         layout()
     }
     
@@ -93,40 +141,77 @@ final class ProfileHeader: UICollectionReusableView {
         fatalError()
     }
     
-    // MARK: - Helpers
-    
-    func configureUI() {
-        backgroundColor = .white
-        stack.distribution = .fillEqually
-    }
-    
     func layout() {
-        addSubview(profileImageView)
+        addSubview(followersLabel)
+        addSubview(followingLabel)
         addSubview(nameLabel)
-        addSubview(stack)
-        addSubview(editProfileFollowButton)
+        addSubview(bioLabel)
+        addSubview(buttonStackView)
         
-        profileImageView.anchor(top: topAnchor, left: leftAnchor, paddingTop: 16, paddingLeft: 12)
-        profileImageView.setDimensions(height: 80, width: 80)
-        profileImageView.layer.cornerRadius = 80 / 2
+        followersLabel.anchor(
+            top: topAnchor,
+            left: leftAnchor,
+            paddingTop: 18,
+            paddingLeft: 50
+        )
         
-        nameLabel.anchor(top: profileImageView.bottomAnchor, left: leftAnchor, paddingTop: 12, paddingLeft: 12)
+        followingLabel.anchor(
+            top: topAnchor,
+            right: rightAnchor,
+            paddingTop: 18,
+            paddingRight: 50
+        )
         
-        stack.centerY(inView: profileImageView)
-        stack.anchor(left: profileImageView.rightAnchor,
-                     right: rightAnchor,
-                     paddingLeft: 12, paddingRight: 12, height: 50)
+        nameLabel.anchor(
+            top: topAnchor,
+            left: leftAnchor,
+            right: rightAnchor,
+            paddingTop: 78,
+            paddingLeft: 24,
+            paddingRight: 24
+        )
+        nameLabel.centerX(inView: self)
         
-        editProfileFollowButton.anchor(left: leftAnchor,
-                                       bottom: bottomAnchor,
-                                       right: rightAnchor,
-                                       paddingLeft: 24, paddingBottom: 16, paddingRight: 24)
+        bioLabel.anchor(
+            top: nameLabel.bottomAnchor,
+            left: leftAnchor,
+            right: rightAnchor,
+            paddingTop: 4,
+            paddingLeft: 90,
+            paddingRight: 90
+        )
+        bioLabel.centerX(inView: self)
+        
+        buttonStackView.anchor(
+            top: bioLabel.bottomAnchor,
+            left: leftAnchor,
+            bottom: bottomAnchor,
+            right: rightAnchor,
+            paddingTop: 17,
+            paddingLeft: 18,
+            paddingBottom: 8,
+            paddingRight: 18
+        )
+        editProfileFollowButton.setDimensions(height: 40, width: 125)
+        goChatButton.setDimensions(height: 40, width: 125)
+        blockButton.setDimensions(height: 40, width: 80)
+        
     }
     
     // MARK: - Action
-    
     @objc func handleEditProfileFollowTapped() {
         guard let viewModel = viewModel else { return }
         delegate?.header(self, didTapActionButtonFor: viewModel.user)
     }
+    
+    @objc func goChat() {
+        guard let viewModel = viewModel else { return }
+        delegate?.header(self, wantToChatWith: viewModel.user)
+    }
+    
+    @objc func handleBlockUser() {
+        guard let viewModel = viewModel else { return }
+        delegate?.header(self, didTapBlock: viewModel.user)
+    }
+    
 }

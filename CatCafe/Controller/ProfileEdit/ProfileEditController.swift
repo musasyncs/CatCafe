@@ -5,171 +5,229 @@
 //  Created by Ewen on 2022/7/1.
 //
 
-import Foundation
 import UIKit
 import ProgressHUD
-import RxSwift
-import RxCocoa
 import FirebaseAuth
 
 class ProfileEditController: UIViewController {
     
-    private let disposeBag = DisposeBag()
     private var hasChangedImage = false
 
-    var user: User?
+    var user: User? {
+        didSet {
+            nameLabel.text = user?.fullname
+            
+            usernameTextField.text = user?.username
+            fullnameTextField.text = user?.fullname
+            bioTextView.text = user?.bioText
+        }
+    }
     
-    private var username = ""
-    private var fullname = ""
-    private var email = ""
+    // MARK: - View
+    private let leaveButton = makeIconButton(
+        imagename: ImageAsset.Icons_24px_Close.rawValue,
+        imageColor: .white,
+        imageWidth: 20, imageHeight: 20,
+        backgroundColor: .ccGrey,
+        cornerRadius: 36 / 2
+    )
     
-    let leaveButton = makeIconButton(imagename: "Icons_24px_Close",
-                                     imageColor: .white,
-                                     imageWidth: 20, imageHeight: 20,
-                                     backgroundColor: .darkGray,
-                                     cornerRadius: 36 / 2)
+    private let saveButton = makeIconButton(
+        imagename: ImageAsset.check.rawValue,
+        imageColor: .ccPrimary,
+        imageWidth: 28,
+        imageHeight: 28
+    )
     
-    let profileEditButton = makeProfileEditButton()
-    let profileImageView: UIImageView = {
+    private let profileEditButton = makeProfileEditButton()
+    
+    private let profileImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "no-Image")
+        imageView.image = UIImage.asset(.no_image)
         imageView.contentMode = .scaleAspectFill
-        imageView.layer.cornerRadius = 120/2
+        imageView.layer.cornerRadius = 96 / 2
         imageView.layer.masksToBounds = true
         return imageView
     }()
     
-    let titleLabel = ProfileLabel()
+    private lazy var nameLabel = makeLabel(
+        withTitle: "",
+        font: .systemFont(ofSize: 20, weight: .bold),
+        textColor: .ccGrey
+    )
     
-    lazy var colletionView: UICollectionView = {
-        let layout = UICollectionViewFlowLayout()
-        layout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.dataSource = self
-        collectionView.backgroundColor = .white
-        collectionView.isScrollEnabled = false
-        collectionView.register(
-            InfoCollectionViewCell.self,
-            forCellWithReuseIdentifier: InfoCollectionViewCell.identifier
-        )
-        return collectionView
+    private let usernameLabel = makeLabel(
+        withTitle: "帳號",
+        font: .systemFont(ofSize: 13, weight: .regular),
+        textColor: .ccGrey
+    )
+    private let fullnameLabel = makeLabel(
+        withTitle: "全名",
+        font: .systemFont(ofSize: 13, weight: .regular),
+        textColor: .ccGrey
+    )
+    private let bioLabel = makeLabel(
+        withTitle: "個人簡介（至多34字）",
+        font: .systemFont(ofSize: 13, weight: .regular),
+        textColor: .ccGrey
+    )
+    private let usernameTextField = ProfileTextField(placeholder: "請輸入帳號")
+    private let fullnameTextField = ProfileTextField(placeholder: "請輸入全名")
+    lazy var bioTextView: InputTextView = {
+        let textView = InputTextView()
+        textView.delegate = self
+        textView.backgroundColor = .ccGreyVariant.withAlphaComponent(0.1)
+        textView.layer.cornerRadius = 5
+        return textView
     }()
-    
-    let saveButton = makeTitleButton(withText: "儲存",
-                                     font: .systemFont(ofSize: 17, weight: .regular),
-                                     kern: 0.8,
-                                     foregroundColor: .white,
-                                     backgroundColor: .systemBrown,
-                                     insets: .init(top: 5, left: 10, bottom: 5, right: 10),
-                                     cornerRadius: 8)
-    
+
+    private lazy var stackView = UIStackView()
+    private lazy var bioStackView = UIStackView()
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
         style()
         layout()
+        
+        setupNotificationObservers()
+    }
+    
+    // MARK: - Action
+    @objc func keyboardWillShow(notification: NSNotification) {
+        let distance = CGFloat(100)
+        let transform = CGAffineTransform(translationX: 0, y: -distance)
+        
+        UIView.animate(withDuration: 0.2, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: []) {
+            self.view.transform = transform
+        }
+    }
+    
+    @objc func keyboardWillHide() {
+        UIView.animate(withDuration: 0.2, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: []) {
+            self.view.transform = .identity
+        }
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        view.endEditing(true)
     }
 }
 
 extension ProfileEditController {
-    func setup() {
-        // 傳過來的 user 取其中的 profileImageUrl，顯示
-        if let url = URL(string: user?.profileImageUrlString ?? "") {
-            profileImageView.sd_setImage(with: url)
-        }
-        // 傳過來的 user 取其中的 name，顯示
-        titleLabel.text = user?.fullname
-
+    
+    private func setup() {
         leaveButton.addTarget(self, action: #selector(handleLeave), for: .touchUpInside)
-        profileEditButton.addTarget(self, action: #selector(profileEditButtonTapped), for: .touchUpInside)
         saveButton.addTarget(self, action: #selector(saveButtonTapped), for: .touchUpInside)
+        
+        profileImageView.loadImage(user?.profileImageUrlString, placeHolder: UIImage.asset(.avatar))
+        profileEditButton.addTarget(self, action: #selector(profileEditButtonTapped), for: .touchUpInside)
     }
     
-    func style() {
+    private func style() {
         view.backgroundColor = .white
         leaveButton.layer.cornerRadius = 36 / 2
         leaveButton.clipsToBounds = true
+        nameLabel.textAlignment = .center
+        
+        let pairs = [
+            [usernameLabel, usernameTextField],
+            [fullnameLabel, fullnameTextField]
+        ]
+        let pairSVs = pairs.map { (pair) -> UIStackView in
+            guard let label = pair.first as? UILabel,
+                  let textField = pair.last as? UITextField else { return UIStackView() }
+            let pairSV = UIStackView(arrangedSubviews: [label, textField])
+            pairSV.axis = .vertical
+            pairSV.spacing = 5
+            textField.textColor = .ccGrey
+            textField.anchor(height: 45)
+            return pairSV
+        }
+        stackView = UIStackView(arrangedSubviews: pairSVs)
+        stackView.axis = .vertical
+        stackView.spacing = 15
+        
+        bioStackView = UIStackView(arrangedSubviews: [bioLabel, bioTextView])
+        bioStackView.axis = .vertical
+        bioStackView.spacing = 5
     }
     
-    func layout() {
+    private func layout() {
         view.addSubview(leaveButton)
-        view.addSubview(titleLabel)
+        view.addSubview(saveButton)
+        view.addSubview(nameLabel)
         view.addSubview(profileImageView)
         view.addSubview(profileEditButton)
-        view.addSubview(colletionView)
-        view.addSubview(saveButton)
+        view.addSubview(stackView)
+        view.addSubview(bioStackView)
         
-        leaveButton.anchor(top: view.topAnchor,
-                           left: view.leftAnchor,
-                           paddingTop: 56, paddingLeft: 24)
+        leaveButton.anchor(
+            top: view.topAnchor,
+            left: view.leftAnchor,
+            paddingTop: 56, paddingLeft: 24
+        )
         leaveButton.setDimensions(height: 36, width: 36)
+        
+        saveButton.anchor(
+            top: view.topAnchor,
+            right: view.rightAnchor,
+            paddingTop: 56, paddingRight: 24
+        )
+        saveButton.setDimensions(height: 36, width: 36)
         
         profileImageView.anchor(top: view.topAnchor, paddingTop: 96)
         profileImageView.centerX(inView: view)
-        profileImageView.setDimensions(height: 120, width: 120)
+        profileImageView.setDimensions(height: 96, width: 96)
         
-        titleLabel.anchor(top: profileImageView.bottomAnchor, paddingTop: 20)
-        titleLabel.centerX(inView: view)
+        profileEditButton.anchor(
+            top: profileImageView.topAnchor,
+            right: profileImageView.rightAnchor,
+            paddingTop: -4, paddingRight: -4,
+            width: 28, height: 28
+        )
         
-        profileEditButton.anchor(top: profileImageView.topAnchor,
-                                 right: profileImageView.rightAnchor,
-                                 width: 36, height: 36)
+        nameLabel.anchor(
+            top: profileImageView.bottomAnchor,
+            left: view.leftAnchor,
+            right: view.rightAnchor,
+            paddingTop: 20,
+            paddingLeft: 24,
+            paddingRight: 24
+        )
+        nameLabel.centerX(inView: view)
+    
+        stackView.anchor(
+            top: nameLabel.bottomAnchor,
+            paddingTop: 28,
+            width: UIScreen.width * 0.7
+        )
+        stackView.centerX(inView: view)
         
-        colletionView.anchor(top: titleLabel.bottomAnchor,
-                             left: view.leftAnchor,
-                             right: view.rightAnchor,
-                             paddingTop: 32,
-                             paddingLeft: 40, paddingRight: 40)
-        colletionView.setHeight(250)
-        colletionView.backgroundColor = .clear
-        
-        saveButton.anchor(top: colletionView.bottomAnchor, paddingTop: 30)
-        saveButton.centerX(inView: colletionView)
-        saveButton.setDimensions(height: 40, width: 80)
-    }
-}
-
-// MARK: - UICollectionViewDataSource
-extension ProfileEditController: UICollectionViewDataSource {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 1
+        bioStackView.anchor(
+            top: stackView.bottomAnchor,
+            paddingTop: 15,
+            width: UIScreen.width * 0.7
+        )
+        bioStackView.centerX(inView: view)
+        bioTextView.setHeight(60)
     }
     
-    func collectionView(
-        _ collectionView: UICollectionView,
-        cellForItemAt indexPath: IndexPath
-    ) -> UICollectionViewCell {
-        guard let cell = colletionView.dequeueReusableCell(
-            withReuseIdentifier: InfoCollectionViewCell.identifier,
-            for: indexPath
-        ) as? InfoCollectionViewCell else { return UICollectionViewCell() }
-        cell.user = self.user // user 傳給 cell 的user
-        setupCellBindings(cell: cell) // 把編輯的內容與同步到 self 的屬性
-        return cell
+    private func setupNotificationObservers() {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardWillShow),
+            name: UIResponder.keyboardDidShowNotification,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardWillHide),
+            name: UIResponder.keyboardWillHideNotification,
+            object: nil
+        )
     }
-
-    private func setupCellBindings(cell: InfoCollectionViewCell) {
-        cell.usernameTextField.rx.text
-            .asDriver()
-            .drive { [weak self] text in
-                self?.username = text ?? ""
-            }
-            .disposed(by: disposeBag)
-
-        cell.fullnameTextField.rx.text
-            .asDriver()
-            .drive { [weak self] text in
-                self?.fullname = text ?? ""
-            }
-            .disposed(by: disposeBag)
-        
-        cell.emailTextField.rx.text
-            .asDriver()
-            .drive { [weak self] text in
-                self?.email = text ?? ""
-            }
-            .disposed(by: disposeBag)
-    }
+    
 }
 
 // MARK: - Actions
@@ -184,25 +242,39 @@ extension ProfileEditController {
         let alert = UIAlertController(title: "確定送出？", message: "", preferredStyle: .alert)
         let okAction = UIAlertAction(title: "確定", style: .default) { _ in
             
+            guard let username = self.usernameTextField.text,
+                  !username.isEmpty else {
+                self.showMessage(withTitle: "Oops", message: "帳號不可為空")
+                return
+            }
+            
+            guard let fullname = self.fullnameTextField.text,
+                  !fullname.isEmpty else {
+                self.showMessage(withTitle: "Oops", message: "全名不可為空")
+                return
+            }
+            
+            guard let bioText = self.bioTextView.text else { return }
+            
             let group = DispatchGroup()
             
             group.enter()
-            CCProgressHUD.show()
+            self.show()
             UserService.shared.updateCurrentUserInfo(
-                fullname: self.fullname,
-                username: self.username,
-                email: self.email
+                fullname: fullname,
+                username: username,
+                bioText: bioText
             ) { error in
-                CCProgressHUD.dismiss()
                 
-                if let error = error {
-                    CCProgressHUD.showFailure()
-                    print("DEBUG: Failed to create profile with error: \(error.localizedDescription)")
+                if error != nil {
+                    self.dismiss()
+                    self.showFailure(text: "無法更新個人資料")
                     return
                 }
                 
-                CCProgressHUD.showSuccess(text: "資料已更新")
-                self.titleLabel.text = self.fullname
+                self.dismiss()
+                self.showSuccess(text: "資料已更新")
+                self.nameLabel.text = fullname
                 
                 group.leave()
             }
@@ -216,26 +288,22 @@ extension ProfileEditController {
                 guard let currentUid = LocalStorage.shared.getUid() else { return }
                 let directory = "Profile/" + "_\(currentUid)" + ".jpg"
                 
-                ProgressHUD.show()
-                
+                self.show()
                 group.enter()
                 FileStorage.uploadImage(profileImage, directory: directory) { profileImageUrlString in
                     
-                    CCProgressHUD.show()
                     UserService.shared.uploadProfileImage(
                         userId: currentUid,
                         profileImageUrlString: profileImageUrlString
                     ) { error in
-                        CCProgressHUD.dismiss()
                         
-                        if let error = error {
-                            CCProgressHUD.showFailure()
-                            print("DEBUG: Failed to create imageUrlString with error: \(error.localizedDescription)")
+                        if error != nil {
+                            self.dismiss()
+                            self.showFailure(text: "無法更新頭貼")
                             return
                         }
-                        
-                        CCProgressHUD.showSuccess(text: "頭貼已更新")
-                        
+                        self.dismiss()
+                        self.showSuccess(text: "頭貼已更新")
                         group.leave()
                     }
                 }
@@ -247,11 +315,11 @@ extension ProfileEditController {
             }
         }
         
-        okAction.setValue(UIColor.systemBrown, forKey: "titleTextColor")
+        okAction.setValue(UIColor.ccPrimary, forKey: "titleTextColor")
         alert.addAction(okAction)
         
         let cancelAction = UIAlertAction(title: "取消", style: .cancel) { _ in }
-        cancelAction.setValue(UIColor.systemBrown, forKey: "titleTextColor")
+        cancelAction.setValue(UIColor.ccPrimary, forKey: "titleTextColor")
         alert.addAction(cancelAction)
         
         present(alert, animated: true)
@@ -309,5 +377,44 @@ extension ProfileEditController: UIImagePickerControllerDelegate, UINavigationCo
         self.hasChangedImage = true
         
         picker.dismiss(animated: true)
+    }
+}
+
+// MARK: - UITextViewDelegate
+extension ProfileEditController: UITextViewDelegate {
+    
+    func textViewDidChange(_ textView: UITextView) {
+        checkMaxlength(textView)
+    }
+    
+    private func checkMaxlength(_ textView: UITextView) {
+        if textView.text.count > 34 {
+            textView.deleteBackward()
+        }
+    }
+}
+
+// MARK: - ProfileTextField
+class ProfileTextField: UITextField {
+    
+    init(placeholder: String) {
+        super.init(frame: .zero)
+        
+        borderStyle = .roundedRect
+        backgroundColor = .ccGreyVariant.withAlphaComponent(0.1)
+        font = .systemFont(ofSize: 14, weight: .regular)
+        
+        attributedPlaceholder = NSAttributedString(
+            string: placeholder,
+            attributes: [
+                NSAttributedString.Key.foregroundColor: UIColor.systemGray2,
+                NSAttributedString.Key.font: UIFont.systemFont(ofSize: 13, weight: .regular)
+            ]
+        )
+        
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 }

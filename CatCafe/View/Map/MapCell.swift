@@ -1,5 +1,5 @@
 //
-//  SearchCell.swift
+//  MapCell.swift
 //  CatCafe
 //
 //  Created by Ewen on 2022/7/1.
@@ -66,7 +66,7 @@ class MapCell: UITableViewCell {
         let label = UILabel()
         label.numberOfLines = 1
         label.font = UIFont.systemFont(ofSize: 14, weight: .semibold)
-        label.textColor = .black
+        label.textColor = .ccGrey
         return label
     }()
     

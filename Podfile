@@ -18,18 +18,12 @@ target 'CatCafe' do
   
   pod 'MetalPetal', '~> 1.10.1'
   pod 'Kingfisher'
-  pod 'SDWebImage'
 
   pod 'JGProgressHUD'
   pod 'ProgressHUD'
-  pod 'MJRefresh'
 
   pod 'MessageKit'
-  pod 'InputBarAccessoryView'
   pod 'SKPhotoBrowser'
   pod 'Gallery'
-  
-  pod 'RxSwift'
-  pod 'RxCocoa'
   
 end

@@ -14,8 +14,7 @@ class MyArrangeController: BaseMeetChildController {
         fetchMyArrangedMeet()
     }
     
-    // MARK: - API
-    func fetchMyArrangedMeet() {
+    private func fetchMyArrangedMeet() {
         guard let currentUid = LocalStorage.shared.getUid() else { return }
         
         MeetService.fetchMeets(forUser: currentUid) { meets in
@@ -25,7 +24,7 @@ class MyArrangeController: BaseMeetChildController {
         }
     }
     
-    func checkIfCurrentUserLikedMeets() {
+    private func checkIfCurrentUserLikedMeets() {
         self.meets.forEach { meet in
             MeetService.checkIfCurrentUserLikedMeet(meet: meet) { isLiked in
                 if let index = self.meets.firstIndex(where: { $0.meetId == meet.meetId }) {
@@ -35,7 +34,6 @@ class MyArrangeController: BaseMeetChildController {
         }
     }
 
-    // MARK: - Action
     @objc override func handleRefresh() {
         fetchMyArrangedMeet()
     }

@@ -7,8 +7,62 @@
 
 import UIKit
 
-// MARK: - UITextView
+func makeNavigationController(rootViewController: UIViewController) -> UINavigationController {
+    let navController = UINavigationController(rootViewController: rootViewController)
+    
+    let navBarAppearance = UINavigationBarAppearance()
+    navBarAppearance.configureWithDefaultBackground()
+    navBarAppearance.backgroundColor = .white
+    
+    // navbar 標題顏色跟字型
+    let attrs = [
+        NSAttributedString.Key.foregroundColor: UIColor.ccGrey,
+        NSAttributedString.Key.font: UIFont.systemFont(ofSize: 15, weight: .medium)
+    ]
+    navBarAppearance.titleTextAttributes = attrs
+    
+    // navbar 返回按鈕自訂圖片("arrow.backward")
+    let backIndicatorImage = UIImage.asset(.Icons_24px_Back02)?
+        .withRenderingMode(.alwaysOriginal)
+        .withTintColor(.ccGrey)
+    navBarAppearance.setBackIndicatorImage(backIndicatorImage, transitionMaskImage: backIndicatorImage)
+    
+    // 返回按鈕 字型樣式(clear color)
+    let backButtonAppearance = UIBarButtonItemAppearance()
+    backButtonAppearance.normal.titleTextAttributes = [.foregroundColor: UIColor.clear]
+    navBarAppearance.backButtonAppearance = backButtonAppearance
+    
+    let controllerName = String(describing: type(of: rootViewController.self))
+    
+    // Hide navigation bar underline
+    [
+        String(describing: FeedController.self),
+        String(describing: ExploreController.self),
+        String(describing: MeetController.self),
+        String(describing: ProfileController.self)
+        
+    ].forEach { name in
+        if name == controllerName {
+            navBarAppearance.shadowColor = .clear
+        }
+    }
+    
+    // Status bar style
+    [ String(describing: ProfileController.self)].forEach { name in
+        if name == controllerName {
+            navController.navigationBar.overrideUserInterfaceStyle = .dark
+        } else {
+            navController.navigationBar.overrideUserInterfaceStyle = .light
+        }
+    }
+    
+    navController.navigationBar.standardAppearance = navBarAppearance
+    navController.navigationBar.compactAppearance = navBarAppearance
+    navController.navigationBar.scrollEdgeAppearance = navBarAppearance
+    return navController
+}
 
+// MARK: - UITextView
 class InputTextView: UITextView {
     
     var placeholderText: String? {
@@ -30,13 +84,19 @@ class InputTextView: UITextView {
     
     let placeholderLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 12, weight: .medium)
-        label.textColor = .lightGray
+        label.font = .systemFont(ofSize: 14, weight: .medium)
+        label.textColor = .ccGreyVariant
         return label
     }()
     
     override init(frame: CGRect, textContainer: NSTextContainer?) {
         super.init(frame: frame, textContainer: textContainer)
+        backgroundColor = .white
+        tintColor = .ccGreyVariant
+        textColor = .ccGrey
+        font = .systemFont(ofSize: 14, weight: .regular)
+        isScrollEnabled = false
+        textContainerInset = .init(top: 12, left: 2, bottom: 12, right: 2)
         
         addSubview(placeholderLabel)
         
@@ -57,21 +117,20 @@ class InputTextView: UITextView {
 }
 
 // MARK: - UILabel
-
 func makeLabel(withTitle title: String, font: UIFont, textColor: UIColor) -> UILabel {
     let label = UILabel()
     label.translatesAutoresizingMaskIntoConstraints = false
     label.text = title
     label.font = font
-    label.textAlignment = .center
+    label.textAlignment = .left
     label.textColor = textColor
+    label.backgroundColor = .clear
     label.numberOfLines = 0
     label.adjustsFontSizeToFitWidth = true
     return label
 }
 
 // MARK: - UIStackView
-
 func makeStackView(axis: NSLayoutConstraint.Axis) -> UIStackView {
     let stack = UIStackView()
     stack.translatesAutoresizingMaskIntoConstraints = false
@@ -81,7 +140,6 @@ func makeStackView(axis: NSLayoutConstraint.Axis) -> UIStackView {
 }
 
 // MARK: - Buttons
-
 func makeBarButtonItem(target: Any?,
                        foregroundColor: UIColor,
                        text: String,
@@ -135,7 +193,7 @@ func makeIconButton(imagename: String,
 func makeTitleButton(withText text: String,
                      font: UIFont,
                      kern: Double = 1,
-                     foregroundColor: UIColor = .black,
+                     foregroundColor: UIColor = UIColor.ccGrey,
                      backgroundColor: UIColor = .clear,
                      insets: UIEdgeInsets = .zero,
                      cornerRadius: CGFloat = 0,
@@ -155,8 +213,8 @@ func makeTitleButton(withText text: String,
     button.setAttributedTitle(attributedText, for: .normal)
     button.backgroundColor = backgroundColor
     
-    button.titleLabel?.adjustsFontSizeToFitWidth = true
-    
+    button.titleLabel?.font = font
+            
     button.contentEdgeInsets = insets
     button.layer.cornerRadius = cornerRadius
     button.layer.borderWidth = borderWidth
@@ -174,10 +232,10 @@ func makeTabButton(imageName: String, unselectedImageName: String) -> UIButton {
 
 func makeProfileEditButton() -> UIButton {
     let button = UIButton(type: .system)
-    button.setImage(UIImage(systemName: "square.and.pencil"), for: .normal)
+    button.setImage(UIImage(systemName: "square.and.pencil")?.resize(to: .init(width: 20, height: 20)), for: .normal)
     button.imageView?.contentMode = .scaleToFill
     
-    button.layer.cornerRadius = 36/2
+    button.layer.cornerRadius = 28/2
     button.layer.borderWidth = 0.3
     button.layer.borderColor = UIColor.darkGray.cgColor
     

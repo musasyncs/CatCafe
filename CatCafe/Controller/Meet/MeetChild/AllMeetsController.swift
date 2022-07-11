@@ -14,8 +14,7 @@ class AllMeetsController: BaseMeetChildController {
         fetchMeets()
     }
     
-    // MARK: - API
-    func fetchMeets() {
+    private func fetchMeets() {
         MeetService.fetchMeets { meets in
             self.meets = meets
             self.checkIfCurrentUserLikedMeets()
@@ -33,7 +32,6 @@ class AllMeetsController: BaseMeetChildController {
         }
     }
 
-    // MARK: - Action
     @objc override func handleRefresh() {
         fetchMeets()
     }

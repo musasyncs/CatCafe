@@ -5,14 +5,13 @@
 //  Created by Ewen on 2022/6/29.
 //
 
-import Foundation
 import MessageKit
 
 extension ChatController: MessagesLayoutDelegate {
     
     private enum MessageDefaults {
-        static let bubbleColorOutgoing = UIColor.systemBrown.withAlphaComponent(0.6)
-        static let bubbleColorIncoming = UIColor(red: 230/255, green: 229/255, blue: 234/255, alpha: 1.0)
+        static let bubbleColorOutgoing = UIColor.ccPrimary
+        static let bubbleColorIncoming = UIColor.ccGreyVariant.withAlphaComponent(0.1)
     }
     
     func textColor(
@@ -20,7 +19,9 @@ extension ChatController: MessagesLayoutDelegate {
         at indexPath: IndexPath,
         in messagesCollectionView: MessagesCollectionView
     ) -> UIColor {
-        return .label
+        return isFromCurrentSender(message: message)
+        ? .white
+        : .ccGrey
     }
     
     func backgroundColor(

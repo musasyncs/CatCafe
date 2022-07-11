@@ -23,12 +23,13 @@ class AuthService {
     }
     
     func registerUser(
-        withCredial credentials: AuthCredentials,
+        withEmail email: String,
+        password: String,
         completion: @escaping (Result<FirebaseAuth.User, Error>) -> Void
     ) {
         Auth.auth().createUser(
-            withEmail: credentials.email,
-            password: credentials.password
+            withEmail: email,
+            password: password
         ) { authResult, error in
             if let error = error {
                 completion(.failure(error))
@@ -63,7 +64,7 @@ class AuthService {
     func logoutUser() -> Result<Void, Error> {
         do {
             try Auth.auth().signOut()
-            UserService.shared.currentUser = nil
+            UserService.shared.currentUser = nil // 更新 currentUser
             return .success(())
         } catch {
             return .failure(error)
@@ -88,7 +89,6 @@ class AuthService {
         completion: @escaping (AuthDataResult?) -> Void
     ) {
         if let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential {
-            
             print("user: \(appleIDCredential.user)")
             print("fullName: \(String(describing: appleIDCredential.fullName))")
             print("Email: \(String(describing: appleIDCredential.email))")
@@ -119,7 +119,6 @@ class AuthService {
                     return
                 }
                 // User is signed in to Firebase with Apple.
-                // ...
                 completion(authResult)
             }
         }

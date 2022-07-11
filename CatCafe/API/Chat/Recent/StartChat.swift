@@ -32,9 +32,7 @@ func getReceiverFrom(users: [User]) -> User {
 // MARK: - RecentChats
 func createRecentItems(chatRoomId: String, users: [User]) {
     var memberIdsToCreateRecent = [users.first!.uid, users.last!.uid]
-    
-    print("DEBUG: members to create recent are ", memberIdsToCreateRecent)
-    
+        
     // does user have recent?
     firebaseReference(.recent)
         .whereField(CCConstant.CHATROOMID, isEqualTo: chatRoomId)
@@ -42,16 +40,14 @@ func createRecentItems(chatRoomId: String, users: [User]) {
             guard let snapshot = snapshot else { return }
             
             if !snapshot.isEmpty {
+                // Updated members to create recent
                 memberIdsToCreateRecent = removeMemberWhoHasRecent(
                     snapshot: snapshot,
                     memberIds: memberIdsToCreateRecent
                 )
-                print("DEBUG: updated members to create recent are ", memberIdsToCreateRecent)
             }
             
             for userId in memberIdsToCreateRecent {
-                print("DEBUG: creating recent for user with id ", userId)
-                
                 guard let senderUser = userId == LocalStorage.shared.getUid()
                         ? UserService.shared.currentUser
                         : getReceiverFrom(users: users) else { return }

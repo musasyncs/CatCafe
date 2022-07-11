@@ -35,7 +35,6 @@ struct CommentService {
     }
     
     // MARK: - Fetch all comments for a post
-    
     static func fetchComments(
         forPost postId: String,
         completion: @escaping ([Comment]) -> Void
@@ -59,7 +58,6 @@ struct CommentService {
     }
     
     // MARK: - Upload comment for a meet
-    
     // swiftlint:disable:next function_parameter_count
     static func uploadMeetComment(
         meetId: String,
@@ -84,7 +82,6 @@ struct CommentService {
     }
     
     // MARK: - Fetch all comments for a meet
-    
     static func fetchMeetComments(
         forMeet meetId: String,
         completion: @escaping ([Comment]) -> Void

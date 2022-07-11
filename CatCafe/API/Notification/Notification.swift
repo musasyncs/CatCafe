@@ -14,9 +14,9 @@ enum NotitficationType: Int {
     
     var notificationMessage: String {
         switch self {
-        case .like: return " liked your post"
-        case .follow: return " started following you"
-        case .comment: return " commented on your post"
+        case .like: return " 說你的貼文讚。"
+        case .follow: return " 開始追蹤你。"
+        case .comment: return " 在你的貼文上留言。"
         }
     }
 }

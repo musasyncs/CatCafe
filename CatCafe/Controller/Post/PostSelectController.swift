@@ -12,17 +12,21 @@ class PostSelectController: UIViewController {
     
     var selectedAsset: PHAsset?
         
-    let topView = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.width, height: UIScreen.width))
-    var gridScrollView: GridScrollView!
-    let controlView = ControlView()
-    let albumView = UIView()
-    var albumPhotoViewController: AlbumPhotoViewController?
+    // MARK: - View
+    private let topView = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.width, height: UIScreen.width))
+    private var gridScrollView: GridScrollView!
+    private let controlView = ControlView()
+    private let albumView = UIView()
+    private var albumPhotoViewController: AlbumPhotoViewController?
     
     // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        setup()
-        layout()
+        view.backgroundColor = .white
+        setupNavBar()
+        setupTopView()
+        setupControlView()
+        setupAlbumView()
         requestPhoto()
     }
     
@@ -30,7 +34,8 @@ class PostSelectController: UIViewController {
         PHPhotoLibrary.shared().unregisterChangeObserver(self)
     }
     
-    fileprivate func requestPhoto() {
+    // MARK: - Helper
+    private func requestPhoto() {
         PHPhotoLibrary.requestAuthorization(for: .readWrite, handler: { status in
             switch status {
             case .authorized:
@@ -46,7 +51,7 @@ class PostSelectController: UIViewController {
         })
     }
     
-    fileprivate func loadPhotos() {
+    private func loadPhotos() {
         let options = PHFetchOptions()
         options.wantsIncrementalChangeDetails = false
         options.sortDescriptors = [ NSSortDescriptor(key: "creationDate", ascending: false) ]
@@ -73,7 +78,7 @@ class PostSelectController: UIViewController {
         }
     }
     
-    fileprivate func loadImageFor(_ asset: PHAsset) {
+    private func loadImageFor(_ asset: PHAsset) {
         let options = PHImageRequestOptions()
         options.deliveryMode = .highQualityFormat
         options.isSynchronous = true
@@ -91,12 +96,12 @@ class PostSelectController: UIViewController {
         selectedAsset = asset
     }
     
-    // MARK: - Actions
-    @objc private func handleCancel() {
+    // MARK: - Action
+    @objc func handleCancel() {
         dismiss(animated: true, completion: nil)
     }
 
-    @objc private func handleNext() {
+    @objc func handleNext() {
         guard let croppedImage = gridScrollView.croppedImage else { return }
         let controller = PostFilterController()
         controller.croppedImage = croppedImage
@@ -106,13 +111,13 @@ class PostSelectController: UIViewController {
 }
 
 extension PostSelectController {
-    func setup() {
-        view.backgroundColor = .white
-        navigationController?.navigationBar.tintColor = .black
+    
+    private func setupNavBar() {
+        navigationController?.navigationBar.tintColor = .ccGrey
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(
-            image: UIImage(named: "Icons_24px_Close")?
-                .withTintColor(.black)
+            image: UIImage.asset(.Icons_24px_Close)?
+                .withTintColor(.ccGrey)
                 .withRenderingMode(.alwaysOriginal),
             style: .plain,
             target: self,
@@ -120,7 +125,7 @@ extension PostSelectController {
         )
         navigationItem.rightBarButtonItem = UIBarButtonItem(
             image: UIImage(systemName: "arrow.right")?
-                .withTintColor(.black)
+                .withTintColor(.ccGrey)
                 .withRenderingMode(.alwaysOriginal),
             style: .plain,
             target: self,
@@ -128,45 +133,52 @@ extension PostSelectController {
         )
     }
     
-    func layout() {
-        controlView.delegate = self
-            
+    private func setupTopView() {
+        view.addSubview(topView)
+        topView.anchor(
+            top: view.safeAreaLayoutGuide.topAnchor,
+            left: view.leftAnchor,
+            right: view.rightAnchor,
+            height: UIScreen.width
+        )
+        
         gridScrollView = GridScrollView(frame: topView.bounds)
         topView.addSubview(gridScrollView)
-        
-        view.addSubview(topView)
-        topView.anchor(top: view.safeAreaLayoutGuide.topAnchor,
-                       left: view.leftAnchor,
-                       right: view.rightAnchor,
-                       height: UIScreen.width)
-        
+    }
+    
+    private func setupControlView() {
+        controlView.delegate = self
         view.addSubview(controlView)
-        controlView.anchor(top: topView.bottomAnchor,
-                           left: view.leftAnchor,
-                           right: view.rightAnchor,
-                           height: 50)
-        
+        controlView.anchor(
+            top: topView.bottomAnchor,
+            left: view.leftAnchor,
+            right: view.rightAnchor,
+            height: 50
+        )
+    }
+    
+    private func setupAlbumView() {
         view.addSubview(albumView)
-        albumView.anchor(top: controlView.bottomAnchor,
-                         left: view.leftAnchor,
-                         bottom: view.bottomAnchor,
-                         right: view.rightAnchor)
+        albumView.anchor(
+            top: controlView.bottomAnchor,
+            left: view.leftAnchor,
+            bottom: view.bottomAnchor,
+            right: view.rightAnchor
+        )
     }
 }
 
 // MARK: - PHPhotoLibraryChangeObserver
 extension PostSelectController: PHPhotoLibraryChangeObserver {
+    
     func photoLibraryDidChange(_ changeInstance: PHChange) {
         self.loadPhotos()
     }
+    
 }
 
 // MARK: - ControlViewDelegate
 extension PostSelectController: ControlViewDelegate {
-    
-    func didTapGallery(_ view: ControlView) {
-        print("DEBUG: didTapGallery")
-    }
     
     func didTapCamera(_ view: ControlView) {
         let controller = PostCameraController()

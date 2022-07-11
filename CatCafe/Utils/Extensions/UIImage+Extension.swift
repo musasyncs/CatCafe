@@ -60,8 +60,6 @@ extension UIImage {
 enum ImageAsset: String {
     
     // swiftlint:disable identifier_name
-    case bookmark_selected
-    case bookmark_unselected
     case home_selected
     case home_unselected
     case profile_selected
@@ -71,20 +69,57 @@ enum ImageAsset: String {
     case speaker_selected
     case speaker_unselected
     
-    case cancel_shadow
+    case camera
+    case capture_photo
+    case meet_camera
+    case save_shadow
+    
+    case logo
+    case logo_text
+    
+    case catAnno
+    case info
+    case location_arrow_flat
+    case location
+    case map
+    case pin
+    case website
+    case Icons_24px_RegisterCellphone
+    
+    case chat
     case comment
-    case gear
-    case grid
+    case add_icon
+    case camera_icon
+    case delete_icon
+    case picture_icon
+    case send_icon
+    
+    case back
+    case cancel_shadow
+    case check
+    case cross
+    case delete
+    case right_arrow
+    case Icons_24px_Close
+    case Icons_24px_Back02
+    
     case like_selected
     case like_unselected
-    case list
-    case play
+    case lock
+    case logout
+    case mail
     case plus_photo
     case plus_unselected
-    case ribbon
-    case right_arrow_shadow
-    case save_shadow
-    case send2
-    case upload_image_icon
-     
+    case plus
+    case trash
+    
+    case no_image
+    case photoPlaceholder
+    
+    // profile
+    case avatar
+    case user
+    case profile_back
+    case block
+    
 }

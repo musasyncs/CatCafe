@@ -29,9 +29,10 @@ class BaseMeetChildController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setup()
-        style()
-        layout()
+        view.backgroundColor = .white
+        setupCollectionView()
+        setupPullToRefresh()
+        setupUpdateMeetFeedObserver()
     }
     
     @objc func handleRefresh() {}
@@ -40,29 +41,18 @@ class BaseMeetChildController: UIViewController {
 
 extension BaseMeetChildController {
     
-    func setup() {
-        // setup pull to refresh
-        let refresher = UIRefreshControl()
-        refresher.addTarget(self, action: #selector(handleRefresh), for: .valueChanged)
-        collectionView.refreshControl = refresher
-        
-        // setup Update Meet Feed Observer
-        addUpdateMeetFeedObserver()
-    }
-    
-    func style() {
-        view.backgroundColor = .white
-    }
-    
-    func layout() {
+    func setupCollectionView() {
         view.addSubview(collectionView)
-        collectionView.anchor(top: view.topAnchor,
-                              left: view.leftAnchor,
-                              bottom: view.bottomAnchor,
-                              right: view.rightAnchor)
+        collectionView.fillSuperView()
     }
     
-    func addUpdateMeetFeedObserver() {
+    func setupPullToRefresh() {
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(handleRefresh), for: .valueChanged)
+        collectionView.refreshControl = refreshControl
+    }
+
+    func setupUpdateMeetFeedObserver() {
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(handleRefresh),
@@ -70,28 +60,27 @@ extension BaseMeetChildController {
             object: nil
         )
     }
-
+    
 }
 
 // MARK: - MeetCellDelegate
-
 extension BaseMeetChildController: MeetCellDelegate {
     
     func cell(_ cell: MeetCell, didLike meet: Meet) {
         cell.viewModel?.meet.isLiked.toggle()
         
         if meet.isLiked {
-            MeetService.unlikeMeet(meet: meet) { _ in
-                cell.viewModel?.meet.likes = meet.likes - 1
+            MeetService.unlikeMeet(meet: meet) { likeCount in
+                cell.viewModel?.meet.likes = likeCount
             }
         } else {
-            MeetService.likeMeet(meet: meet) { _ in
-                cell.viewModel?.meet.likes = meet.likes + 1
-                
-                // 發like通知給對方 Optional
+            MeetService.likeMeet(meet: meet) { likeCount in
+                cell.viewModel?.meet.likes = likeCount
             }
         }
+        
     }
+    
 }
 
 // MARK: - UICollectionViewDataSource, UICollectionViewDelegate
@@ -101,8 +90,9 @@ extension BaseMeetChildController: UICollectionViewDataSource, UICollectionViewD
         return meets.count
     }
     
-    func collectionView(_ collectionView: UICollectionView,
-                        cellForItemAt indexPath: IndexPath
+    func collectionView(
+        _ collectionView: UICollectionView,
+        cellForItemAt indexPath: IndexPath
     ) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(
             withReuseIdentifier: MeetCell.identifier,
@@ -116,7 +106,7 @@ extension BaseMeetChildController: UICollectionViewDataSource, UICollectionViewD
         
         UserService.shared.fetchUserBy(uid: meet.ownerUid) { user in
             cell.viewModel?.ownerUsername = user.username
-            cell.viewModel?.ownerImageUrl = URL(string: user.profileImageUrlString)
+            cell.viewModel?.ownerImageUrlString = user.profileImageUrlString
         }
         
         // meet comments count
@@ -150,7 +140,8 @@ extension BaseMeetChildController: UICollectionViewDelegateFlowLayout {
     func collectionView(
         _ collectionView: UICollectionView,
         layout collectionViewLayout: UICollectionViewLayout,
-        minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-            return 16
-        }
+        minimumInteritemSpacingForSectionAt section: Int
+    ) -> CGFloat {
+        return 16
+    }
 }

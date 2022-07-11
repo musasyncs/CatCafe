@@ -11,76 +11,36 @@ import MetalPetal
 
 class PostFilterController: UIViewController {
     
-    let previewView = UIView()
-    let filtersView = UIView()
-    fileprivate var collectionView: UICollectionView!
-    fileprivate var filterControlView: FilterControlView?
-    fileprivate var imageView: MTIImageView!
-    
     public var croppedImage: UIImage!
     
-    fileprivate var originInputImage: MTIImage?
-    fileprivate var allFilters: [MTFilter.Type] = []
-    fileprivate var allTools: [FilterToolItem] = []
-    fileprivate var thumbnails: [String: UIImage] = [:]
-    fileprivate var cachedFilters: [Int: MTFilter] = [:]
+    private var allFilters: [MTFilter.Type] = []
+    private var originInputImage: MTIImage?
+    private var thumbnails: [String: UIImage] = [:]
+    private var currentSelectFilterIndex: Int = 0
+    private var currentAdjustStrengthFilter: MTFilter?
     
-    fileprivate var currentSelectFilterIndex: Int = 0
-    fileprivate var currentAdjustStrengthFilter: MTFilter?
+    // MARK: - View
+    private let previewView = UIView()
+    private let filtersView = UIView()
+    private var collectionView: UICollectionView!
+    private var filterControlView: FilterControlView?
+    private var mtImageView: MTIImageView!
     
     // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
-        
-        imageView = MTIImageView(frame: .zero)
-        imageView.resizingMode = .aspectFill
-        imageView.backgroundColor = .lightGray
         allFilters = MTFilterManager.shared.allFilters
         
-        setupCollectionView()
-    
-        let ciImage = CIImage(cgImage: croppedImage.cgImage!)
-        let originImage = MTIImage(ciImage: ciImage, isOpaque: true)
-        originInputImage = originImage
-        imageView.image = originImage
-        
-        generateFilterThumbnails()
+        view.backgroundColor = .white
         setupNavigationButton()
-        
-        // layout
-        view.addSubview(previewView)
-        previewView.addSubview(imageView)
-        view.addSubview(filtersView)
-        filtersView.addSubview(collectionView)
-        
-        previewView.anchor(top: view.safeAreaLayoutGuide.topAnchor,
-                           left: view.leftAnchor,
-                           right: view.rightAnchor,
-                           height: UIScreen.width)
-        imageView.fillSuperView()
-        
-        filtersView.anchor(top: previewView.bottomAnchor,
-                           left: view.leftAnchor,
-                           bottom: view.bottomAnchor,
-                           right: view.rightAnchor,
-                           paddingBottom: 44)
-        
-        collectionView.centerY(inView: filtersView)
-        collectionView.setDimensions(height: 154, width: UIScreen.width)
-    }
-
-    // MARK: - Helpers
-    fileprivate func getFilterAtIndex(_ index: Int) -> MTFilter {
-        if let filter = cachedFilters[index] {
-            return filter
-        }
-        let filter = allFilters[index].init()
-        cachedFilters[index] = filter
-        return filter
+        setupCollectionView()
+        setupMtImageView()
+        setupLayout()
+        generateFilterThumbnails()
     }
     
-    fileprivate func presentFilterControlView(for tool: FilterToolItem) {
+    // MARK: - Helper
+    private func presentFilterControlView(for tool: FilterToolItem) {
         let width = filtersView.bounds.width
         let height = filtersView.bounds.height + 44 + view.safeAreaInsets.bottom
         let frame = CGRect(x: 0, y: view.bounds.height - height + 44, width: width, height: height)
@@ -99,14 +59,14 @@ class PostFilterController: UIViewController {
         }
     }
     
-    fileprivate func valueForFilterControlView(with tool: FilterToolItem) -> Float {
+    private func valueForFilterControlView(with tool: FilterToolItem) -> Float {
         switch tool.type {
         case .adjustStrength:
             return 1.0
         }
     }
     
-    fileprivate func dismissFilterControlView() {
+    private func dismissFilterControlView() {
         UIView.animate(withDuration: 0.2) {
             self.filterControlView?.setPosition(offScreen: true)
         } completion: { _ in
@@ -116,13 +76,13 @@ class PostFilterController: UIViewController {
         }
     }
     
-    // MARK: - Actions
+    // MARK: - Action
     @objc func cancelBarButtonTapped() {
         navigationController?.popViewController(animated: false)
     }
     
     @objc func nextBarButtonTapped() {
-        guard let image = self.imageView.image,
+        guard let image = self.mtImageView.image,
               let uiImage = MTFilterManager.shared.generate(image: image) else { return }
         let postEditController = PostEditController()
         postEditController.image = uiImage
@@ -133,10 +93,10 @@ class PostFilterController: UIViewController {
 
 extension PostFilterController {
     
-    func setupNavigationButton() {
+    private func setupNavigationButton() {
         let leftBarButton = UIBarButtonItem(
-            image: UIImage(named: "Icons_24px_Back02")?
-                .withTintColor(.black)
+            image: UIImage.asset(.Icons_24px_Back02)?
+                .withTintColor(.ccGrey)
                 .withRenderingMode(.alwaysOriginal),
             style: .plain,
             target: self,
@@ -144,7 +104,7 @@ extension PostFilterController {
         )
         let rightBarButton = UIBarButtonItem(
             image: UIImage(systemName: "arrow.right")?
-                .withTintColor(.black)
+                .withTintColor(.ccGrey)
                 .withRenderingMode(.alwaysOriginal),
             style: .plain,
             target: self,
@@ -154,13 +114,13 @@ extension PostFilterController {
         self.navigationItem.rightBarButtonItem = rightBarButton
     }
     
-    func clearNavigationButton() {
+    private func clearNavigationButton() {
         self.navigationItem.leftBarButtonItem = nil
         self.navigationItem.hidesBackButton = true
         self.navigationItem.rightBarButtonItem = nil
     }
 
-    func setupCollectionView() {
+    private func setupCollectionView() {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         layout.minimumLineSpacing = 0
@@ -180,7 +140,43 @@ extension PostFilterController {
         collectionView.reloadData()
     }
     
-    func generateFilterThumbnails() {
+    private func setupMtImageView() {
+        mtImageView = MTIImageView(frame: .zero)
+        mtImageView.resizingMode = .aspectFill
+        mtImageView.backgroundColor = .lightGray
+        let ciImage = CIImage(cgImage: croppedImage.cgImage!)
+        let originImage = MTIImage(ciImage: ciImage, isOpaque: true)
+        originInputImage = originImage
+        mtImageView.image = originImage
+    }
+    
+    private func setupLayout() {
+        view.addSubview(previewView)
+        previewView.anchor(
+            top: view.safeAreaLayoutGuide.topAnchor,
+            left: view.leftAnchor,
+            right: view.rightAnchor,
+            height: UIScreen.width
+        )
+        
+        previewView.addSubview(mtImageView)
+        mtImageView.fillSuperView()
+        
+        view.addSubview(filtersView)
+        filtersView.anchor(
+            top: previewView.bottomAnchor,
+            left: view.leftAnchor,
+            bottom: view.bottomAnchor,
+            right: view.rightAnchor,
+            paddingBottom: 44
+        )
+        
+        filtersView.addSubview(collectionView)
+        collectionView.centerY(inView: filtersView)
+        collectionView.setDimensions(height: 154, width: UIScreen.width)
+    }
+    
+    private func generateFilterThumbnails() {
         DispatchQueue.global().async {
             let size = CGSize(width: 200, height: 200)
             UIGraphicsBeginImageContextWithOptions(size, false, 0)
@@ -209,7 +205,7 @@ extension PostFilterController: FilterControlViewDelegate {
     func filterControlViewDidPressCancel() {
         // dicard filter
         currentAdjustStrengthFilter?.strength = 0
-        imageView.image = currentAdjustStrengthFilter?.outputImage
+        mtImageView.image = currentAdjustStrengthFilter?.outputImage
         // dismiss
         dismissFilterControlView()
     }
@@ -218,19 +214,21 @@ extension PostFilterController: FilterControlViewDelegate {
         dismissFilterControlView()
     }
     
-    func filterControlView(_ controlView: FilterControlView,
-                           didChangeValue value: Float,
-                           filterTool: FilterToolItem
+    func filterControlView(
+        _ controlView: FilterControlView,
+        didChangeValue value: Float,
+        filterTool: FilterToolItem
     ) {
         if filterTool.type == .adjustStrength {
             currentAdjustStrengthFilter?.strength = value
-            imageView.image = currentAdjustStrengthFilter?.outputImage
+            mtImageView.image = currentAdjustStrengthFilter?.outputImage
             return
         }
     }
     
 }
 
+// MARK: - UICollectionViewDataSource, UICollectionViewDelegate
 extension PostFilterController: UICollectionViewDataSource, UICollectionViewDelegate {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -238,10 +236,7 @@ extension PostFilterController: UICollectionViewDataSource, UICollectionViewDele
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if collectionView == collectionView {
-            return allFilters.count
-        }
-        return allTools.count
+        return allFilters.count
     }
     
     func collectionView(
@@ -261,7 +256,8 @@ extension PostFilterController: UICollectionViewDataSource, UICollectionViewDele
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if currentSelectFilterIndex == indexPath.item { // double tap
+        // double tap
+        if currentSelectFilterIndex == indexPath.item {
             if indexPath.item != 0 {
                 let item = FilterToolItem(type: .adjustStrength, slider: .zeroToHundred)
                 presentFilterControlView(for: item)
@@ -271,8 +267,9 @@ extension PostFilterController: UICollectionViewDataSource, UICollectionViewDele
         } else {
             let filter = allFilters[indexPath.item].init()
             filter.inputImage = originInputImage
-            imageView.image = filter.outputImage
+            mtImageView.image = filter.outputImage
             currentSelectFilterIndex = indexPath.item
         }
     }
+
 }

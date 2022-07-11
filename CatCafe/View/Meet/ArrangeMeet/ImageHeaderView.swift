@@ -15,7 +15,7 @@ class ImageHeaderView: UIView {
         view.clipsToBounds = true
         view.layer.cornerRadius = 16
         view.layer.borderWidth = 1
-        view.layer.borderColor = UIColor.black.cgColor
+        view.layer.borderColor = UIColor.ccGrey.cgColor
         return view
     }()
     

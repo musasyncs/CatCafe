@@ -8,55 +8,62 @@
 import UIKit
 
 class MeetController: UIViewController {
-        
-    lazy var arrangeMeetButon = makeTitleButton(withText: "舉辦聚會", font: .systemFont(ofSize: 12, weight: .regular))
-    lazy var arrangeMeetButtonItem = UIBarButtonItem(customView: arrangeMeetButon)
     
-    lazy var allButton = makeTitleButton(
+    // MARK: - View
+    private lazy var arrangeMeetButon = makeTitleButton(
+        withText: "舉辦聚會",
+        font: .systemFont(ofSize: 12, weight: .regular)
+    )
+    private lazy var arrangeMeetButtonItem = UIBarButtonItem(customView: arrangeMeetButon)
+    
+    private lazy var allButton = makeTitleButton(
         withText: "全部",
         font: .systemFont(ofSize: 11, weight: .regular),
-        foregroundColor: .systemBrown,
+        foregroundColor: .ccPrimary,
         insets: UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5),
         cornerRadius: 8,
         borderWidth: 1,
-        borderColor: .systemBrown
+        borderColor: .ccPrimary
     )
-    lazy var myArrangedButton = makeTitleButton(
+    
+    private lazy var myArrangedButton = makeTitleButton(
         withText: "我發起的",
         font: .systemFont(ofSize: 11, weight: .regular),
-        foregroundColor: .systemBrown,
+        foregroundColor: .ccPrimary,
         insets: UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5),
         cornerRadius: 8,
         borderWidth: 1,
-        borderColor: .systemBrown
+        borderColor: .ccPrimary
     )
-    lazy var myAttendButton = makeTitleButton(
+    
+    private lazy var myAttendButton = makeTitleButton(
         withText: "我報名的",
         font: .systemFont(ofSize: 11, weight: .regular),
-        foregroundColor: .systemBrown,
+        foregroundColor: .ccPrimary,
         insets: UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5),
         cornerRadius: 8,
         borderWidth: 1,
-        borderColor: .systemBrown
+        borderColor: .ccPrimary
     )
-    lazy var stackView = UIStackView(arrangedSubviews: [allButton, myArrangedButton, myAttendButton])
     
-    let containerVC = UIViewController()
+    private lazy var buttonStackView = UIStackView(arrangedSubviews: [allButton, myArrangedButton, myAttendButton])
     
-    let allMeetsController = AllMeetsController()
-    let myArrangeController = MyArrangeController()
-    let myAttendController = MyAttendController()
+    private let containerVC = UIViewController()
+    private let allMeetsController = AllMeetsController()
+    private let myArrangeController = MyArrangeController()
+    private let myAttendController = MyAttendController()
     
+    // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        setup()
-        style()
-        layout()
+        view.backgroundColor = .white
+        setupNavButtons()
+        setupStackView()
+        setupChildController()
         allButtonTapped()
     }
     
-    // MARK: - Helpers
-    
+    // MARK: - Helper
     // swiftlint:disable:next function_parameter_count
     private func setupButtons(
         button1fgColor: UIColor, button1bgColor: UIColor,
@@ -95,10 +102,9 @@ class MeetController: UIViewController {
     }
     
     // MARK: - Action
-    
     @objc func arrangeMeetTapped() {
         let controller = SelectMeetPicController()
-        let navController = UINavigationController(rootViewController: controller)
+        let navController = makeNavigationController(rootViewController: controller)
         navController.modalPresentationStyle = .overFullScreen
         present(navController, animated: true)
     }
@@ -109,9 +115,9 @@ class MeetController: UIViewController {
         myAttendController.view.isHidden = true
         
         self.setupButtons(
-            button1fgColor: .white, button1bgColor: .systemBrown,
-            button2fgColor: .systemBrown, button2bgColor: .white,
-            button3fgColor: .systemBrown, button3bgColor: .white
+            button1fgColor: .white, button1bgColor: .ccPrimary,
+            button2fgColor: .ccPrimary, button2bgColor: .white,
+            button3fgColor: .ccPrimary, button3bgColor: .white
         )
     }
     
@@ -121,9 +127,9 @@ class MeetController: UIViewController {
         myAttendController.view.isHidden = true
         
         self.setupButtons(
-            button1fgColor: .systemBrown, button1bgColor: .white,
-            button2fgColor: .white, button2bgColor: .systemBrown,
-            button3fgColor: .systemBrown, button3bgColor: .white
+            button1fgColor: .ccPrimary, button1bgColor: .white,
+            button2fgColor: .white, button2bgColor: .ccPrimary,
+            button3fgColor: .ccPrimary, button3bgColor: .white
         )
     }
     
@@ -133,64 +139,71 @@ class MeetController: UIViewController {
         myAttendController.view.isHidden = false
         
         self.setupButtons(
-            button1fgColor: .systemBrown, button1bgColor: .white,
-            button2fgColor: .systemBrown, button2bgColor: .white,
-            button3fgColor: .white, button3bgColor: .systemBrown
+            button1fgColor: .ccPrimary, button1bgColor: .white,
+            button2fgColor: .ccPrimary, button2bgColor: .white,
+            button3fgColor: .white, button3bgColor: .ccPrimary
         )
     }
-
+    
 }
 
 extension MeetController {
     
-    func setup() {
+    private func setupNavButtons() {
         arrangeMeetButon.addTarget(self, action: #selector(arrangeMeetTapped), for: .touchUpInside)
         navigationItem.leftBarButtonItem = arrangeMeetButtonItem
         
         allButton.addTarget(self, action: #selector(allButtonTapped), for: .touchUpInside)
+        
         myArrangedButton.addTarget(self, action: #selector(myArrangedButtonTapped), for: .touchUpInside)
         myAttendButton.addTarget(self, action: #selector(myAttendButtonTapped), for: .touchUpInside)
-        
+    }
+    
+    private func setupStackView() {
+        buttonStackView.backgroundColor = .white
+        buttonStackView.alignment = .center
+        buttonStackView.spacing = 8
+        buttonStackView.distribution = .fillProportionally
+        view.addSubview(buttonStackView)
+        buttonStackView.anchor(
+            top: view.safeAreaLayoutGuide.topAnchor,
+            left: view.leftAnchor,
+            paddingTop: 8,
+            paddingLeft: 8
+        )
+    }
+    
+    private func setupChildController() {
         addChild(allMeetsController)
         addChild(myArrangeController)
         addChild(myAttendController)
         didMove(toParent: allMeetsController)
         didMove(toParent: myArrangeController)
         didMove(toParent: myAttendController)
-    }
-    
-    func style() {
-        view.backgroundColor = .white
-        stackView.backgroundColor = .white
-        stackView.alignment = .center
-        stackView.spacing = 8
-        stackView.distribution = .fillProportionally
-    }
-    
-    func layout() {
-        view.addSubview(stackView)
-        stackView.anchor(top: view.safeAreaLayoutGuide.topAnchor,
-                         left: view.leftAnchor,
-                         paddingTop: 8,
-                         paddingLeft: 8)
-        
         view.addSubview(allMeetsController.view)
         view.addSubview(myArrangeController.view)
         view.addSubview(myAttendController.view)
-        allMeetsController.view.anchor(top: stackView.bottomAnchor,
-                                       left: view.leftAnchor,
-                                       bottom: view.safeAreaLayoutGuide.bottomAnchor,
-                                       right: view.rightAnchor,
-                                       paddingTop: 8)
-        myArrangeController.view.anchor(top: stackView.bottomAnchor,
-                                        left: view.leftAnchor,
-                                        bottom: view.safeAreaLayoutGuide.bottomAnchor,
-                                        right: view.rightAnchor,
-                                        paddingTop: 8)
-        myAttendController.view.anchor(top: stackView.bottomAnchor,
-                                       left: view.leftAnchor,
-                                       bottom: view.safeAreaLayoutGuide.bottomAnchor,
-                                       right: view.rightAnchor,
-                                       paddingTop: 8)
+        allMeetsController.view.anchor(
+            top: buttonStackView.bottomAnchor,
+            left: view.leftAnchor,
+            bottom: view.safeAreaLayoutGuide.bottomAnchor,
+            right: view.rightAnchor,
+            paddingTop: 8
+        )
+        myArrangeController.view.anchor(
+            top: buttonStackView.bottomAnchor,
+            left: view.leftAnchor,
+            bottom: view.safeAreaLayoutGuide.bottomAnchor,
+            right: view.rightAnchor,
+            paddingTop: 8
+        )
+        myAttendController.view.anchor(
+            top: buttonStackView.bottomAnchor,
+            left: view.leftAnchor,
+            bottom: view.safeAreaLayoutGuide.bottomAnchor,
+            right: view.rightAnchor,
+            paddingTop: 8
+        )
     }
+
 }

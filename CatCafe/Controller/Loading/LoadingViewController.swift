@@ -12,7 +12,7 @@ class LoadingViewController: UIViewController {
     // MARK: - Views
     var loadingImageView: UIImageView = {
         let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 75, height: 75))
-        imageView.image = UIImage(named: "logo")
+        imageView.image = UIImage.asset(.logo)
         return imageView
     }()
     

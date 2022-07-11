@@ -7,51 +7,61 @@
 
 import UIKit
 import MessageKit
-import InputBarAccessoryView
 import Gallery
 
 class ChatController: MessagesViewController {
+    
     private var chatId = ""
     private var recipientId = ""
     private var recipientName = ""
-    var displayingMessagesCount = 0
-    var maxMessageNumber = 0
-    var minMessageNumber = 0
-    var typingCounter = 0
     
+    var displayingMessagesCount = 0
+    private var maxMessageNumber = 0
+    private var minMessageNumber = 0
+    private var typingCounter = 0
+    
+    var allLocalMessages = [LocalMessage]()
     var mkMessages = [MKMessage]()
+    
     let currentUser = MKSender(
         senderId: LocalStorage.shared.getUid()!,
         displayName: UserService.shared.currentUser!.username
     )
-    var allLocalMessages = [LocalMessage]()
-    var gallery: GalleryController!
+    private var gallery: GalleryController!
+    private let refreshController = UIRefreshControl()
     
-    // MARK: - UI
-    let leftBarButtonView: UIView = {
+    // MARK: - View
+    private let leftBarButtonView: UIView = {
         return UIView(frame: CGRect(x: 0, y: 0, width: 200, height: 50))
     }()
     
-    let titleLabel: UILabel = {
+    private let titleLabel: UILabel = {
         let title = UILabel(frame: CGRect(x: 5, y: 0, width: 180, height: 25))
         title.textAlignment = .left
-        title.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+        title.textColor = .ccGrey
+        title.font = .systemFont(ofSize: 14, weight: .medium)
         title.adjustsFontSizeToFitWidth = true
         return title
     }()
     
-    let subTitleLabel: UILabel = {
+    private let subTitleLabel: UILabel = {
         let subTitle = UILabel(frame: CGRect(x: 5, y: 22, width: 180, height: 20))
         subTitle.textAlignment = .left
-        subTitle.font = UIFont.systemFont(ofSize: 13, weight: .medium)
+        subTitle.textColor = .ccGreyVariant
+        subTitle.font = .systemFont(ofSize: 12, weight: .medium)
         subTitle.adjustsFontSizeToFitWidth = true
         return subTitle
     }()
+
+    private lazy var chatInputView: ChatInputAccessoryView = {
+        let inputView = ChatInputAccessoryView()
+        inputView.delegate = self
+        return inputView
+    }()
+    override var inputAccessoryView: UIView? { return chatInputView }
+    override var canBecomeFirstResponder: Bool { return true }
     
-    let refreshController = UIRefreshControl()
-    let micButton = InputBarButtonItem()
-    
-    // MARK: - Inits
+    // MARK: - Initializer
     init(chatId: String, recipientId: String, recipientName: String) {
         super.init(nibName: nil, bundle: nil)
         self.chatId = chatId
@@ -63,19 +73,18 @@ class ChatController: MessagesViewController {
         super.init(coder: coder)
     }
     
-    // MARK: - LifeCycle
+    // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        configureLeftBarButton()
-        configureCustomTitle()
-        configureMessageCollectionView()
-        configureMessageInputBar()
-        
-        createTypingObserver()
+        setupLeftBarButton()
+        setupCustomTitle()
+        setupMessageCollectionView()
+        setupTypingObserver()
         
         loadChats()
         listenForNewChats()
+        
         listenForReadStatusChange()
     }
     
@@ -88,45 +97,13 @@ class ChatController: MessagesViewController {
         super.viewWillDisappear(animated)
         RecentChatService.shared.resetRecentCounter(chatRoomId: chatId)
     }
-
-    // MARK: - Load Chats
-    func loadChats() {
-        MessageService.shared.checkForOldChats(LocalStorage.shared.getUid()!, collectionId: chatId) { localMessages in
-            self.allLocalMessages = localMessages
-            
-            self.insertMessages()
-            self.messagesCollectionView.reloadData()
-            self.messagesCollectionView.scrollToLastItem(animated: true)
-        }
-    }
-
-    func listenForNewChats() {
-        MessageService.shared.listenForNewChats(
-            LocalStorage.shared.getUid()!,
-            collectionId: chatId,
-            lastMessageDate: lastMessageDate()
-        ) { newMessage in
-            self.insertMessage(newMessage)
-        }
-    }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        createGradientBackground()
+    }
+        
     // MARK: - Helper
-    private func lastMessageDate() -> Date {
-        let lastMessageDate = allLocalMessages.last?.date ?? Date()
-        return Calendar.current.date(byAdding: .second, value: 1, to: lastMessageDate) ?? lastMessageDate
-    }
-    
-    private func removeListeners() {
-        TypingService.shared.removeTypingListener()
-        MessageService.shared.removeListeners()
-    }
-    
-    // MARK: - Action
-    @objc func backButtonPressed() {
-        removeListeners()
-        navigationController?.popViewController(animated: true)
-    }
-    
     func messageSend(text: String?, photo: UIImage?, video: Video?) {
         MessageSender.send(
             chatId: chatId,
@@ -139,109 +116,76 @@ class ChatController: MessagesViewController {
         }
     }
     
-    private func actionAttachMessage() {
-        messageInputBar.inputTextView.resignFirstResponder()
-        
-        let optionMenu = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        
-        let takePhotoOrVideo = UIAlertAction(title: "相機", style: .default) { _ in
-            self.showImageGallery(camera: true)
-        }
-        let shareMedia = UIAlertAction(title: "相簿", style: .default) { _ in
-            self.showImageGallery(camera: false)
-        }
-        
-        let cancelAction = UIAlertAction(title: "取消", style: .cancel, handler: nil)
-        takePhotoOrVideo.setValue(UIImage(systemName: "camera"), forKey: "image")
-        shareMedia.setValue(UIImage(systemName: "photo.fill"), forKey: "image")
-        
-        optionMenu.addAction(takePhotoOrVideo)
-        optionMenu.addAction(shareMedia)
-        optionMenu.addAction(cancelAction)
-        
-        self.present(optionMenu, animated: true)
-    }
-    
     // MARK: - Action
-    private func showImageGallery(camera: Bool) {
-        gallery = GalleryController()
-        gallery.delegate = self
-        
-        Config.tabsToShow = camera ? [.cameraTab] : [.imageTab, .videoTab]
-        Config.Camera.imageLimit = 1
-        Config.initialTab = .imageTab
-        Config.VideoEditor.maximumDuration = 30
-        
-        self.present(gallery, animated: true)
+    @objc func backButtonPressed() {
+        TypingService.shared.removeTypingListener()
+        MessageService.shared.removeListeners()
+        navigationController?.popViewController(animated: true)
     }
 
 }
 
-// MARK: - Update Typing indicator
 extension ChatController {
     
-    func createTypingObserver() {
-        TypingService.shared.createTypingObserver(chatRoomId: chatId) { (isTyping) in
+    private func setupLeftBarButton() {
+        self.navigationItem.leftBarButtonItems = [
+            UIBarButtonItem(
+                image: UIImage.asset(.Icons_24px_Back02)?
+                    .withTintColor(.ccGrey)
+                    .withRenderingMode(.alwaysOriginal),
+                style: .plain,
+                target: self,
+                action: #selector(backButtonPressed)
+            )
+        ]
+    }
+    
+    private func setupCustomTitle() {
+        leftBarButtonView.addSubview(titleLabel)
+        leftBarButtonView.addSubview(subTitleLabel)
+        let leftBarButtonItem = UIBarButtonItem(customView: leftBarButtonView)
+        self.navigationItem.leftBarButtonItems?.append(leftBarButtonItem)
+        
+        titleLabel.text = recipientName
+    }
+    
+    private func setupMessageCollectionView() {
+        messagesCollectionView.messagesDataSource = self
+        messagesCollectionView.messagesLayoutDelegate = self
+        messagesCollectionView.messagesDisplayDelegate = self
+        messagesCollectionView.messageCellDelegate = self
+        
+        scrollsToLastItemOnKeyboardBeginsEditing = true
+        maintainPositionOnKeyboardFrameChanged = true
+        
+        messagesCollectionView.backgroundColor = .clear
+        messagesCollectionView.showsVerticalScrollIndicator = false
+        messagesCollectionView.refreshControl = refreshController
+    }
+    
+    private func setupTypingObserver() {
+        TypingService.shared.createTypingObserver(chatRoomId: chatId) { isTyping in
             DispatchQueue.main.async {
-                self.updateTypingIndicator(isTyping)
+                self.subTitleLabel.text = isTyping ? "正在輸入..." : ""
             }
         }
     }
     
-    func typingIndicatorUpdate() {
-        typingCounter += 1
-        TypingService.saveTypingCounter(typing: true, chatRoomId: chatId)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-            self.typingCounterStop()
-        }
-    }
-    
-    func typingCounterStop() {
-        typingCounter -= 1
-        if typingCounter == 0 {
-            TypingService.saveTypingCounter(typing: false, chatRoomId: chatId)
-        }
-    }
-    
-    func updateTypingIndicator(_ show: Bool) {
-        subTitleLabel.text = show ? "正在輸入..." : ""
-    }
 }
 
-// UpdateReadMessagesStatus
 extension ChatController {
-    
-    func listenForReadStatusChange() {
-        MessageService.shared.listenForReadStatusChange(
-            LocalStorage.shared.getUid()!,
-            collectionId: chatId
-        ) { (updatedMessage) in
-            if updatedMessage.status != CCConstant.SENT {
-                self.updateMessage(updatedMessage)
-            }
+
+    // 載入歷史訊息
+    private func loadChats() {
+        MessageService.shared.checkForOldChats(LocalStorage.shared.getUid()!, collectionId: chatId) { localMessages in
+            self.allLocalMessages = localMessages
+            
+            self.insertOldMessages()
+            self.messagesCollectionView.reloadData()
+            self.messagesCollectionView.scrollToLastItem(animated: true)
         }
     }
-    
-    private func updateMessage(_ localMessage: LocalMessage) {
-        for index in 0 ..< mkMessages.count {
-            let tempMessage = mkMessages[index]
-
-            if localMessage.id == tempMessage.messageId {
-                mkMessages[index].status = localMessage.status
-                mkMessages[index].readDate = localMessage.readDate
-                                
-                if mkMessages[index].status == CCConstant.READ {
-                    self.messagesCollectionView.reloadData()
-                }
-            }
-        }
-    }
-}
-
-// MARK: - Insert Messages
-extension ChatController {
-    
-    private func insertMessages() {
+    private func insertOldMessages() {
         maxMessageNumber = allLocalMessages.count - displayingMessagesCount
         minMessageNumber = maxMessageNumber - CCConstant.NUMBEROFMESSAGES
         if minMessageNumber < 0 {
@@ -252,6 +196,26 @@ extension ChatController {
         }
     }
 
+    // 監聽新訊息
+    private func listenForNewChats() {
+        MessageService.shared.listenForNewChats(
+            LocalStorage.shared.getUid()!,
+            collectionId: chatId,
+            lastMessageDate: lastMessageDate()
+        ) { newMessage in
+            self.insertMessage(newMessage)
+        }
+    }
+    private func lastMessageDate() -> Date {
+        let lastMessageDate = allLocalMessages.last?.date ?? Date()
+        return Calendar.current.date(
+            byAdding: .second,
+            value: 1,
+            to: lastMessageDate
+        ) ?? lastMessageDate
+    }
+    
+    // 插入訊息
     private func insertMessage(_ localMessage: LocalMessage) {
         if localMessage.senderId != LocalStorage.shared.getUid()! {
             markMessageAsRead(localMessage)
@@ -263,23 +227,9 @@ extension ChatController {
         self.messagesCollectionView.reloadData()
         self.messagesCollectionView.scrollToLastItem(animated: false)
     }
-    
-    private func loadMoreMessages(maxNumber: Int, minNumber: Int) {
-        maxMessageNumber = minNumber - 1
-        minMessageNumber = maxMessageNumber - CCConstant.NUMBEROFMESSAGES
-        
-        if minMessageNumber < 0 {
-            minMessageNumber = 0
-        }
-        for number in (minMessageNumber ... maxMessageNumber).reversed() {
-            insertOlderMessage(allLocalMessages[number])
-        }
-    }
-    
     private func markMessageAsRead(_ localMessage: LocalMessage) {
         if localMessage.senderId != LocalStorage.shared.getUid()!
-            && localMessage.status != CCConstant.READ {
-            
+           && localMessage.status != CCConstant.READ {
             MessageService.shared.updateMessageInFireStore(
                 localMessage,
                 memberIds: [LocalStorage.shared.getUid()!, recipientId]
@@ -287,69 +237,76 @@ extension ChatController {
         }
     }
     
-    private func insertOlderMessage(_ localMessage: LocalMessage) {
-        let messageReceiver = MessageReceiver(_collectionView: self)
-        self.mkMessages.insert(messageReceiver.createMessage(localMessage: localMessage)!, at: 0)
-        displayingMessagesCount += 1
+    // 送出的訊息判斷是否被讀
+    private func listenForReadStatusChange() {
+        MessageService.shared.listenForReadStatusChange(
+            LocalStorage.shared.getUid()!,
+            collectionId: chatId
+        ) { (updatedMessage) in
+            if updatedMessage.status != CCConstant.SENT {
+                self.updateMessage(updatedMessage)
+            }
+        }
     }
-    
+    private func updateMessage(_ localMessage: LocalMessage) {
+        for index in 0 ..< mkMessages.count {
+            let tempMessage = mkMessages[index]
+            
+            if localMessage.id == tempMessage.messageId {
+                mkMessages[index].status = localMessage.status
+                mkMessages[index].readDate = localMessage.readDate
+                
+                if mkMessages[index].status == CCConstant.READ {
+                    self.messagesCollectionView.reloadData()
+                }
+            }
+        }
+    }
 }
 
-// MARK: - Configurations
-extension ChatController {
+// MARK: - CommentInputAccessoryViewDelegate
+extension ChatController: ChatInputAccessoryViewDelegate {
     
-    private func configureLeftBarButton() {
-        self.navigationItem.leftBarButtonItems = [
-            UIBarButtonItem(
-                image: UIImage(named: "Icons_24px_Back02")?
-                    .withTintColor(.black)
-                    .withRenderingMode(.alwaysOriginal),
-                style: .plain,
-                target: self,
-                action: #selector(backButtonPressed)
-            )
-        ]
-    }
-    
-    private func configureCustomTitle() {
-        leftBarButtonView.addSubview(titleLabel)
-        leftBarButtonView.addSubview(subTitleLabel)
-        let leftBarButtonItem = UIBarButtonItem(customView: leftBarButtonView)
-        self.navigationItem.leftBarButtonItems?.append(leftBarButtonItem)
-        
-        titleLabel.text = recipientName
-    }
-    
-    private func configureMessageCollectionView() {
-        messagesCollectionView.messagesDataSource = self
-        messagesCollectionView.messagesLayoutDelegate = self
-        messagesCollectionView.messagesDisplayDelegate = self
-        messagesCollectionView.messageCellDelegate = self
-        
-        scrollsToLastItemOnKeyboardBeginsEditing = true
-        maintainPositionOnKeyboardFrameChanged = true
-        
-        messagesCollectionView.refreshControl = refreshController
-    }
-    
-    private func configureMessageInputBar() {
-        messageInputBar.delegate = self
-        
-        let attachButton = InputBarButtonItem()
-        attachButton.image = UIImage(
-            systemName: "plus",
-            withConfiguration: UIImage.SymbolConfiguration(pointSize: 30)
-        )
-        attachButton.setSize(CGSize(width: 30, height: 30), animated: false)
-        attachButton.onTouchUpInside { _ in
-            self.actionAttachMessage()
+    func chatInputView(_ inputView: ChatInputAccessoryView, textDidChangeTo text: String) {
+        if !text.isEmpty {
+            typingIndicatorUpdate()
         }
-                
-        messageInputBar.setStackViewItems([attachButton], forStack: .left, animated: false)
-        messageInputBar.setLeftStackViewWidthConstant(to: 36, animated: false)
-        messageInputBar.inputTextView.isImagePasteEnabled = false
-        messageInputBar.backgroundView.backgroundColor = .systemBackground
-        messageInputBar.inputTextView.backgroundColor = .systemBackground
+    }
+    private func typingIndicatorUpdate() {
+        typingCounter += 1
+        TypingService.saveTypingCounter(typing: true, chatRoomId: chatId)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+            self.typingCounterStop()
+        }
+    }
+    private func typingCounterStop() {
+        typingCounter -= 1
+        if typingCounter == 0 {
+            TypingService.saveTypingCounter(typing: false, chatRoomId: chatId)
+        }
+    }
+    
+    func chatInputView(_ inputView: ChatInputAccessoryView, wantsToUploadText text: String) {
+        messageSend(text: text, photo: nil, video: nil)
+        inputView.clearChatTextView()
+    }
+    
+    func openCamera(_ inputView: ChatInputAccessoryView) {
+        self.showImageGallery(camera: true)
+    }
+    
+    func openGallery(_ inputView: ChatInputAccessoryView) {
+        self.showImageGallery(camera: false)
+    }
+    
+    private func showImageGallery(camera: Bool) {
+        gallery = GalleryController()
+        gallery.delegate = self
+        Config.tabsToShow = camera ? [.cameraTab] : [.imageTab, .videoTab]
+        Config.Camera.imageLimit = 1
+        Config.initialTab = .imageTab
+        Config.VideoEditor.maximumDuration = 30
+        self.present(gallery, animated: true)
     }
     
 }
@@ -366,6 +323,20 @@ extension ChatController {
             refreshController.endRefreshing()
         }
     }
+    private func loadMoreMessages(maxNumber: Int, minNumber: Int) {
+        maxMessageNumber = minNumber - 1
+        minMessageNumber = maxMessageNumber - CCConstant.NUMBEROFMESSAGES
+        
+        if minMessageNumber < 0 {
+            minMessageNumber = 0
+        }
+        for number in (minMessageNumber ... maxMessageNumber).reversed() {
+            let messageReceiver = MessageReceiver(_collectionView: self)
+            self.mkMessages.insert(messageReceiver.createMessage(localMessage: allLocalMessages[number])!, at: 0)
+            displayingMessagesCount += 1
+        }
+    }
+
 }
 
 // MARK: - GalleryControllerDelegate
@@ -381,7 +352,6 @@ extension ChatController: GalleryControllerDelegate {
     }
     
     func galleryController(_ controller: GalleryController, didSelectVideo video: Video) {
-        print("selected video")
         self.messageSend(text: nil, photo: nil, video: video)
         controller.dismiss(animated: true, completion: nil)
     }
@@ -393,5 +363,5 @@ extension ChatController: GalleryControllerDelegate {
     func galleryControllerDidCancel(_ controller: GalleryController) {
         controller.dismiss(animated: true, completion: nil)
     }
-    
+
 }

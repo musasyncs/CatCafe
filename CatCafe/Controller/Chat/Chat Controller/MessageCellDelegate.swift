@@ -5,7 +5,6 @@
 //  Created by Ewen on 2022/6/29.
 //
 
-import Foundation
 import MessageKit
 import AVFoundation
 import AVKit
@@ -17,7 +16,7 @@ extension ChatController: MessageCellDelegate {
         if let indexPath = messagesCollectionView.indexPath(for: cell) {
             let mkMessage = mkMessages[indexPath.section]
             
-            // this is a photo item
+            // photo item
             if mkMessage.photoItem != nil && mkMessage.photoItem!.image != nil {
                 var images = [SKPhoto]()
                 let photo = SKPhoto.photoWithImage(mkMessage.photoItem!.image!)
@@ -29,7 +28,7 @@ extension ChatController: MessageCellDelegate {
                 present(browser, animated: true, completion: nil)
             }
             
-            // this is a video item
+            // video item
             if mkMessage.videoItem != nil && mkMessage.videoItem!.url != nil {
                 let player = AVPlayer(url: mkMessage.videoItem!.url!)
                 let moviePlayer = AVPlayerViewController()
@@ -41,9 +40,6 @@ extension ChatController: MessageCellDelegate {
                 moviePlayer.player = player
                 
                 navigationController?.pushViewController(moviePlayer, animated: true)
-//                present(moviePlayer, animated: true) {
-//                    moviePlayer.player!.play()
-//                }
             }
 
         }

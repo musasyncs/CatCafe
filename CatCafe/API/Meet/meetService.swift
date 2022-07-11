@@ -11,7 +11,6 @@ import Firebase
 struct MeetService {
     
     // MARK: - Upload meet
-    
     // swiftlint:disable:next function_parameter_count
     static func uploadMeet(
         title: String,
@@ -43,7 +42,6 @@ struct MeetService {
     }
     
     // MARK: - Fetch all meets / Fetch Meet with meet id / Fetch meets by uid / Fetch current user attended meets
-    
     static func fetchMeets(completion: @escaping(([Meet]) -> Void)) {
         firebaseReference(.meets).order(by: "timestamp", descending: true).getDocuments { snapshot, _ in
             guard let documents = snapshot?.documents else { return }
@@ -94,44 +92,72 @@ struct MeetService {
         }
     }
         
-    // MARK: - Like a meet / UnLike a meet / Check if current user like a meet
-    
-    static func likeMeet(meet: Meet, completion: @escaping(FirestoreCompletion)) {
-        guard let currentUid = LocalStorage.shared.getUid() else { return }
-        
-        firebaseReference(.meets)
-            .document(meet.meetId)
-            .updateData(["likes": meet.likes + 1])
-        
-        firebaseReference(.meets)
-            .document(meet.meetId)
-            .collection("meet-likes")
-            .document(currentUid).setData([:]) { _ in
-                firebaseReference(.users)
-                    .document(currentUid)
-                    .collection("user-meet-likes")
-                    .document(meet.meetId).setData([:], completion: completion)
+    // MARK: - Fetch Like Count / Like a meet / UnLike a meet / Check if current user like a meet
+    static func fetchLikeCount(meet: Meet, completion: @escaping ((Int) -> Void)) {
+        MeetService.fetchMeet(withMeetId: meet.meetId) { meet in
+            completion(meet.likes)
         }
     }
     
-    static func unlikeMeet(meet: Meet, completion: @escaping(FirestoreCompletion)) {
+    static func likeMeet(meet: Meet, completion: @escaping ((Int) -> Void)) {
+        guard let currentUid = LocalStorage.shared.getUid() else { return }
+        
+        MeetService.fetchLikeCount(meet: meet) { likeCount in
+            
+            firebaseReference(.meets).document(meet.meetId).updateData(["likes": likeCount + 1]) { error in
+                
+                if let error = error {
+                    print(error.localizedDescription)
+                }
+                
+                firebaseReference(.meets).document(meet.meetId)
+                    .collection("meet-likes").document(currentUid).setData([:]) { _ in
+                        
+                        firebaseReference(.users).document(currentUid)
+                            .collection("user-meet-likes").document(meet.meetId).setData([:]) { error in
+                                
+                                if let error = error {
+                                    print(error.localizedDescription)
+                                }
+                                
+                                completion(likeCount + 1)
+                            }
+                    }
+            }
+            
+        }
+        
+    }
+    
+    static func unlikeMeet(meet: Meet, completion: @escaping ((Int) -> Void)) {
         guard let currentUid = LocalStorage.shared.getUid() else { return }
         guard meet.likes > 0 else { return }
         
-        firebaseReference(.meets)
-            .document(meet.meetId)
-            .updateData(["likes": meet.likes - 1])
+        MeetService.fetchLikeCount(meet: meet) { likeCount in
         
-        firebaseReference(.meets)
-            .document(meet.meetId)
-            .collection("meet-likes")
-            .document(currentUid).delete { _ in
-                firebaseReference(.users)
-                    .document(currentUid)
-                    .collection("user-meet-likes")
-                    .document(meet.meetId)
-                    .delete(completion: completion)
+            firebaseReference(.meets).document(meet.meetId).updateData(["likes": likeCount - 1]) { error in
+                
+                if let error = error {
+                    print(error.localizedDescription)
+                }
+                
+                firebaseReference(.meets).document(meet.meetId)
+                    .collection("meet-likes").document(currentUid).delete { _ in
+                        
+                        firebaseReference(.users).document(currentUid)
+                            .collection("user-meet-likes").document(meet.meetId).delete { error in
+                                
+                                if let error = error {
+                                    print(error.localizedDescription)
+                                }
+                                
+                                completion(likeCount - 1)
+                            }
+                    }
             }
+            
+        }
+    
     }
     
     static func checkIfCurrentUserLikedMeet(meet: Meet, completion: @escaping(Bool) -> Void) {
@@ -148,7 +174,6 @@ struct MeetService {
     }
     
     // MARK: - Attend a meet / check if current user attended a Meet
-    
     static func attendMeet(meet: Meet,
                            contact: String,
                            remarks: String,
@@ -190,7 +215,6 @@ struct MeetService {
     }
     
     // MARK: - Fetch all people for a meet
-        
     static func fetchPeople(
         forMeet meetId: String,
         completion: @escaping ([Person]) -> Void

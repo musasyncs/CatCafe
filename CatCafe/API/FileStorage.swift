@@ -14,11 +14,11 @@ struct FileStorage {
     // MARK: - Upload and download Image
     static func uploadImage(_ image: UIImage,
                             directory: String,
-                            completion: @escaping(String) -> Void
+                            completion: @escaping (String) -> Void
     ) {
         let ref = Storage.storage().reference(withPath: directory)
-        
-        guard let imageData = image.jpegData(compressionQuality: 0.8) else { return }
+        guard let imageData = image.jpegData(compressionQuality: 0.8) else { return
+        }
         
         var task: StorageUploadTask!
         task = ref.putData(imageData, metadata: nil) { _, error in
@@ -26,17 +26,10 @@ struct FileStorage {
             task.removeAllObservers()
             ProgressHUD.dismiss()
             
-            if let error = error {
-                print("DEBUG: Failed to upload image \(error.localizedDescription)")
-                return
-            }
+            if error != nil { return }
             ref.downloadURL { url, error in
-                if let error = error {
-                    print("DEBUG: Failed to fetch downloadUrl: \(error.localizedDescription)")
-                    return
-                }
+                if error != nil { return }
                 guard let imageUrlString = url?.absoluteString else { return }
-                print("DEBUG: Successfully uploaded image:", imageUrlString)
                 completion(imageUrlString)
             }
         }
@@ -59,7 +52,7 @@ struct FileStorage {
                 completion(contentsOfFile)
             } else {
                 print("couldnt convert local image")
-                completion(UIImage(named: "avatar"))
+                completion(UIImage.asset(.avatar))
             }
             
         } else {

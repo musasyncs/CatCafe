@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import SDWebImage
 
 protocol MeetCellDelegate: AnyObject {
     func cell(_ cell: MeetCell, didLike meet: Meet)
@@ -19,13 +18,13 @@ final class MeetCell: UICollectionViewCell {
     var viewModel: MeetViewModel? {
         didSet {
             guard let viewModel = viewModel else { return }
-            meetImageView.sd_setImage(with: viewModel.mediaUrl)
+            meetImageView.loadImage(viewModel.mediaUrlString, placeHolder: UIImage.asset(.no_image))
             
             titleLabel.text = viewModel.titleText
             timeLabel.text = viewModel.timestampText
             placeLabel.text = viewModel.locationText
             
-            hostProfileImageView.sd_setImage(with: viewModel.ownerImageUrl)
+            hostProfileImageView.loadImage(viewModel.ownerImageUrlString, placeHolder: UIImage.asset(.avatar))
             hostnameLabel.text = viewModel.ownerUsername
             
             infoLabel.text = viewModel.infoText
@@ -37,7 +36,6 @@ final class MeetCell: UICollectionViewCell {
     
     private let meetImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "cutecat")
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 10
@@ -56,7 +54,6 @@ final class MeetCell: UICollectionViewCell {
     
     private let hostProfileImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "cutecat")
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 24 / 2
@@ -98,21 +95,21 @@ extension MeetCell {
     fileprivate func style() {
         backgroundColor = .white
         layer.cornerRadius = 12
-        layer.shadowColor = UIColor.black.cgColor
+        layer.shadowColor = UIColor.ccGrey.cgColor
         layer.shadowOffset = CGSize(width: 0, height: 2)
         layer.shadowOpacity = 0.2
         layer.shadowRadius = 2
         
         titleLabel.font = .systemFont(ofSize: 15, weight: .regular)
-        titleLabel.textColor = .black
+        titleLabel.textColor = .ccGrey
         timeTitleLabel.font = .systemFont(ofSize: 10, weight: .regular)
         timeTitleLabel.textColor = .systemGray
         timeLabel.font = .systemFont(ofSize: 11, weight: .regular)
-        timeLabel.textColor = .black
+        timeLabel.textColor = .ccGrey
         placeTitleLabel.font = .systemFont(ofSize: 10, weight: .regular)
         placeTitleLabel.textColor = .systemGray
         placeLabel.font = .systemFont(ofSize: 11, weight: .regular)
-        placeLabel.textColor = .black
+        placeLabel.textColor = .ccGrey
         
         timeStackView.axis = .horizontal
         timeStackView.alignment = .center
@@ -123,14 +120,14 @@ extension MeetCell {
         placeStackView.spacing = 8
         
         hostnameLabel.font = .systemFont(ofSize: 11, weight: .regular)
-        hostnameLabel.textColor = .black
+        hostnameLabel.textColor = .ccGrey
         infoLabel.font = .systemFont(ofSize: 12, weight: .regular)
         infoLabel.textColor = .systemGray
         
-        likeButton.setImage(UIImage(named: "like_unselected"), for: .normal)
-        likeButton.tintColor = .black
+        likeButton.setImage(UIImage.asset(.like_unselected), for: .normal)
+        likeButton.tintColor = .ccGrey
         likesLabel.font = .systemFont(ofSize: 10, weight: .regular)
-        likesLabel.textColor = .black
+        likesLabel.textColor = .ccGrey
     }
     
     fileprivate func layout() {

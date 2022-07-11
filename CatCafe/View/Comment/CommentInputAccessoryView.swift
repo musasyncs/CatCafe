@@ -17,11 +17,9 @@ class CommentInputAccessoryView: UIView {
     
     lazy var commentTextView: InputTextView = {
         let textView = InputTextView()
-        textView.placeholderText = "新增留言..."
-        textView.font = UIFont.systemFont(ofSize: 15)
-        textView.backgroundColor = .white
-        textView.isScrollEnabled = false
         textView.delegate = self
+        textView.backgroundColor = .white
+        textView.placeholderText = "新增留言..."
         textView.placeholderShouldCenter = true
         return textView
     }()
@@ -45,20 +43,23 @@ class CommentInputAccessoryView: UIView {
         addSubview(commentTextView)
         postButton.anchor(top: topAnchor, right: rightAnchor, paddingRight: 8)
         postButton.setDimensions(height: 50, width: 50)
-        commentTextView.anchor(top: topAnchor,
-                               left: leftAnchor,
-                               bottom: safeAreaLayoutGuide.bottomAnchor,
-                               right: postButton.leftAnchor,
-                               paddingTop: 8, paddingLeft: 8,
-                               paddingBottom: 8, paddingRight: 8)
+        commentTextView.anchor(
+            top: topAnchor,
+            left: leftAnchor,
+            bottom: safeAreaLayoutGuide.bottomAnchor,
+            right: postButton.leftAnchor,
+            paddingTop: 8, paddingLeft: 8,
+            paddingBottom: 8, paddingRight: 8
+        )
         
         let divider = UIView()
-        divider.backgroundColor = .systemGray3
+        divider.backgroundColor = .gray5
         addSubview(divider)
-        divider.anchor(top: topAnchor,
-                       left: leftAnchor,
-                       right: rightAnchor,
-                       height: 0.5
+        divider.anchor(
+            top: topAnchor,
+            left: leftAnchor,
+            right: rightAnchor,
+            height: 0.5
         )
     }
     
@@ -70,15 +71,13 @@ class CommentInputAccessoryView: UIView {
         return .zero
     }
     
-    // MARK: - Helpers
-    
+    // MARK: - Helper
     func clearCommentTextView() {
         commentTextView.text = nil
         commentTextView.placeholderLabel.isHidden = false
     }
     
-    // MARK: - Actions
-    
+    // MARK: - Action
     @objc func handlePostTapped() {
         delegate?.inputView(self, wantsToUploadComment: commentTextView.text)
     }
@@ -87,12 +86,12 @@ class CommentInputAccessoryView: UIView {
 
 extension CommentInputAccessoryView: UITextViewDelegate {
     func textViewDidChange(_ textView: UITextView) {
-        if !textView.text.isEmpty {
-            self.postButton.setTitleColor(UIColor.black, for: .normal)
-            self.postButton.isEnabled = true
-        } else {
+        if textView.text.isEmpty {
             self.postButton.setTitleColor(UIColor.lightGray, for: .normal)
             self.postButton.isEnabled = false
+        } else {
+            self.postButton.setTitleColor(UIColor.ccGrey, for: .normal)
+            self.postButton.isEnabled = true
         }
     }
 }

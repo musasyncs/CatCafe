@@ -18,7 +18,10 @@ class CommentSectionHeader: UICollectionReusableView {
         didSet {
             guard let viewModel = viewModel else { return }
                         
-            hostProfileImageView.sd_setImage(with: viewModel.ownerImageUrl)
+            hostProfileImageView.loadImage(
+                viewModel.ownerImageUrlString,
+                placeHolder: UIImage.asset(.avatar)
+            )            
             hostnameLabel.text = viewModel.ownerUsername
             seeAllPeopleButton.isHidden = viewModel.shouldHidePeopleButton
             
@@ -43,7 +46,6 @@ class CommentSectionHeader: UICollectionReusableView {
     
     private let hostProfileImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "cutecat")
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 24 / 2
@@ -69,14 +71,14 @@ class CommentSectionHeader: UICollectionReusableView {
     let attendButton = makeTitleButton(withText: "報名聚會",
                                        font: .systemFont(ofSize: 15, weight: .regular),
                                        foregroundColor: .white,
-                                       backgroundColor: .systemBrown)
+                                       backgroundColor: .ccPrimary)
     let publicCommentLabel = UILabel()
     
     let seeAllPeopleButton = makeTitleButton(withText: "查看報名者",
                                              font: .systemFont(ofSize: 12, weight: .regular),
-                                             foregroundColor: .systemBrown, backgroundColor: .white,
+                                             foregroundColor: .ccPrimary, backgroundColor: .white,
                                              insets: .init(top: 5, left: 5, bottom: 5, right: 5),
-                                             cornerRadius: 5, borderWidth: 1, borderColor: .systemBrown)
+                                             cornerRadius: 5, borderWidth: 1, borderColor: .ccPrimary)
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -97,10 +99,6 @@ class CommentSectionHeader: UICollectionReusableView {
         delegate?.didTapSeeAllPeopleButton(self)
     }
     
-    @objc func didTapLike() {
-        print("DEBUG: List all users like this post")
-    }
-    
     @objc func handleAttendTapped() {
         delegate?.didTapAttendButton(self)
     }
@@ -115,8 +113,6 @@ extension CommentSectionHeader {
         publicCommentLabel.text = "公開留言"
         
         attendButton.addTarget(self, action: #selector(handleAttendTapped), for: .touchUpInside)
-        likeButton.addTarget(self, action: #selector(didTapLike), for: .touchUpInside)
-        
         seeAllPeopleButton.addTarget(self, action: #selector(seeAllPeople), for: .touchUpInside)
     }
     
@@ -125,18 +121,18 @@ extension CommentSectionHeader {
         
         titleLabel.font = .systemFont(ofSize: 15, weight: .regular)
         titleLabel.numberOfLines = 0
-        titleLabel.textColor = .black
+        titleLabel.textColor = .ccGrey
         descriptionLabel.font = .systemFont(ofSize: 11, weight: .regular)
         descriptionLabel.numberOfLines = 0
-        descriptionLabel.textColor = .black
+        descriptionLabel.textColor = .ccGrey
         timeTitleLabel.font = .systemFont(ofSize: 11, weight: .regular)
         timeTitleLabel.textColor = .systemGray
         timeLabel.font = .systemFont(ofSize: 11, weight: .regular)
-        timeLabel.textColor = .black
+        timeLabel.textColor = .ccGrey
         placeTitleLabel.font = .systemFont(ofSize: 11, weight: .regular)
         placeTitleLabel.textColor = .systemGray
         placeLabel.font = .systemFont(ofSize: 11, weight: .regular)
-        placeLabel.textColor = .black
+        placeLabel.textColor = .ccGrey
         
         timeStackView.axis = .horizontal
         timeStackView.alignment = .center
@@ -147,17 +143,17 @@ extension CommentSectionHeader {
         placeStackView.spacing = 16
         
         hostnameLabel.font = .systemFont(ofSize: 11, weight: .regular)
-        hostnameLabel.textColor = .black
+        hostnameLabel.textColor = .ccGrey
         infoLabel.font = .systemFont(ofSize: 12, weight: .regular)
         infoLabel.textColor = .systemGray
         
-        likeButton.setImage(UIImage(named: "like_unselected"), for: .normal)
-        likeButton.tintColor = .black
+        likeButton.setImage(UIImage.asset(.like_unselected), for: .normal)
+        likeButton.tintColor = .ccGrey
         likesLabel.font = .systemFont(ofSize: 10, weight: .regular)
-        likesLabel.textColor = .black
+        likesLabel.textColor = .ccGrey
         
         publicCommentLabel.font = .systemFont(ofSize: 12, weight: .medium)
-        publicCommentLabel.textColor = .greyishBrown
+        publicCommentLabel.textColor = .ccGrey
     }
     
     // swiftlint:disable all

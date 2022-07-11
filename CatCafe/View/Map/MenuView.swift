@@ -29,7 +29,7 @@ enum ExpansionState {
     case fullyExpanded
 }
 
-protocol SearchInputViewDelegate: AnyObject {
+protocol MenuViewDelegate: AnyObject {
     func animateBottomConstraint(constant: CGFloat, goalState: ExpansionState)
     func shouldHideCenterButton(_ shouldHide: Bool)
     func selectedAnnotation(withCafe cafe: Cafe)
@@ -37,7 +37,7 @@ protocol SearchInputViewDelegate: AnyObject {
 
 class MenuView: UIView {
     
-    weak var delegate: SearchInputViewDelegate?
+    weak var delegate: MenuViewDelegate?
     var mapController: MapController?
     var expansionState: ExpansionState!
         
@@ -61,9 +61,9 @@ class MenuView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = .white
-        configureIndicatorView()
-        configureTableView()
-        configureGestureRecognizers()
+        setupIndicatorView()
+        setupTableView()
+        setupGestureRecognizers()
         expansionState = .notExpanded
     }
     
@@ -125,16 +125,17 @@ class MenuView: UIView {
 }
 
 extension MenuView {
-    func configureIndicatorView() {
+    func setupIndicatorView() {
         addSubview(indicatorView)
-        indicatorView.anchor(top: topAnchor, paddingTop: 8, width: 40, height: 8)
+        indicatorView.anchor(top: topAnchor, paddingTop: 16, width: 40, height: 8)
         indicatorView.centerX(inView: self)
     }
     
-    func configureTableView() {
+    func setupTableView() {
+        tableView.backgroundColor = .white
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.register(SearchCell.self, forCellReuseIdentifier: SearchCell.identifier)
+        tableView.register(MapCell.self, forCellReuseIdentifier: MapCell.identifier)
         tableView.rowHeight = 64
         tableView.showsVerticalScrollIndicator = false
         
@@ -143,10 +144,10 @@ extension MenuView {
                          left: leftAnchor,
                          bottom: bottomAnchor,
                          right: rightAnchor,
-                         paddingTop: 8)
+                         paddingTop: 16)
     }
     
-    func configureGestureRecognizers() {
+    func setupGestureRecognizers() {
         let swipeUp = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeGesture))
         swipeUp.direction = .up
         addGestureRecognizer(swipeUp)
@@ -165,9 +166,9 @@ extension MenuView: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(
-            withIdentifier: SearchCell.identifier,
+            withIdentifier: MapCell.identifier,
             for: indexPath
-        ) as? SearchCell else { return UITableViewCell() }
+        ) as? MapCell else { return UITableViewCell() }
         
         if let controller = mapController {
             cell.delegate = controller

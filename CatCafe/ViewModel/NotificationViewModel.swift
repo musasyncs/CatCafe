@@ -11,9 +11,9 @@ struct NotificationViewModel {
     
     var notification: Notification
     
-    var profileImageUrl: URL?
+    var profileImageUrlString: String?
     var username: String?
-    var mediaUrl: URL?
+    var mediaUrlString: String?
     
     var notificationMessage: NSAttributedString {
         guard let username = username else { return NSAttributedString() }
@@ -21,12 +21,18 @@ struct NotificationViewModel {
         
         let attributedText = NSMutableAttributedString(
             string: username,
-            attributes: [.font: UIFont.systemFont(ofSize: 12, weight: .medium)]
+            attributes: [
+                .font: UIFont.systemFont(ofSize: 12, weight: .medium),
+                .foregroundColor: UIColor.ccGrey
+            ]
         )
         attributedText.append(
             NSAttributedString(
                 string: message,
-                attributes: [.font: UIFont.systemFont(ofSize: 12, weight: .regular)]
+                attributes: [
+                    .font: UIFont.systemFont(ofSize: 12, weight: .regular),
+                    .foregroundColor: UIColor.ccGrey
+                ]
             ))
         attributedText.append(
             NSAttributedString(
@@ -38,14 +44,14 @@ struct NotificationViewModel {
         return attributedText
     }
     
-    var photoUrl: URL? {
+    var photoUrlString: String? {
         switch notification.notiType {
         case .like:
-            return mediaUrl
+            return mediaUrlString
         case .follow:
             return nil
         case .comment:
-            return mediaUrl
+            return mediaUrlString
         }
     }
     
@@ -54,15 +60,23 @@ struct NotificationViewModel {
     }
     
     var followButtonText: String {
-        return notification.userIsFollowed ? "Following" : "Follow"
+        return notification.userIsFollowed ? "追蹤中" : "追蹤"
     }
     
     var followButtonBackgroundColor: UIColor {
-        return notification.userIsFollowed ? .white : .systemBrown
+        return notification.userIsFollowed ? .white : .ccPrimary
     }
     
     var followButtonTextColor: UIColor {
-        return notification.userIsFollowed ? .black : .white
+        return notification.userIsFollowed ? .ccGrey : .white
+    }
+    
+    var borderLineColor: CGColor {
+        if notification.userIsFollowed {
+            return UIColor.ccGreyVariant.cgColor
+        } else {
+            return UIColor.ccPrimary.cgColor
+        }
     }
     
     var timestampText: String? {
