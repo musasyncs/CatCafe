@@ -105,6 +105,7 @@ class RegistrationController: UIViewController {
     }
     
     // MARK: - Action
+    // swiftlint:disable all
     @objc func handleSignUp() {
         guard let email = emailTextField.text else {
             showMessage(withTitle: "Validate Failed", message: "欄位不可留白")
@@ -162,6 +163,7 @@ class RegistrationController: UIViewController {
             }
         }
     }
+    // swiftlint:enable all
     
     @objc func handleShowLogin() {
         navigationController?.popViewController(animated: true)
@@ -246,7 +248,7 @@ extension RegistrationController {
     
     private func setupSignUpButton() {
         signUpButton.addTarget(self, action: #selector(handleSignUp), for: .touchUpInside)
-        signUpButton.setTitle("Sign up", for: .normal)
+        signUpButton.setTitle("註冊", for: .normal)
         signUpButton.setTitleColor(.white, for: .normal)
         signUpButton.layer.cornerRadius = 5
         signUpButton.titleLabel?.font = .systemFont(ofSize: 15, weight: .medium)
@@ -298,7 +300,7 @@ extension RegistrationController {
     
     private func setupAlreadyHaveAccountButton() {
         alreadyHaveAccountButton.addTarget(self, action: #selector(handleShowLogin), for: .touchUpInside)
-        alreadyHaveAccountButton.attributedTitle(firstPart: "Already have an account?  ", secondPart: "Log In")
+        alreadyHaveAccountButton.attributedTitle1(firstPart: "已經註冊了? ", secondPart: "立即登入")
         view.addSubview(alreadyHaveAccountButton)
         alreadyHaveAccountButton.centerX(inView: view)
         alreadyHaveAccountButton.anchor(

@@ -51,6 +51,7 @@ struct PostService {
             let group = DispatchGroup()
             
             snapshot?.documents.forEach({ snapshot in
+                
                 let postId = snapshot.documentID
                 let dic = snapshot.data()
                 guard let uid = dic["ownerUid"] as? String else {
@@ -133,22 +134,28 @@ struct PostService {
         
         firebaseReference(.users).document(currentUid).collection("user-feed").getDocuments { snapshot, _ in
             var posts = [Post]()
+            let group = DispatchGroup()
+            
             snapshot?.documents.forEach({ snapshot in
-                
+                group.enter()
                 fetchPost(withPostId: snapshot.documentID) { result in
                     switch result {
                     case .success(let post):
                         posts.append(post)
-                        posts.sort(by: {
-                            $0.timestamp.seconds > $1.timestamp.seconds
-                        })
-                        completion(posts)
+                        group.leave()
                     case .failure:
                         completion([Post]())
                     }
-                    
                 }
             })
+            
+            group.notify(queue: DispatchQueue.main) {
+                posts.sort(by: {
+                    $0.timestamp.seconds > $1.timestamp.seconds
+                })
+                completion(posts)
+            }
+            
         }
     }
     

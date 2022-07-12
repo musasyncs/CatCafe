@@ -207,6 +207,7 @@ extension AppleSigninProfileEditController {
     }
     
     // 點選儲存按鈕（上傳）
+    // swiftlint:disable all
     @objc func saveButtonTapped() {
         let alert = UIAlertController(title: "確定送出？", message: "", preferredStyle: .alert)
         let okAction = UIAlertAction(title: "確定", style: .default) { _ in
@@ -288,6 +289,7 @@ extension AppleSigninProfileEditController {
         
         present(alert, animated: true)
     }
+    // swiftlint:enable all
     
     // 按頭貼編輯按鈕
     @objc func profileEditButtonTapped() {

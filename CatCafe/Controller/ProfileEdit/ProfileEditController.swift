@@ -153,6 +153,7 @@ extension ProfileEditController {
         bioStackView.spacing = 5
     }
     
+    // swiftlint:disable all
     private func layout() {
         view.addSubview(leaveButton)
         view.addSubview(saveButton)
@@ -212,6 +213,7 @@ extension ProfileEditController {
         bioStackView.centerX(inView: view)
         bioTextView.setHeight(60)
     }
+    // swiftlint:enable all
     
     private func setupNotificationObservers() {
         NotificationCenter.default.addObserver(
@@ -238,6 +240,7 @@ extension ProfileEditController {
     }
     
     // 點選儲存按鈕（上傳）
+    // swiftlint:disable all
     @objc func saveButtonTapped() {
         let alert = UIAlertController(title: "確定送出？", message: "", preferredStyle: .alert)
         let okAction = UIAlertAction(title: "確定", style: .default) { _ in
@@ -324,6 +327,7 @@ extension ProfileEditController {
         
         present(alert, animated: true)
     }
+    // swiftlint:enable all
     
     // 按頭貼編輯按鈕
     @objc func profileEditButtonTapped() {

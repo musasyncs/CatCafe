@@ -7,6 +7,7 @@
 
 import UIKit
 import FirebaseAuth
+import MessageUI
 
 class ProfileController: UIViewController {
     
@@ -50,7 +51,9 @@ class ProfileController: UIViewController {
         imageView.layer.borderWidth = 5
         return imageView
     }()
-
+    
+    private let deleteAccountAlert = DeleteAccountAlert()
+    
     // MARK: - Initializer
     init(user: User) {
         self.user = user
@@ -100,7 +103,7 @@ class ProfileController: UIViewController {
             backIndicatorImage: UIImage.asset(.Icons_24px_Back02)?.withTintColor(.white)
         )
         
-        navigationItem.rightBarButtonItem = UIBarButtonItem(
+        let logoutBarButtonItem = UIBarButtonItem(
             image: UIImage.asset(.logout)?
                 .resize(to: .init(width: 20, height: 20))?
                 .withTintColor(.white)
@@ -109,6 +112,18 @@ class ProfileController: UIViewController {
             target: self,
             action: #selector(handleLogout)
         )
+        
+        let deleteAccountBarButtonItem = UIBarButtonItem(
+            image: UIImage.asset(.trash)?
+                .resize(to: .init(width: 20, height: 20))?
+                .withTintColor(.white)
+                .withRenderingMode(.alwaysOriginal),
+            style: .plain,
+            target: self,
+            action: #selector(handleDeleteAccount)
+        )
+        
+        navigationItem.rightBarButtonItems = [logoutBarButtonItem, deleteAccountBarButtonItem]
     }
     
     private func setupCollectionView() {
@@ -182,7 +197,6 @@ class ProfileController: UIViewController {
     @objc func handleLogout() {
         let alert = UIAlertController(title: "是否登出？", message: "", preferredStyle: .alert)
         let okAction = UIAlertAction(title: "確定", style: .default) { _ in
-            
             self.show()
             let result = AuthService.shared.logoutUser()
             
@@ -215,6 +229,17 @@ class ProfileController: UIViewController {
         
         present(alert, animated: true)
     }
+    
+    @objc func handleDeleteAccount() {
+        deleteAccountAlert.showAlert(on: self)
+    }
+    @objc func sendEmail() {
+        deleteAccountAlert.sendEmail()
+    }
+    @objc func dissmissAlert() {
+        deleteAccountAlert.dissmissAlert()
+    }
+    
 }
 
 // MARK: - UICollectionViewDataSource
@@ -318,7 +343,7 @@ extension ProfileController: UICollectionViewDelegateFlowLayout {
 
 // MARK: - ProfileHeaderDelegate
 extension ProfileController: ProfileHeaderDelegate {
-
+    
     func header(_ profileHeader: ProfileHeader, didTapActionButtonFor user: User) {
         if user.isCurrentUser {
             // Show edit profile
@@ -351,7 +376,7 @@ extension ProfileController: ProfileHeaderDelegate {
                     notiType: .follow,
                     fromUser: currentUser)
             })
-                                    
+            
             // 資料庫user-feed更新
             PostService.shared.updateUserFeedAfterFollowing(user: user, didFollow: true)
         }
@@ -359,6 +384,13 @@ extension ProfileController: ProfileHeaderDelegate {
     
     func header(_ profileHeader: ProfileHeader, wantToChatWith user: User) {
         guard let currentUser = UserService.shared.currentUser else { return }
+        
+        // 封鎖過不可聊天
+        if currentUser.blockedUsers.contains(user.uid) {
+            showMessage(withTitle: "您已封鎖此使用者", message: "無法進行聊天")
+            return
+        }
+            
         let chatId = startChat(user1: currentUser, user2: user)
         
         let controller = ChatController(chatId: chatId, recipientId: user.uid, recipientName: user.username)
@@ -383,7 +415,7 @@ extension ProfileController: ProfileHeaderDelegate {
             UserService.shared.block(uid: user.uid) { error in
                 if let error = error {
                     print("Failed to block with error: \(error.localizedDescription)")
-                    return 
+                    return
                 }
                 
                 self.user.isBlocked = true
@@ -398,7 +430,7 @@ extension ProfileController: ProfileHeaderDelegate {
 
 class TopImageView: UIImageView {
     private let gradientLayer = CAGradientLayer()
-        
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         image = UIImage.asset(.profile_back)
@@ -416,4 +448,8 @@ class TopImageView: UIImageView {
         layer.addSublayer(gradientLayer)
         gradientLayer.frame = self.bounds
     }
+}
+
+extension ProfileController: MFMailComposeViewControllerDelegate {
+    
 }

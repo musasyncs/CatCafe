@@ -5,12 +5,12 @@
 //  Created by Ewen on 2022/6/18.
 //
 
-import Firebase
+//import Firebase
+import FirebaseFirestore
 
 struct CommentService {
     
     // MARK: - Upload comment for a post
-    
     // swiftlint:disable:next function_parameter_count
     static func uploadComment(
         postId: String,
@@ -40,20 +40,36 @@ struct CommentService {
         completion: @escaping ([Comment]) -> Void
     ) {
         var comments = [Comment]()
+        let group = DispatchGroup()
         
         let query = firebaseReference(.posts).document(postId).collection("comments")
             .order(by: "timestamp", descending: false)
         
         query.addSnapshotListener { snapshot, _ in
+            
             snapshot?.documentChanges.forEach({ change in
+                
                 if change.type == .added {
-                    let data = change.document.data()
-                    let comment = Comment(dic: data)
-                    comments.append(comment)
+                    let dic = change.document.data()
+                    
+                    guard let commentUid = dic["uid"] as? String else {
+                        completion([Comment]())
+                        return
+                    }
+                    
+                    group.enter()
+                    UserService.shared.fetchUserBy(uid: commentUid) { user in
+                        let comment = Comment(user: user, dic: dic)
+                        comments.append(comment)
+                        group.leave()
+                    }
+                    
                 }
             })
             
-            completion(comments)
+            group.notify(queue: DispatchQueue.main) {
+                completion(comments)
+            }
         }
     }
     
@@ -87,6 +103,7 @@ struct CommentService {
         completion: @escaping ([Comment]) -> Void
     ) {
         var comments = [Comment]()
+        let group = DispatchGroup()
         
         let query = firebaseReference(.meets)
             .document(meetId)
@@ -94,15 +111,31 @@ struct CommentService {
             .order(by: "timestamp", descending: false)
         
         query.addSnapshotListener { snapshot, _ in
+            
             snapshot?.documentChanges.forEach({ change in
+                
                 if change.type == .added {
-                    let data = change.document.data()
-                    let comment = Comment(dic: data)
-                    comments.append(comment)
+                    let dic = change.document.data()
+                    
+                    guard let commentUid = dic["uid"] as? String else {
+                        completion([Comment]())
+                        return
+                    }
+                    
+                    group.enter()
+                    UserService.shared.fetchUserBy(uid: commentUid) { user in
+                        let comment = Comment(user: user, dic: dic)
+                        comments.append(comment)
+                        group.leave()
+                    }
+                    
                 }
             })
             
-            completion(comments)
+            group.notify(queue: DispatchQueue.main) {
+                completion(comments)
+            }
+            
         }
     }
     

@@ -225,7 +225,12 @@ extension FeedController {
     private func setupPullToRefresh() {
         let refresher = UIRefreshControl()
         refresher.addTarget(self, action: #selector(handleRefresh), for: .valueChanged)
-        collectionView.refreshControl = refresher
+        
+        if post == nil {
+            collectionView.refreshControl = refresher
+        } else {
+            return
+        }
     }
         
     private func setupUpdateFeedObserver() {

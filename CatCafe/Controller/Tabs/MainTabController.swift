@@ -19,13 +19,13 @@ class MainTabController: UITabBarController {
         }
     }
     
-    private let tabs: [Tab] = [.feed, .explore, .meet, .profile]
+    private let tabs: [Tab] = [.feed, .explore, .map, .meet, .profile]
     
     // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         viewControllers = self.tabs.map({ $0.setController(user: nil) })
-        selectedIndex = Tab.explore.rawValue
+        selectedIndex = Tab.map.rawValue
         delegate = self
         
         setTabBarApearance()
@@ -97,7 +97,6 @@ class MainTabController: UITabBarController {
                     controller.modalPresentationStyle = .fullScreen
                     self.present(controller, animated: true)
                 }
-                
             }
         }
         
@@ -145,6 +144,7 @@ extension MainTabController: UITabBarControllerDelegate {
 private enum Tab: Int {
     case feed
     case explore
+    case map
     case meet
     case profile
     
@@ -156,6 +156,8 @@ private enum Tab: Int {
             controller = makeNavigationController(rootViewController: FeedController())
         case .explore:
             controller = makeNavigationController(rootViewController: ExploreController())
+        case .map:
+            controller = makeNavigationController(rootViewController: MapController())
         case .meet:
             controller = makeNavigationController(rootViewController: MeetController())
         case .profile:
@@ -182,6 +184,14 @@ private enum Tab: Int {
                 title: nil,
                 image: UIImage.asset(.search_unselected)!,
                 selectedImage: UIImage.asset(.search_selected)!)
+        case .map:
+            return setTabBarItem(
+                title: nil,
+                image: UIImage.asset(.map_unselected)!
+                    .resize(to: .init(width: 25, height: 25)),
+                selectedImage: UIImage.asset(.map_selected)!
+                    .resize(to: .init(width: 25, height: 25))
+            )
         case .meet:
             return setTabBarItem(
                 title: nil,
