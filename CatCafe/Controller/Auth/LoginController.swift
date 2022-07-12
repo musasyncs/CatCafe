@@ -10,6 +10,7 @@ import FirebaseAuth
 import AuthenticationServices
 import AVFoundation
 import Combine
+import WebKit
 
 class LoginController: UIViewController {
     
@@ -53,8 +54,10 @@ class LoginController: UIViewController {
         ]
     )
     
-    private lazy var dontHaveAccountButton = UIButton(type: .system)
     private lazy var logoImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
+    private lazy var privacyButton = UIButton(type: .system)
+    private lazy var eulaButton = UIButton(type: .system)
+    private lazy var notMemberButton = UIButton(type: .system)
     
     // MARK: - Life Cycle
     override func viewDidLoad() {
@@ -68,8 +71,11 @@ class LoginController: UIViewController {
         setupSignInWithAppleButton()
         setupStackView()
         setupTextFields()
+        
         setupLogo()
-        setupNotHaveAccountButton()
+        setupPrivacyButton()
+        setupEulaButton()
+        setupNotMemberButton()
         
         updateForm()
         
@@ -120,7 +126,7 @@ class LoginController: UIViewController {
                 LocalStorage.shared.hasLogedIn = true
                 
                 self.delegate?.authenticationDidComplete()
-            case .failure(_):
+            case .failure:
                 self.dismiss()
                 self.showFailure(text: "失敗")
             }
@@ -139,6 +145,18 @@ class LoginController: UIViewController {
         let regController = RegistrationController()
         regController.delegate = self.delegate
         navigationController?.pushViewController(regController, animated: true)
+    }
+    
+    @objc func openEulaWebView() {
+        let controller = WebView()
+        controller.url = "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/"
+        present(controller, animated: true)
+    }
+    
+    @objc func openPrivacyWebView() {
+        let controller = WebView()
+        controller.url = "https://www.privacypolicies.com/live/8a57272b-85c4-4dc1-bf1e-f0953951def3"
+        present(controller, animated: true)
     }
     
     @objc func textDidChange(sender: UITextField) {
@@ -168,6 +186,7 @@ class LoginController: UIViewController {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         view.endEditing(true)
     }
+    
 }
 
 extension LoginController {
@@ -209,7 +228,7 @@ extension LoginController {
     
     private func setupSignInButton() {
         loginButton.addTarget(self, action: #selector(handleLogin), for: .touchUpInside)
-        loginButton.setTitle("Log in", for: .normal)
+        loginButton.setTitle("登入", for: .normal)
         loginButton.layer.cornerRadius = 5
         loginButton.titleLabel?.font = .systemFont(ofSize: 15, weight: .medium)
         loginButton.setHeight(36)
@@ -257,17 +276,40 @@ extension LoginController {
         )
     }
     
-    private func setupNotHaveAccountButton() {
-        dontHaveAccountButton.addTarget(self, action: #selector(handleShowSignUp), for: .touchUpInside)
-        dontHaveAccountButton.attributedTitle(firstPart: "Not a member? ", secondPart: "Sign Up now")
-        view.addSubview(dontHaveAccountButton)
-        dontHaveAccountButton.centerX(inView: view)
-        dontHaveAccountButton.anchor(
+    private func setupPrivacyButton() {
+        privacyButton.addTarget(self, action: #selector(openPrivacyWebView), for: .touchUpInside)
+        privacyButton.attributedTitle2(firstPart: "並確認您已詳閱我們的 ", secondPart: "《隱私權政策》")
+        view.addSubview(privacyButton)
+        privacyButton.centerX(inView: view)
+        privacyButton.anchor(
             bottom: logoImageView.topAnchor,
-            paddingBottom: 28
+            paddingBottom: 8
         )
     }
     
+    private func setupEulaButton() {
+        eulaButton.addTarget(self, action: #selector(openEulaWebView), for: .touchUpInside)
+        
+        eulaButton.attributedTitle2(firstPart: "繼續使用代表您同意 CatCafe 的 ", secondPart: "《服務條款》")
+        view.addSubview(eulaButton)
+        eulaButton.centerX(inView: view)
+        eulaButton.anchor(
+            bottom: privacyButton.topAnchor,
+            paddingBottom: 0
+        )
+    }
+            
+    private func setupNotMemberButton() {
+        notMemberButton.addTarget(self, action: #selector(handleShowSignUp), for: .touchUpInside)
+        notMemberButton.attributedTitle1(firstPart: "尚未成為會員？ ", secondPart: "立即註冊")
+        view.addSubview(notMemberButton)
+        notMemberButton.centerX(inView: view)
+        notMemberButton.anchor(
+            bottom: eulaButton.topAnchor,
+            paddingBottom: 36
+        )
+    }
+        
     private func setupNotificationObservers() {
         NotificationCenter.default.addObserver(
             self,
@@ -298,9 +340,9 @@ extension LoginController: FormViewModel {
 extension LoginController: ASAuthorizationControllerDelegate, ASAuthorizationControllerPresentationContextProviding {
     
     func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
-        showFailure(text: "失敗")
     }
     
+    // swiftlint:disable all
     func authorizationController(
         controller: ASAuthorizationController,
         didCompleteWithAuthorization authorization: ASAuthorization
@@ -419,6 +461,7 @@ extension LoginController: ASAuthorizationControllerDelegate, ASAuthorizationCon
 
         }
     }
+    // swiftlint:enable all
     
     func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
         return view.window!
@@ -426,6 +469,7 @@ extension LoginController: ASAuthorizationControllerDelegate, ASAuthorizationCon
 }
 
 // MARK: - Player
+// swiftlint:disable all
 extension LoginController {
     
     private func buildPlayer() -> AVPlayer? {
@@ -494,3 +538,4 @@ extension LoginController {
         }
     }
 }
+// swiftlint:enable all

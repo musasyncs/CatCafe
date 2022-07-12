@@ -7,7 +7,7 @@
 
 import UIKit
 
-class CustomAlert {
+class CafeInfoAlert {
     struct Constants {
         static let bgAlphaTo: CGFloat = 0.6
         static let alertHeight: CGFloat = 170
@@ -78,6 +78,7 @@ class CustomAlert {
         borderColor: .ccPrimary
     )
     
+    // swiftlint:disable all
     func showAlert(
         with title: String?,
         phoneNumber: String,
@@ -149,6 +150,7 @@ class CustomAlert {
             }
         })
     }
+    // swiftlint:enable all
     
     @objc func dissmissAlert() {
         guard let targetView = mytargetView else { return }

@@ -9,14 +9,19 @@ import UIKit
 
 class MyAttendController: BaseMeetChildController {
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         fetchCurrentUserAttendMeets()
     }
     
     private func fetchCurrentUserAttendMeets() {
         MeetService.fetchCurrentUserAttendMeets { meets in
-            self.meets = meets
+            
+            // 過濾出封鎖名單以外的 meets
+            guard let currentUser = UserService.shared.currentUser else { return }
+            let filteredMeets = meets.filter { !currentUser.blockedUsers.contains($0.ownerUid) }
+            
+            self.meets = filteredMeets
             self.checkIfCurrentUserLikedMeets()
             self.collectionView.refreshControl?.endRefreshing()
         }

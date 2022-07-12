@@ -14,11 +14,15 @@ struct Comment {
     let timestamp: Timestamp
     let uid: String
     
-    init(dic: [String: Any]) {
+    let user: User
+    
+    init(user: User, dic: [String: Any]) {
         self.comment = dic["comment"] as? String ?? ""
         self.mediaType = dic["mediaType"] as? Int ?? 0
         self.mediaUrlString = dic["mediaUrlString"] as? String ?? ""
         self.timestamp = dic["timestamp"] as? Timestamp ?? Timestamp(date: Date())
         self.uid = dic["uid"] as? String ?? ""
+        
+        self.user = user
     }
 }

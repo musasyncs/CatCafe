@@ -42,7 +42,11 @@ class FeedCommentController: UICollectionViewController {
     // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupCustomNavBar(backgroundType: .opaqueBackground, shouldSetCustomBackImage: true, backIndicatorImage: UIImage.asset(.Icons_24px_Back02))
+        setupCustomNavBar(
+            backgroundType: .opaqueBackground,
+            shouldSetCustomBackImage: true,
+            backIndicatorImage: UIImage.asset(.Icons_24px_Back02)
+        )
         setupCollectionView()
         fetchComments()
     }
@@ -60,7 +64,12 @@ class FeedCommentController: UICollectionViewController {
     // MARK: - API
     private func fetchComments() {
         CommentService.fetchComments(forPost: post.postId) { comments in
-            self.comments = comments
+            
+            // 過濾出封鎖名單以外的 comments
+            guard let currentUser = UserService.shared.currentUser else { return }
+            let filteredComments = comments.filter { !currentUser.blockedUsers.contains($0.user.uid) }
+            self.comments = filteredComments
+            
             self.collectionView.reloadData()
         }
     }
@@ -96,12 +105,7 @@ extension FeedCommentController {
         
         let comment = comments[indexPath.item]
         cell.viewModel = CommentViewModel(comment: comment)
-        
-        UserService.shared.fetchUserBy(uid: comment.uid) { user in
-            cell.viewModel?.username = user.username
-            cell.viewModel?.profileImageUrlString = user.profileImageUrlString
-        }
-        
+
         return cell
     }
     

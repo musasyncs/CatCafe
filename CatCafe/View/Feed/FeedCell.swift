@@ -79,13 +79,14 @@ final class FeedCell: UICollectionViewCell {
     }
     
     // MARK: - Helper
-    func setup() {
+    private func setup() {
         usernameButton.addTarget(self, action: #selector(showUserProfile), for: .touchUpInside)        
         likeButton.addTarget(self, action: #selector(didTapLike), for: .touchUpInside)
         commentButton.addTarget(self, action: #selector(didTapComments), for: .touchUpInside)
     }
     
-    func setupUI() {
+    // swiftlint:disable all
+    private func setupUI() {
         backgroundColor = .white
         usernameButton.setTitleColor(.ccGrey, for: .normal)
         usernameButton.titleLabel?.font = .systemFont(ofSize: 14, weight: .medium)
@@ -152,7 +153,7 @@ final class FeedCell: UICollectionViewCell {
         postTimeLabel.textColor = .lightGray
     }
     
-    func layout() {
+    private func layout() {
         addSubview(profileImageView)
         addSubview(infoStackView)
         addSubview(postImageView)
@@ -209,6 +210,7 @@ final class FeedCell: UICollectionViewCell {
                              paddingTop: 8, paddingLeft: 8, paddingBottom: 8,
                              height: 16)
     }
+    // swiftlint:enable all
     
     // MARK: - Action
     @objc func showUserProfile() {

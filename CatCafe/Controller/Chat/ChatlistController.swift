@@ -65,8 +65,15 @@ class ChatlistController: UIViewController {
     
     // MARK: - API
     private func downloadRecentChats() {
-        RecentChatService.shared.downloadRecentChatsFromFireStore { (allChats) in
-            self.allRecents = allChats
+        RecentChatService.shared.downloadRecentChatsFromFireStore { (allRecents) in
+            
+            // 過濾出封鎖名單以外的 allRecents
+            guard let currentUser = UserService.shared.currentUser else { return }
+            let filteredRecents = allRecents.filter { !currentUser.blockedUsers.contains($0.senderId) &&
+                !currentUser.blockedUsers.contains($0.receiverId)
+            }
+            self.allRecents = filteredRecents
+            
             DispatchQueue.main.async {
                 self.tableView.reloadData()
             }
@@ -181,9 +188,11 @@ extension ChatlistController: UITableViewDataSource, UITableViewDelegate {
             let recent = searchController.isActive ? filteredRecents[indexPath.row] : allRecents[indexPath.row]
             RecentChatService.shared.deleteRecent(recent)
             
-            searchController.isActive
-            ? filteredRecents.remove(at: indexPath.row)
-            : allRecents.remove(at: indexPath.row)
+            if searchController.isActive {
+                filteredRecents.remove(at: indexPath.row)
+            } else {
+                allRecents.remove(at: indexPath.row)
+            }
             
             tableView.deleteRows(at: [indexPath], with: .automatic)
         }
