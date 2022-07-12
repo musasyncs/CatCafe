@@ -141,7 +141,8 @@ final class ProfileHeader: UICollectionReusableView {
         fatalError()
     }
     
-    func layout() {
+    // swiftlint:disable all
+    private func layout() {
         addSubview(followersLabel)
         addSubview(followingLabel)
         addSubview(nameLabel)
@@ -197,6 +198,7 @@ final class ProfileHeader: UICollectionReusableView {
         blockButton.setDimensions(height: 40, width: 80)
         
     }
+    // swiftlint:enable all
     
     // MARK: - Action
     @objc func handleEditProfileFollowTapped() {

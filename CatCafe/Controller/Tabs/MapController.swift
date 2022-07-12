@@ -27,7 +27,7 @@ class MapController: UIViewController {
     private let mapView = MKMapView()
     private let locationManager = CLLocationManager()
     private let menuView = MenuView()
-    private let customAlert = CustomAlert()
+    private let cafeInfoAlert = CafeInfoAlert()
     
     private lazy var centerMapButton: UIButton = {
         let button = UIButton(type: .system)
@@ -40,9 +40,9 @@ class MapController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        navigationController?.navigationBar.isHidden = true
         setupMapView()
         setupMenuView()
-        setupBackButton()
         setupCenterMapButton()
         
         enableLocationServices()
@@ -53,16 +53,8 @@ class MapController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         centerMapOnUserLocation()
-        navigationController?.navigationBar.isHidden = true
-        tabBarController?.tabBar.isHidden = true
     }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        navigationController?.navigationBar.isHidden = false
-        tabBarController?.tabBar.isHidden = false
-    }
-    
+        
     // MARK: - API
     private func fetchCafes() {
         CafeService.fetchAllCafes { cafes in
@@ -93,15 +85,15 @@ class MapController: UIViewController {
     }
     
     @objc func dissmissAlert() {
-        customAlert.dissmissAlert()
+        cafeInfoAlert.dissmissAlert()
     }
     
     @objc func makePhoneCall() {
-        customAlert.makePhoneCall()
+        cafeInfoAlert.makePhoneCall()
     }
     
     @objc func gotoWebsite() {
-        customAlert.gotoWebsite()
+        cafeInfoAlert.gotoWebsite()
     }
     
 }
@@ -113,7 +105,13 @@ extension MapController {
         mapView.showsUserLocation = true
         mapView.userTrackingMode = .follow
         view.addSubview(mapView)
-        mapView.fillSuperView()
+        mapView.anchor(
+            top: view.topAnchor,
+            left: view.leftAnchor,
+            bottom: view.bottomAnchor,
+            right: view.rightAnchor,
+            paddingBottom: 88
+        )
     }
     
     private func setupMenuView() {
@@ -123,20 +121,9 @@ extension MapController {
         menuView.anchor(left: view.leftAnchor, right: view.rightAnchor, height: height2)
         menuViewBottomConstraint = menuView.bottomAnchor.constraint(
             equalTo: view.bottomAnchor,
-            constant: (height2 - 88)
+            constant: (height2 - 108)
         )
         menuViewBottomConstraint?.isActive = true
-    }
-    
-    private func setupBackButton() {
-        backButton.addTarget(self, action: #selector(goBack), for: .touchUpInside)
-        backButton.layer.cornerRadius = 40 / 2
-        backButton.clipsToBounds = true
-        view.addSubview(backButton)
-        backButton.anchor(top: view.safeAreaLayoutGuide.topAnchor,
-                          left: view.leftAnchor,
-                          paddingTop: 4, paddingLeft: 24)
-        backButton.setDimensions(height: 40, width: 40)
     }
     
     private func setupCenterMapButton() {
@@ -357,7 +344,7 @@ extension MapController: MKMapViewDelegate {
         calloutAccessoryControlTapped control: UIControl
     ) {
         guard let annotation = view.annotation as? CafeAnnotation else { return }
-        customAlert.showAlert(with: annotation.title,
+        cafeInfoAlert.showAlert(with: annotation.title,
                               phoneNumber: annotation.phoneNumber,
                               website: annotation.website,
                               on: self)

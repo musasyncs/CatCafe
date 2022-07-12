@@ -33,6 +33,7 @@ class UserService {
     
     // MARK: - Create user profile / Upload profile image
     // 創建個人檔案
+    // swiftlint:disable:next function_parameter_count
     func createUserProfile(
         uid: String,
         email: String,

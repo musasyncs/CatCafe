@@ -91,8 +91,6 @@ class CommentSectionHeader: UICollectionReusableView {
         fatalError()
     }
     
-    // MARK: - Helpers
-    
     // MARK: - Action
     
     @objc func seeAllPeople() {

@@ -140,6 +140,12 @@ class MeetDetailController: UIViewController {
     
     private func fetchComments() {
         CommentService.fetchMeetComments(forMeet: meet.meetId) { comments in
+            
+            // 過濾出封鎖名單以外的 comments
+            guard let currentUser = UserService.shared.currentUser else { return }
+            let filteredComments = comments.filter { !currentUser.blockedUsers.contains($0.user.uid) }
+            self.comments = filteredComments
+            
             self.comments = comments
         }
     }
@@ -178,10 +184,6 @@ extension MeetDetailController: UICollectionViewDataSource, UICollectionViewDele
         let comment = comments[indexPath.item]
         cell.viewModel = CommentViewModel(comment: comment)
         
-        UserService.shared.fetchUserBy(uid: comment.uid) { user in
-            cell.viewModel?.username = user.username
-            cell.viewModel?.profileImageUrlString = user.profileImageUrlString
-        }
         return cell
     }
     
@@ -210,6 +212,7 @@ extension MeetDetailController: UICollectionViewDataSource, UICollectionViewDele
             header.delegate = self
             header.viewModel = MeetViewModel(meet: meet)
                         
+            // meet owner info
             UserService.shared.fetchUserBy(uid: meet.ownerUid) { user in
                 header.viewModel?.ownerUsername = user.username
                 header.viewModel?.ownerImageUrlString = user.profileImageUrlString

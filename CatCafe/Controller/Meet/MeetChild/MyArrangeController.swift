@@ -9,8 +9,8 @@ import UIKit
 
 class MyArrangeController: BaseMeetChildController {
         
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         fetchMyArrangedMeet()
     }
     

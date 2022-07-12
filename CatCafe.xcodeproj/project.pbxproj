@@ -10,6 +10,8 @@
 		BA099151287A80540086DD1D /* login_bg_video.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = BA099150287A80540086DD1D /* login_bg_video.mp4 */; };
 		BA099153287A964F0086DD1D /* reg_bg_video.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = BA099152287A964F0086DD1D /* reg_bg_video.mp4 */; };
 		BA099157287B2F8B0086DD1D /* AppleSigninProfileEditController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA099156287B2F8B0086DD1D /* AppleSigninProfileEditController.swift */; };
+		BA099159287D18510086DD1D /* WebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA099158287D18510086DD1D /* WebView.swift */; };
+		BA09915B287D58230086DD1D /* DeleteAccountAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA09915A287D58230086DD1D /* DeleteAccountAlert.swift */; };
 		BA13850F2866C389001B7FF1 /* PostFilterController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA13850E2866C389001B7FF1 /* PostFilterController.swift */; };
 		BA1385112866DBF8001B7FF1 /* AlbumPhotoViewController+AlbumPhotoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA1385102866DBF8001B7FF1 /* AlbumPhotoViewController+AlbumPhotoCell.swift */; };
 		BA1385682866F52A001B7FF1 /* MTNormalFilter.metal in Sources */ = {isa = PBXBuildFile; fileRef = BA1385152866F4FD001B7FF1 /* MTNormalFilter.metal */; };
@@ -218,7 +220,7 @@
 		BAEBF617286F2AA200DBA670 /* MapController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAEBF616286F2AA200DBA670 /* MapController.swift */; };
 		BAEBF61A286F2B8600DBA670 /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAEBF619286F2B8600DBA670 /* MenuView.swift */; };
 		BAEBF61C286F2BA200DBA670 /* MapCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAEBF61B286F2BA200DBA670 /* MapCell.swift */; };
-		BAEBF620286FD9D300DBA670 /* CustomAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAEBF61F286FD9D300DBA670 /* CustomAlert.swift */; };
+		BAEBF620286FD9D300DBA670 /* CafeInfoAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAEBF61F286FD9D300DBA670 /* CafeInfoAlert.swift */; };
 		BAEBF622286FF84800DBA670 /* WebsiteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAEBF621286FF84800DBA670 /* WebsiteController.swift */; };
 		BAEBF62528707B7100DBA670 /* LoadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAEBF62428707B7100DBA670 /* LoadingViewController.swift */; };
 		BAEBF6272870828900DBA670 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BAEBF6262870828900DBA670 /* LaunchScreen.storyboard */; };
@@ -234,6 +236,8 @@
 		BA099150287A80540086DD1D /* login_bg_video.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = login_bg_video.mp4; sourceTree = "<group>"; };
 		BA099152287A964F0086DD1D /* reg_bg_video.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = reg_bg_video.mp4; sourceTree = "<group>"; };
 		BA099156287B2F8B0086DD1D /* AppleSigninProfileEditController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleSigninProfileEditController.swift; sourceTree = "<group>"; };
+		BA099158287D18510086DD1D /* WebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebView.swift; sourceTree = "<group>"; };
+		BA09915A287D58230086DD1D /* DeleteAccountAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAccountAlert.swift; sourceTree = "<group>"; };
 		BA13850E2866C389001B7FF1 /* PostFilterController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostFilterController.swift; sourceTree = "<group>"; };
 		BA1385102866DBF8001B7FF1 /* AlbumPhotoViewController+AlbumPhotoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AlbumPhotoViewController+AlbumPhotoCell.swift"; sourceTree = "<group>"; };
 		BA1385152866F4FD001B7FF1 /* MTNormalFilter.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = MTNormalFilter.metal; sourceTree = "<group>"; };
@@ -445,7 +449,7 @@
 		BAEBF616286F2AA200DBA670 /* MapController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapController.swift; sourceTree = "<group>"; };
 		BAEBF619286F2B8600DBA670 /* MenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
 		BAEBF61B286F2BA200DBA670 /* MapCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapCell.swift; sourceTree = "<group>"; };
-		BAEBF61F286FD9D300DBA670 /* CustomAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAlert.swift; sourceTree = "<group>"; };
+		BAEBF61F286FD9D300DBA670 /* CafeInfoAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CafeInfoAlert.swift; sourceTree = "<group>"; };
 		BAEBF621286FF84800DBA670 /* WebsiteController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebsiteController.swift; sourceTree = "<group>"; };
 		BAEBF62328703AF800DBA670 /* CatCafe.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CatCafe.entitlements; sourceTree = "<group>"; };
 		BAEBF62428707B7100DBA670 /* LoadingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingViewController.swift; sourceTree = "<group>"; };
@@ -745,6 +749,7 @@
 				BA44774628588D150045DDB8 /* MainTabController.swift */,
 				BA44774828588E720045DDB8 /* FeedController.swift */,
 				BA44774A28588ECA0045DDB8 /* ExploreController.swift */,
+				BAEBF616286F2AA200DBA670 /* MapController.swift */,
 				BA44774C28588F4B0045DDB8 /* MeetController.swift */,
 				BA44775028588FFD0045DDB8 /* ProfileController.swift */,
 			);
@@ -765,6 +770,7 @@
 			children = (
 				BA44778E28597DBA0045DDB8 /* ProfileCell.swift */,
 				BA44779028597ED00045DDB8 /* ProfileHeader.swift */,
+				BA09915A287D58230086DD1D /* DeleteAccountAlert.swift */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -784,6 +790,7 @@
 				BA44779E2859DE6C0045DDB8 /* RegistrationController.swift */,
 				BA763743286BE58500D4EDFB /* SetProfilePictureController.swift */,
 				BA099156287B2F8B0086DD1D /* AppleSigninProfileEditController.swift */,
+				BA099158287D18510086DD1D /* WebView.swift */,
 			);
 			path = Auth;
 			sourceTree = "<group>";
@@ -1120,7 +1127,6 @@
 		BAEBF615286F2A8D00DBA670 /* Map */ = {
 			isa = PBXGroup;
 			children = (
-				BAEBF616286F2AA200DBA670 /* MapController.swift */,
 				BAEBF621286FF84800DBA670 /* WebsiteController.swift */,
 			);
 			path = Map;
@@ -1131,7 +1137,7 @@
 			children = (
 				BAEBF619286F2B8600DBA670 /* MenuView.swift */,
 				BAEBF61B286F2BA200DBA670 /* MapCell.swift */,
-				BAEBF61F286FD9D300DBA670 /* CustomAlert.swift */,
+				BAEBF61F286FD9D300DBA670 /* CafeInfoAlert.swift */,
 			);
 			path = Map;
 			sourceTree = "<group>";
@@ -1315,6 +1321,7 @@
 				BA1385BE2866F56B001B7FF1 /* MTFilterManager.swift in Sources */,
 				BA13856A2866F52A001B7FF1 /* MTInkwellFilter.metal in Sources */,
 				BADBFF7A286202B100146D6F /* MeetDetailController.swift in Sources */,
+				BA09915B287D58230086DD1D /* DeleteAccountAlert.swift in Sources */,
 				BA13859B2866F52B001B7FF1 /* MTPerpetuaFilter.metal in Sources */,
 				BA44778C285961A50045DDB8 /* FeedCell.swift in Sources */,
 				BAD133A428636B9400B8015A /* MeetViewModel.swift in Sources */,
@@ -1394,6 +1401,7 @@
 				BA4477A42859DF1C0045DDB8 /* RegistrationViewModel.swift in Sources */,
 				BA558F15286E239900A38602 /* PhotoMessage.swift in Sources */,
 				BA13859E2866F52B001B7FF1 /* MTMavenVideoFilter.metal in Sources */,
+				BA099159287D18510086DD1D /* WebView.swift in Sources */,
 				BA1385702866F52A001B7FF1 /* MTJunoFilter.metal in Sources */,
 				BAB299292875B416008B9D3F /* MessagesDataSource.swift in Sources */,
 				BA1385922866F52B001B7FF1 /* MTLarkFilter.swift in Sources */,
@@ -1411,7 +1419,7 @@
 				BA13859F2866F52B001B7FF1 /* MTGinghamVideoFilter.swift in Sources */,
 				BADF1F8D285ECCCD004CF329 /* NotificationViewModel.swift in Sources */,
 				BA1385A32866F52B001B7FF1 /* MTToasterFilter.metal in Sources */,
-				BAEBF620286FD9D300DBA670 /* CustomAlert.swift in Sources */,
+				BAEBF620286FD9D300DBA670 /* CafeInfoAlert.swift in Sources */,
 				BAD133AF2864C66400B8015A /* MeetPeopleController.swift in Sources */,
 				BA1385C22866F648001B7FF1 /* FilterToolItem.swift in Sources */,
 				BA7BB6E72859E31500465DEC /* FileStorage.swift in Sources */,
@@ -1626,12 +1634,11 @@
 				DEVELOPMENT_TEAM = CNCBQDYY2M;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = CatCafe/Info.plist;
-				INFOPLIST_KEY_NSAppleMusicUsageDescription = "We'd like to use your media library";
 				INFOPLIST_KEY_NSCameraUsageDescription = "We'd like to use your camera";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "We'd like to track your movements";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We'd like to track your movements";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "We'd like to use your photo library";
-				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "We'd like access to your photos right now.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "We'd like access to your photos right now";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "";
@@ -1664,12 +1671,11 @@
 				DEVELOPMENT_TEAM = CNCBQDYY2M;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = CatCafe/Info.plist;
-				INFOPLIST_KEY_NSAppleMusicUsageDescription = "We'd like to use your media library";
 				INFOPLIST_KEY_NSCameraUsageDescription = "We'd like to use your camera";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "We'd like to track your movements";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We'd like to track your movements";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "We'd like to use your photo library";
-				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "We'd like access to your photos right now.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "We'd like access to your photos right now";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "";

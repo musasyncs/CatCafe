@@ -60,14 +60,18 @@ extension UIImage {
 enum ImageAsset: String {
     
     // swiftlint:disable identifier_name
+    
+    // tabs
     case home_selected
     case home_unselected
-    case profile_selected
-    case profile_unselected
     case search_selected
     case search_unselected
+    case map_selected
+    case map_unselected
     case speaker_selected
     case speaker_unselected
+    case profile_selected
+    case profile_unselected
     
     case camera
     case capture_photo

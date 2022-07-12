@@ -49,7 +49,12 @@ class NewMessageController: UIViewController {
     // MARK: - API
     private func fetchUsers() {
         UserService.fetchUsers(exceptCurrentUser: true, completion: { users in
-            self.users = users
+            
+            // 過濾出封鎖名單以外的 users
+            guard let currentUser = UserService.shared.currentUser else { return }
+            let filteredUsers = users.filter { !currentUser.blockedUsers.contains($0.uid) }
+            self.users = filteredUsers
+            
             self.tableView.refreshControl?.endRefreshing()
         })
     }

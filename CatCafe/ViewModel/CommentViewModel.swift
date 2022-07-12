@@ -11,8 +11,13 @@ struct CommentViewModel {
     
     private let comment: Comment
     
-    var profileImageUrlString: String?
-    var username: String?
+    var profileImageUrlString: String? {
+        return comment.user.profileImageUrlString
+    }
+    
+    var username: String? {
+        return comment.user.username
+    }
     
     func makeCommentLabelText() -> NSAttributedString {
         guard let username = username else { return NSAttributedString(string: "") }

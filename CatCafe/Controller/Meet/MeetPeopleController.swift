@@ -127,7 +127,12 @@ class MeetPeopleViewController: UIViewController {
     // MARK: - API
     private func fetchPeople() {
         MeetService.fetchPeople(forMeet: meet.meetId) { people in
-            self.people = people
+            
+            // 過濾出封鎖名單以外的 people
+            guard let currentUser = UserService.shared.currentUser else { return }
+            let filteredPeople = people.filter { !currentUser.blockedUsers.contains($0.uid) }
+            
+            self.people = filteredPeople
         }
     }
     

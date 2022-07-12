@@ -20,8 +20,8 @@ struct CafeItem {
     var isSelected: Bool
 }
 
-let height1: CGFloat = UIScreen.height * 0.4
-let height2: CGFloat = UIScreen.height * 0.8
+let height1: CGFloat = UIScreen.height * 0.3
+let height2: CGFloat = UIScreen.height * 0.7
 
 enum ExpansionState {
     case notExpanded
@@ -82,7 +82,7 @@ class MenuView: UIView {
     
     private func toNotExpand() {
         delegate?.shouldHideCenterButton(false)
-        delegate?.animateBottomConstraint(constant: (height2 - 88), goalState: .notExpanded)
+        delegate?.animateBottomConstraint(constant: (height2 - 108), goalState: .notExpanded)
     }
     
     private func toPartial() {
@@ -92,7 +92,7 @@ class MenuView: UIView {
     
     private func toFull() {
         delegate?.shouldHideCenterButton(true)
-        delegate?.animateBottomConstraint(constant: 0, goalState: .fullyExpanded)
+        delegate?.animateBottomConstraint(constant: -88, goalState: .fullyExpanded)
     }
     
     // MARK: - Actions

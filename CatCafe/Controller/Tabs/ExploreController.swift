@@ -36,14 +36,6 @@ class ExploreController: UIViewController {
         target: self,
         action: #selector(showCollectionView)
     )
-
-    let mapButton = makeIconButton(
-        imagename: "map",
-        imageColor: .ccGrey,
-        imageWidth: 24,
-        imageHeight: 24
-    )
-    lazy var mapBarButtonItem = UIBarButtonItem(customView: mapButton)
     
     private let tableView = UITableView()
     private lazy var collectionView: UICollectionView = {
@@ -84,12 +76,7 @@ class ExploreController: UIViewController {
         PostService.shared.fetchPosts { result in
             switch result {
             case .success(let posts):
-                
-                // 過濾出封鎖名單以外的 posts
-                guard let currentUser = UserService.shared.currentUser else { return }
-                let filteredPosts = posts.filter { !currentUser.blockedUsers.contains($0.user.uid) }
-                self.posts = filteredPosts
-                
+                self.posts = posts
                 self.collectionView.refreshControl?.endRefreshing()
                 self.collectionView.reloadData()
             case .failure:
@@ -107,11 +94,6 @@ class ExploreController: UIViewController {
         collectionView.isHidden = false
         tableView.isHidden = true
         navigationItem.leftBarButtonItem = nil
-    }
-    
-    @objc func showMap() {
-        let controller = MapController()
-        navigationController?.pushViewController(controller, animated: true)
     }
     
     @objc func handlePostRefresh() {
@@ -147,9 +129,6 @@ extension ExploreController {
     }
     
     private func setupSearchController() {
-        navigationItem.rightBarButtonItem = mapBarButtonItem
-        mapButton.addTarget(self, action: #selector(showMap), for: .touchUpInside)
-        
         searchController.searchResultsUpdater = self
         searchController.hidesNavigationBarDuringPresentation = false
         definesPresentationContext = true
