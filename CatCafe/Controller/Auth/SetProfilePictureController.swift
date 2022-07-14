@@ -45,14 +45,12 @@ class SetProfilePictureController: UIViewController {
         ProgressHUD.show()
         FileStorage.uploadImage(profileImage, directory: directory) { imageUrlString in
             
-            self.show()
             UserService.shared.uploadProfileImage(
                 userId: currentUid,
                 profileImageUrlString: imageUrlString
             ) { error in
                 
                 if error != nil {
-                    self.dismiss()
                     self.showFailure(text: "Failed to create profile image")
                     return
                 }

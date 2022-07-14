@@ -12,7 +12,7 @@ final class MeetStretchyHeader: UICollectionReusableView {
     var imageUrlString: String? {
         didSet {
             guard let imageUrlString = imageUrlString else { return }
-            meetImageView.loadImage(imageUrlString, placeHolder: UIImage.asset(.no_image))            
+            meetImageView.loadImage(imageUrlString)
         }
     }
     
@@ -20,6 +20,7 @@ final class MeetStretchyHeader: UICollectionReusableView {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
+        imageView.backgroundColor = .gray6
         return imageView
     }()
     

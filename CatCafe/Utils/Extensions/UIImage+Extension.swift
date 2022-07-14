@@ -73,14 +73,17 @@ enum ImageAsset: String {
     case profile_selected
     case profile_unselected
     
+    // camera
     case camera
     case capture_photo
     case meet_camera
     case save_shadow
     
+    // logo
     case logo
     case logo_text
     
+    // map
     case catAnno
     case info
     case location_arrow_flat
@@ -90,6 +93,7 @@ enum ImageAsset: String {
     case website
     case Icons_24px_RegisterCellphone
     
+    // chat
     case chat
     case comment
     case add_icon
@@ -98,6 +102,7 @@ enum ImageAsset: String {
     case picture_icon
     case send_icon
     
+    // navigation
     case back
     case cancel_shadow
     case check
@@ -107,6 +112,8 @@ enum ImageAsset: String {
     case Icons_24px_Close
     case Icons_24px_Back02
     
+    // others
+    case heart
     case like_selected
     case like_unselected
     case lock
@@ -116,14 +123,13 @@ enum ImageAsset: String {
     case plus_unselected
     case plus
     case trash
+    case user
     
+    // placeholder
     case no_image
     case photoPlaceholder
     
     // profile
-    case avatar
-    case user
     case profile_back
-    case block
     
 }

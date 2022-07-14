@@ -18,13 +18,13 @@ final class MeetCell: UICollectionViewCell {
     var viewModel: MeetViewModel? {
         didSet {
             guard let viewModel = viewModel else { return }
-            meetImageView.loadImage(viewModel.mediaUrlString, placeHolder: UIImage.asset(.no_image))
+            meetImageView.loadImage(viewModel.mediaUrlString)
             
             titleLabel.text = viewModel.titleText
             timeLabel.text = viewModel.timestampText
             placeLabel.text = viewModel.locationText
             
-            hostProfileImageView.loadImage(viewModel.ownerImageUrlString, placeHolder: UIImage.asset(.avatar))
+            hostProfileImageView.loadImage(viewModel.ownerImageUrlString)
             hostnameLabel.text = viewModel.ownerUsername
             
             infoLabel.text = viewModel.infoText
@@ -39,6 +39,7 @@ final class MeetCell: UICollectionViewCell {
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 10
+        imageView.backgroundColor = .gray6
         return imageView
     }()
     
@@ -57,6 +58,7 @@ final class MeetCell: UICollectionViewCell {
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 24 / 2
+        imageView.backgroundColor = .gray6
         return imageView
     }()
     let hostnameLabel = UILabel()

@@ -5,10 +5,10 @@
 //  Created by Ewen on 2022/6/28.
 //
 
-import Foundation
-import Firebase
+import FirebaseFirestore
 
 // MARK: - startChat
+
 func startChat(user1: User, user2: User) -> String {
     let chatRoomId = chatRoomIdFrom(user1Id: user1.uid, user2Id: user2.uid)
     createRecentItems(chatRoomId: chatRoomId, users: [user1, user2])
@@ -30,6 +30,7 @@ func getReceiverFrom(users: [User]) -> User {
 }
 
 // MARK: - RecentChats
+
 func createRecentItems(chatRoomId: String, users: [User]) {
     var memberIdsToCreateRecent = [users.first!.uid, users.last!.uid]
         

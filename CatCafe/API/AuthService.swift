@@ -5,7 +5,6 @@
 //  Created by Ewen on 2022/6/15.
 //
 
-import UIKit
 import FirebaseAuth
 import FirebaseFirestore
 import AuthenticationServices
@@ -64,7 +63,6 @@ class AuthService {
     func logoutUser() -> Result<Void, Error> {
         do {
             try Auth.auth().signOut()
-            UserService.shared.currentUser = nil // 更新 currentUser
             return .success(())
         } catch {
             return .failure(error)

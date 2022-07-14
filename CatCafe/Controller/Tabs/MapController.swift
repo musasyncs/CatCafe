@@ -110,7 +110,7 @@ extension MapController {
             left: view.leftAnchor,
             bottom: view.bottomAnchor,
             right: view.rightAnchor,
-            paddingBottom: 88
+            paddingBottom: 75
         )
     }
     

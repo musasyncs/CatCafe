@@ -9,13 +9,40 @@ import UIKit
 
 class RecentChatCell: UITableViewCell {
     
+    var recent: RecentChat? {
+        didSet {
+            guard let recent = recent else { return }
+            
+            usernameLabel.text = recent.receiverName
+            usernameLabel.adjustsFontSizeToFitWidth = true
+            usernameLabel.minimumScaleFactor = 0.9
+            
+            lastMessageLabel.text = recent.lastMessage
+            lastMessageLabel.adjustsFontSizeToFitWidth = true
+            lastMessageLabel.numberOfLines = 2
+            lastMessageLabel.minimumScaleFactor = 0.9
+            
+            if recent.unreadCounter != 0 {
+                self.unreadCounterLabel.text = "\(recent.unreadCounter)"
+                self.unreadCounterBackgroundView.isHidden = false
+            } else {
+                self.unreadCounterBackgroundView.isHidden = true
+            }
+                    
+            avatarImageView.loadImage(recent.avatarLink)
+            
+            dateLabel.text = timeElapsed(recent.date ?? Date())
+            dateLabel.adjustsFontSizeToFitWidth = true
+        }
+    }
+    
     private let avatarImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage.asset(.no_image)
         imageView.layer.cornerRadius = 50 / 2
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
-        imageView.backgroundColor = .lightGray
+        imageView.backgroundColor = .gray6
         return imageView
     }()
     
@@ -110,38 +137,5 @@ class RecentChatCell: UITableViewCell {
         
         unreadCounterLabel.center(inView: unreadCounterBackgroundView)
     }
-    
-    private func setAvatar(avatarLink: String) {
-        if avatarLink != "" {
-            FileStorage.downloadImage(imageUrl: avatarLink) { (avatarImage) in
-                self.avatarImageView.image = avatarImage?.circleMasked
-            }
-        } else {
-            self.avatarImageView.image = UIImage.asset(.avatar)
-        }
-    }
-    
-    // MARK: - Public
-    func configure(recent: RecentChat) {
-        usernameLabel.text = recent.receiverName
-        usernameLabel.adjustsFontSizeToFitWidth = true
-        usernameLabel.minimumScaleFactor = 0.9
-        
-        lastMessageLabel.text = recent.lastMessage
-        lastMessageLabel.adjustsFontSizeToFitWidth = true
-        lastMessageLabel.numberOfLines = 2
-        lastMessageLabel.minimumScaleFactor = 0.9
-        
-        if recent.unreadCounter != 0 {
-            self.unreadCounterLabel.text = "\(recent.unreadCounter)"
-            self.unreadCounterBackgroundView.isHidden = false
-        } else {
-            self.unreadCounterBackgroundView.isHidden = true
-        }
-        
-        setAvatar(avatarLink: recent.avatarLink)
-        dateLabel.text = timeElapsed(recent.date ?? Date())
-        dateLabel.adjustsFontSizeToFitWidth = true
-    }
-    
+
 }

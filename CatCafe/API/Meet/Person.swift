@@ -5,7 +5,7 @@
 //  Created by Ewen on 2022/6/24.
 //
 
-import Firebase
+import FirebaseFirestore
 
 struct Person {
     let contact: String
@@ -14,9 +14,9 @@ struct Person {
     let uid: String
     
     init(dic: [String: Any]) {
-        self.contact = dic["contact"] as? String ?? ""
-        self.remarks = dic["remarks"] as? String ?? ""
-        self.timestamp = dic["timestamp"] as? Timestamp ?? Timestamp(date: Date())
-        self.uid = dic["uid"] as? String ?? ""
+        self.contact    = dic["contact"] as? String ?? ""
+        self.remarks    = dic["remarks"] as? String ?? ""
+        self.timestamp  = dic["timestamp"] as? Timestamp ?? Timestamp(date: Date())
+        self.uid        = dic["uid"] as? String ?? ""
     }
 }

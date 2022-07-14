@@ -86,17 +86,9 @@ class MainTabController: UITabBarController {
             
             // 剛註冊
             if UserService.shared.currentUser?.profileImageUrlString == "" {
-                if UserService.shared.currentUser?.username == "" {
-                    // Apple sign in
-                    let controller = AppleSigninProfileEditController()
-                    controller.modalPresentationStyle = .fullScreen
-                    self.present(controller, animated: true)
-                } else {
-                    // native sign in
-                    let controller = SetProfilePictureController()
-                    controller.modalPresentationStyle = .fullScreen
-                    self.present(controller, animated: true)
-                }
+                let controller = SetProfilePictureController()
+                controller.modalPresentationStyle = .fullScreen
+                self.present(controller, animated: true)
             }
         }
         
@@ -123,10 +115,11 @@ extension MainTabController: UITabBarControllerDelegate {
         _ tabBarController: UITabBarController,
         shouldSelect viewController: UIViewController
     ) -> Bool {
-        guard let navVC = viewController as? UINavigationController,
-              navVC.viewControllers.first is ExploreController else {
-            
-            // 不是 explore page 需登入
+        guard let navVC = viewController as? UINavigationController else { return false }
+        
+        if navVC.viewControllers.first is ExploreController || navVC.viewControllers.first is MapController {
+            return true
+        } else {
             guard LocalStorage.shared.hasLogedIn else {
                 let loginVC = LoginController()
                 loginVC.delegate = self
@@ -136,7 +129,7 @@ extension MainTabController: UITabBarControllerDelegate {
             }
             return true
         }
-        return true
+        
     }
     
 }

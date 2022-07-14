@@ -13,12 +13,11 @@ typealias FirestoreCompletion = (Error?) -> Void
 class UserService {
     
     static let shared = UserService()
-    
     private init() {}
     
     var currentUser: User?
     
-    // MARK: - Check if user exists
+    // MARK: - Check if a user exists
     func checkIfUserExistOnFirebase(uid: String, completion: @escaping (Result<Bool, Error>) -> Void) {
         firebaseReference(.users).document(uid).getDocument { snapshot, error in
             if let error = error {
@@ -93,7 +92,8 @@ class UserService {
     // MARK: - FetchCurrentUser / Fetch user by uid / Fetch users with uids / Fetch all users
     func fetchCurrentUser(completion: @escaping(User) -> Void) {
         guard let currentUid = LocalStorage.shared.getUid() else { return }
-        firebaseReference(.users).document(currentUid).getDocument { snapshot, _ in
+        firebaseReference(.users).document(currentUid).getDocument { snapshot, error in
+            if error != nil { return }
             guard let dic = snapshot?.data() else { return }
             let currentUser = User(dic: dic)
             self.currentUser = currentUser
@@ -102,7 +102,8 @@ class UserService {
     }
     
     func fetchUserBy(uid: String, completion: @escaping(User) -> Void) {
-        firebaseReference(.users).document(uid).getDocument { snapshot, _ in
+        firebaseReference(.users).document(uid).getDocument { snapshot, error in
+            if error != nil { return }
             guard let dic = snapshot?.data() else { return }
             let user = User(dic: dic)
             completion(user)
@@ -114,10 +115,11 @@ class UserService {
         var userArray: [User] = []
         
         for uid in uids {
-            firebaseReference(.users).document(uid).getDocument { snapshot, _ in
+            firebaseReference(.users).document(uid).getDocument { snapshot, error in
+                if error != nil { return }
+                
                 guard let dic = snapshot?.data() else { return }
                 let user = User(dic: dic)
-                
                 userArray.append(user)
                 count += 1
                 
@@ -129,7 +131,7 @@ class UserService {
         
     }
     
-    static func fetchUsers(exceptCurrentUser: Bool, completion: @escaping([User]) -> Void) {
+    func fetchUsers(exceptCurrentUser: Bool, completion: @escaping([User]) -> Void) {
         firebaseReference(.users).limit(to: 500).getDocuments { snapshot, _ in
             guard let snapshot = snapshot else { return }
             
@@ -154,7 +156,7 @@ class UserService {
     }
     
     // MARK: - Follow / Unfollow User / Check if a user is followed
-    static func follow(uid: String, completion: @escaping(FirestoreCompletion)) {
+    func follow(uid: String, completion: @escaping(FirestoreCompletion)) {
         guard let currentUid = LocalStorage.shared.getUid() else { return }
         
         firebaseReference(.following)
@@ -171,7 +173,7 @@ class UserService {
             }
     }
     
-    static func unfollow(uid: String, completion: @escaping(FirestoreCompletion)) {
+    func unfollow(uid: String, completion: @escaping(FirestoreCompletion)) {
         guard let currentUid = LocalStorage.shared.getUid() else { return }
         
         firebaseReference(.following)

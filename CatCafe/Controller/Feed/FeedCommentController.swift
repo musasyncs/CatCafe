@@ -48,6 +48,7 @@ class FeedCommentController: UICollectionViewController {
             backIndicatorImage: UIImage.asset(.Icons_24px_Back02)
         )
         setupCollectionView()
+        setupDismissKeyboardWhenTapped()
         fetchComments()
     }
     
@@ -63,7 +64,7 @@ class FeedCommentController: UICollectionViewController {
     
     // MARK: - API
     private func fetchComments() {
-        CommentService.fetchComments(forPost: post.postId) { comments in
+        CommentService.shared.fetchComments(forPost: post.postId) { comments in
             
             // 過濾出封鎖名單以外的 comments
             guard let currentUser = UserService.shared.currentUser else { return }
@@ -74,6 +75,10 @@ class FeedCommentController: UICollectionViewController {
         }
     }
     
+    // MARK: - Action
+    @objc func dismissKeyboard() {
+        commentInputView.commentTextView.resignFirstResponder()
+    }
 }
 
 extension FeedCommentController {
@@ -83,6 +88,11 @@ extension FeedCommentController {
         collectionView.register(CommentCell.self, forCellWithReuseIdentifier: CommentCell.identifier)
         collectionView.alwaysBounceVertical = true
         collectionView.keyboardDismissMode = .interactive
+    }
+    
+    private func setupDismissKeyboardWhenTapped() {
+        let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        collectionView.addGestureRecognizer(tap)
     }
     
 }
@@ -140,7 +150,7 @@ extension FeedCommentController: CommentInputAccessoryViewDelegate {
         UserService.shared.fetchUserBy(uid: currentUid, completion: { currentUser in
             
             self.show()
-            CommentService.uploadComment(
+            CommentService.shared.uploadComment(
                 postId: self.post.postId,
                 user: currentUser,
                 commentType: 0,
@@ -158,7 +168,7 @@ extension FeedCommentController: CommentInputAccessoryViewDelegate {
                 inputView.clearCommentTextView()
                 
                 // 通知被留言的人
-                NotificationService.uploadNotification(
+                NotificationService.shared.uploadNotification(
                     toUid: self.post.ownerUid,
                     notiType: .comment,
                     fromUser: currentUser,

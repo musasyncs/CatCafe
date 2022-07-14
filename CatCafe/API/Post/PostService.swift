@@ -6,9 +6,9 @@
 //
 
 import UIKit
-import Firebase
+import FirebaseFirestore
 
-struct PostService {
+class PostService {
     
     static let shared = PostService()
     private init() {}
@@ -138,7 +138,7 @@ struct PostService {
             
             snapshot?.documents.forEach({ snapshot in
                 group.enter()
-                fetchPost(withPostId: snapshot.documentID) { result in
+                self.fetchPost(withPostId: snapshot.documentID) { result in
                     switch result {
                     case .success(let post):
                         posts.append(post)
@@ -177,10 +177,7 @@ struct PostService {
         PostService.shared.fetchLikeCount(post: post) { likeCount in
                     
             firebaseReference(.posts).document(post.postId).updateData(["likes": likeCount + 1]) { error in
-                
-                if let error = error {
-                    print(error.localizedDescription)
-                }
+                if error != nil { return }
                 
                 firebaseReference(.posts).document(post.postId)
                     .collection("post-likes").document(uid).setData([:]) { _ in
@@ -207,10 +204,7 @@ struct PostService {
         PostService.shared.fetchLikeCount(post: post) { likeCount in
         
             firebaseReference(.posts).document(post.postId).updateData(["likes": likeCount - 1]) { error in
-                
-                if let error = error {
-                    print(error.localizedDescription)
-                }
+                if error != nil { return }
                 
                 firebaseReference(.posts).document(post.postId)
                     .collection("post-likes").document(currentUid).delete { _ in
@@ -235,7 +229,8 @@ struct PostService {
         guard let uid = LocalStorage.shared.getUid() else { return }
         
         firebaseReference(.users).document(uid)
-            .collection("user-post-likes").document(post.postId).getDocument { snapshot, _ in
+            .collection("user-post-likes").document(post.postId).getDocument { snapshot, error in
+                if error != nil { return }
                 guard let isLiked = snapshot?.exists else { return }
                 completion(isLiked)
             }
@@ -280,21 +275,5 @@ struct PostService {
                 firebaseReference(.users).document(currentUid).collection("user-feed").document(postId).setData([:])
             }
     }
-    
-    private func updateFeedAfterDelete(postId: String) {
-        guard let currentUid = LocalStorage.shared.getUid() else { return }
-        firebaseReference(.followers).document(currentUid)
-            .collection("user-followers").getDocuments { snapshot, _ in
-                guard let documents = snapshot?.documents else { return }
-                
-                // 追蹤者feed上要消失我的貼文
-                documents.forEach { snapshot in
-                    firebaseReference(.users).document(snapshot.documentID)
-                        .collection("user-feed").document(postId).delete()
-                }
-                // 自己feed上要消失我的貼文
-                firebaseReference(.users).document(currentUid).collection("user-feed").document(postId).delete()
-            }
-    }
-    
+
 }

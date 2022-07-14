@@ -36,9 +36,10 @@ class DeleteAccountAlert {
     }()
     
     lazy var titleLabel = UILabel()
+    lazy var descriptionLabel = UILabel()
 
-    lazy var okButton = makeTitleButton(
-        withText: "確定",
+    lazy var cancelButton = makeTitleButton(
+        withText: "取消",
         font: .systemFont(ofSize: 13, weight: .regular),
         kern: 1,
         foregroundColor: .ccPrimary,
@@ -49,14 +50,18 @@ class DeleteAccountAlert {
         borderColor: .ccPrimary
     )
     
-    lazy var emailButton = makeTitleButton(
-        withText: "rubato.cw@gmail.com",
-        font: .systemFont(ofSize: 14, weight: .regular),
+    lazy var okButton = makeTitleButton(
+        withText: "確定",
+        font: .systemFont(ofSize: 13, weight: .regular),
         kern: 1,
         foregroundColor: .ccSecondary,
-        backgroundColor: .clear
+        backgroundColor: .white,
+        insets: .init(top: 5, left: 16, bottom: 5, right: 16),
+        cornerRadius: 5,
+        borderWidth: 1,
+        borderColor: .ccSecondary
     )
-    
+
     // swiftlint:disable all
     func showAlert(on viewController: UIViewController) {
         
@@ -70,12 +75,12 @@ class DeleteAccountAlert {
         alertView.frame = CGRect(
             x: 40,
             y: -300,
-            width: targetView.frame.size.width-100,
+            width: targetView.frame.width-100,
             height: Constants.alertHeight
         )
         
         // alertView
-        titleLabel.text = "欲刪除帳號請聯絡開發者："
+        titleLabel.text = "注意"
         titleLabel.textAlignment = .center
         titleLabel.numberOfLines = 1
         titleLabel.font = .systemFont(ofSize: 15, weight: .semibold)
@@ -86,15 +91,33 @@ class DeleteAccountAlert {
                           right: self.alertView.rightAnchor,
                           paddingTop: 32)
         
-        okButton.addTarget(viewController, action: #selector(dissmissAlert), for: .touchUpInside)
-        alertView.addSubview(okButton)
-        okButton.centerX(inView: self.alertView)
-        okButton.anchor(bottom: self.alertView.bottomAnchor, paddingBottom: 16)
+        descriptionLabel.text = "我們將刪除您的帳號"
+        descriptionLabel.textAlignment = .center
+        descriptionLabel.numberOfLines = 1
+        descriptionLabel.font = .systemFont(ofSize: 14, weight: .regular)
+        descriptionLabel.textColor = .ccGrey
         
-        emailButton.addTarget(viewController, action: #selector(sendEmail), for: .touchUpInside)
-        alertView.addSubview(emailButton)
-        emailButton.centerX(inView: self.alertView)
-        emailButton.centerY(inView: self.alertView)
+        alertView.addSubview(descriptionLabel)
+        descriptionLabel.centerX(inView: self.alertView)
+        descriptionLabel.centerY(inView: self.alertView)
+        
+        cancelButton.addTarget(viewController, action: #selector(dissmissAlert), for: .touchUpInside)
+        alertView.addSubview(cancelButton)
+        cancelButton.anchor(
+            left: self.alertView.leftAnchor,
+            bottom: self.alertView.bottomAnchor,
+            paddingLeft: self.alertView.frame.width / 5,
+            paddingBottom: 16
+        )
+        
+        okButton.addTarget(viewController, action: #selector(deleteAccount), for: .touchUpInside)
+        alertView.addSubview(okButton)
+        okButton.anchor(
+            bottom: self.alertView.bottomAnchor,
+            right: self.alertView.rightAnchor,
+            paddingBottom: 16,
+            paddingRight: self.alertView.frame.width / 5
+        )
         
         // bgView
         UIView.animate(withDuration: 0.25, animations: {
@@ -108,23 +131,7 @@ class DeleteAccountAlert {
         })
     }
     // swiftlint:enable all
-    
-    @objc func sendEmail() {
-        guard let viewController = viewController else { return }
         
-        guard MFMailComposeViewController.canSendMail() else {
-            viewController.showMessage(withTitle: "Oops", message: "無法聯絡開發者")
-            return
-        }
-        
-        let composer = MFMailComposeViewController()
-        composer.mailComposeDelegate = viewController as? MFMailComposeViewControllerDelegate
-        composer.setToRecipients(["rubato.cw@gmail.com"])
-        composer.setSubject("Please help")
-        composer.setMessageBody("Please help delete my account!", isHTML: false)
-        viewController.present(composer, animated: true)
-    }
-    
     @objc func dissmissAlert() {
         guard let targetView = mytargetView else { return }
         
@@ -146,5 +153,8 @@ class DeleteAccountAlert {
             }
         })
     }
+    
+    @objc func deleteAccount() {}
+        
     
 }

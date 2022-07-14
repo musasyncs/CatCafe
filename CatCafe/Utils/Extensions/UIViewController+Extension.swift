@@ -141,7 +141,6 @@ extension UIViewController {
     }
     
     // MARK: - Add / Remove child view controller
-    
     func add(_ child: UIViewController) {
         addChild(child)
         view.addSubview(child.view)

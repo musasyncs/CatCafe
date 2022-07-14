@@ -5,7 +5,6 @@
 //  Created by Ewen on 2022/6/15.
 //
 
-import Foundation
 import FirebaseStorage
 import ProgressHUD
 
@@ -45,19 +44,16 @@ struct FileStorage {
         
         if fileExistsAtPath(path: imageFileName) {
             // get it locally
-//            print("We have local image")
-            
             if let contentsOfFile = UIImage(contentsOfFile: fileInDocumentsDirectory(fileName: imageFileName)) {
                 
                 completion(contentsOfFile)
             } else {
                 print("couldnt convert local image")
-                completion(UIImage.asset(.avatar))
+                completion(UIImage.asset(.no_image))
             }
             
         } else {
             // download from Firebase
-            
             if imageUrl != "" {
                 let documentUrl = URL(string: imageUrl)
                 let downloadQueue = DispatchQueue(label: "imageDownloadQueue")
@@ -139,72 +135,6 @@ struct FileStorage {
                     }
                 } else {
                     print("no document in database")
-                }
-            }
-        }
-    }
-    
-    // MARK: - Upload and dowload Audio
-    static func uploadAudio(_ audioFileName: String,
-                            directory: String,
-                            completion: @escaping (_ audioLink: String?) -> Void
-    ) {
-        let fileName = audioFileName + ".m4a"
-        let ref = Storage.storage().reference(withPath: directory)
-                        
-        var task: StorageUploadTask!
-        
-        if fileExistsAtPath(path: fileName) {
-            if let audioData = NSData(contentsOfFile: fileInDocumentsDirectory(fileName: fileName)) {
-                
-                task = ref.putData(audioData as Data, metadata: nil, completion: { (_, error) in
-                    task.removeAllObservers()
-                    ProgressHUD.dismiss()
-                    
-                    if error != nil {
-                        print("error uploading audio \(error!.localizedDescription)")
-                        return
-                    }
-                    
-                    ref.downloadURL { (url, _) in
-                        guard let downloadUrl = url  else {
-                            completion(nil)
-                            return
-                        }
-                        completion(downloadUrl.absoluteString)
-                    }
-                })
-                
-                task.observe(StorageTaskStatus.progress) { (snapshot) in
-                    
-                    let progress = snapshot.progress!.completedUnitCount / snapshot.progress!.totalUnitCount
-                    ProgressHUD.showProgress(CGFloat(progress))
-                }
-            } else {
-                print("nothing to upload (audio)")
-            }
-        }
-    }
-
-    static func downloadAudio(audioLink: String, completion: @escaping (_ audioFileName: String) -> Void) {
-        let audioFileName = fileNameFrom(fileUrl: audioLink) + ".m4a"
-
-        if fileExistsAtPath(path: audioFileName) {
-            completion(audioFileName)
-        } else {
-            let downloadQueue = DispatchQueue(label: "AudioDownloadQueue")
-            
-            downloadQueue.async {
-                let data = NSData(contentsOf: URL(string: audioLink)!)
-                if data != nil {
-                    // Save locally
-                    FileStorage.saveFileLocally(fileData: data!, fileName: audioFileName)
-                    
-                    DispatchQueue.main.async {
-                        completion(audioFileName)
-                    }
-                } else {
-                    print("no document in database audio")
                 }
             }
         }

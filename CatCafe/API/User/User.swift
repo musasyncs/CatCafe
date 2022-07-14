@@ -5,8 +5,7 @@
 //  Created by Ewen on 2022/6/15.
 //
 
-import Foundation
-import Firebase
+import FirebaseFirestore
 import FirebaseFirestoreSwift
 
 struct User: Codable, Equatable {
@@ -26,12 +25,12 @@ struct User: Codable, Equatable {
     }
     
     init(dic: [String: Any]) {
-        self.email = dic["email"] as? String ?? ""
-        self.fullname = dic["fullname"] as? String ?? ""
-        self.profileImageUrlString = dic["profileImageUrlString"] as? String ?? ""
-        self.username = dic["username"] as? String ?? ""
-        self.bioText = dic["bioText"] as? String ?? ""
-        self.uid = dic["uid"] as? String ?? ""
+        self.email                  = dic["email"] as? String ?? ""
+        self.fullname               = dic["fullname"] as? String ?? ""
+        self.profileImageUrlString  = dic["profileImageUrlString"] as? String ?? ""
+        self.username               = dic["username"] as? String ?? ""
+        self.bioText                = dic["bioText"] as? String ?? ""
+        self.uid                    = dic["uid"] as? String ?? ""
         
         self.stats = UserStats(followers: 0, following: 0, postCounts: 0)
         self.blockedUsers = dic["blockedUsers"] as? [String] ?? []

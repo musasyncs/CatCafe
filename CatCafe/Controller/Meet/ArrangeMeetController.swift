@@ -57,6 +57,7 @@ class ArrangeMeetController: UIViewController {
         setupScrollView()
         setupStackView()
         setupChildViews()
+        setupDismissKeyboardWhenTapped()
     }
     
     private func setupNavigationButtons() {
@@ -99,7 +100,6 @@ class ArrangeMeetController: UIViewController {
         stackView.backgroundColor = .clear
         scrollView.addSubview(stackView)
         stackView.fillSuperView()
-//        stackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
     }
     
     private func setupChildViews() {
@@ -120,6 +120,11 @@ class ArrangeMeetController: UIViewController {
         descriptionTileView.textField.tag = 2
         descriptionTileView.delegate = self
     }
+    
+    private func setupDismissKeyboardWhenTapped() {
+        let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        view.addGestureRecognizer(tap)
+    }
 
     // MARK: - Action
     @objc private func handleCancel() {
@@ -139,7 +144,6 @@ class ArrangeMeetController: UIViewController {
         
         navigationItem.rightBarButtonItem?.isEnabled = false
         
-        show()
         MeetService.uploadMeet(
             title: meetTitleText,
             caption: meetDescription,
@@ -150,7 +154,6 @@ class ArrangeMeetController: UIViewController {
         ) { error in
         
             if error != nil {
-                self.dismiss()
                 self.showFailure(text: "Failed to upload meet")
                 self.navigationItem.rightBarButtonItem?.isEnabled = true
                 return
@@ -170,6 +173,10 @@ class ArrangeMeetController: UIViewController {
         let navController = makeNavigationController(rootViewController: controller)
         navController.modalPresentationStyle = .overFullScreen
         present(navController, animated: true)
+    }
+    
+    @objc func dismissKeyboard() {
+        titleTileView.textField.resignFirstResponder()
     }
 }
 

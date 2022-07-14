@@ -47,6 +47,7 @@ class PostEditController: UIViewController {
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 36 / 2
+        imageView.backgroundColor = .gray6
         return imageView
     }()
     
@@ -118,7 +119,7 @@ class PostEditController: UIViewController {
     private func fetchProfilePic() {
         guard let currentUid = LocalStorage.shared.getUid() else { return }
         UserService.shared.fetchUserBy(uid: currentUid, completion: { user in
-            self.profileImageView.loadImage(user.profileImageUrlString, placeHolder: UIImage.asset(.avatar))
+            self.profileImageView.loadImage(user.profileImageUrlString)
         })
     }
     
@@ -148,19 +149,16 @@ class PostEditController: UIViewController {
         
         navigationItem.rightBarButtonItem?.isEnabled = false
         
-        show()
         PostService.shared.uploadImagePost(caption: caption,
                                            postImage: postImage,
                                            cafeId: selectedCafe.id,
                                            cafeName: selectedCafe.title) { error in
             if error != nil {
-                self.dismiss()
                 self.showFailure(text: "Failed to upload post")
                 self.navigationItem.rightBarButtonItem?.isEnabled = true
                 return
             }
             
-            self.dismiss()
             self.dismiss(animated: true) {
                 // save photo
                 PHPhotoLibrary.shared().performChanges {

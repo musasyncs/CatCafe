@@ -67,7 +67,7 @@ class ProfileEditController: UIViewController {
         textColor: .ccGrey
     )
     private let bioLabel = makeLabel(
-        withTitle: "個人簡介（至多34字）",
+        withTitle: "個人簡介（至多34字元）",
         font: .systemFont(ofSize: 13, weight: .regular),
         textColor: .ccGrey
     )
@@ -120,7 +120,7 @@ extension ProfileEditController {
         leaveButton.addTarget(self, action: #selector(handleLeave), for: .touchUpInside)
         saveButton.addTarget(self, action: #selector(saveButtonTapped), for: .touchUpInside)
         
-        profileImageView.loadImage(user?.profileImageUrlString, placeHolder: UIImage.asset(.avatar))
+        profileImageView.loadImage(user?.profileImageUrlString)
         profileEditButton.addTarget(self, action: #selector(profileEditButtonTapped), for: .touchUpInside)
     }
     
@@ -294,7 +294,6 @@ extension ProfileEditController {
                 self.show()
                 group.enter()
                 FileStorage.uploadImage(profileImage, directory: directory) { profileImageUrlString in
-                    
                     UserService.shared.uploadProfileImage(
                         userId: currentUid,
                         profileImageUrlString: profileImageUrlString

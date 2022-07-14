@@ -20,7 +20,7 @@ class SnappyCell: UICollectionViewCell {
             guard let person = person else { return }
             
             UserService.shared.fetchUserBy(uid: person.uid) { user in
-                self.superImageView.loadImage(user.profileImageUrlString, placeHolder: nil)
+                self.superImageView.loadImage(user.profileImageUrlString)
             }
             
             let formatter = DateFormatter()
