@@ -40,10 +40,9 @@ class MeetDetailController: UIViewController {
             forCellWithReuseIdentifier: CommentCell.identifier
         )
         collectionView.alwaysBounceVertical = true
-        collectionView.keyboardDismissMode = .interactive
-        
-        collectionView.backgroundColor = .white
         collectionView.showsVerticalScrollIndicator = false
+        collectionView.backgroundColor = .white
+        
         return collectionView
     }()
     
@@ -77,6 +76,7 @@ class MeetDetailController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        setupDismissKeyboardWhenTapped()
         setupCollectionView()
         setupBackButton()
     
@@ -96,6 +96,11 @@ class MeetDetailController: UIViewController {
         tabBarController?.tabBar.isHidden = false
     }
 
+    private func setupDismissKeyboardWhenTapped() {
+        let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        collectionView.addGestureRecognizer(tap)
+    }
+    
     private func setupCollectionView() {
         view.addSubview(collectionView)
         collectionView.anchor(
@@ -139,7 +144,7 @@ class MeetDetailController: UIViewController {
     }
     
     private func fetchComments() {
-        CommentService.fetchMeetComments(forMeet: meet.meetId) { comments in
+        CommentService.shared.fetchMeetComments(forMeet: meet.meetId) { comments in
             
             // 過濾出封鎖名單以外的 comments
             guard let currentUser = UserService.shared.currentUser else { return }
@@ -153,6 +158,10 @@ class MeetDetailController: UIViewController {
     // MARK: - Action
     @objc func goBack() {
         dismiss(animated: false)
+    }
+    
+    @objc func dismissKeyboard() {
+        commentInputView.commentTextView.resignFirstResponder()
     }
 
 }
@@ -315,7 +324,7 @@ extension MeetDetailController: CommentInputAccessoryViewDelegate {
         UserService.shared.fetchUserBy(uid: currentUid, completion: { currentUser in
             
             self.show()
-            CommentService.uploadMeetComment(
+            CommentService.shared.uploadMeetComment(
                 meetId: self.meet.meetId,
                 user: currentUser,
                 commentType: 0,

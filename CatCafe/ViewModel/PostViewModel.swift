@@ -18,11 +18,17 @@ struct PostViewModel {
     var ownerUsername: String? {
         return post.user.username
     }
-    
     var locationText: String? {
         return post.cafeName
     }
-    
+    var shouldHideFunctionButton: Bool {
+        if post.ownerUid == UserService.shared.currentUser?.uid {
+            return true
+        } else {
+            return false
+        }
+    }
+
     var mediaUrlString: String {
         return post.mediaUrlString
     }

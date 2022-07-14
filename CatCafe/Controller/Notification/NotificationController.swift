@@ -40,7 +40,7 @@ class NotificationController: UIViewController {
     
     // MARK: - API
     func fetchnotifications() {
-        NotificationService.fetchNotifications { notifications in
+        NotificationService.shared.fetchNotifications { notifications in
             
             // 過濾出封鎖名單以外的 notifications
             guard let currentUser = UserService.shared.currentUser else { return }
@@ -191,7 +191,7 @@ extension NotificationController: NotificationCellDelegate {
     }
     
     func cell(_ cell: NotificationCell, wantsToFollow uid: String) {
-        UserService.follow(uid: uid) { _ in
+        UserService.shared.follow(uid: uid) { _ in
             cell.viewModel?.notification.userIsFollowed.toggle()
             UserService.shared.fetchUserBy(uid: uid) { user in
                 PostService.shared.updateUserFeedAfterFollowing(user: user, didFollow: true)
@@ -200,7 +200,7 @@ extension NotificationController: NotificationCellDelegate {
     }
     
     func cell(_ cell: NotificationCell, wantsToUnfollow uid: String) {
-        UserService.unfollow(uid: uid) { _ in
+        UserService.shared.unfollow(uid: uid) { _ in
             cell.viewModel?.notification.userIsFollowed.toggle()
             UserService.shared.fetchUserBy(uid: uid) { user in
                 PostService.shared.updateUserFeedAfterFollowing(user: user, didFollow: false)

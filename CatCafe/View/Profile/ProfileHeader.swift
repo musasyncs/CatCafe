@@ -10,6 +10,8 @@ import Lottie
 
 protocol ProfileHeaderDelegate: AnyObject {
     func header(_ profileHeader: ProfileHeader, didTapActionButtonFor user: User)
+    func header(_ profileHeader: ProfileHeader)
+    
     func header(_ profileHeader: ProfileHeader, wantToChatWith user: User)
     func header(_ profileHeader: ProfileHeader, didTapBlock user: User)
 }
@@ -40,10 +42,12 @@ final class ProfileHeader: UICollectionReusableView {
             
             if viewModel.user == UserService.shared.currentUser {
                 buttonStackView.addArrangedSubview(editProfileFollowButton)
+                deleteAccountButton.isHidden = false
             } else {
                 buttonStackView.addArrangedSubview(editProfileFollowButton)
                 buttonStackView.addArrangedSubview(goChatButton)
                 buttonStackView.addArrangedSubview(blockButton)
+                deleteAccountButton.isHidden = true
             }
         }
     }
@@ -67,6 +71,7 @@ final class ProfileHeader: UICollectionReusableView {
         label.font = .systemFont(ofSize: 20, weight: .bold)
         label.textAlignment = .center
         label.numberOfLines = 1
+        label.adjustsFontSizeToFitWidth = true
         label.textColor = .ccGrey
         return label
     }()
@@ -112,6 +117,12 @@ final class ProfileHeader: UICollectionReusableView {
         cornerRadius: 40 / 2,
         borderWidth: 1, borderColor: .ccSecondary
     )
+   
+    private lazy var deleteAccountButton = makeIconButton(
+        imagename: ImageAsset.trash.rawValue,
+        imageColor: .ccRed,
+        imageWidth: 17, imageHeight: 17
+    )
     
     private lazy var buttonStackView = UIStackView()
     
@@ -120,6 +131,7 @@ final class ProfileHeader: UICollectionReusableView {
         backgroundColor = .white
         
         editProfileFollowButton.addTarget(self, action: #selector(handleEditProfileFollowTapped), for: .touchUpInside)
+        deleteAccountButton.addTarget(self, action: #selector(handleDeleteAccountTapped), for: .touchUpInside)
         
         goChatButton.addTarget(self, action: #selector(goChat), for: .touchUpInside)
         goChatButton.layer.shadowColor = UIColor.ccGrey.cgColor
@@ -132,7 +144,7 @@ final class ProfileHeader: UICollectionReusableView {
         
         buttonStackView.alignment = .center
         buttonStackView.distribution = .equalSpacing
-        buttonStackView.alignment = .center
+        buttonStackView.spacing = 8
         
         layout()
     }
@@ -146,6 +158,7 @@ final class ProfileHeader: UICollectionReusableView {
         addSubview(followersLabel)
         addSubview(followingLabel)
         addSubview(nameLabel)
+        addSubview(deleteAccountButton)
         addSubview(bioLabel)
         addSubview(buttonStackView)
         
@@ -165,13 +178,12 @@ final class ProfileHeader: UICollectionReusableView {
         
         nameLabel.anchor(
             top: topAnchor,
-            left: leftAnchor,
-            right: rightAnchor,
             paddingTop: 78,
-            paddingLeft: 24,
-            paddingRight: 24
+            width: 120
         )
         nameLabel.centerX(inView: self)
+        
+        deleteAccountButton.centerY(inView: nameLabel, leftAnchor: nameLabel.rightAnchor, paddingLeft: 8, constant: 0)
         
         bioLabel.anchor(
             top: nameLabel.bottomAnchor,
@@ -196,7 +208,6 @@ final class ProfileHeader: UICollectionReusableView {
         editProfileFollowButton.setDimensions(height: 40, width: 125)
         goChatButton.setDimensions(height: 40, width: 125)
         blockButton.setDimensions(height: 40, width: 80)
-        
     }
     // swiftlint:enable all
     
@@ -204,6 +215,9 @@ final class ProfileHeader: UICollectionReusableView {
     @objc func handleEditProfileFollowTapped() {
         guard let viewModel = viewModel else { return }
         delegate?.header(self, didTapActionButtonFor: viewModel.user)
+    }
+    @objc func handleDeleteAccountTapped() {
+        delegate?.header(self)
     }
     
     @objc func goChat() {

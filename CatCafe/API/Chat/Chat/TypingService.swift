@@ -5,15 +5,14 @@
 //  Created by Ewen on 2022/6/29.
 //
 
-import Foundation
-import Firebase
+import FirebaseFirestore
 
 class TypingService {
     
     static let shared = TypingService()
-    var typingListener: ListenerRegistration!
-    
     private init() { }
+    
+    var typingListener: ListenerRegistration!
     
     func createTypingObserver(chatRoomId: String, completion: @escaping (_ isTyping: Bool) -> Void) {
         

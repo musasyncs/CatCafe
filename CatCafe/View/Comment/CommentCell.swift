@@ -12,7 +12,7 @@ final class CommentCell: UICollectionViewCell {
     var viewModel: CommentViewModel? {
         didSet {
             guard let viewModel = viewModel else { return }
-            profileImageView.loadImage(viewModel.profileImageUrlString, placeHolder: UIImage.asset(.avatar))
+            profileImageView.loadImage(viewModel.profileImageUrlString)
             commentLabel.attributedText = viewModel.makeCommentLabelText()
         }
     }
@@ -21,7 +21,7 @@ final class CommentCell: UICollectionViewCell {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
-        imageView.backgroundColor = .lightGray
+        imageView.backgroundColor = .gray6
         imageView.layer.cornerRadius = 24 / 2
         return imageView
     }()

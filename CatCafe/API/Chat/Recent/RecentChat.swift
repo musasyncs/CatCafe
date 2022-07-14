@@ -5,7 +5,6 @@
 //  Created by Ewen on 2022/6/28.
 //
 
-import Foundation
 import FirebaseFirestoreSwift
 
 struct RecentChat: Codable {

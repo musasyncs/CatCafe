@@ -18,10 +18,7 @@ class CommentSectionHeader: UICollectionReusableView {
         didSet {
             guard let viewModel = viewModel else { return }
                         
-            hostProfileImageView.loadImage(
-                viewModel.ownerImageUrlString,
-                placeHolder: UIImage.asset(.avatar)
-            )            
+            hostProfileImageView.loadImage(viewModel.ownerImageUrlString)
             hostnameLabel.text = viewModel.ownerUsername
             seeAllPeopleButton.isHidden = viewModel.shouldHidePeopleButton
             
@@ -49,6 +46,7 @@ class CommentSectionHeader: UICollectionReusableView {
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 24 / 2
+        imageView.backgroundColor = .gray6
         return imageView
     }()
     let hostnameLabel = UILabel()

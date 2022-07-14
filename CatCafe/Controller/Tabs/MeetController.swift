@@ -12,7 +12,11 @@ class MeetController: UIViewController {
     // MARK: - View
     private lazy var arrangeMeetButon = makeTitleButton(
         withText: "舉辦聚會",
-        font: .systemFont(ofSize: 12, weight: .regular)
+        font: .systemFont(ofSize: 12, weight: .regular),
+        foregroundColor: .white,
+        backgroundColor: .ccSecondary,
+        insets: UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5),
+        cornerRadius: 8
     )
     private lazy var arrangeMeetButtonItem = UIBarButtonItem(customView: arrangeMeetButon)
     
@@ -169,7 +173,7 @@ extension MeetController {
             top: view.safeAreaLayoutGuide.topAnchor,
             left: view.leftAnchor,
             paddingTop: 8,
-            paddingLeft: 8
+            paddingLeft: 16
         )
     }
     

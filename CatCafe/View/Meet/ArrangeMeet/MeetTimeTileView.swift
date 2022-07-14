@@ -169,7 +169,7 @@ final class TimeSelectorView: UIView {
         backgroundColor = .white
         layer.cornerRadius = 8
         layer.borderColor = UIColor.ccGrey.cgColor
-        layer.borderWidth = 1
+        layer.borderWidth = 0.5
         
         datePicker = UIDatePicker(frame: CGRect(x: 0, y: 0, width: 96, height: 24))
         datePicker.date = Date()

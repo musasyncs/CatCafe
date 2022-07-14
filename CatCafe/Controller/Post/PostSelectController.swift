@@ -68,13 +68,13 @@ class PostSelectController: UIViewController {
                 self?.loadImageFor(selectedAsset)
             }
             
-            addChild(controller)
-            controller.didMove(toParent: self)
-            
-            albumView.addSubview(controller.view)
-            controller.view.frame = albumView.bounds
-
-            self.albumPhotoViewController = controller
+            DispatchQueue.main.async {
+                self.addChild(controller)
+                controller.didMove(toParent: self)
+                self.albumView.addSubview(controller.view)
+                controller.view.frame = self.albumView.bounds
+                self.albumPhotoViewController = controller
+            }
         }
     }
     

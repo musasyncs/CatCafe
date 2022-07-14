@@ -21,7 +21,7 @@ final class NotificationCell: UITableViewCell {
     var viewModel: NotificationViewModel? {
         didSet {
             guard let viewModel = viewModel else { return }
-            profileImageView.loadImage(viewModel.profileImageUrlString, placeHolder: UIImage.asset(.avatar))
+            profileImageView.loadImage(viewModel.profileImageUrlString)
             infoLabel.attributedText = viewModel.notificationMessage
             postImageView.loadImage(viewModel.photoUrlString, placeHolder: UIImage.asset(.no_image))
             
@@ -37,7 +37,7 @@ final class NotificationCell: UITableViewCell {
     
     lazy var profileImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.backgroundColor = .lightGray
+        imageView.backgroundColor = .gray6
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 36 / 2

@@ -175,34 +175,31 @@ class CafeInfoAlert {
     }
     
     @objc func makePhoneCall() {
-        guard let phoneNumber = phoneNumber,
-              let viewController = viewController else { return }
-        if !phoneNumber.isEmpty {
-            if let phoneCallURL = URL(string: "tel://" + phoneNumber) {
-                let application: UIApplication = UIApplication.shared
-                if application.canOpenURL(phoneCallURL) {
-                    application.open(phoneCallURL, options: [:], completionHandler: nil)
-                }
-            }
+        guard let phoneNumber = phoneNumber, !phoneNumber.isEmpty else {
+            viewController?.showMessage(withTitle: "Oops", message: "無電話")
             return
-        } else {
-            viewController.showMessage(withTitle: "Oops", message: "無電話")
         }
+        
+        if let phoneCallURL = URL(string: "tel://" + phoneNumber) {
+            let application: UIApplication = UIApplication.shared
+            if application.canOpenURL(phoneCallURL) {
+                application.open(phoneCallURL, options: [:], completionHandler: nil)
+            }
+        }
+        
     }
     
     @objc func gotoWebsite() {
-        guard let website = website,
-              let viewController = viewController else { return }
-        
-        if !website.isEmpty {
-            let controller = WebsiteController()
-            controller.website = website
-            let navController = makeNavigationController(rootViewController: controller)
-            navController.modalPresentationStyle = .overFullScreen
-            viewController.present(navController, animated: true)
-        } else {
-            viewController.showMessage(withTitle: "Oops", message: "無網站")
+        guard let website = website, !website.isEmpty else {
+            viewController?.showMessage(withTitle: "Oops", message: "無網站")
+            return
         }
+                
+        let controller = WebsiteController()
+        controller.website = website
+        let navController = makeNavigationController(rootViewController: controller)
+        navController.modalPresentationStyle = .overFullScreen
+        viewController?.present(navController, animated: true)
     }
     
 }

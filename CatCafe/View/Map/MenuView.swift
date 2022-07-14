@@ -92,7 +92,7 @@ class MenuView: UIView {
     
     private func toFull() {
         delegate?.shouldHideCenterButton(true)
-        delegate?.animateBottomConstraint(constant: -88, goalState: .fullyExpanded)
+        delegate?.animateBottomConstraint(constant: -75, goalState: .fullyExpanded)
     }
     
     // MARK: - Actions

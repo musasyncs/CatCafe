@@ -153,8 +153,7 @@ extension ChatlistController: UITableViewDataSource, UITableViewDelegate {
             withIdentifier: RecentChatCell.identifier,
             for: indexPath) as? RecentChatCell
         else { return UITableViewCell() }
-        let recent = inSearchMode ? filteredRecents[indexPath.row] : allRecents[indexPath.row]
-        cell.configure(recent: recent)
+        cell.recent = inSearchMode ? filteredRecents[indexPath.row] : allRecents[indexPath.row]
         return cell
     }
     

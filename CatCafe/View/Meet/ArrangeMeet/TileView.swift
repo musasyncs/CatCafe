@@ -39,6 +39,7 @@ class TileView: UIView {
         // style
         titleLabel.font = .systemFont(ofSize: 15, weight: .medium)
         titleLabel.textColor = .ccGrey
+        textField.returnKeyType = .done
         
         // layout
         addSubview(titleLabel)

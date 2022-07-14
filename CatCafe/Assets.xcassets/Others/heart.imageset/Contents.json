@@ -1,12 +1,11 @@
 {
   "images" : [
     {
-      "filename" : "block-user (1).png",
+      "filename" : "heart.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "block.png",
       "idiom" : "universal",
       "scale" : "2x"
     },

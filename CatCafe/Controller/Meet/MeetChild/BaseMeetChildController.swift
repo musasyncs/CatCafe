@@ -110,7 +110,7 @@ extension BaseMeetChildController: UICollectionViewDataSource, UICollectionViewD
         }
         
         // meet comments count
-        CommentService.fetchMeetComments(forMeet: meet.meetId) { comments in
+        CommentService.shared.fetchMeetComments(forMeet: meet.meetId) { comments in
             cell.viewModel?.comments = comments
         }
         

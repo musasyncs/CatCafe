@@ -7,9 +7,12 @@
 
 import Firebase
 
-struct NotificationService {
+class NotificationService {
     
-    static func uploadNotification(
+    static let shared = NotificationService()
+    private init() {}
+    
+    func uploadNotification(
         toUid uid: String,
         notiType: NotitficationType,
         fromUser: User,
@@ -37,7 +40,7 @@ struct NotificationService {
         docRef.setData(dic)
     }
     
-    static func fetchNotifications(completion: @escaping([Notification]) -> Void) {
+    func fetchNotifications(completion: @escaping([Notification]) -> Void) {
         guard let currentUid = LocalStorage.shared.getUid() else { return }
         
         let query = firebaseReference(.notifications)

@@ -7,7 +7,6 @@
 
 import UIKit
 import FirebaseAuth
-import MessageUI
 
 class ProfileController: UIViewController {
     
@@ -45,10 +44,10 @@ class ProfileController: UIViewController {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
-        imageView.backgroundColor = .lightGray
         imageView.layer.cornerRadius = 100 / 2
         imageView.layer.borderColor = UIColor.white.cgColor
         imageView.layer.borderWidth = 5
+        imageView.backgroundColor = .gray6
         return imageView
     }()
     
@@ -112,18 +111,8 @@ class ProfileController: UIViewController {
             target: self,
             action: #selector(handleLogout)
         )
-        
-        let deleteAccountBarButtonItem = UIBarButtonItem(
-            image: UIImage.asset(.trash)?
-                .resize(to: .init(width: 20, height: 20))?
-                .withTintColor(.white)
-                .withRenderingMode(.alwaysOriginal),
-            style: .plain,
-            target: self,
-            action: #selector(handleDeleteAccount)
-        )
-        
-        navigationItem.rightBarButtonItems = [logoutBarButtonItem, deleteAccountBarButtonItem]
+            
+        navigationItem.rightBarButtonItems = [logoutBarButtonItem]
     }
     
     private func setupCollectionView() {
@@ -195,6 +184,12 @@ class ProfileController: UIViewController {
     }
     
     @objc func handleLogout() {
+        // 還沒登入要先登入
+        if UserService.shared.currentUser == nil {
+            showMessage(withTitle: "Oops", message: "請先登入")
+            return
+        }
+        
         let alert = UIAlertController(title: "是否登出？", message: "", preferredStyle: .alert)
         let okAction = UIAlertAction(title: "確定", style: .default) { _ in
             self.show()
@@ -206,7 +201,6 @@ class ProfileController: UIViewController {
                 
                 LocalStorage.shared.clearUid()
                 LocalStorage.shared.hasLogedIn = false
-                
                 UserService.shared.currentUser = nil // 更新 currentUser
                 
                 let controller = LoginController()
@@ -230,14 +224,34 @@ class ProfileController: UIViewController {
         present(alert, animated: true)
     }
     
-    @objc func handleDeleteAccount() {
-        deleteAccountAlert.showAlert(on: self)
-    }
-    @objc func sendEmail() {
-        deleteAccountAlert.sendEmail()
-    }
     @objc func dissmissAlert() {
         deleteAccountAlert.dissmissAlert()
+    }
+    
+    @objc func deleteAccount() {
+        guard let currentUser = Auth.auth().currentUser else { return }
+        
+        self.show()
+        currentUser.delete(completion: { error in
+            if let error = error {
+                self.dismiss()
+                print("Error deleting account: \(error)")
+            } else {
+                self.dismiss()
+
+                LocalStorage.shared.clearUid()
+                LocalStorage.shared.hasLogedIn = false
+                UserService.shared.currentUser = nil // 更新 currentUser
+
+                self.deleteAccountAlert.dissmissAlert()
+                
+                let controller = LoginController()
+                controller.delegate = self.tabBarController as? MainTabController
+                let nav = makeNavigationController(rootViewController: controller)
+                nav.modalPresentationStyle = .fullScreen
+                self.present(nav, animated: true)
+            }
+        })
     }
     
 }
@@ -345,6 +359,12 @@ extension ProfileController: UICollectionViewDelegateFlowLayout {
 extension ProfileController: ProfileHeaderDelegate {
     
     func header(_ profileHeader: ProfileHeader, didTapActionButtonFor user: User) {
+        // 還沒登入要先登入
+        if UserService.shared.currentUser == nil {
+            showMessage(withTitle: "Oops", message: "請先登入")
+            return
+        }
+        
         if user.isCurrentUser {
             // Show edit profile
             let controller = ProfileEditController()
@@ -354,7 +374,7 @@ extension ProfileController: ProfileHeaderDelegate {
             
         } else if user.isFollowed {
             // Handle unfollow user
-            UserService.unfollow(uid: user.uid) { _ in
+            UserService.shared.unfollow(uid: user.uid) { _ in
                 self.user.isFollowed = false
                 self.collectionView.reloadData()
             }
@@ -363,7 +383,7 @@ extension ProfileController: ProfileHeaderDelegate {
             
         } else {
             // Handle follow user
-            UserService.follow(uid: user.uid) { _ in
+            UserService.shared.follow(uid: user.uid) { _ in
                 self.user.isFollowed = true
                 self.collectionView.reloadData()
             }
@@ -371,7 +391,7 @@ extension ProfileController: ProfileHeaderDelegate {
             // 通知被follow的人
             guard let currentUid = LocalStorage.shared.getUid() else { return }
             UserService.shared.fetchUserBy(uid: currentUid, completion: { currentUser in
-                NotificationService.uploadNotification(
+                NotificationService.shared.uploadNotification(
                     toUid: user.uid,
                     notiType: .follow,
                     fromUser: currentUser)
@@ -382,8 +402,16 @@ extension ProfileController: ProfileHeaderDelegate {
         }
     }
     
+    func header(_ profileHeader: ProfileHeader) {
+        deleteAccountAlert.showAlert(on: self)
+    }
+    
     func header(_ profileHeader: ProfileHeader, wantToChatWith user: User) {
-        guard let currentUser = UserService.shared.currentUser else { return }
+        // 還沒登入要先登入
+        guard let currentUser = UserService.shared.currentUser else {
+            showMessage(withTitle: "Oops", message: "請先登入")
+            return
+        }
         
         // 封鎖過不可聊天
         if currentUser.blockedUsers.contains(user.uid) {
@@ -399,6 +427,12 @@ extension ProfileController: ProfileHeaderDelegate {
     }
     
     func header(_ profileHeader: ProfileHeader, didTapBlock user: User) {
+        // 還沒登入要先登入
+        if UserService.shared.currentUser == nil {
+            showMessage(withTitle: "Oops", message: "請先登入")
+            return
+        }
+        
         if user.isBlocked {
             UserService.shared.unblock(uid: user.uid) { error in
                 if let error = error {
@@ -448,8 +482,4 @@ class TopImageView: UIImageView {
         layer.addSublayer(gradientLayer)
         gradientLayer.frame = self.bounds
     }
-}
-
-extension ProfileController: MFMailComposeViewControllerDelegate {
-    
 }
