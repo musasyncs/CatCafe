@@ -99,6 +99,7 @@ class ArrangeMeetController: UIViewController {
         stackView.spacing = 24
         stackView.backgroundColor = .clear
         scrollView.addSubview(stackView)
+        stackView.centerX(inView: scrollView)
         stackView.fillSuperView()
     }
     
