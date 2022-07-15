@@ -14,8 +14,6 @@ target 'CatCafe' do
   pod 'Firebase/Crashlytics'
   pod 'FirebaseFirestoreSwift'
   
-  pod 'lottie-ios'
-  
   pod 'MetalPetal', '~> 1.10.1'
   pod 'Kingfisher'
 

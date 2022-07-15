@@ -41,7 +41,7 @@ extension ChatController: MessageCellDelegate {
                 
                 navigationController?.pushViewController(moviePlayer, animated: true)
             }
-
+            
         }
     }
 }
