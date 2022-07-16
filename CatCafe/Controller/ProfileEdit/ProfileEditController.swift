@@ -271,12 +271,12 @@ extension ProfileEditController {
                 
                 if error != nil {
                     self.dismiss()
-                    self.showFailure(text: "無法更新個人資料")
+                    self.showFailure(text: "失敗")
                     return
                 }
                 
                 self.dismiss()
-                self.showSuccess(text: "資料已更新")
+                self.showSuccess()
                 self.nameLabel.text = fullname
                 
                 group.leave()
@@ -305,7 +305,6 @@ extension ProfileEditController {
                             return
                         }
                         self.dismiss()
-                        self.showSuccess(text: "頭貼已更新")
                         group.leave()
                     }
                 }

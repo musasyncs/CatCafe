@@ -45,7 +45,7 @@ class CommentService {
         let group = DispatchGroup()
         
         let query = firebaseReference(.posts).document(postId).collection("comments")
-            .order(by: "timestamp", descending: true)
+            .order(by: "timestamp", descending: false)
         
         query.addSnapshotListener { snapshot, _ in
             
@@ -110,7 +110,7 @@ class CommentService {
         let query = firebaseReference(.meets)
             .document(meetId)
             .collection("comments")
-            .order(by: "timestamp", descending: true)
+            .order(by: "timestamp", descending: false)
         
         query.addSnapshotListener { snapshot, _ in
             

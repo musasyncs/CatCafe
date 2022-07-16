@@ -13,20 +13,17 @@ class PostService {
     static let shared = PostService()
     private init() {}
     
-    enum PostError: Error {
-        case unknownError
-    }
-    
     // MARK: - Upload image post
-    func uploadImagePost(
-        caption: String,
-        postImage: UIImage,
-        cafeId: String,
-        cafeName: String,
-        completion: @escaping(FirestoreCompletion)
+    func uploadImagePost(caption: String,
+                         postImage: UIImage,
+                         cafeId: String,
+                         cafeName: String,
+                         completion: @escaping(FirestoreCompletion)
     ) {
         guard let uid = LocalStorage.shared.getUid() else { return }
-        let directory = "Post/" + "_\(uid)" + ".jpg"
+        
+        let fileName = Date().stringDate()
+        let directory = "Post/" + "_\(uid)" + "_\(fileName)" + ".jpg"
         
         FileStorage.uploadImage(postImage, directory: directory) { imageUrlString in
             let dic: [String: Any] = [
@@ -44,9 +41,9 @@ class PostService {
         }
     }
     
-    // MARK: - Fetch all posts / Fetch posts by uid / Fetch post with post id / Fetch feed posts
+    // MARK: - Fetch all posts / Fetch feed posts / Fetch posts by uid / Fetch post with post id
     func fetchPosts(completion: @escaping (Result<[Post], Error>) -> Void) {
-        firebaseReference(.posts).order(by: "timestamp", descending: true).getDocuments { snapshot, _ in
+        firebaseReference(.posts).getDocuments { snapshot, _ in
             var posts = [Post]()
             let group = DispatchGroup()
             
@@ -54,10 +51,7 @@ class PostService {
                 
                 let postId = snapshot.documentID
                 let dic = snapshot.data()
-                guard let uid = dic["ownerUid"] as? String else {
-                    completion(.failure(PostError.unknownError))
-                    return
-                }
+                guard let uid = dic["ownerUid"] as? String else { return }
                 
                 group.enter()
                 UserService.shared.fetchUserBy(uid: uid) { user in
@@ -70,60 +64,6 @@ class PostService {
             group.notify(queue: DispatchQueue.main) {
                 posts.sort(by: { $0.timestamp.seconds > $1.timestamp.seconds })
                 completion(.success(posts))
-            }
-            
-        }
-    }
-    
-    func fetchPosts(forUser uid: String, completion: @escaping (Result<[Post], Error>) -> Void) {
-        let query = firebaseReference(.posts).whereField("ownerUid", isEqualTo: uid)
-        
-        query.getDocuments { snapshot, _ in
-            
-            var posts = [Post]()
-            let group = DispatchGroup()
-            
-            snapshot?.documents.forEach({ snapshot in
-                
-                let postId = snapshot.documentID
-                let dic = snapshot.data()
-                guard let uid = dic["ownerUid"] as? String else {
-                    completion(.failure(PostError.unknownError))
-                    return
-                }
-                
-                group.enter()
-                UserService.shared.fetchUserBy(uid: uid) { user in
-                    let post = Post(user: user, postId: postId, dic: dic)
-                    posts.append(post)
-                    group.leave()
-                }
-            })
-            
-            group.notify(queue: DispatchQueue.main) {
-                posts.sort(by: { $0.timestamp.seconds > $1.timestamp.seconds })
-                completion(.success(posts))
-            }
-            
-        }
-    }
-    
-    func fetchPost(withPostId postId: String, completion: @escaping (Result<Post, Error>) -> Void) {
-        firebaseReference(.posts).document(postId).getDocument { snapshot, error in
-            if let error = error {
-                completion(.failure(error))
-            } else {
-                guard let snapshot = snapshot,
-                      let dic = snapshot.data(),
-                      let uid = dic["ownerUid"] as? String else {
-                          completion(.failure(PostError.unknownError))
-                          return
-                      }
-                UserService.shared.fetchUserBy(uid: uid) { user in
-                    let post = Post(user: user, postId: snapshot.documentID, dic: dic)
-                    completion(.success(post))
-                }
-
             }
             
         }
@@ -159,6 +99,50 @@ class PostService {
         }
     }
     
+    func fetchPosts(forUser uid: String, completion: @escaping (Result<[Post], Error>) -> Void) {
+        firebaseReference(.posts).whereField("ownerUid", isEqualTo: uid).getDocuments { snapshot, _ in
+            
+            var posts = [Post]()
+            let group = DispatchGroup()
+            
+            snapshot?.documents.forEach({ snapshot in
+                let postId = snapshot.documentID
+                let dic = snapshot.data()
+                guard let uid = dic["ownerUid"] as? String else { return }
+                
+                group.enter()
+                UserService.shared.fetchUserBy(uid: uid) { user in
+                    let post = Post(user: user, postId: postId, dic: dic)
+                    posts.append(post)
+                    group.leave()
+                }
+            })
+            
+            group.notify(queue: DispatchQueue.main) {
+                posts.sort(by: { $0.timestamp.seconds > $1.timestamp.seconds })
+                completion(.success(posts))
+            }
+        }
+    }
+    
+    func fetchPost(withPostId postId: String, completion: @escaping (Result<Post, Error>) -> Void) {
+        firebaseReference(.posts).document(postId).getDocument { snapshot, error in
+            if let error = error {
+                completion(.failure(error))
+            } else {
+                guard let snapshot = snapshot,
+                      let dic = snapshot.data(),
+                      let uid = dic["ownerUid"] as? String else { return }
+                UserService.shared.fetchUserBy(uid: uid) { user in
+                    let post = Post(user: user, postId: snapshot.documentID, dic: dic)
+                    completion(.success(post))
+                }
+
+            }
+            
+        }
+    }
+    
     // MARK: - Fetch Like Count / Like a post / UnLike a post / Check if current user like a post
     func fetchLikeCount(post: Post, completion: @escaping ((Int) -> Void)) {
         PostService.shared.fetchPost(withPostId: post.postId) { result in
@@ -180,14 +164,13 @@ class PostService {
                 if error != nil { return }
                 
                 firebaseReference(.posts).document(post.postId)
-                    .collection("post-likes").document(uid).setData([:]) { _ in
+                    .collection("post-likes").document(uid).setData([:]) { error in
+                        if error != nil { return }
+                        
                         firebaseReference(.users).document(uid)
                             .collection("user-post-likes").document(post.postId).setData([:]) { error in
-                                
-                                if let error = error {
-                                    print(error.localizedDescription)
-                                }
-                                
+                                if error != nil { return }
+        
                                 completion(likeCount + 1)
                             }
                     }
@@ -207,14 +190,12 @@ class PostService {
                 if error != nil { return }
                 
                 firebaseReference(.posts).document(post.postId)
-                    .collection("post-likes").document(currentUid).delete { _ in
+                    .collection("post-likes").document(currentUid).delete { error in
+                        if error != nil { return }
                         
                         firebaseReference(.users).document(currentUid)
                             .collection("user-post-likes").document(post.postId).delete { error in
-                                
-                                if let error = error {
-                                    print(error.localizedDescription)
-                                }
+                                if error != nil { return }
                                 
                                 completion(likeCount - 1)
                             }
@@ -244,7 +225,8 @@ class PostService {
         guard let uid = LocalStorage.shared.getUid() else { return }
         
         let query = firebaseReference(.posts).whereField("ownerUid", isEqualTo: user.uid)
-        query.getDocuments { snapshot, _ in
+        query.getDocuments { snapshot, error in
+            if error != nil { return }
             guard let documents = snapshot?.documents else { return }
             let docIds = documents.map({ $0.documentID })
             
@@ -261,8 +243,10 @@ class PostService {
     
     private func updateFeedAfterPost(postId: String) {
         guard let currentUid = LocalStorage.shared.getUid() else { return }
+        
         firebaseReference(.followers).document(currentUid)
-            .collection("user-followers").getDocuments { snapshot, _ in
+            .collection("user-followers").getDocuments { snapshot, error in
+                if error != nil { return }
                 guard let documents = snapshot?.documents else { return }
                 
                 // 給追蹤者

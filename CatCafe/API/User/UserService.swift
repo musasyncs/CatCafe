@@ -128,7 +128,6 @@ class UserService {
                 }
             }
         }
-        
     }
     
     func fetchUsers(exceptCurrentUser: Bool, completion: @escaping([User]) -> Void) {

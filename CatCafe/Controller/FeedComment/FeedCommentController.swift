@@ -166,6 +166,10 @@ extension FeedCommentController: CommentInputAccessoryViewDelegate {
                 
                 self.dismiss()
                 inputView.clearCommentTextView()
+                inputView.postButton.isEnabled = false
+                inputView.postButton.setTitleColor(UIColor.lightGray, for: .normal)
+                
+                self.dismissKeyboard()
                 
                 // 通知被留言的人
                 NotificationService.shared.uploadNotification(

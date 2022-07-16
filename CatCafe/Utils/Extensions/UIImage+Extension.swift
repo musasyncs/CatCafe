@@ -15,24 +15,6 @@ extension UIImage {
     var breadthSize: CGSize { return CGSize(width: breadth, height: breadth) }
     var breadthRect: CGRect { return CGRect(origin: .zero, size: breadthSize) }
     
-    var circleMasked: UIImage? {
-        
-        UIGraphicsBeginImageContextWithOptions(breadthSize, false, scale)
-        
-        defer { UIGraphicsEndImageContext() }
-        guard let cgImage = cgImage?.cropping(to: CGRect(
-            origin: CGPoint(
-                x: isLandscape ? floor((size.width - size.height) / 2) : 0,
-                y: isPortrait ? floor((size.height - size.width) / 2) : 0),
-            size: breadthSize)
-        )
-        else { return nil }
-        
-        UIBezierPath(ovalIn: breadthRect).addClip()
-        UIImage(cgImage: cgImage).draw(in: breadthRect)
-        return UIGraphicsGetImageFromCurrentImageContext()
-    }
-    
     func resize(to goalSize: CGSize) -> UIImage? {
         let widthRatio = goalSize.width / size.width
         let heightRatio = goalSize.height / size.height
@@ -89,7 +71,7 @@ enum ImageAsset: String {
     case location_arrow_flat
     case location
     case map
-    case pin
+    case pawprint
     case website
     case Icons_24px_RegisterCellphone
     

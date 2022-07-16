@@ -21,7 +21,7 @@ class MeetTimeTileView: UIView {
     
     let timeSelectorView = TimeSelectorView()
     lazy var textField = CustomTextField(
-        placeholder: "目前暫無刪除功能",
+        placeholder: "目前暫無刪除聚會功能",
         textColor: .ccGrey,
         fgColor: .ccPrimary,
         font: .systemFont(ofSize: 11, weight: .regular)

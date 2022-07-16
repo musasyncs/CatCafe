@@ -36,7 +36,7 @@ class MessageCreator {
             FileStorage.downloadImage(imageUrl: localMessage.pictureUrl) { (thumbNail) in
                 
                 FileStorage.downloadVideo(videoLink: localMessage.videoUrl) { (_, fileName) in
-                    let videoURL = URL(fileURLWithPath: fileInDocumentsDirectory(fileName: fileName))
+                    let videoURL = URL(fileURLWithPath: filePathInDocumentsDirectory(fileName: fileName))
                     let videoItem = VideoMessage(url: videoURL)
                     mkMessage.videoItem = videoItem
                     mkMessage.kind = MessageKind.video(videoItem)

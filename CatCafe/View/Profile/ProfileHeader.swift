@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import Lottie
 
 protocol ProfileHeaderDelegate: AnyObject {
     func header(_ profileHeader: ProfileHeader, didTapActionButtonFor user: User)

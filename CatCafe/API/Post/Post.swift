@@ -20,6 +20,7 @@ struct Post {
     var isLiked = false
     var postId: String
     var user: User
+    var commentCount = 0
         
     init(user: User, postId: String, dic: [String: Any]) {
         self.cafeId         = dic["cafeId"] as? String ?? ""

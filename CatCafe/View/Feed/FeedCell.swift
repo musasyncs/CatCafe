@@ -260,4 +260,5 @@ final class FeedCell: UICollectionViewCell {
         guard let gestureView = gesture.view else { return }
         delegate?.cell(self, gestureView: gestureView, didDoubleTapLike: viewModel.post)
     }
+    
 }

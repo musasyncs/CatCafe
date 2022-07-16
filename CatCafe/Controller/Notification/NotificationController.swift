@@ -155,7 +155,6 @@ extension NotificationController: UITableViewDataSource, UITableViewDelegate {
                     cell.viewModel?.mediaUrlString = post.mediaUrlString
                 case .failure:
                     self.dismiss()
-                    self.showFailure(text: "無法讀取貼文")
                 }
             }
         }
@@ -185,7 +184,7 @@ extension NotificationController: NotificationCellDelegate {
                 controller.post = post
                 self.navigationController?.pushViewController(controller, animated: true)
             case .failure:
-                self.showFailure(text: "無法讀取貼文")
+                self.showFailure(text: "錯誤")
             }
         }
     }

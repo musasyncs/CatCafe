@@ -108,7 +108,7 @@ class MeetDetailController: UIViewController {
             left: view.leftAnchor,
             bottom: view.safeAreaLayoutGuide.bottomAnchor,
             right: view.rightAnchor,
-            paddingBottom: 45
+            paddingBottom: 60
         )
     }
     
@@ -217,19 +217,8 @@ extension MeetDetailController: UICollectionViewDataSource, UICollectionViewDele
                 withReuseIdentifier: CommentSectionHeader.identifier,
                 for: indexPath
             ) as? CommentSectionHeader else { return UICollectionReusableView() }
-                        
             header.delegate = self
             header.viewModel = MeetViewModel(meet: meet)
-                        
-            // meet owner info
-            UserService.shared.fetchUserBy(uid: meet.ownerUid) { user in
-                header.viewModel?.ownerUsername = user.username
-                header.viewModel?.ownerImageUrlString = user.profileImageUrlString
-            }
-            
-            // comments count
-            header.viewModel?.comments = self.comments
-                                
             return header
         }
     }
@@ -340,8 +329,10 @@ extension MeetDetailController: CommentInputAccessoryViewDelegate {
                 
                 self.dismiss()
                 inputView.clearCommentTextView()
+                inputView.postButton.isEnabled = false
+                inputView.postButton.setTitleColor(UIColor.lightGray, for: .normal)
                 
-                // 通知被留言的人
+                self.dismissKeyboard()
             }
             
         })

@@ -15,14 +15,13 @@ class MeetService {
     
     // MARK: - Upload meet
     // swiftlint:disable:next function_parameter_count
-    static func uploadMeet(
-        title: String,
-        caption: String,
-        meetImage: UIImage,
-        cafeId: String,
-        cafeName: String,
-        meetDate: Date,
-        completion: @escaping(FirestoreCompletion)
+    static func uploadMeet(title: String,
+                           caption: String,
+                           meetImage: UIImage,
+                           cafeId: String,
+                           cafeName: String,
+                           meetDate: Date,
+                           completion: @escaping(FirestoreCompletion)
     ) {
         guard let uid = LocalStorage.shared.getUid() else { return }
         let directory = "Meet/" + "_\(uid)" + ".jpg"
@@ -44,33 +43,46 @@ class MeetService {
         }
     }
     
-    // MARK: - Fetch all meets / Fetch Meet with meet id / Fetch meets by uid / Fetch current user attended meets
+    // MARK: - Fetch all meets / Fetch meets by uid / Fetch current user attended meets / Fetch Meet with meet id
     static func fetchMeets(completion: @escaping (([Meet]) -> Void)) {
-        firebaseReference(.meets).order(by: "timestamp", descending: true).getDocuments { snapshot, _ in
-            guard let documents = snapshot?.documents else { return }
+        firebaseReference(.meets).getDocuments { snapshot, error in
+            if error != nil { return }
+            let group = DispatchGroup()
+            var meets = [Meet]()
             
-            let meets = documents.map { Meet(meetId: $0.documentID, dic: $0.data()) }
-            completion(meets)
-        }
-    }
-    
-    static func fetchMeet(withMeetId meetId: String, completion: @escaping (Meet) -> Void) {
-        firebaseReference(.meets).document(meetId).getDocument { snapshot, _ in
-            guard let snapshot = snapshot else { return }
-            guard let dic = snapshot.data() else { return }
-            let meet = Meet(meetId: snapshot.documentID, dic: dic)
-            completion(meet)
+            snapshot?.documents.forEach({ snapshot in
+                group.enter()
+                self.fetchMeet(withMeetId: snapshot.documentID) { meet in
+                    meets.append(meet)
+                    group.leave()
+                }
+            })
+            
+            group.notify(queue: .main) {
+                meets.sort(by: { $0.timestamp.seconds > $1.timestamp.seconds })
+                completion(meets)
+            }
         }
     }
     
     static func fetchMeets(forUser uid: String, completion: @escaping(([Meet]) -> Void)) {
-        let query = firebaseReference(.meets).whereField("ownerUid", isEqualTo: uid)
-        
-        query.getDocuments { snapshot, _ in
-            guard let documents = snapshot?.documents else { return }
-            var meets = documents.map { Meet(meetId: $0.documentID, dic: $0.data()) }
-            meets.sort(by: { $0.timestamp.seconds > $1.timestamp.seconds })
-            completion(meets)
+        firebaseReference(.meets).whereField("ownerUid", isEqualTo: uid).getDocuments { snapshot, error in
+            if error != nil { return }
+            var meets = [Meet]()
+            let group = DispatchGroup()
+            
+            snapshot?.documents.forEach({ snapshot in
+                group.enter()
+                self.fetchMeet(withMeetId: snapshot.documentID) { meet in
+                    meets.append(meet)
+                    group.leave()
+                }
+            })
+            
+            group.notify(queue: .main) {
+                meets.sort(by: { $0.timestamp.seconds > $1.timestamp.seconds })
+                completion(meets)
+            }
         }
     }
     
@@ -92,6 +104,20 @@ class MeetService {
             })
 
             completion([Meet]())
+        }
+    }
+    
+    static func fetchMeet(withMeetId meetId: String, completion: @escaping (Meet) -> Void) {
+        firebaseReference(.meets).document(meetId).getDocument { snapshot, error in
+            if error != nil { return }
+            guard let snapshot = snapshot,
+                  let dic = snapshot.data(),
+                  let uid = dic["ownerUid"] as? String else { return }
+
+            UserService.shared.fetchUserBy(uid: uid) { user in
+                let meet = Meet(user: user, meetId: snapshot.documentID, dic: dic)
+                completion(meet)
+            }
         }
     }
         
@@ -206,9 +232,8 @@ class MeetService {
     }
     
     // MARK: - Fetch all people for a meet
-    static func fetchPeople(
-        forMeet meetId: String,
-        completion: @escaping ([Person]) -> Void
+    static func fetchPeople(forMeet meetId: String,
+                            completion: @escaping ([Person]) -> Void
     ) {
         var people = [Person]()
         
