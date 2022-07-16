@@ -48,7 +48,7 @@ class NewMessageController: UIViewController {
     
     // MARK: - API
     private func fetchUsers() {
-        UserService.fetchUsers(exceptCurrentUser: true, completion: { users in
+        UserService.shared.fetchUsers(exceptCurrentUser: true, completion: { users in
             
             // 過濾出封鎖名單以外的 users
             guard let currentUser = UserService.shared.currentUser else { return }
@@ -81,7 +81,7 @@ extension NewMessageController {
         tableView.tableFooterView = UIView()
         tableView.separatorStyle = .none
         tableView.bounces = false
-        tableView.rowHeight = 80
+        tableView.rowHeight = 72
         view.addSubview(tableView)
         tableView.fillSuperView()
     }

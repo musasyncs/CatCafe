@@ -10,7 +10,6 @@ import UIKit
 struct PostViewModel {
     
     var post: Post
-    var comments = [Comment]()
 
     var ownerImageUrlString: String? {
         return post.user.profileImageUrlString
@@ -18,11 +17,17 @@ struct PostViewModel {
     var ownerUsername: String? {
         return post.user.username
     }
-    
     var locationText: String? {
         return post.cafeName
     }
-    
+    var shouldHideFunctionButton: Bool {
+        if post.ownerUid == UserService.shared.currentUser?.uid {
+            return true
+        } else {
+            return false
+        }
+    }
+
     var mediaUrlString: String {
         return post.mediaUrlString
     }
@@ -63,13 +68,9 @@ struct PostViewModel {
     var likeButtonTintColor: UIColor {
         return post.isLiked ? .systemRed : .ccGrey
     }
-    
-    var commentCount: Int {
-        return comments.count
-    }
-    
+        
     var commentCountText: String? {
-        return "\(commentCount)"
+        return "\(post.commentCount)"
     }
     
     var timestampText: String? {

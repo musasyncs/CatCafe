@@ -40,10 +40,9 @@ class MeetDetailController: UIViewController {
             forCellWithReuseIdentifier: CommentCell.identifier
         )
         collectionView.alwaysBounceVertical = true
-        collectionView.keyboardDismissMode = .interactive
-        
-        collectionView.backgroundColor = .white
         collectionView.showsVerticalScrollIndicator = false
+        collectionView.backgroundColor = .white
+        
         return collectionView
     }()
     
@@ -77,6 +76,7 @@ class MeetDetailController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        setupDismissKeyboardWhenTapped()
         setupCollectionView()
         setupBackButton()
     
@@ -96,6 +96,11 @@ class MeetDetailController: UIViewController {
         tabBarController?.tabBar.isHidden = false
     }
 
+    private func setupDismissKeyboardWhenTapped() {
+        let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        collectionView.addGestureRecognizer(tap)
+    }
+    
     private func setupCollectionView() {
         view.addSubview(collectionView)
         collectionView.anchor(
@@ -103,7 +108,7 @@ class MeetDetailController: UIViewController {
             left: view.leftAnchor,
             bottom: view.safeAreaLayoutGuide.bottomAnchor,
             right: view.rightAnchor,
-            paddingBottom: 45
+            paddingBottom: 60
         )
     }
     
@@ -139,7 +144,7 @@ class MeetDetailController: UIViewController {
     }
     
     private func fetchComments() {
-        CommentService.fetchMeetComments(forMeet: meet.meetId) { comments in
+        CommentService.shared.fetchMeetComments(forMeet: meet.meetId) { comments in
             
             // 過濾出封鎖名單以外的 comments
             guard let currentUser = UserService.shared.currentUser else { return }
@@ -153,6 +158,10 @@ class MeetDetailController: UIViewController {
     // MARK: - Action
     @objc func goBack() {
         dismiss(animated: false)
+    }
+    
+    @objc func dismissKeyboard() {
+        commentInputView.commentTextView.resignFirstResponder()
     }
 
 }
@@ -208,19 +217,8 @@ extension MeetDetailController: UICollectionViewDataSource, UICollectionViewDele
                 withReuseIdentifier: CommentSectionHeader.identifier,
                 for: indexPath
             ) as? CommentSectionHeader else { return UICollectionReusableView() }
-                        
             header.delegate = self
             header.viewModel = MeetViewModel(meet: meet)
-                        
-            // meet owner info
-            UserService.shared.fetchUserBy(uid: meet.ownerUid) { user in
-                header.viewModel?.ownerUsername = user.username
-                header.viewModel?.ownerImageUrlString = user.profileImageUrlString
-            }
-            
-            // comments count
-            header.viewModel?.comments = self.comments
-                                
             return header
         }
     }
@@ -315,7 +313,7 @@ extension MeetDetailController: CommentInputAccessoryViewDelegate {
         UserService.shared.fetchUserBy(uid: currentUid, completion: { currentUser in
             
             self.show()
-            CommentService.uploadMeetComment(
+            CommentService.shared.uploadMeetComment(
                 meetId: self.meet.meetId,
                 user: currentUser,
                 commentType: 0,
@@ -331,8 +329,10 @@ extension MeetDetailController: CommentInputAccessoryViewDelegate {
                 
                 self.dismiss()
                 inputView.clearCommentTextView()
+                inputView.postButton.isEnabled = false
+                inputView.postButton.setTitleColor(UIColor.lightGray, for: .normal)
                 
-                // 通知被留言的人
+                self.dismissKeyboard()
             }
             
         })

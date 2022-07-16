@@ -22,12 +22,13 @@ class AttendMeetController: UIViewController {
 
     private lazy var contactTextView: InputTextView = {
         let textView = InputTextView()
-        textView.placeholderText = "輸入您最常用的聯絡方式"
+        textView.placeholderText = "最常用的聯絡方式"
+        textView.backgroundColor = .ccGreyVariant.withAlphaComponent(0.1)
         textView.font = .systemFont(ofSize: 13, weight: .regular)
         textView.showsVerticalScrollIndicator = false
         textView.isScrollEnabled = false
         textView.delegate = self
-        textView.placeholderShouldCenter = false
+        textView.placeholderShouldCenter = true
         return textView
     }()
     
@@ -44,12 +45,13 @@ class AttendMeetController: UIViewController {
 
     private lazy var remarkTextView: InputTextView = {
         let textView = InputTextView()
-        textView.placeholderText = "輸入想對聚會主說的話"
+        textView.placeholderText = "想說的話"
+        textView.backgroundColor = .ccGreyVariant.withAlphaComponent(0.1)
         textView.font = .systemFont(ofSize: 13, weight: .regular)
         textView.showsVerticalScrollIndicator = false
         textView.isScrollEnabled = false
         textView.delegate = self
-        textView.placeholderShouldCenter = false
+        textView.placeholderShouldCenter = true
         return textView
     }()
     
@@ -231,7 +233,6 @@ extension AttendMeetController {
     }
     
     private func setupContactTextView() {
-        contactTextView.backgroundColor = .gray6
         view.addSubview(contactTextView)
         contactTextView.anchor(
             top: contactLabel.bottomAnchor,
@@ -241,7 +242,6 @@ extension AttendMeetController {
             paddingLeft: 16,
             paddingRight: 16
         )
-        contactTextView.setHeight(50)
     }
     
     private func setupContactCountLabel() {
@@ -263,7 +263,6 @@ extension AttendMeetController {
     }
     
     private func setupRemarkTextView() {
-        remarkTextView.backgroundColor = .gray6
         view.addSubview(remarkTextView)
         remarkTextView.anchor(
             top: remarkLabel.bottomAnchor,
@@ -273,7 +272,6 @@ extension AttendMeetController {
             paddingLeft: 16,
             paddingRight: 16
         )
-        remarkTextView.setHeight(50)
     }
     
     private func setupRemarkCountLabel() {

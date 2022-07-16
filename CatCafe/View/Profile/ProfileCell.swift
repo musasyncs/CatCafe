@@ -12,12 +12,13 @@ final class ProfileCell: UICollectionViewCell {
     var viewModel: PostViewModel? {
         didSet {
             guard let viewModel = viewModel else { return }
-            postImageView.loadImage(viewModel.mediaUrlString, placeHolder: UIImage.asset(.no_image))
+            postImageView.loadImage(viewModel.mediaUrlString)
         }
     }
     
     private let postImageView: UIImageView = {
         let imageView = UIImageView()
+        imageView.backgroundColor = .gray6
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         return imageView

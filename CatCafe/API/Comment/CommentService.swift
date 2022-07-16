@@ -5,14 +5,16 @@
 //  Created by Ewen on 2022/6/18.
 //
 
-//import Firebase
 import FirebaseFirestore
 
-struct CommentService {
+class CommentService {
+    
+    static let shared = CommentService()
+    private init() {}
     
     // MARK: - Upload comment for a post
     // swiftlint:disable:next function_parameter_count
-    static func uploadComment(
+    func uploadComment(
         postId: String,
         user: User,
         commentType: Int,
@@ -35,7 +37,7 @@ struct CommentService {
     }
     
     // MARK: - Fetch all comments for a post
-    static func fetchComments(
+    func fetchComments(
         forPost postId: String,
         completion: @escaping ([Comment]) -> Void
     ) {
@@ -75,7 +77,7 @@ struct CommentService {
     
     // MARK: - Upload comment for a meet
     // swiftlint:disable:next function_parameter_count
-    static func uploadMeetComment(
+    func uploadMeetComment(
         meetId: String,
         user: User,
         commentType: Int,
@@ -98,7 +100,7 @@ struct CommentService {
     }
     
     // MARK: - Fetch all comments for a meet
-    static func fetchMeetComments(
+    func fetchMeetComments(
         forMeet meetId: String,
         completion: @escaping ([Comment]) -> Void
     ) {

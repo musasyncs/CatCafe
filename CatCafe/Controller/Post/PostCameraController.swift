@@ -42,9 +42,8 @@ class PostCameraController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         checkCameraPermissions()
-        setupCaptureButton()
     }
-    
+
     private func setupCaptureButton() {
         view.addSubview(capturePhotoButton)
         capturePhotoButton.anchor(bottom: view.bottomAnchor, paddingBottom: 24)
@@ -110,6 +109,9 @@ class PostCameraController: UIViewController {
         view.layer.addSublayer(previewLayer)
         captureSession.startRunning()
         self.session = captureSession
+        
+        // setup button
+        setupCaptureButton()
     }
         
     // MARK: - Action

@@ -5,9 +5,7 @@
 //  Created by Ewen on 2022/6/29.
 //
 
-import Foundation
-import Firebase
-import FirebaseFirestoreSwift
+import FirebaseFirestore
 
 class MessageService {
     
@@ -18,12 +16,13 @@ class MessageService {
     private init() {}
 
     func checkForOldChats(_ documentId: String, collectionId: String, completion: @escaping ([LocalMessage]) -> Void) {
+        
         firebaseReference(.messages)
             .document(documentId)
             .collection(collectionId)
-            .getDocuments { (querySnapshot, _) in
+            .getDocuments { (snapshot, _) in
             
-            guard let documents = querySnapshot?.documents else {
+            guard let documents = snapshot?.documents else {
                 print("no documents for old chats")
                 return
             }

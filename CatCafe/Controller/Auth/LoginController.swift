@@ -42,8 +42,8 @@ class LoginController: UIViewController {
     )
     private lazy var loginButton = UIButton(type: .system)
     private lazy var signInWithAppleButton = ASAuthorizationAppleIDButton(
-        authorizationButtonType: .default,
-        authorizationButtonStyle: .black
+        authorizationButtonType: .signIn,
+        authorizationButtonStyle: .white
     )
     private lazy var stackView = UIStackView(
         arrangedSubviews: [
@@ -236,9 +236,6 @@ extension LoginController {
     
     private func setupSignInWithAppleButton() {
         signInWithAppleButton.addTarget(self, action: #selector(handleSignInWithAppleTapped), for: .touchUpInside)
-        signInWithAppleButton.layer.borderWidth = 1
-        signInWithAppleButton.layer.borderColor = UIColor.black.cgColor
-        signInWithAppleButton.layer.cornerRadius = 45 / 2
         signInWithAppleButton.setHeight(45)
     }
     
@@ -360,18 +357,20 @@ extension LoginController: ASAuthorizationControllerDelegate, ASAuthorizationCon
             }
             self.dismiss() // 登入成功
             
-            // 拿currentUid和userEmail
+            // 拿 currentUid, userEmail, Apple givenName
             let currentUid = authDataResult.user.uid
             let userEmail = authDataResult.user.email
- 
+            var userName: String?
+            if let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential {
+                userName = appleIDCredential.fullName?.givenName
+            }
+            
             let semaphore = DispatchSemaphore(value: 0)
             let dispatchQueue = DispatchQueue.global(qos: .background)
             
             UserService.shared.checkIfUserExistOnFirebase(uid: currentUid) { result in
-                
                 switch result {
                 case .success(let isExist):
-                    
                     // 已註冊過
                     if isExist {
                         self.show()
@@ -423,15 +422,14 @@ extension LoginController: ASAuthorizationControllerDelegate, ASAuthorizationCon
                         }
                     } else {
                         // 尚未註冊
-                             
                         self.show()
                         
                         dispatchQueue.async {
                             UserService.shared.createUserProfile(
                                 uid: currentUid,
                                 email: userEmail ?? "",
-                                username: "",
-                                fullname: "",
+                                username: userName ?? "User Name",
+                                fullname: userName ?? "Full Name",
                                 profileImageUrlString: "",
                                 bioText: "",
                                 blockedUsers: []
@@ -453,7 +451,6 @@ extension LoginController: ASAuthorizationControllerDelegate, ASAuthorizationCon
                             }
                         }
                     }
-                    
                 case .failure(let error):
                     print(error)
                 }

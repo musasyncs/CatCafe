@@ -11,10 +11,14 @@ import Firebase
 struct MeetViewModel {
     
     var meet: Meet
-    var comments = [Comment]()
         
-    var ownerImageUrlString: String?
-    var ownerUsername: String?
+    var ownerImageUrlString: String? {
+        return meet.user.profileImageUrlString
+    }
+    
+    var ownerUsername: String? {
+        return meet.user.username
+    }
     
     var locationText: String? {
         return meet.cafeName
@@ -90,12 +94,8 @@ struct MeetViewModel {
         return meet.peopleCount
     }
     
-    var commentCount: Int {
-        return comments.count
-    }
-    
     var infoText: String? {
-        return "\(peopleCount)人報名｜\(commentCount)則留言"
+        return "\(peopleCount)人報名｜\(meet.commentCount)則留言"
     }
     
     var shouldHidePeopleButton: Bool {

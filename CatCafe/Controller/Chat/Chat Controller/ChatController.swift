@@ -220,8 +220,10 @@ extension ChatController {
         if localMessage.senderId != LocalStorage.shared.getUid()! {
             markMessageAsRead(localMessage)
         }
-        let messageReceiver = MessageReceiver(_collectionView: self)
-        self.mkMessages.append(messageReceiver.createMessage(localMessage: localMessage)!)
+        self.mkMessages.append(
+            MessageCreator(_collectionView: self)
+                .createMessage(localMessage: localMessage)!
+        )
         displayingMessagesCount += 1
         
         self.messagesCollectionView.reloadData()
@@ -331,8 +333,10 @@ extension ChatController {
             minMessageNumber = 0
         }
         for number in (minMessageNumber ... maxMessageNumber).reversed() {
-            let messageReceiver = MessageReceiver(_collectionView: self)
-            self.mkMessages.insert(messageReceiver.createMessage(localMessage: allLocalMessages[number])!, at: 0)
+            self.mkMessages.insert(
+                MessageCreator(_collectionView: self)
+                    .createMessage(localMessage: allLocalMessages[number])!, at: 0
+            )
             displayingMessagesCount += 1
         }
     }

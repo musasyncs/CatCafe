@@ -46,7 +46,7 @@ class MapCell: UITableViewCell {
     
     lazy var imageContainerView: UIView = {
         let view = UIView()
-        view.backgroundColor = .lightGray
+        view.backgroundColor = .ccGreyVariant.withAlphaComponent(0.1)
         view.addSubview(locationImageView)
         locationImageView.center(inView: view)
         locationImageView.setDimensions(height: 16, width: 16)
@@ -57,8 +57,10 @@ class MapCell: UITableViewCell {
         let imageView = UIImageView()
         imageView.clipsToBounds = true
         imageView.contentMode = .scaleAspectFit
-        imageView.backgroundColor = .lightGray
-        imageView.image = UIImage.asset(.pin)
+        imageView.backgroundColor = .clear
+        imageView.image = UIImage.asset(.pawprint)?
+            .resize(to: .init(width: 20, height: 20))?
+            .withRenderingMode(.alwaysOriginal)
         return imageView
     }()
     

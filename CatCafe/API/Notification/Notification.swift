@@ -5,7 +5,7 @@
 //  Created by Ewen on 2022/6/19.
 //
 
-import Firebase
+import FirebaseFirestore
 
 enum NotitficationType: Int {
     case like
@@ -31,11 +31,11 @@ struct Notification {
     var userIsFollowed = false
     
     init(dic: [String: Any]) {
-        self.notiId = dic["notiId"] as? String ?? ""
-        self.notiType = NotitficationType(rawValue: dic["notiType"] as? Int ?? 0) ?? .like
-        self.fromUid = dic["fromUid"] as? String ?? ""
-        self.postId = dic["postId"] as? String ?? ""
-        self.timestamp = dic["timestamp"] as? Timestamp ?? Timestamp(date: Date())
+        self.notiId     = dic["notiId"] as? String ?? ""
+        self.notiType   = NotitficationType(rawValue: dic["notiType"] as? Int ?? 0) ?? .like
+        self.fromUid    = dic["fromUid"] as? String ?? ""
+        self.postId     = dic["postId"] as? String ?? ""
+        self.timestamp  = dic["timestamp"] as? Timestamp ?? Timestamp(date: Date())
         
     }
 }

@@ -12,7 +12,7 @@ final class UserCell: UITableViewCell {
     var viewModel: UserCellViewModel? {
         didSet {
             guard let viewModel = viewModel else { return }
-            profileImageView.loadImage(viewModel.profileImageUrl, placeHolder: UIImage.asset(.avatar))
+            profileImageView.loadImage(viewModel.profileImageUrl)
             usernameLabel.text = viewModel.username
             fullnameLabel.text = viewModel.fullname
         }
@@ -20,11 +20,10 @@ final class UserCell: UITableViewCell {
         
     private let profileImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage.asset(.no_image)
-        imageView.layer.cornerRadius = 48 / 2
+        imageView.layer.cornerRadius = 36 / 2
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
-        imageView.backgroundColor = .lightGray
+        imageView.backgroundColor = .gray6
         return imageView
     }()
     
@@ -56,7 +55,7 @@ final class UserCell: UITableViewCell {
         addSubview(profileImageView)
         addSubview(stack)
         
-        profileImageView.setDimensions(height: 48, width: 48)
+        profileImageView.setDimensions(height: 36, width: 36)
         profileImageView.centerY(inView: self, leftAnchor: leftAnchor, paddingLeft: 12)
         stack.centerY(inView: profileImageView, leftAnchor: profileImageView.rightAnchor, paddingLeft: 8)
     }

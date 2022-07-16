@@ -5,13 +5,12 @@
 //  Created by Ewen on 2022/6/15.
 //
 
-import Foundation
 import FirebaseStorage
 import ProgressHUD
 
 struct FileStorage {
     
-    // MARK: - Upload and download Image
+    // MARK: - Upload Image
     static func uploadImage(_ image: UIImage,
                             directory: String,
                             completion: @escaping (String) -> Void
@@ -40,24 +39,22 @@ struct FileStorage {
         }
     }
     
+    // MARK: - Download Image
     static func downloadImage(imageUrl: String, completion: @escaping (_ image: UIImage?) -> Void) {
         let imageFileName = fileNameFrom(fileUrl: imageUrl)
         
-        if fileExistsAtPath(path: imageFileName) {
+        if fileExistsAtPath(filename: imageFileName) {
             // get it locally
-//            print("We have local image")
-            
-            if let contentsOfFile = UIImage(contentsOfFile: fileInDocumentsDirectory(fileName: imageFileName)) {
+            if let contentsOfFile = UIImage(contentsOfFile: filePathInDocumentsDirectory(fileName: imageFileName)) {
                 
                 completion(contentsOfFile)
             } else {
                 print("couldnt convert local image")
-                completion(UIImage.asset(.avatar))
+                completion(UIImage.asset(.no_image))
             }
             
         } else {
             // download from Firebase
-            
             if imageUrl != "" {
                 let documentUrl = URL(string: imageUrl)
                 let downloadQueue = DispatchQueue(label: "imageDownloadQueue")
@@ -84,7 +81,7 @@ struct FileStorage {
         }
     }
     
-    // MARK: - Upload and download Video
+    // MARK: - Upload Video
     static func uploadVideo(_ video: NSData,
                             directory: String,
                             completion: @escaping (_ videoLink: String?) -> Void
@@ -115,15 +112,16 @@ struct FileStorage {
             ProgressHUD.showProgress(CGFloat(progress))
         }
     }
-
+    
+    // MARK: - download Video
     static func downloadVideo(
         videoLink: String,
         completion: @escaping (_ isReadyToPlay: Bool, _ videoFileName: String) -> Void
     ) {
         let videoUrl = URL(string: videoLink)
         let videoFileName = fileNameFrom(fileUrl: videoLink) + ".mov"
-
-        if fileExistsAtPath(path: videoFileName) {
+        
+        if fileExistsAtPath(filename: videoFileName) {
             completion(true, videoFileName)
         } else {
             let downloadQueue = DispatchQueue(label: "VideoDownloadQueue")
@@ -144,72 +142,6 @@ struct FileStorage {
         }
     }
     
-    // MARK: - Upload and dowload Audio
-    static func uploadAudio(_ audioFileName: String,
-                            directory: String,
-                            completion: @escaping (_ audioLink: String?) -> Void
-    ) {
-        let fileName = audioFileName + ".m4a"
-        let ref = Storage.storage().reference(withPath: directory)
-                        
-        var task: StorageUploadTask!
-        
-        if fileExistsAtPath(path: fileName) {
-            if let audioData = NSData(contentsOfFile: fileInDocumentsDirectory(fileName: fileName)) {
-                
-                task = ref.putData(audioData as Data, metadata: nil, completion: { (_, error) in
-                    task.removeAllObservers()
-                    ProgressHUD.dismiss()
-                    
-                    if error != nil {
-                        print("error uploading audio \(error!.localizedDescription)")
-                        return
-                    }
-                    
-                    ref.downloadURL { (url, _) in
-                        guard let downloadUrl = url  else {
-                            completion(nil)
-                            return
-                        }
-                        completion(downloadUrl.absoluteString)
-                    }
-                })
-                
-                task.observe(StorageTaskStatus.progress) { (snapshot) in
-                    
-                    let progress = snapshot.progress!.completedUnitCount / snapshot.progress!.totalUnitCount
-                    ProgressHUD.showProgress(CGFloat(progress))
-                }
-            } else {
-                print("nothing to upload (audio)")
-            }
-        }
-    }
-
-    static func downloadAudio(audioLink: String, completion: @escaping (_ audioFileName: String) -> Void) {
-        let audioFileName = fileNameFrom(fileUrl: audioLink) + ".m4a"
-
-        if fileExistsAtPath(path: audioFileName) {
-            completion(audioFileName)
-        } else {
-            let downloadQueue = DispatchQueue(label: "AudioDownloadQueue")
-            
-            downloadQueue.async {
-                let data = NSData(contentsOf: URL(string: audioLink)!)
-                if data != nil {
-                    // Save locally
-                    FileStorage.saveFileLocally(fileData: data!, fileName: audioFileName)
-                    
-                    DispatchQueue.main.async {
-                        completion(audioFileName)
-                    }
-                } else {
-                    print("no document in database audio")
-                }
-            }
-        }
-    }
-    
     // MARK: - Save Locally
     static func saveFileLocally(fileData: NSData, fileName: String) {
         let docUrl = getDocumentsURL().appendingPathComponent(fileName, isDirectory: false)
@@ -219,7 +151,7 @@ struct FileStorage {
 }
 
 // Helpers
-func fileInDocumentsDirectory(fileName: String) -> String {
+func filePathInDocumentsDirectory(fileName: String) -> String {
     return getDocumentsURL().appendingPathComponent(fileName).path
 }
 
@@ -227,6 +159,6 @@ func getDocumentsURL() -> URL {
     return FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).last!
 }
 
-func fileExistsAtPath(path: String) -> Bool {
-    return FileManager.default.fileExists(atPath: fileInDocumentsDirectory(fileName: path))
+func fileExistsAtPath(filename: String) -> Bool {
+    return FileManager.default.fileExists(atPath: filePathInDocumentsDirectory(fileName: filename))
 }

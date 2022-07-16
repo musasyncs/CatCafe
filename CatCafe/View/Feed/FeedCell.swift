@@ -9,7 +9,9 @@ import UIKit
 
 protocol FeedCellDelegate: AnyObject {
     func cell(_ cell: FeedCell, wantsToShowProfileFor uid: String)
+    func cell(_ cell: FeedCell, wantsToReportFor post: Post)
     func cell(_ cell: FeedCell, didLike post: Post)
+    func cell(_ cell: FeedCell, gestureView: UIView, didDoubleTapLike post: Post)
     func cell(_ cell: FeedCell, showCommentsFor post: Post)
 }
 
@@ -20,10 +22,12 @@ final class FeedCell: UICollectionViewCell {
     var viewModel: PostViewModel? {
         didSet {
             guard let viewModel = viewModel else { return }
-            profileImageView.loadImage(viewModel.ownerImageUrlString, placeHolder: UIImage.asset(.avatar))
+            profileImageView.loadImage(viewModel.ownerImageUrlString)
             usernameButton.setTitle(viewModel.ownerUsername, for: .normal)
             locationButton.setTitle(viewModel.locationText, for: .normal)
-            postImageView.loadImage(viewModel.mediaUrlString, placeHolder: UIImage.asset(.no_image))
+            functionButton.isHidden = viewModel.shouldHideFunctionButton
+            
+            postImageView.loadImage(viewModel.mediaUrlString)
             
             likeButton.tintColor = viewModel.likeButtonTintColor
             likeButton.setImage(viewModel.likeButtonImage, for: .normal)
@@ -40,7 +44,7 @@ final class FeedCell: UICollectionViewCell {
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         imageView.isUserInteractionEnabled = true
-        imageView.backgroundColor = .lightGray
+        imageView.backgroundColor = .gray6
         
         let recognizer = UITapGestureRecognizer(target: self, action: #selector(showUserProfile))
         imageView.isUserInteractionEnabled = true
@@ -51,6 +55,8 @@ final class FeedCell: UICollectionViewCell {
     private lazy var usernameButton = UIButton(type: .system)
     private lazy var locationButton = UIButton(type: .system)
     private lazy var infoStackView = UIStackView(arrangedSubviews: [usernameButton, locationButton])
+    private lazy var functionButton = UIButton(type: .system)
+      
     private lazy var postImageView = UIImageView()
     
     private lazy var blurControlView = UIVisualEffectView(effect: UIBlurEffect(style: .light))
@@ -80,6 +86,12 @@ final class FeedCell: UICollectionViewCell {
     
     // MARK: - Helper
     private func setup() {
+        functionButton.addTarget(self, action: #selector(showSheet), for: .touchUpInside)
+        
+        let doubleTap = UITapGestureRecognizer(target: self, action: #selector(didDoubleTap))
+        doubleTap.numberOfTapsRequired = 2
+        postImageView.addGestureRecognizer(doubleTap)
+        
         usernameButton.addTarget(self, action: #selector(showUserProfile), for: .touchUpInside)        
         likeButton.addTarget(self, action: #selector(didTapLike), for: .touchUpInside)
         commentButton.addTarget(self, action: #selector(didTapComments), for: .touchUpInside)
@@ -96,10 +108,13 @@ final class FeedCell: UICollectionViewCell {
         infoStackView.distribution = .fillEqually
         infoStackView.spacing = 2
         infoStackView.alignment = .leading
+        functionButton.tintColor = .ccGrey
+        functionButton.setImage(UIImage(systemName: "ellipsis"), for: .normal)
         
         postImageView.contentMode = .scaleAspectFill
         postImageView.clipsToBounds = true
         postImageView.isUserInteractionEnabled = true
+        postImageView.backgroundColor = .gray6
         
         blurControlView.alpha = 0.9
         blurControlView.layer.cornerRadius = 50 / 2
@@ -156,6 +171,7 @@ final class FeedCell: UICollectionViewCell {
     private func layout() {
         addSubview(profileImageView)
         addSubview(infoStackView)
+        addSubview(functionButton)
         addSubview(postImageView)
         addSubview(blurControlView)
         addSubview(controlStackView)
@@ -172,6 +188,12 @@ final class FeedCell: UICollectionViewCell {
         infoStackView.centerY(inView: profileImageView)
         usernameButton.setHeight(16)
         locationButton.setHeight(16)
+        functionButton.anchor(
+            right: rightAnchor,
+            paddingRight: 8,
+            width: 40, height: 40
+        )
+        functionButton.centerY(inView: profileImageView)
         
         postImageView.anchor(top: profileImageView.bottomAnchor, left: leftAnchor, right: rightAnchor, paddingTop: 8)
         postImageView.heightAnchor.constraint(equalTo: widthAnchor, multiplier: 1).isActive = true
@@ -217,6 +239,11 @@ final class FeedCell: UICollectionViewCell {
         guard let viewModel = viewModel else { return }
         delegate?.cell(self, wantsToShowProfileFor: viewModel.post.ownerUid)
     }
+    
+    @objc func showSheet() {
+        guard let viewModel = viewModel else { return }
+        delegate?.cell(self, wantsToReportFor: viewModel.post)
+    }
         
     @objc func didTapComments() {
         guard let viewModel = viewModel else { return }
@@ -227,4 +254,11 @@ final class FeedCell: UICollectionViewCell {
         guard let viewModel = viewModel else { return }
         delegate?.cell(self, didLike: viewModel.post)
     }
+    
+    @objc func didDoubleTap(_ gesture: UITapGestureRecognizer) {
+        guard let viewModel = viewModel else { return }
+        guard let gestureView = gesture.view else { return }
+        delegate?.cell(self, gestureView: gestureView, didDoubleTapLike: viewModel.post)
+    }
+    
 }

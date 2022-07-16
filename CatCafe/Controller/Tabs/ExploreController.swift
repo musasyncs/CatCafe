@@ -66,7 +66,7 @@ class ExploreController: UIViewController {
     
     // MARK: - API
     private func fetchUsers() {
-        UserService.fetchUsers(exceptCurrentUser: true, completion: { users in
+        UserService.shared.fetchUsers(exceptCurrentUser: true, completion: { users in
             self.users = users
             self.tableView.refreshControl?.endRefreshing()
         })
@@ -116,7 +116,7 @@ extension ExploreController {
         
         tableView.separatorStyle = .none
         tableView.keyboardDismissMode = .onDrag
-        tableView.rowHeight = 64
+        tableView.rowHeight = 72
         tableView.isHidden = true
         
         view.addSubview(tableView)

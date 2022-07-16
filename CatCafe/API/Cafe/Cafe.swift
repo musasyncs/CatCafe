@@ -17,12 +17,12 @@ struct Cafe {
     var isSelected: Bool = false
         
     init(dic: [String: Any]) {
-        self.address = dic["address"] as? String ?? ""
-        self.id = dic["id"] as? String ?? ""
-        self.lat = dic["lat"] as? Double ?? 0
-        self.long = dic["long"] as? Double ?? 0
-        self.phoneNumber = dic["phoneNumber"] as? String ?? ""
-        self.title = dic["title"] as? String ?? ""
-        self.website = dic["website"] as? String ?? ""
+        self.address        = dic["address"] as? String ?? ""
+        self.id             = dic["id"] as? String ?? ""
+        self.lat            = dic["lat"] as? Double ?? 0
+        self.long           = dic["long"] as? Double ?? 0
+        self.phoneNumber    = dic["phoneNumber"] as? String ?? ""
+        self.title          = dic["title"] as? String ?? ""
+        self.website        = dic["website"] as? String ?? ""
     }
 }

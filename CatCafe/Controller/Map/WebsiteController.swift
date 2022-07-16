@@ -58,9 +58,9 @@ class WebsiteController: UIViewController, WKNavigationDelegate, WKScriptMessage
     
     @objc func start() {
         self.view.endEditing(true)
-        guard let website = website else { return }
-        let url = URL(string: website)
-        let urlRequest = URLRequest(url: url!)
+        guard let website = website, !website.isEmpty else { return }
+        guard let url = URL(string: website) else { return }
+        let urlRequest = URLRequest(url: url)
         webView.load(urlRequest)
     }
     
