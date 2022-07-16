@@ -77,14 +77,14 @@ class InputTextView: UITextView {
                 placeholderLabel.anchor(left: leftAnchor, right: rightAnchor, paddingLeft: 8)
                 placeholderLabel.centerY(inView: self)
             } else {
-                placeholderLabel.anchor(top: topAnchor, left: leftAnchor, paddingTop: 8, paddingLeft: 7)
+                placeholderLabel.anchor(top: topAnchor, left: leftAnchor, paddingTop: 12, paddingLeft: 8)
             }
         }
     }
     
     let placeholderLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 14, weight: .medium)
+        label.font = .systemFont(ofSize: 13, weight: .medium)
         label.textColor = .ccGreyVariant
         return label
     }()

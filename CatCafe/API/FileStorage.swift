@@ -10,7 +10,7 @@ import ProgressHUD
 
 struct FileStorage {
     
-    // MARK: - Upload and download Image
+    // MARK: - Upload Image
     static func uploadImage(_ image: UIImage,
                             directory: String,
                             completion: @escaping (String) -> Void
@@ -39,12 +39,13 @@ struct FileStorage {
         }
     }
     
+    // MARK: - Download Image
     static func downloadImage(imageUrl: String, completion: @escaping (_ image: UIImage?) -> Void) {
         let imageFileName = fileNameFrom(fileUrl: imageUrl)
         
-        if fileExistsAtPath(path: imageFileName) {
+        if fileExistsAtPath(filename: imageFileName) {
             // get it locally
-            if let contentsOfFile = UIImage(contentsOfFile: fileInDocumentsDirectory(fileName: imageFileName)) {
+            if let contentsOfFile = UIImage(contentsOfFile: filePathInDocumentsDirectory(fileName: imageFileName)) {
                 
                 completion(contentsOfFile)
             } else {
@@ -80,7 +81,7 @@ struct FileStorage {
         }
     }
     
-    // MARK: - Upload and download Video
+    // MARK: - Upload Video
     static func uploadVideo(_ video: NSData,
                             directory: String,
                             completion: @escaping (_ videoLink: String?) -> Void
@@ -111,15 +112,16 @@ struct FileStorage {
             ProgressHUD.showProgress(CGFloat(progress))
         }
     }
-
+    
+    // MARK: - download Video
     static func downloadVideo(
         videoLink: String,
         completion: @escaping (_ isReadyToPlay: Bool, _ videoFileName: String) -> Void
     ) {
         let videoUrl = URL(string: videoLink)
         let videoFileName = fileNameFrom(fileUrl: videoLink) + ".mov"
-
-        if fileExistsAtPath(path: videoFileName) {
+        
+        if fileExistsAtPath(filename: videoFileName) {
             completion(true, videoFileName)
         } else {
             let downloadQueue = DispatchQueue(label: "VideoDownloadQueue")
@@ -149,7 +151,7 @@ struct FileStorage {
 }
 
 // Helpers
-func fileInDocumentsDirectory(fileName: String) -> String {
+func filePathInDocumentsDirectory(fileName: String) -> String {
     return getDocumentsURL().appendingPathComponent(fileName).path
 }
 
@@ -157,6 +159,6 @@ func getDocumentsURL() -> URL {
     return FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).last!
 }
 
-func fileExistsAtPath(path: String) -> Bool {
-    return FileManager.default.fileExists(atPath: fileInDocumentsDirectory(fileName: path))
+func fileExistsAtPath(filename: String) -> Bool {
+    return FileManager.default.fileExists(atPath: filePathInDocumentsDirectory(fileName: filename))
 }

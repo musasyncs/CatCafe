@@ -35,6 +35,26 @@ class BaseMeetChildController: UIViewController {
         setupUpdateMeetFeedObserver()
     }
     
+    func checkIfCurrentUserLikedMeets() {
+        self.meets.forEach { meet in
+            MeetService.checkIfCurrentUserLikedMeet(meet: meet) { isLiked in
+                if let index = self.meets.firstIndex(where: { $0.meetId == meet.meetId }) {
+                    self.meets[index].isLiked = isLiked
+                }
+            }
+        }
+    }
+    
+    func fetchMeetsCommentCount() {
+        self.meets.forEach { meet in
+            CommentService.shared.fetchMeetComments(forMeet: meet.meetId) { comments in
+                if let index = self.meets.firstIndex(where: { $0.meetId == meet.meetId }) {
+                    self.meets[index].commentCount = comments.count
+                }
+            }
+        }
+    }
+    
     @objc func handleRefresh() {}
     
 }
@@ -98,22 +118,8 @@ extension BaseMeetChildController: UICollectionViewDataSource, UICollectionViewD
             withReuseIdentifier: MeetCell.identifier,
             for: indexPath ) as? MeetCell
         else { return UICollectionViewCell() }
-        
         cell.delegate = self
-        
-        let meet = meets[indexPath.item]
-        cell.viewModel = MeetViewModel(meet: meet)
-        
-        UserService.shared.fetchUserBy(uid: meet.ownerUid) { user in
-            cell.viewModel?.ownerUsername = user.username
-            cell.viewModel?.ownerImageUrlString = user.profileImageUrlString
-        }
-        
-        // meet comments count
-        CommentService.shared.fetchMeetComments(forMeet: meet.meetId) { comments in
-            cell.viewModel?.comments = comments
-        }
-        
+        cell.viewModel = MeetViewModel(meet: meets[indexPath.item])
         return cell
     }
     

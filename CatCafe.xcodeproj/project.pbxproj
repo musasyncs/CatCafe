@@ -176,7 +176,7 @@
 		BAB29927287569CA008B9D3F /* ChatInputAccessoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAB29926287569CA008B9D3F /* ChatInputAccessoryView.swift */; };
 		BAB299292875B416008B9D3F /* MessagesDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAB299282875B416008B9D3F /* MessagesDataSource.swift */; };
 		BAD1339E2863124C00B8015A /* Meet.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAD1339D2863124C00B8015A /* Meet.swift */; };
-		BAD133A02863132300B8015A /* meetService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAD1339F2863132300B8015A /* meetService.swift */; };
+		BAD133A02863132300B8015A /* MeetService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAD1339F2863132300B8015A /* MeetService.swift */; };
 		BAD133A22863629B00B8015A /* MeetCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAD133A12863629B00B8015A /* MeetCell.swift */; };
 		BAD133A428636B9400B8015A /* MeetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAD133A328636B9400B8015A /* MeetViewModel.swift */; };
 		BAD133A828647F0E00B8015A /* AllMeetsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAD133A728647F0E00B8015A /* AllMeetsController.swift */; };
@@ -405,7 +405,7 @@
 		BAB29926287569CA008B9D3F /* ChatInputAccessoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatInputAccessoryView.swift; sourceTree = "<group>"; };
 		BAB299282875B416008B9D3F /* MessagesDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesDataSource.swift; sourceTree = "<group>"; };
 		BAD1339D2863124C00B8015A /* Meet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Meet.swift; sourceTree = "<group>"; };
-		BAD1339F2863132300B8015A /* meetService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = meetService.swift; sourceTree = "<group>"; };
+		BAD1339F2863132300B8015A /* MeetService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetService.swift; sourceTree = "<group>"; };
 		BAD133A12863629B00B8015A /* MeetCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetCell.swift; sourceTree = "<group>"; };
 		BAD133A328636B9400B8015A /* MeetViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetViewModel.swift; sourceTree = "<group>"; };
 		BAD133A728647F0E00B8015A /* AllMeetsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllMeetsController.swift; sourceTree = "<group>"; };
@@ -734,7 +734,7 @@
 				BA44779C2859DE370045DDB8 /* Auth */,
 				BA44774528588CA90045DDB8 /* Tabs */,
 				BA7BB726285AE68D00465DEC /* Post */,
-				BADF1F74285D7C21004CF329 /* Feed */,
+				BADF1F74285D7C21004CF329 /* FeedComment */,
 				BADF1F84285E786F004CF329 /* Notification */,
 				BAEBF615286F2A8D00DBA670 /* Map */,
 				BADBFF6D28614DD900146D6F /* Meet */,
@@ -980,7 +980,7 @@
 			children = (
 				BAD1339D2863124C00B8015A /* Meet.swift */,
 				BAD133B12864C7D200B8015A /* Person.swift */,
-				BAD1339F2863132300B8015A /* meetService.swift */,
+				BAD1339F2863132300B8015A /* MeetService.swift */,
 			);
 			path = Meet;
 			sourceTree = "<group>";
@@ -1057,12 +1057,12 @@
 			path = Post;
 			sourceTree = "<group>";
 		};
-		BADF1F74285D7C21004CF329 /* Feed */ = {
+		BADF1F74285D7C21004CF329 /* FeedComment */ = {
 			isa = PBXGroup;
 			children = (
 				BADF1F72285D6D64004CF329 /* FeedCommentController.swift */,
 			);
-			path = Feed;
+			path = FeedComment;
 			sourceTree = "<group>";
 		};
 		BADF1F75285D7CC0004CF329 /* Comment */ = {
@@ -1481,7 +1481,7 @@
 				BAEBF61A286F2B8600DBA670 /* MenuView.swift in Sources */,
 				BA13859C2866F52B001B7FF1 /* MTAdenFilter.swift in Sources */,
 				BADBFF7C28620C5D00146D6F /* MeetStretchyHeader.swift in Sources */,
-				BAD133A02863132300B8015A /* meetService.swift in Sources */,
+				BAD133A02863132300B8015A /* MeetService.swift in Sources */,
 				BAEBF617286F2AA200DBA670 /* MapController.swift in Sources */,
 				BA1385852866F52B001B7FF1 /* MTMoonVideoFilter.metal in Sources */,
 				BA558F13286E238400A38602 /* LocalMessage.swift in Sources */,

@@ -54,7 +54,6 @@ class PostEditController: UIViewController {
     private lazy var captionTextView: InputTextView = {
         let textView = InputTextView()
         textView.placeholderText = "請輸入文字"
-        textView.font = .systemFont(ofSize: 13, weight: .regular)
         textView.showsVerticalScrollIndicator = false
         textView.isScrollEnabled = false
         textView.delegate = self

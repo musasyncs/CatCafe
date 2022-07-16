@@ -8,8 +8,6 @@
 import FirebaseFirestore
 import FirebaseFirestoreSwift
 
-import FirebaseFirestoreSwift
-
 struct Report: Codable, Identifiable {
     @DocumentID var id: String?
     var postID: String = ""
@@ -29,7 +27,7 @@ class ReportManager {
             message: message
         )
         do {
-            let _ = try firebaseReference(.reports).addDocument(from: report)
+            _ = try firebaseReference(.reports).addDocument(from: report)
             completion(.success(()))
         } catch {
             completion(.failure(error))

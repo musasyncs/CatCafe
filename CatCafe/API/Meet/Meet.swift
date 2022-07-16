@@ -22,8 +22,10 @@ struct Meet {
     var isLiked = false
     var isAttended = false
     var meetId: String
+    var user: User
+    var commentCount = 0
         
-    init(meetId: String, dic: [String: Any]) {
+    init(user: User, meetId: String, dic: [String: Any]) {
         self.cafeId         = dic["cafeId"] as? String ?? ""
         self.cafeName       = dic["cafeName"] as? String ?? ""
         self.caption        = dic["caption"] as? String ?? ""
@@ -35,6 +37,7 @@ struct Meet {
         self.title          = dic["title"] as? String ?? ""
         self.peopleCount    = dic["peopleCount"] as? Int ?? 0
         
+        self.user = user
         self.meetId = meetId
     }
     

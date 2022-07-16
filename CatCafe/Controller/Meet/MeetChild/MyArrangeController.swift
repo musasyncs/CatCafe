@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Firebase
 
 class MyArrangeController: BaseMeetChildController {
         
@@ -18,19 +19,16 @@ class MyArrangeController: BaseMeetChildController {
         guard let currentUid = LocalStorage.shared.getUid() else { return }
         
         MeetService.fetchMeets(forUser: currentUid) { meets in
-            self.meets = meets
-            self.checkIfCurrentUserLikedMeets()
-            self.collectionView.refreshControl?.endRefreshing()
-        }
-    }
-    
-    private func checkIfCurrentUserLikedMeets() {
-        self.meets.forEach { meet in
-            MeetService.checkIfCurrentUserLikedMeet(meet: meet) { isLiked in
-                if let index = self.meets.firstIndex(where: { $0.meetId == meet.meetId }) {
-                    self.meets[index].isLiked = isLiked
-                }
+            
+            // 過濾出還沒過期的 meets
+            let filteredMeets = meets.filter {
+                $0.timestamp.seconds > Timestamp(date: Date.now).seconds ? true : false
             }
+            
+            self.meets = filteredMeets
+            self.checkIfCurrentUserLikedMeets()
+            self.fetchMeetsCommentCount()
+            self.collectionView.refreshControl?.endRefreshing()
         }
     }
 

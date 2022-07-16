@@ -115,9 +115,9 @@ extension MainTabController: UITabBarControllerDelegate {
         _ tabBarController: UITabBarController,
         shouldSelect viewController: UIViewController
     ) -> Bool {
-        guard let navVC = viewController as? UINavigationController else { return false }
+        guard let navCcontroller = viewController as? UINavigationController else { return false }
         
-        if navVC.viewControllers.first is ExploreController || navVC.viewControllers.first is MapController {
+        if navCcontroller.viewControllers.first is ExploreController || navCcontroller.viewControllers.first is MapController {
             return true
         } else {
             guard LocalStorage.shared.hasLogedIn else {
@@ -127,6 +127,12 @@ extension MainTabController: UITabBarControllerDelegate {
                 present(loginNav, animated: true)
                 return false
             }
+            
+            guard let feedVC = navCcontroller.viewControllers.first as? FeedController,
+                  let scrollView = feedVC.view.subviews.first(where: { $0 is UIScrollView }) as? UIScrollView
+            else { return true }
+            
+            scrollView.scrollRectToVisible(CGRect(origin: .zero, size: CGSize(width: 1, height: 1)), animated: true)
             return true
         }
         

@@ -156,5 +156,4 @@ class DeleteAccountAlert {
     
     @objc func deleteAccount() {}
         
-    
 }

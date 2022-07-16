@@ -61,6 +61,8 @@ class FeedController: UIViewController {
         setupPullToRefresh()
         
         setupUpdateFeedObserver()
+        
+        fetchPosts()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -68,13 +70,13 @@ class FeedController: UIViewController {
         setupCustomNavBar(backgroundType: .opaqueBackground,
                           shouldSetCustomBackImage: true,
                           backIndicatorImage: UIImage.asset(.Icons_24px_Back02))
-        fetchPosts()
     }
     
     // MARK: - API
     func fetchPosts() {
         guard post == nil else {
             checkIfCurrentUserLikedPosts()
+            self.fetchPostsCommentCount()
             self.collectionView.refreshControl?.endRefreshing()
             return
         }
@@ -84,8 +86,9 @@ class FeedController: UIViewController {
             guard let currentUser = UserService.shared.currentUser else { return }
             let filteredPosts = posts.filter { !currentUser.blockedUsers.contains($0.user.uid) }
             self.posts = filteredPosts
-            
+
             self.checkIfCurrentUserLikedPosts()
+            self.fetchPostsCommentCount()
             self.collectionView.refreshControl?.endRefreshing()
         }
         
@@ -102,6 +105,22 @@ class FeedController: UIViewController {
                 PostService.shared.checkIfCurrentUserLikedPost(post: post) { isLiked in
                     if let index = self.posts.firstIndex(where: { $0.postId == post.postId }) {
                         self.posts[index].isLiked = isLiked
+                    }
+                }
+            }
+        }
+    }
+    
+    private func fetchPostsCommentCount() {
+        if let post = post {
+            CommentService.shared.fetchComments(forPost: post.postId) { comments in
+                self.post?.commentCount = comments.count
+            }
+        } else {
+            self.posts.forEach { post in
+                CommentService.shared.fetchComments(forPost: post.postId) { comments in
+                    if let index = self.posts.firstIndex(where: { $0.postId == post.postId }) {
+                        self.posts[index].commentCount = comments.count
                     }
                 }
             }
@@ -192,7 +211,7 @@ extension FeedController {
         collectionView.anchor(
             top: view.safeAreaLayoutGuide.topAnchor,
             left: view.leftAnchor,
-            bottom: view.safeAreaLayoutGuide.bottomAnchor,
+            bottom: view.bottomAnchor,
             right: view.rightAnchor
         )
     }
@@ -254,6 +273,12 @@ extension FeedController: FeedCellDelegate {
     }
     
     func cell(_ cell: FeedCell, wantsToReportFor post: Post) {
+        // 還沒登入要先登入
+        if UserService.shared.currentUser == nil {
+            showMessage(withTitle: "Oops", message: "請先登入")
+            return
+        }
+        
         showAlertController(forPost: post)
     }
     
@@ -318,6 +343,7 @@ extension FeedController: FeedCellDelegate {
                     )
                     
                 }
+                
             }
             
         })
@@ -331,6 +357,11 @@ extension FeedController: FeedCellDelegate {
         let controller = FeedCommentController(post: post)
         navigationController?.pushViewController(controller, animated: true)
     }
+    
+}
+
+// MARK: - Helper
+extension FeedController {
     
     private func showAlertController(forPost post: Post) {
         let controller = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
@@ -405,7 +436,7 @@ extension FeedController: FeedCellDelegate {
             case .success:
                 self?.showReportSuccessAlert()
             case .failure(let error):
-                self?.error404(message: error.localizedDescription)
+                self?.showErrorAlert(message: error.localizedDescription)
             }
         }
     }
@@ -418,9 +449,9 @@ extension FeedController: FeedCellDelegate {
         alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
         present(alert, animated: true)
     }
-    private func error404(message: String) {
+    private func showErrorAlert(message: String) {
         let alert = UIAlertController(
-            title: "Error 404",
+            title: "網路異常",
             message: message,
             preferredStyle: .alert
         )
@@ -491,7 +522,6 @@ extension FeedController: FeedCellDelegate {
             }
         }
     }
-    
 }
 
 // MARK: - UICollectionViewDataSource, UICollectionViewDelegate
@@ -515,15 +545,8 @@ extension FeedController: UICollectionViewDataSource, UICollectionViewDelegate {
         
         if let post = post {
             cell.viewModel = PostViewModel(post: post)
-            CommentService.shared.fetchComments(forPost: post.postId) { comments in
-                cell.viewModel?.comments = comments
-            }
-            
         } else {
             cell.viewModel = PostViewModel(post: posts[indexPath.item])
-            CommentService.shared.fetchComments(forPost: posts[indexPath.item].postId) { comments in
-                cell.viewModel?.comments = comments
-            }
         }
         return cell
     }

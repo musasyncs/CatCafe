@@ -10,7 +10,6 @@ import UIKit
 struct PostViewModel {
     
     var post: Post
-    var comments = [Comment]()
 
     var ownerImageUrlString: String? {
         return post.user.profileImageUrlString
@@ -69,13 +68,9 @@ struct PostViewModel {
     var likeButtonTintColor: UIColor {
         return post.isLiked ? .systemRed : .ccGrey
     }
-    
-    var commentCount: Int {
-        return comments.count
-    }
-    
+        
     var commentCountText: String? {
-        return "\(commentCount)"
+        return "\(post.commentCount)"
     }
     
     var timestampText: String? {
