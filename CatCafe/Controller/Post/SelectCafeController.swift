@@ -45,7 +45,8 @@ class SelectCafeController: UITableViewController {
     
     // MARK: - API
     private func fetchCafes() {
-        CafeService.fetchAllCafes { cafes in
+        CafeService.fetchAllCafes { [weak self] cafes in
+            guard let self = self else { return }
             self.cafes = cafes
             self.tableView.reloadData()
         }
@@ -62,7 +63,6 @@ class SelectCafeController: UITableViewController {
 }
 
 extension SelectCafeController {
-
     private func setupTableView() {
         tableView.register(PlaceCell.self, forCellReuseIdentifier: PlaceCell.identifier)
         tableView.rowHeight = 64
@@ -122,7 +122,7 @@ extension SelectCafeController: UISearchResultsUpdating {
         filteredCafes = cafes.filter({
             $0.title.contains(searchText) || $0.address.contains(searchText)
         })
-        self.tableView.reloadData()
+        tableView.reloadData()
     }
     
 }

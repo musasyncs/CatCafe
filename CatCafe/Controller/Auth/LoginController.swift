@@ -348,7 +348,8 @@ extension LoginController: ASAuthorizationControllerDelegate, ASAuthorizationCon
         AuthService.shared.authorizationController(
             controller: controller,
             didCompleteWithAuthorization: authorization
-        ) { authDataResult in
+        ) { [weak self] authDataResult in
+            guard let self = self else { return }
             
             guard let authDataResult = authDataResult else {
                 self.dismiss()
@@ -368,7 +369,8 @@ extension LoginController: ASAuthorizationControllerDelegate, ASAuthorizationCon
             let semaphore = DispatchSemaphore(value: 0)
             let dispatchQueue = DispatchQueue.global(qos: .background)
             
-            UserService.shared.checkIfUserExistOnFirebase(uid: currentUid) { result in
+            UserService.shared.checkIfUserExistOnFirebase(uid: currentUid) { [weak self] result in
+                guard let self = self else { return }
                 switch result {
                 case .success(let isExist):
                     // 已註冊過
@@ -402,7 +404,8 @@ extension LoginController: ASAuthorizationControllerDelegate, ASAuthorizationCon
                                 profileImageUrlString: profileImageUrlString ?? "",
                                 bioText: bioText ?? "",
                                 blockedUsers: blockedUsers
-                            ) { error in
+                            ) { [weak self] error in
+                                guard let self = self else { return }
                                 if error != nil {
                                     self.dismiss()
                                     self.showFailure(text: "失敗")
@@ -433,7 +436,8 @@ extension LoginController: ASAuthorizationControllerDelegate, ASAuthorizationCon
                                 profileImageUrlString: "",
                                 bioText: "",
                                 blockedUsers: []
-                            ) { error in
+                            ) { [weak self] error in
+                                guard let self = self else { return }
                                 if error != nil {
                                     self.dismiss()
                                     self.showFailure(text: "失敗")
@@ -515,7 +519,6 @@ extension LoginController {
     }
     
     private func observeAppEvents() {
-        
         notificationCenter.publisher(for: .AVPlayerItemDidPlayToEndTime).sink { [weak self] _ in
             self?.restartVideo()
         }.store(in: &appEventSubscribers)

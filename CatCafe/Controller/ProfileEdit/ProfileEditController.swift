@@ -98,14 +98,23 @@ class ProfileEditController: UIViewController {
         let distance = CGFloat(100)
         let transform = CGAffineTransform(translationX: 0, y: -distance)
         
-        UIView.animate(withDuration: 0.2, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: []) {
-            self.view.transform = transform
+        UIView.animate(withDuration: 0.2,
+                       delay: 0,
+                       usingSpringWithDamping: 1,
+                       initialSpringVelocity: 1, options: []
+        ) { [weak self] in
+            self?.view.transform = transform
         }
     }
     
     @objc func keyboardWillHide() {
-        UIView.animate(withDuration: 0.2, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: []) {
-            self.view.transform = .identity
+        UIView.animate(withDuration: 0.2,
+                       delay: 0,
+                       usingSpringWithDamping: 1,
+                       initialSpringVelocity: 1,
+                       options: []
+        ) { [weak self] in
+            self?.view.transform = .identity
         }
     }
     
@@ -243,7 +252,8 @@ extension ProfileEditController {
     // swiftlint:disable all
     @objc func saveButtonTapped() {
         let alert = UIAlertController(title: "確定送出？", message: "", preferredStyle: .alert)
-        let okAction = UIAlertAction(title: "確定", style: .default) { _ in
+        let okAction = UIAlertAction(title: "確定", style: .default) { [weak self] _ in
+            guard let self = self else { return }
             
             guard let username = self.usernameTextField.text,
                   !username.isEmpty else {
@@ -262,21 +272,18 @@ extension ProfileEditController {
             let group = DispatchGroup()
             
             group.enter()
-            self.show()
             UserService.shared.updateCurrentUserInfo(
                 fullname: fullname,
                 username: username,
                 bioText: bioText
-            ) { error in
+            ) { [weak self] error in
+                guard let self = self else { return }
                 
                 if error != nil {
-                    self.dismiss()
                     self.showFailure(text: "失敗")
                     return
                 }
                 
-                self.dismiss()
-                self.showSuccess()
                 self.nameLabel.text = fullname
                 
                 group.leave()
@@ -291,20 +298,19 @@ extension ProfileEditController {
                 guard let currentUid = LocalStorage.shared.getUid() else { return }
                 let directory = "Profile/" + "_\(currentUid)" + ".jpg"
                 
-                self.show()
                 group.enter()
                 FileStorage.uploadImage(profileImage, directory: directory) { profileImageUrlString in
+                    
                     UserService.shared.uploadProfileImage(
                         userId: currentUid,
                         profileImageUrlString: profileImageUrlString
-                    ) { error in
+                    ) { [weak self] error in
+                        guard let self = self else { return }
                         
                         if error != nil {
-                            self.dismiss()
                             self.showFailure(text: "無法更新頭貼")
                             return
                         }
-                        self.dismiss()
                         group.leave()
                     }
                 }
@@ -334,14 +340,16 @@ extension ProfileEditController {
                                             preferredStyle: .actionSheet)
         
         if UIImagePickerController.isSourceTypeAvailable(.camera) {
-            let cameraButton = UIAlertAction(title: "Camera", style: .default) { _ in
+            let cameraButton = UIAlertAction(title: "Camera", style: .default) { [weak self] _ in
+                guard let self = self else { return }
                 self.showImagePickerController(mode: .camera)
             }
             actionSheet.addAction(cameraButton)
         }
         
         if UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
-            let libraryButton = UIAlertAction(title: "Photo Library", style: .default) { _ in
+            let libraryButton = UIAlertAction(title: "Photo Library", style: .default) { [weak self] _ in
+                guard let self = self else { return }
                 self.showImagePickerController(mode: .photoLibrary)
             }
             actionSheet.addAction(libraryButton)

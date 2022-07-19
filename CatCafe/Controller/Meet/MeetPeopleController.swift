@@ -113,11 +113,14 @@ class MeetPeopleViewController: UIViewController {
             self.visualEffectView.alpha = 0
             self.briefInfoView.alpha = 0
             self.briefInfoView.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
-        } completion: { _ in
+        } completion: { [weak self] _ in
+            guard let self = self else { return }
+            
             self.briefInfoView.removeFromSuperview()
             guard let uid = person?.uid else { return }
 
-            UserService.shared.fetchUserBy(uid: uid) { user in
+            UserService.shared.fetchUserBy(uid: uid) { [weak self] user in
+                guard let self = self else { return }
                 let controller = ProfileController(user: user)
                 self.navigationController?.pushViewController(controller, animated: true)
             }
@@ -126,7 +129,8 @@ class MeetPeopleViewController: UIViewController {
     
     // MARK: - API
     private func fetchPeople() {
-        MeetService.fetchPeople(forMeet: meet.meetId) { people in
+        MeetService.fetchPeople(forMeet: meet.meetId) { [weak self] people in
+            guard let self = self else { return }
             
             // 過濾出封鎖名單以外的 people
             guard let currentUser = UserService.shared.currentUser else { return }

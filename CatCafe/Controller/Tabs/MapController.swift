@@ -57,7 +57,8 @@ class MapController: UIViewController {
         
     // MARK: - API
     private func fetchCafes() {
-        CafeService.fetchAllCafes { cafes in
+        CafeService.fetchAllCafes { [weak self] cafes in
+            guard let self = self else { return }
             self.cafes = cafes
             
             cafes.forEach { cafe in
@@ -262,7 +263,8 @@ extension MapController: MenuViewDelegate {
     }
     
     func selectedAnnotation(withCafe cafe: Cafe) {
-        mapView.annotations.forEach { (annotation) in
+        mapView.annotations.forEach { [weak self] annotation in
+            guard let self = self else { return }
             if annotation.title == cafe.title {
                 self.mapView.selectAnnotation(annotation, animated: true)
                 self.zoomToFit(selectedAnnotation: annotation)
@@ -345,9 +347,9 @@ extension MapController: MKMapViewDelegate {
     ) {
         guard let annotation = view.annotation as? CafeAnnotation else { return }
         cafeInfoAlert.showAlert(with: annotation.title,
-                              phoneNumber: annotation.phoneNumber,
-                              website: annotation.website,
-                              on: self)
+                                phoneNumber: annotation.phoneNumber,
+                                website: annotation.website,
+                                on: self)
     }
 }
 

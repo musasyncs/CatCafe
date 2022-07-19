@@ -25,7 +25,8 @@ class MessageCreator {
             mkMessage.photoItem = photoItem
             mkMessage.kind = MessageKind.photo(photoItem)
             
-            FileStorage.downloadImage(imageUrl: localMessage.pictureUrl) { (image) in
+            FileStorage.downloadImage(imageUrl: localMessage.pictureUrl) { [weak self] image in
+                guard let self = self else { return }
                 mkMessage.photoItem?.image = image
                 self.messageCollectionView.messagesCollectionView.reloadData()
             }
@@ -33,7 +34,8 @@ class MessageCreator {
         
         // message type is video
         if localMessage.type == CCConstant.VIDEO {
-            FileStorage.downloadImage(imageUrl: localMessage.pictureUrl) { (thumbNail) in
+            FileStorage.downloadImage(imageUrl: localMessage.pictureUrl) { [weak self] thumbNail in
+                guard let self = self else { return }
                 
                 FileStorage.downloadVideo(videoLink: localMessage.videoUrl) { (_, fileName) in
                     let videoURL = URL(fileURLWithPath: filePathInDocumentsDirectory(fileName: fileName))

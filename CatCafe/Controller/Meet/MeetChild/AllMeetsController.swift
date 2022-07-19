@@ -16,7 +16,8 @@ class AllMeetsController: BaseMeetChildController {
     }
     
     private func fetchMeets() {
-        MeetService.fetchMeets { meets in
+        MeetService.fetchMeets { [weak self] meets in
+            guard let self = self else { return }
             
             // 過濾出封鎖名單以外的 meets
             // 過濾出還沒過期的 meets

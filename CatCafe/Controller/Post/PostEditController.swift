@@ -117,7 +117,8 @@ class PostEditController: UIViewController {
     // MARK: - API
     private func fetchProfilePic() {
         guard let currentUid = LocalStorage.shared.getUid() else { return }
-        UserService.shared.fetchUserBy(uid: currentUid, completion: { user in
+        UserService.shared.fetchUserBy(uid: currentUid, completion: { [weak self] user in
+            guard let self = self else { return }
             self.profileImageView.loadImage(user.profileImageUrlString)
         })
     }
@@ -151,7 +152,9 @@ class PostEditController: UIViewController {
         PostService.shared.uploadImagePost(caption: caption,
                                            postImage: postImage,
                                            cafeId: selectedCafe.id,
-                                           cafeName: selectedCafe.title) { error in
+                                           cafeName: selectedCafe.title) { [weak self] error in
+            guard let self = self else { return }
+            
             if error != nil {
                 self.showFailure(text: "Failed to upload post")
                 self.navigationItem.rightBarButtonItem?.isEnabled = true

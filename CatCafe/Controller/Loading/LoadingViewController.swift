@@ -9,7 +9,7 @@ import UIKit
 
 class LoadingViewController: UIViewController {
     
-    // MARK: - Views
+    // MARK: - View
     var loadingImageView: UIImageView = {
         let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 75, height: 75))
         imageView.image = UIImage.asset(.logo)
@@ -44,14 +44,14 @@ class LoadingViewController: UIViewController {
         
         UIView.animate(withDuration: 0.5) {
             self.loadingImageView.alpha = 0
-        } completion: { _ in
-            self.delay(durationInSeconds: 0.5) {
+        } completion: { [weak self] _ in
+            self?.delay(durationInSeconds: 0.5) {
                 Presentaion.shared.show(viewController: .mainTabBarController)
             }
         }
     }
     
-    func delay(durationInSeconds secound: Double, completion: @escaping () -> Void) {
+    private func delay(durationInSeconds secound: Double, completion: @escaping () -> Void) {
         DispatchQueue.main.asyncAfter(deadline: .now() + secound, execute: completion)
     }
     

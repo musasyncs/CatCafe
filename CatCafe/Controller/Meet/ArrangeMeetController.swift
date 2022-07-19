@@ -152,7 +152,8 @@ class ArrangeMeetController: UIViewController {
             cafeId: selectedCafe.id,
             cafeName: selectedCafe.title,
             meetDate: chosenDate
-        ) { error in
+        ) { [weak self] error in
+            guard let self = self else { return }
         
             if error != nil {
                 self.showFailure(text: "Failed to upload meet")

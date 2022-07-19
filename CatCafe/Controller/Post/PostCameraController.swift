@@ -65,9 +65,10 @@ class PostCameraController: UIViewController {
         switch AVCaptureDevice.authorizationStatus(for: .video) {
         case .notDetermined:
             AVCaptureDevice.requestAccess(for: .video) { [weak self] granted in
+                guard let self = self else { return }
                 guard granted else { return }
                 DispatchQueue.main.async {
-                    self?.setupCaptureSession()
+                    self.setupCaptureSession()
                 }
                 return
             }
@@ -86,7 +87,7 @@ class PostCameraController: UIViewController {
         let captureSession = AVCaptureSession()
         
         // 1. Setup inputs
-        guard let captureDevice = AVCaptureDevice.default(for: AVMediaType.video) else { return}
+        guard let captureDevice = AVCaptureDevice.default(for: AVMediaType.video) else { return }
         
         do {
             let input = try AVCaptureDeviceInput(device: captureDevice)

@@ -48,7 +48,8 @@ class SetProfilePictureController: UIViewController {
             UserService.shared.uploadProfileImage(
                 userId: currentUid,
                 profileImageUrlString: imageUrlString
-            ) { error in
+            ) { [weak self] error in
+                guard let self = self else { return }
                 
                 if error != nil {
                     self.showFailure(text: "Failed to create profile image")

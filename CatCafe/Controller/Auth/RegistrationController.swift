@@ -144,8 +144,9 @@ class RegistrationController: UIViewController {
                     profileImageUrlString: "",
                     bioText: "",
                     blockedUsers: []
-                ) { error in
-                
+                ) { [weak self] error in
+                    guard let self = self else { return }
+                    
                     if error != nil {
                         self.dismiss()
                         self.showFailure(text: "無法建立使用者")
@@ -383,9 +384,9 @@ extension RegistrationController {
     }
     
     private func observeAppEvents() {
-        
         notificationCenter.publisher(for: .AVPlayerItemDidPlayToEndTime).sink { [weak self] _ in
-            self?.restartVideo()
+            guard let self = self else { return }
+            self.restartVideo()
         }.store(in: &appEventSubscribers)
         
         notificationCenter.publisher(for: UIApplication.willResignActiveNotification).sink { [weak self] _ in

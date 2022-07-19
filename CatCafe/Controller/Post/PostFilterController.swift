@@ -53,7 +53,8 @@ class PostFilterController: UIViewController {
         UIView.animate(withDuration: 0.2) {
             self.view.addSubview(controlView)
             controlView.setPosition(offScreen: false)
-        } completion: { _ in
+        } completion: { [weak self] _ in
+            guard let self = self else { return }
             self.title = tool.title
             self.clearNavigationButton()
         }
@@ -69,7 +70,8 @@ class PostFilterController: UIViewController {
     private func dismissFilterControlView() {
         UIView.animate(withDuration: 0.2) {
             self.filterControlView?.setPosition(offScreen: true)
-        } completion: { _ in
+        } completion: { [ weak self] _ in
+            guard let self = self else { return }
             self.filterControlView?.removeFromSuperview()
             self.title = ""
             self.setupNavigationButton()

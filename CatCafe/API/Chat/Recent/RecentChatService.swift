@@ -42,7 +42,8 @@ class RecentChatService {
     func updateRecents(chatRoomId: String, lastMessage: String) {
         firebaseReference(.recent)
             .whereField(CCConstant.CHATROOMID, isEqualTo: chatRoomId)
-            .getDocuments { snapshot, error in
+            .getDocuments { [weak self] snapshot, error in
+                guard let self = self else { return }
                 
                 if error != nil { return }
                 guard let documents = snapshot?.documents else { return }
@@ -63,8 +64,8 @@ class RecentChatService {
         firebaseReference(.recent)
             .whereField(CCConstant.CHATROOMID, isEqualTo: chatRoomId)
             .whereField(CCConstant.SENDERID, isEqualTo: currentUid)
-            .getDocuments { snapshot, error in
-                
+            .getDocuments { [weak self] snapshot, error in
+                guard let self = self else { return }
                 if error != nil { return }
                 guard let documents = snapshot?.documents else { return }
                 

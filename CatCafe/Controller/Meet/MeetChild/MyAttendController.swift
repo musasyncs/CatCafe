@@ -15,7 +15,8 @@ class MyAttendController: BaseMeetChildController {
     }
     
     private func fetchCurrentUserAttendMeets() {
-        MeetService.fetchCurrentUserAttendMeets { meets in
+        MeetService.fetchCurrentUserAttendMeets { [weak self] meets in
+            guard let self = self else { return }
             
             // 過濾出封鎖名單以外的 meets
             guard let currentUser = UserService.shared.currentUser else { return }

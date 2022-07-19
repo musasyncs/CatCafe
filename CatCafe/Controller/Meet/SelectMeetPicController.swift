@@ -123,7 +123,8 @@ class SelectMeetPicController: UIViewController {
         
         // Only add the camera button if it's available
         if UIImagePickerController.isSourceTypeAvailable(.camera) {
-            let cameraAction = UIAlertAction(title: "Camera", style: .default) { _ in
+            let cameraAction = UIAlertAction(title: "Camera", style: .default) { [weak self] _ in
+                guard let self = self else { return }
                 self.showImagePicker(mode: .camera)
             }
             cameraAction.setValue(UIColor.ccPrimary, forKey: "titleTextColor")
@@ -132,7 +133,8 @@ class SelectMeetPicController: UIViewController {
         
         // Only add the library button if it's available
         if UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
-            let libraryAction = UIAlertAction(title: "Photo Library", style: .default) { _ in
+            let libraryAction = UIAlertAction(title: "Photo Library", style: .default) { [weak self] _ in
+                guard let self = self else { return }
                 self.showImagePicker(mode: .photoLibrary)
             }
             libraryAction.setValue(UIColor.ccPrimary, forKey: "titleTextColor")

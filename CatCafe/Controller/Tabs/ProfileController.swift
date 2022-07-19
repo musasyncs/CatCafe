@@ -149,7 +149,8 @@ class ProfileController: UIViewController {
     }
     
     private func fetchUserStats() {
-        UserService.shared.fetchUserStats(uid: user.uid) { stats in
+        UserService.shared.fetchUserStats(uid: user.uid) { [weak self] stats in
+            guard let self = self else { return }
             self.user.stats = stats
             self.collectionView.refreshControl?.endRefreshing()
             self.collectionView.reloadData()
@@ -157,7 +158,8 @@ class ProfileController: UIViewController {
     }
     
     private func fetchUserPosts() {
-        PostService.shared.fetchPosts(forUser: user.uid) { result in
+        PostService.shared.fetchPosts(forUser: user.uid) { [weak self] result in
+            guard let self = self else { return }
             switch result {
             case .success(let posts):
                 self.posts = posts
@@ -171,7 +173,8 @@ class ProfileController: UIViewController {
     }
     
     private func checkIfUserIsBlocked() {
-        UserService.shared.checkIfUserIsBlocked(uid: user.uid) { isBlocked in
+        UserService.shared.checkIfUserIsBlocked(uid: user.uid) { [weak self] isBlocked in
+            guard let self = self else { return }
             self.user.isBlocked = isBlocked
             self.collectionView.reloadData()
         }
@@ -191,7 +194,9 @@ class ProfileController: UIViewController {
         }
         
         let alert = UIAlertController(title: "是否登出？", message: "", preferredStyle: .alert)
-        let okAction = UIAlertAction(title: "確定", style: .default) { _ in
+        let okAction = UIAlertAction(title: "確定", style: .default) { [weak self] _ in
+            guard let self = self else { return }
+            
             self.show()
             let result = AuthService.shared.logoutUser()
             
@@ -232,7 +237,8 @@ class ProfileController: UIViewController {
         guard let currentUser = Auth.auth().currentUser else { return }
         
         self.show()
-        currentUser.delete(completion: { error in
+        currentUser.delete(completion: { [weak self] error in
+            guard let self = self else { return }
             if let error = error {
                 self.dismiss()
                 print("Error deleting account: \(error)")
@@ -374,7 +380,8 @@ extension ProfileController: ProfileHeaderDelegate {
             
         } else if user.isFollowed {
             // Handle unfollow user
-            UserService.shared.unfollow(uid: user.uid) { _ in
+            UserService.shared.unfollow(uid: user.uid) { [weak self] _ in
+                guard let self = self else { return }
                 self.user.isFollowed = false
                 self.collectionView.reloadData()
             }
@@ -383,7 +390,8 @@ extension ProfileController: ProfileHeaderDelegate {
             
         } else {
             // Handle follow user
-            UserService.shared.follow(uid: user.uid) { _ in
+            UserService.shared.follow(uid: user.uid) { [weak self] _ in
+                guard let self = self else { return }
                 self.user.isFollowed = true
                 self.collectionView.reloadData()
             }
@@ -434,7 +442,8 @@ extension ProfileController: ProfileHeaderDelegate {
         }
         
         if user.isBlocked {
-            UserService.shared.unblock(uid: user.uid) { error in
+            UserService.shared.unblock(uid: user.uid) { [weak self] error in
+                guard let self = self else { return }
                 if let error = error {
                     print("Failed to unblock with error: \(error.localizedDescription)")
                     return
@@ -446,7 +455,8 @@ extension ProfileController: ProfileHeaderDelegate {
                 self.collectionView.reloadData()
             }
         } else {
-            UserService.shared.block(uid: user.uid) { error in
+            UserService.shared.block(uid: user.uid) { [weak self] error in
+                guard let self = self else { return }
                 if let error = error {
                     print("Failed to block with error: \(error.localizedDescription)")
                     return
