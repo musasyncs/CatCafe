@@ -92,7 +92,8 @@ class UserService {
     // MARK: - FetchCurrentUser / Fetch user by uid / Fetch users with uids / Fetch all users
     func fetchCurrentUser(completion: @escaping(User) -> Void) {
         guard let currentUid = LocalStorage.shared.getUid() else { return }
-        firebaseReference(.users).document(currentUid).getDocument { snapshot, error in
+        firebaseReference(.users).document(currentUid).getDocument { [weak self] snapshot, error in
+            guard let self = self else { return }
             if error != nil { return }
             guard let dic = snapshot?.data() else { return }
             let currentUser = User(dic: dic)

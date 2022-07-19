@@ -40,7 +40,8 @@ class NotificationController: UIViewController {
     
     // MARK: - API
     func fetchnotifications() {
-        NotificationService.shared.fetchNotifications { notifications in
+        NotificationService.shared.fetchNotifications { [weak self] notifications in
+            guard let self = self else { return }
             
             // 過濾出封鎖名單以外的 notifications
             guard let currentUser = UserService.shared.currentUser else { return }
@@ -55,7 +56,9 @@ class NotificationController: UIViewController {
         notifications.forEach { notification in
             guard notification.notiType == .follow else { return }
             
-            UserService.shared.checkIfUserIsFollowed(uid: notification.fromUid) { userIsFollowed in
+            UserService.shared.checkIfUserIsFollowed(uid: notification.fromUid) { [weak self] userIsFollowed
+                in
+                guard let self = self else { return }
                 if let index = self.notifications.firstIndex(where: { $0.notiId == notification.notiId }) {
                     self.notifications[index].userIsFollowed = userIsFollowed
                 }
@@ -148,7 +151,8 @@ extension NotificationController: UITableViewDataSource, UITableViewDelegate {
             cell.viewModel?.mediaUrlString = nil
         } else {
             // is liked or commented
-            PostService.shared.fetchPost(withPostId: notification.postId) { result in
+            PostService.shared.fetchPost(withPostId: notification.postId) { [weak self] result in
+                guard let self = self else { return }
                 switch result {
                 case .success(let post):
                     self.dismiss()
@@ -168,14 +172,16 @@ extension NotificationController: UITableViewDataSource, UITableViewDelegate {
 extension NotificationController: NotificationCellDelegate {
     
     func cell(_ cell: NotificationCell, wantsToViewProfile uid: String) {
-        UserService.shared.fetchUserBy(uid: uid) { user in
+        UserService.shared.fetchUserBy(uid: uid) { [weak self] user in
+            guard let self = self else { return }
             let controller = ProfileController(user: user)
             self.navigationController?.pushViewController(controller, animated: true)
         }
     }
     
     func cell(_ cell: NotificationCell, wantsToViewPost postId: String) {
-        PostService.shared.fetchPost(withPostId: postId) { result in
+        PostService.shared.fetchPost(withPostId: postId) { [weak self] result in
+            guard let self = self else { return }
             switch result {
             case .success(let post):
                 let flowLayout = UICollectionViewFlowLayout()

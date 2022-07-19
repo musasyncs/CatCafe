@@ -111,7 +111,8 @@ class ChatController: MessagesViewController {
             photo: photo,
             video: video,
             memberIds: [LocalStorage.shared.getUid()!, recipientId]
-        ) { newMessage in
+        ) { [weak self] newMessage in
+            guard let self = self else { return }
             self.insertMessage(newMessage)
         }
     }
@@ -128,7 +129,7 @@ class ChatController: MessagesViewController {
 extension ChatController {
     
     private func setupLeftBarButton() {
-        self.navigationItem.leftBarButtonItems = [
+        navigationItem.leftBarButtonItems = [
             UIBarButtonItem(
                 image: UIImage.asset(.Icons_24px_Back02)?
                     .withTintColor(.ccGrey)
@@ -144,7 +145,7 @@ extension ChatController {
         leftBarButtonView.addSubview(titleLabel)
         leftBarButtonView.addSubview(subTitleLabel)
         let leftBarButtonItem = UIBarButtonItem(customView: leftBarButtonView)
-        self.navigationItem.leftBarButtonItems?.append(leftBarButtonItem)
+        navigationItem.leftBarButtonItems?.append(leftBarButtonItem)
         
         titleLabel.text = recipientName
     }
@@ -164,7 +165,8 @@ extension ChatController {
     }
     
     private func setupTypingObserver() {
-        TypingService.shared.createTypingObserver(chatRoomId: chatId) { isTyping in
+        TypingService.shared.createTypingObserver(chatRoomId: chatId) { [weak self] isTyping in
+            guard let self = self else { return }
             DispatchQueue.main.async {
                 self.subTitleLabel.text = isTyping ? "正在輸入..." : ""
             }
@@ -177,7 +179,8 @@ extension ChatController {
 
     // 載入歷史訊息
     private func loadChats() {
-        MessageService.shared.checkForOldChats(LocalStorage.shared.getUid()!, collectionId: chatId) { localMessages in
+        MessageService.shared.checkForOldChats(LocalStorage.shared.getUid()!, collectionId: chatId) { [weak self] localMessages in
+            guard let self = self else { return }
             self.allLocalMessages = localMessages
             
             self.insertOldMessages()
@@ -202,7 +205,8 @@ extension ChatController {
             LocalStorage.shared.getUid()!,
             collectionId: chatId,
             lastMessageDate: lastMessageDate()
-        ) { newMessage in
+        ) { [weak self] newMessage in
+            guard let self = self else { return }
             self.insertMessage(newMessage)
         }
     }
@@ -220,14 +224,13 @@ extension ChatController {
         if localMessage.senderId != LocalStorage.shared.getUid()! {
             markMessageAsRead(localMessage)
         }
-        self.mkMessages.append(
-            MessageCreator(_collectionView: self)
-                .createMessage(localMessage: localMessage)!
+        mkMessages.append(
+            MessageCreator(_collectionView: self).createMessage(localMessage: localMessage)!
         )
         displayingMessagesCount += 1
         
-        self.messagesCollectionView.reloadData()
-        self.messagesCollectionView.scrollToLastItem(animated: false)
+        messagesCollectionView.reloadData()
+        messagesCollectionView.scrollToLastItem(animated: false)
     }
     private func markMessageAsRead(_ localMessage: LocalMessage) {
         if localMessage.senderId != LocalStorage.shared.getUid()!
@@ -244,7 +247,8 @@ extension ChatController {
         MessageService.shared.listenForReadStatusChange(
             LocalStorage.shared.getUid()!,
             collectionId: chatId
-        ) { (updatedMessage) in
+        ) { [weak self] updatedMessage in
+            guard let self = self else { return }
             if updatedMessage.status != CCConstant.SENT {
                 self.updateMessage(updatedMessage)
             }
@@ -259,7 +263,7 @@ extension ChatController {
                 mkMessages[index].readDate = localMessage.readDate
                 
                 if mkMessages[index].status == CCConstant.READ {
-                    self.messagesCollectionView.reloadData()
+                    messagesCollectionView.reloadData()
                 }
             }
         }
@@ -348,7 +352,8 @@ extension ChatController: GalleryControllerDelegate {
     
     func galleryController(_ controller: GalleryController, didSelectImages images: [Image]) {
         if images.count > 0 {
-            images.first!.resolve { (image) in
+            images.first!.resolve { [weak self] image in
+                guard let self = self else { return }
                 self.messageSend(text: nil, photo: image, video: nil)
             }
         }

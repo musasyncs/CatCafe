@@ -65,7 +65,8 @@ class ChatlistController: UIViewController {
     
     // MARK: - API
     private func downloadRecentChats() {
-        RecentChatService.shared.downloadRecentChatsFromFireStore { (allRecents) in
+        RecentChatService.shared.downloadRecentChatsFromFireStore { [weak self] allRecents in
+            guard let self = self else { return }
             
             // 過濾出封鎖名單以外的 allRecents
             guard let currentUser = UserService.shared.currentUser else { return }
@@ -99,10 +100,8 @@ extension ChatlistController {
     
     private func setupTableView() {
         tableView.register(RecentChatCell.self, forCellReuseIdentifier: RecentChatCell.identifier)
-        tableView.register(
-            MessageSectionHeader.self,
-            forHeaderFooterViewReuseIdentifier: MessageSectionHeader.identifier
-        )
+        tableView.register(MessageSectionHeader.self,
+                           forHeaderFooterViewReuseIdentifier: MessageSectionHeader.identifier)
         tableView.delegate = self
         tableView.dataSource = self
         

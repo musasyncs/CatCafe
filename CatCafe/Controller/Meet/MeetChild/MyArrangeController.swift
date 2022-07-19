@@ -18,7 +18,8 @@ class MyArrangeController: BaseMeetChildController {
     private func fetchMyArrangedMeet() {
         guard let currentUid = LocalStorage.shared.getUid() else { return }
         
-        MeetService.fetchMeets(forUser: currentUid) { meets in
+        MeetService.fetchMeets(forUser: currentUid) { [weak self] meets in
+            guard let self = self else { return }
             
             // 過濾出還沒過期的 meets
             let filteredMeets = meets.filter {

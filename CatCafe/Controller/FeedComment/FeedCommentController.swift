@@ -64,7 +64,8 @@ class FeedCommentController: UICollectionViewController {
     
     // MARK: - API
     private func fetchComments() {
-        CommentService.shared.fetchComments(forPost: post.postId) { comments in
+        CommentService.shared.fetchComments(forPost: post.postId) { [weak self] comments in
+            guard let self = self else { return }
             
             // 過濾出封鎖名單以外的 comments
             guard let currentUser = UserService.shared.currentUser else { return }
@@ -121,7 +122,8 @@ extension FeedCommentController {
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let uid = comments[indexPath.item].uid
-        UserService.shared.fetchUserBy(uid: uid) { user in
+        UserService.shared.fetchUserBy(uid: uid) { [weak self] user in
+            guard let self = self else { return }
             let controller = ProfileController(user: user)
             self.navigationController?.pushViewController(controller, animated: true)
         }
@@ -147,7 +149,8 @@ extension FeedCommentController: CommentInputAccessoryViewDelegate {
     
     func inputView(_ inputView: CommentInputAccessoryView, wantsToUploadComment comment: String) {
         guard let currentUid = LocalStorage.shared.getUid() else { return }
-        UserService.shared.fetchUserBy(uid: currentUid, completion: { currentUser in
+        UserService.shared.fetchUserBy(uid: currentUid, completion: { [weak self] currentUser in
+            guard let self = self else { return }
             
             self.show()
             CommentService.shared.uploadComment(
@@ -156,7 +159,8 @@ extension FeedCommentController: CommentInputAccessoryViewDelegate {
                 commentType: 0,
                 mediaUrlString: "",
                 comment: comment
-            ) { error in
+            ) { [weak self] error in
+                guard let self = self else { return }
                 
                 if error != nil {
                     self.dismiss()

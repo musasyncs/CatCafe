@@ -36,7 +36,7 @@ class FeedController: UIViewController {
     private lazy var chatBarButtonItem = UIBarButtonItem(customView: chatButton)
     private lazy var notiBarButtonItem = UIBarButtonItem(customView: notiButton)
     private lazy var postBarButtonItem = UIBarButtonItem(customView: postButton)
-    private var dropTableView = UITableView(frame: .zero, style: .plain)
+    private let dropTableView = UITableView(frame: .zero, style: .plain)
     
     private lazy var collectionView: UICollectionView = {
         let flowLayout = UICollectionViewFlowLayout()
@@ -81,7 +81,9 @@ class FeedController: UIViewController {
             return
         }
         
-        PostService.shared.fetchFeedPosts { posts in
+        PostService.shared.fetchFeedPosts { [weak self] posts in
+            guard let self = self else { return }
+            
             // 過濾出封鎖名單以外的 posts
             guard let currentUser = UserService.shared.currentUser else { return }
             let filteredPosts = posts.filter { !currentUser.blockedUsers.contains($0.user.uid) }
@@ -97,12 +99,14 @@ class FeedController: UIViewController {
     
     private func checkIfCurrentUserLikedPosts() {
         if let post = post {
-            PostService.shared.checkIfCurrentUserLikedPost(post: post) { isLiked in
+            PostService.shared.checkIfCurrentUserLikedPost(post: post) { [weak self] isLiked in
+                guard let self = self else { return }
                 self.post?.isLiked = isLiked
             }
         } else {
             self.posts.forEach { post in
-                PostService.shared.checkIfCurrentUserLikedPost(post: post) { isLiked in
+                PostService.shared.checkIfCurrentUserLikedPost(post: post) { [weak self] isLiked in
+                    guard let self = self else { return }
                     if let index = self.posts.firstIndex(where: { $0.postId == post.postId }) {
                         self.posts[index].isLiked = isLiked
                     }
@@ -113,12 +117,14 @@ class FeedController: UIViewController {
     
     private func fetchPostsCommentCount() {
         if let post = post {
-            CommentService.shared.fetchComments(forPost: post.postId) { comments in
+            CommentService.shared.fetchComments(forPost: post.postId) { [weak self] comments in
+                guard let self = self else { return }
                 self.post?.commentCount = comments.count
             }
         } else {
             self.posts.forEach { post in
-                CommentService.shared.fetchComments(forPost: post.postId) { comments in
+                CommentService.shared.fetchComments(forPost: post.postId) { [weak self] comments in
+                    guard let self = self else { return }
                     if let index = self.posts.firstIndex(where: { $0.postId == post.postId }) {
                         self.posts[index].commentCount = comments.count
                     }
@@ -266,7 +272,8 @@ extension FeedController {
 extension FeedController: FeedCellDelegate {
     
     func cell(_ cell: FeedCell, wantsToShowProfileFor uid: String) {
-        UserService.shared.fetchUserBy(uid: uid) { user in
+        UserService.shared.fetchUserBy(uid: uid) { [weak self] user in
+            guard let self = self else { return }
             let controller = ProfileController(user: user)
             self.navigationController?.pushViewController(controller, animated: false)
         }
@@ -320,7 +327,8 @@ extension FeedController: FeedCellDelegate {
             return
         }
         
-        UserService.shared.fetchUserBy(uid: currentUid, completion: { currentUser in
+        UserService.shared.fetchUserBy(uid: currentUid, completion: { [weak self] currentUser in
+            guard let self = self else { return }
             cell.viewModel?.post.isLiked.toggle()
             
             if post.isLiked {
@@ -432,11 +440,12 @@ extension FeedController {
     }
     private func sendReport(postId: String, message: String) {
         ReportManager.shared.sendReport(postId: postId, message: message) { [weak self] result in
+            guard let self = self else { return }
             switch result {
             case .success:
-                self?.showReportSuccessAlert()
+                self.showReportSuccessAlert()
             case .failure(let error):
-                self?.showErrorAlert(message: error.localizedDescription)
+                self.showErrorAlert(message: error.localizedDescription)
             }
         }
     }

@@ -36,7 +36,8 @@ class PostSelectController: UIViewController {
     
     // MARK: - Helper
     private func requestPhoto() {
-        PHPhotoLibrary.requestAuthorization(for: .readWrite, handler: { status in
+        PHPhotoLibrary.requestAuthorization(for: .readWrite, handler: { [weak self] status in
+            guard let self = self else { return }
             switch status {
             case .authorized:
                 DispatchQueue.main.async {
@@ -63,12 +64,12 @@ class PostSelectController: UIViewController {
         if let controller = albumPhotoViewController {
             controller.update(dataSource: result)
         } else {
-            let controller = AlbumPhotoViewController(dataSource: result)
-            controller.didSelectAssetHandler = { [weak self] selectedAsset in
-                self?.loadImageFor(selectedAsset)
-            }
-            
             DispatchQueue.main.async {
+                let controller = AlbumPhotoViewController(dataSource: result)
+                controller.didSelectAssetHandler = { [weak self] selectedAsset in
+                    guard let self = self else { return }
+                    self.loadImageFor(selectedAsset)
+                }
                 self.addChild(controller)
                 controller.didMove(toParent: self)
                 self.albumView.addSubview(controller.view)
@@ -88,7 +89,8 @@ class PostSelectController: UIViewController {
                                               targetSize: targetSize,
                                               contentMode: .default,
                                               options: options
-        ) { (image, _) in
+        ) { [weak self] image, _ in
+            guard let self = self else { return }
             DispatchQueue.main.async {
                 self.gridScrollView.image = image
             }

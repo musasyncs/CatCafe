@@ -105,7 +105,7 @@ extension UIViewController {
         UIViewController.hud.dismiss()
     }
     
-    func showSuccess(text: String = "success") {
+    func showSuccess(text: String = "成功") {
         if !Thread.isMainThread {
             DispatchQueue.main.async {
                 self.showSuccess(text: text)
@@ -118,7 +118,7 @@ extension UIViewController {
         UIViewController.hud.dismiss(afterDelay: 1.5)
     }
     
-    func showFailure(text: String = "Failure") {
+    func showFailure(text: String = "失敗") {
         if !Thread.isMainThread {
             DispatchQueue.main.async {
                 self.showFailure(text: text)

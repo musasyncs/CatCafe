@@ -76,7 +76,8 @@ class MainTabController: UITabBarController {
         let group = DispatchGroup()
         
         group.enter()
-        UserService.shared.fetchCurrentUser { currentUser in
+        UserService.shared.fetchCurrentUser { [weak self ]currentUser in
+            guard let self = self else { return }
             self.currentUser = currentUser
             group.leave()
         }
@@ -117,7 +118,8 @@ extension MainTabController: UITabBarControllerDelegate {
     ) -> Bool {
         guard let navCcontroller = viewController as? UINavigationController else { return false }
         
-        if navCcontroller.viewControllers.first is ExploreController || navCcontroller.viewControllers.first is MapController {
+        if navCcontroller.viewControllers.first is ExploreController
+            || navCcontroller.viewControllers.first is MapController {
             return true
         } else {
             guard LocalStorage.shared.hasLogedIn else {
@@ -177,12 +179,14 @@ private enum Tab: Int {
             return setTabBarItem(
                 title: nil,
                 image: UIImage.asset(.home_unselected)!,
-                selectedImage: UIImage.asset(.home_selected)!)
+                selectedImage: UIImage.asset(.home_selected)!
+            )
         case .explore:
             return setTabBarItem(
                 title: nil,
                 image: UIImage.asset(.search_unselected)!,
-                selectedImage: UIImage.asset(.search_selected)!)
+                selectedImage: UIImage.asset(.search_selected)!
+            )
         case .map:
             return setTabBarItem(
                 title: nil,
@@ -195,15 +199,16 @@ private enum Tab: Int {
             return setTabBarItem(
                 title: nil,
                 image: UIImage.asset(.speaker_unselected)!
-                    .resize(to: .init(width: 25, height: 25)),
+                    .resize(to: .init(width: 28, height: 28)),
                 selectedImage: UIImage.asset(.speaker_selected)!
-                    .resize(to: .init(width: 25, height: 25))
+                    .resize(to: .init(width: 28, height: 28))
             )
         case .profile:
             return setTabBarItem(
                 title: nil,
                 image: UIImage.asset(.profile_unselected)!,
-                selectedImage: UIImage.asset(.profile_selected)!)
+                selectedImage: UIImage.asset(.profile_selected)!
+            )
         }
     }
 

@@ -16,8 +16,7 @@ struct FileStorage {
                             completion: @escaping (String) -> Void
     ) {
         let ref = Storage.storage().reference(withPath: directory)
-        guard let imageData = image.jpegData(compressionQuality: 0.8) else { return
-        }
+        guard let imageData = image.jpegData(compressionQuality: 0.8) else { return }
         
         var task: StorageUploadTask!
         task = ref.putData(imageData, metadata: nil) { _, error in
@@ -87,11 +86,7 @@ struct FileStorage {
                             completion: @escaping (_ videoLink: String?) -> Void
     ) {
         let ref = Storage.storage().reference(withPath: directory)
-        var task: StorageUploadTask!
-        
-        task = ref.putData(video as Data, metadata: nil, completion: { (_, error) in
-            task.removeAllObservers()
-            ProgressHUD.dismiss()
+        ref.putData(video as Data, metadata: nil, completion: { (_, error) in
             
             if error != nil {
                 print("error uploading video \(error!.localizedDescription)")
@@ -106,11 +101,7 @@ struct FileStorage {
                 completion(downloadUrl.absoluteString)
             }
         })
-        
-        task.observe(StorageTaskStatus.progress) { (snapshot) in
-            let progress = snapshot.progress!.completedUnitCount / snapshot.progress!.totalUnitCount
-            ProgressHUD.showProgress(CGFloat(progress))
-        }
+
     }
     
     // MARK: - download Video

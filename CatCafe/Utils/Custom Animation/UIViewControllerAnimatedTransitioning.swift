@@ -29,7 +29,7 @@ class CustomAnimationPresentor: NSObject, UIViewControllerAnimatedTransitioning 
                        options: .curveEaseOut,
                        animations: {
             toView.frame.origin = CGPoint(x: 0, y: 0)
-        }, completion: { (_) in
+        }, completion: { _ in
             transitionContext.completeTransition(true)
         })
     }
@@ -58,9 +58,7 @@ class CustomAnimationDismisser: NSObject, UIViewControllerAnimatedTransitioning 
                        initialSpringVelocity: 1,
                        options: .curveEaseOut,
                        animations: {
-            
             fromView.frame.origin = CGPoint(x: -fromView.frame.width, y: 0)
-            
         }, completion: { (_) in
             fromView.removeFromSuperview()
             transitionContext.completeTransition(true)

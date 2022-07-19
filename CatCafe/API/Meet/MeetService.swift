@@ -66,7 +66,7 @@ class MeetService {
     }
     
     static func fetchMeets(forUser uid: String, completion: @escaping(([Meet]) -> Void)) {
-        firebaseReference(.meets).whereField("ownerUid", isEqualTo: uid).getDocuments { snapshot, error in
+        firebaseReference(.meets).whereField("ownerUid", isEqualTo: uid).getDocuments { snapshot, error in            
             if error != nil { return }
             var meets = [Meet]()
             let group = DispatchGroup()

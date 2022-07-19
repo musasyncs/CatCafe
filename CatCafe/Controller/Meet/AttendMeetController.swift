@@ -138,7 +138,9 @@ class AttendMeetController: UIViewController {
         show()
         MeetService.attendMeet(meet: meet,
                                contact: contact,
-                               remarks: remarks) { error in
+                               remarks: remarks) { [weak self] error in
+            guard let self = self else { return }
+            
             if error != nil {
                 self.dismiss()
                 self.showFailure(text: "Failed to attend meet")

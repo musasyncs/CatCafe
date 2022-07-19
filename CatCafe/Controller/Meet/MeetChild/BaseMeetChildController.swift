@@ -36,7 +36,8 @@ class BaseMeetChildController: UIViewController {
     }
     
     func checkIfCurrentUserLikedMeets() {
-        self.meets.forEach { meet in
+        meets.forEach { [weak self] meet in
+            guard let self = self else { return }
             MeetService.checkIfCurrentUserLikedMeet(meet: meet) { isLiked in
                 if let index = self.meets.firstIndex(where: { $0.meetId == meet.meetId }) {
                     self.meets[index].isLiked = isLiked
@@ -46,7 +47,8 @@ class BaseMeetChildController: UIViewController {
     }
     
     func fetchMeetsCommentCount() {
-        self.meets.forEach { meet in
+        meets.forEach { [weak self] meet in
+            guard let self = self else { return }
             CommentService.shared.fetchMeetComments(forMeet: meet.meetId) { comments in
                 if let index = self.meets.firstIndex(where: { $0.meetId == meet.meetId }) {
                     self.meets[index].commentCount = comments.count

@@ -76,7 +76,9 @@ class PostService {
             var posts = [Post]()
             let group = DispatchGroup()
             
-            snapshot?.documents.forEach({ snapshot in
+            snapshot?.documents.forEach({ [weak self] snapshot in
+                guard let self = self else { return }
+                
                 group.enter()
                 self.fetchPost(withPostId: snapshot.documentID) { result in
                     switch result {

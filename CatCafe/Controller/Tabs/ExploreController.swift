@@ -66,14 +66,16 @@ class ExploreController: UIViewController {
     
     // MARK: - API
     private func fetchUsers() {
-        UserService.shared.fetchUsers(exceptCurrentUser: true, completion: { users in
+        UserService.shared.fetchUsers(exceptCurrentUser: true, completion: { [weak self] users in
+            guard let self = self else { return }
             self.users = users
             self.tableView.refreshControl?.endRefreshing()
         })
     }
     
     private func fetchPosts() {
-        PostService.shared.fetchPosts { result in
+        PostService.shared.fetchPosts { [weak self] result in
+            guard let self = self else { return }
             switch result {
             case .success(let posts):
                 self.posts = posts
@@ -177,13 +179,12 @@ extension ExploreController: UITableViewDataSource, UITableViewDelegate {
 
 // MARK: - UISearchResultsUpdating
 extension ExploreController: UISearchResultsUpdating {
-    
     func updateSearchResults(for searchController: UISearchController) {
         guard let searchText = searchController.searchBar.text?.lowercased() else { return }
         filteredUsers = users.filter({
             $0.username.contains(searchText) || $0.fullname.contains(searchText)
         })
-        self.tableView.reloadData()
+        tableView.reloadData()
     }
 }
 

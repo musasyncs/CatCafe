@@ -126,25 +126,29 @@ class MeetDetailController: UIViewController {
     
     // MARK: - API
     private func fetchMeetWithMeetId() {
-        MeetService.fetchMeet(withMeetId: meet.meetId) { meet in
+        MeetService.fetchMeet(withMeetId: meet.meetId) { [weak self] meet in
+            guard let self = self else { return }
             self.meet.likes = meet.likes
         }
     }
     
     private func checkIfCurrentUserLikedMeet() {
-        MeetService.checkIfCurrentUserLikedMeet(meet: meet) { isLiked in
+        MeetService.checkIfCurrentUserLikedMeet(meet: meet) { [weak self] isLiked in
+            guard let self = self else { return }
             self.meet.isLiked = isLiked
         }
     }
 
     private func checkIfCurrentUserAttendedMeet() {
-        MeetService.checkIfCurrentUserAttendedMeet(meet: meet) { isAttended in
+        MeetService.checkIfCurrentUserAttendedMeet(meet: meet) { [weak self] isAttended in
+            guard let self = self else { return }
             self.meet.isAttended = isAttended
         }
     }
     
     private func fetchComments() {
-        CommentService.shared.fetchMeetComments(forMeet: meet.meetId) { comments in
+        CommentService.shared.fetchMeetComments(forMeet: meet.meetId) { [weak self] comments in
+            guard let self = self else { return }
             
             // 過濾出封鎖名單以外的 comments
             guard let currentUser = UserService.shared.currentUser else { return }
@@ -310,7 +314,8 @@ extension MeetDetailController: CommentInputAccessoryViewDelegate {
     func inputView(_ inputView: CommentInputAccessoryView, wantsToUploadComment comment: String) {
         
         guard let currentUid = LocalStorage.shared.getUid() else { return }
-        UserService.shared.fetchUserBy(uid: currentUid, completion: { currentUser in
+        UserService.shared.fetchUserBy(uid: currentUid, completion: { [weak self] currentUser in
+            guard let self = self else { return }
             
             self.show()
             CommentService.shared.uploadMeetComment(
@@ -319,7 +324,8 @@ extension MeetDetailController: CommentInputAccessoryViewDelegate {
                 commentType: 0,
                 mediaUrlString: "",
                 comment: comment
-            ) { error in
+            ) { [weak self] error in
+                guard let self = self else { return }
                 
                 if error != nil {
                     self.dismiss()

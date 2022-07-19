@@ -8,18 +8,6 @@
 import UIKit
 import MapKit
 
-struct CafeItem {
-    let address: String
-    let id: String
-    let lat: Double
-    let long: Double
-    let phoneNumber: String
-    let title: String
-    let website: String
-    
-    var isSelected: Bool
-}
-
 let height1: CGFloat = UIScreen.height * 0.3
 let height2: CGFloat = UIScreen.height * 0.7
 

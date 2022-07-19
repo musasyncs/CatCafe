@@ -48,7 +48,8 @@ class NewMessageController: UIViewController {
     
     // MARK: - API
     private func fetchUsers() {
-        UserService.shared.fetchUsers(exceptCurrentUser: true, completion: { users in
+        UserService.shared.fetchUsers(exceptCurrentUser: true, completion: { [weak self] users in
+            guard let self = self else { return }
             
             // 過濾出封鎖名單以外的 users
             guard let currentUser = UserService.shared.currentUser else { return }
@@ -152,7 +153,7 @@ extension NewMessageController: UISearchResultsUpdating {
             $0.username.lowercased().contains(searchText) ||
             $0.fullname.lowercased().contains(searchText)
         })
-        self.tableView.reloadData()
+        tableView.reloadData()
     }
 }
 
