@@ -42,8 +42,7 @@ class TileView: UIView {
         textField.returnKeyType = .done
         
         // layout
-        addSubview(titleLabel)
-        addSubview(textField)
+        addSubviews(titleLabel, textField)
         titleLabel.anchor(top: topAnchor, left: leftAnchor, paddingLeft: 8, height: 36)
         textField.anchor(
             top: titleLabel.bottomAnchor,

@@ -50,8 +50,7 @@ class FilterPickerCell: UICollectionViewCell {
         super.init(frame: frame)
         
         thumbnailImageView.center = contentView.center
-        contentView.addSubview(titleLabel)
-        contentView.addSubview(thumbnailImageView)
+        contentView.addSubviews(titleLabel, thumbnailImageView)
     }
     
     required init?(coder aDecoder: NSCoder) {

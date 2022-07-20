@@ -109,7 +109,7 @@ final class FeedCell: UICollectionViewCell {
         infoStackView.spacing = 2
         infoStackView.alignment = .leading
         functionButton.tintColor = .ccGrey
-        functionButton.setImage(UIImage(systemName: "ellipsis"), for: .normal)
+        functionButton.setImage(SFSymbols.ellipsis, for: .normal)
         
         postImageView.contentMode = .scaleAspectFill
         postImageView.clipsToBounds = true
@@ -169,17 +169,8 @@ final class FeedCell: UICollectionViewCell {
     }
     
     private func layout() {
-        addSubview(profileImageView)
-        addSubview(infoStackView)
-        addSubview(functionButton)
-        addSubview(postImageView)
-        addSubview(blurControlView)
-        addSubview(controlStackView)
-        addSubview(likeStackView)
-        addSubview(commentStackView)
-        addSubview(captionLabel)
-        addSubview(postTimeLabel)
-        
+        addSubviews(profileImageView, infoStackView, functionButton, postImageView, blurControlView, controlStackView, likeStackView, commentStackView, captionLabel, postTimeLabel)
+  
         profileImageView.anchor(top: topAnchor, left: leftAnchor, paddingTop: 12, paddingLeft: 15)
         profileImageView.setDimensions(height: 40, width: 40)
         profileImageView.layer.cornerRadius = 40 / 2

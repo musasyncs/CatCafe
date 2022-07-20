@@ -29,7 +29,7 @@ class ExploreController: UIViewController {
     
     // MARK: - View
     private lazy var backBarButtonItem = UIBarButtonItem(
-        image: UIImage(systemName: "arrow.left")?
+        image: SFSymbols.arrow_left?
             .withTintColor(.ccGrey)
             .withRenderingMode(.alwaysOriginal),
         style: .plain,

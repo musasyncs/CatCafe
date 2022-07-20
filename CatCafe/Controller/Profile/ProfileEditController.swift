@@ -41,7 +41,10 @@ class ProfileEditController: UIViewController {
     
     private let profileEditButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setImage(UIImage(systemName: "square.and.pencil")?.resize(to: .init(width: 20, height: 20)), for: .normal)
+        button.setImage(
+            SFSymbols.square_pencil?.resize(to: .init(width: 20, height: 20)),
+            for: .normal
+        )
         button.imageView?.contentMode = .scaleToFill
         
         button.layer.cornerRadius = 28/2
@@ -176,13 +179,7 @@ extension ProfileEditController {
     
     // swiftlint:disable all
     private func layout() {
-        view.addSubview(leaveButton)
-        view.addSubview(saveButton)
-        view.addSubview(nameLabel)
-        view.addSubview(profileImageView)
-        view.addSubview(profileEditButton)
-        view.addSubview(stackView)
-        view.addSubview(bioStackView)
+        view.addSubviews(leaveButton, saveButton, nameLabel, profileImageView, profileEditButton, stackView, bioStackView)
         
         leaveButton.anchor(
             top: view.topAnchor,
@@ -269,13 +266,13 @@ extension ProfileEditController {
             
             guard let username = self.usernameTextField.text,
                   !username.isEmpty else {
-                AlertHelper.showMessage(title: "Oops", message: "帳號不可為空", over: self)
+                AlertHelper.showMessage(title: "Oops", message: "帳號不可為空", buttonTitle: "OK", over: self)
                 return
             }
             
             guard let fullname = self.fullnameTextField.text,
                   !fullname.isEmpty else {
-                AlertHelper.showMessage(title: "Oops", message: "全名不可為空", over: self)
+                AlertHelper.showMessage(title: "Oops", message: "全名不可為空", buttonTitle: "OK", over: self)
                 return
             }
             
@@ -303,7 +300,7 @@ extension ProfileEditController {
         
             if self.hasChangedImage {
                 guard let profileImage = self.profileImageView.image else {
-                    AlertHelper.showMessage(title: "請上傳大頭照", message: "", over: self)
+                    AlertHelper.showMessage(title: "請上傳大頭照", message: "", buttonTitle: "OK", over: self)
                     return
                 }
                 

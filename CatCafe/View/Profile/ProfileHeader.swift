@@ -154,12 +154,7 @@ final class ProfileHeader: UICollectionReusableView {
     
     // swiftlint:disable all
     private func layout() {
-        addSubview(followersLabel)
-        addSubview(followingLabel)
-        addSubview(nameLabel)
-        addSubview(deleteAccountButton)
-        addSubview(bioLabel)
-        addSubview(buttonStackView)
+        addSubviews(followersLabel, followingLabel, nameLabel, deleteAccountButton, bioLabel, buttonStackView)
         
         followersLabel.anchor(
             top: topAnchor,

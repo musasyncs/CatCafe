@@ -39,8 +39,7 @@ class CommentInputAccessoryView: UIView {
         backgroundColor = .white
         autoresizingMask = .flexibleHeight
         
-        addSubview(postButton)
-        addSubview(commentTextView)
+        addSubviews(postButton, commentTextView)
         postButton.anchor(top: topAnchor, right: rightAnchor, paddingRight: 8)
         postButton.setDimensions(height: 50, width: 50)
         commentTextView.anchor(

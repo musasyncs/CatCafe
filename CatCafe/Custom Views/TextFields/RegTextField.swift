@@ -13,12 +13,17 @@ class RegTextField: UITextField {
         super.init(frame: .zero)
         keyboardType = .emailAddress
         autocapitalizationType = .none
+        keyboardAppearance = .light
+        autocorrectionType = .no
         
         borderStyle = .none
-        textColor = .white
-        font = .systemFont(ofSize: 14, weight: .regular)
-        keyboardAppearance = .light
         backgroundColor = .clear
+        textColor = .white
+        tintColor = .white
+        textAlignment = .left
+        font = .systemFont(ofSize: 14, weight: .regular)
+        adjustsFontSizeToFitWidth = true
+        minimumFontSize = 12
         
         attributedPlaceholder = NSAttributedString(
             string: placeholder,

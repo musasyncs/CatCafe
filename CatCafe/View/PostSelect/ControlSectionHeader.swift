@@ -35,8 +35,7 @@ final class ControlView: UIView {
         cameraButton.addTarget(self, action: #selector(handleCamera), for: .touchUpInside)
         cameraButton.layer.cornerRadius = 30 / 2
 
-        addSubview(galleryButton)
-        addSubview(cameraButton)
+        addSubviews(galleryButton, cameraButton)
         galleryButton.centerY(inView: self, leftAnchor: leftAnchor, paddingLeft: 16, constant: 0)
         cameraButton.centerY(inView: self)
         cameraButton.anchor(right: rightAnchor, paddingRight: 16)

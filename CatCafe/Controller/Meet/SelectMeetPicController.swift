@@ -66,7 +66,7 @@ class SelectMeetPicController: UIViewController {
             action: #selector(handleCancel)
         )
         navigationItem.rightBarButtonItem = UIBarButtonItem(
-            image: UIImage(systemName: "arrow.right")?
+            image: SFSymbols.arrow_right?
                 .withTintColor(.ccGrey)
                 .withRenderingMode(.alwaysOriginal),
             style: .plain,
@@ -76,9 +76,7 @@ class SelectMeetPicController: UIViewController {
     }
     
     private func setupLayout() {
-        view.addSubview(titleLabel)
-        view.addSubview(subtitleLabel)
-        view.addSubview(meetPicView)
+        view.addSubviews(titleLabel, subtitleLabel, meetPicView)
         titleLabel.anchor(top: view.safeAreaLayoutGuide.topAnchor, paddingTop: 16)
         titleLabel.centerX(inView: view)
         subtitleLabel.anchor(top: titleLabel.bottomAnchor, paddingTop: 8)
@@ -104,7 +102,7 @@ class SelectMeetPicController: UIViewController {
 
     @objc private func handleNext() {
         guard let selectedImage = selectedImage else {
-            AlertHelper.showMessage(title: "", message: "請上傳聚會封面", over: self)
+            AlertHelper.showMessage(title: "", message: "請上傳聚會封面", buttonTitle: "OK", over: self)
             return
         }
         let controller = ArrangeMeetController()

@@ -126,7 +126,7 @@ extension PostSelectController {
             action: #selector(handleCancel)
         )
         navigationItem.rightBarButtonItem = UIBarButtonItem(
-            image: UIImage(systemName: "arrow.right")?
+            image: SFSymbols.arrow_right?
                 .withTintColor(.ccGrey)
                 .withRenderingMode(.alwaysOriginal),
             style: .plain,

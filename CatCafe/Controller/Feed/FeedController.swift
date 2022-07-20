@@ -282,7 +282,7 @@ extension FeedController: FeedCellDelegate {
     func cell(_ cell: FeedCell, wantsToReportFor post: Post) {
         // 還沒登入要先登入
         if UserService.shared.currentUser == nil {
-            AlertHelper.showMessage(title: "Oops", message: "請先登入", over: self)
+            AlertHelper.showMessage(title: "Oops", message: "請先登入", buttonTitle: "OK", over: self)
             return
         }
         
@@ -293,7 +293,7 @@ extension FeedController: FeedCellDelegate {
     
     func cell(_ cell: FeedCell, didLike post: Post) {
         guard let currentUid = LocalStorage.shared.getUid() else {
-            AlertHelper.showMessage(title: "Oops", message: "請先登入", over: self)
+            AlertHelper.showMessage(title: "Oops", message: "請先登入", buttonTitle: "OK", over: self)
             return
         }
         
@@ -325,7 +325,7 @@ extension FeedController: FeedCellDelegate {
     
     func cell(_ cell: FeedCell, gestureView: UIView, didDoubleTapLike post: Post) {
         guard let currentUid = LocalStorage.shared.getUid() else {
-            AlertHelper.showMessage(title: "Oops", message: "請先登入", over: self)
+            AlertHelper.showMessage(title: "Oops", message: "請先登入", buttonTitle: "OK", over: self)
             return
         }
         
@@ -361,7 +361,7 @@ extension FeedController: FeedCellDelegate {
     
     func cell(_ cell: FeedCell, showCommentsFor post: Post) {
         if LocalStorage.shared.getUid() == nil {
-            AlertHelper.showMessage(title: "Oops", message: "請先登入", over: self)
+            AlertHelper.showMessage(title: "Oops", message: "請先登入", buttonTitle: "OK", over: self)
             return
         }
         let controller = FeedCommentController(post: post)

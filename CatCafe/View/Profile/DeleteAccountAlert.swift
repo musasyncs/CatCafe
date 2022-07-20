@@ -69,9 +69,8 @@ class DeleteAccountAlert {
         mytargetView = targetView
         self.viewController = viewController
       
-        targetView.addSubview(bgView)
-        targetView.addSubview(alertView)
-        bgView.frame    = targetView.bounds
+        targetView.addSubviews(bgView, alertView)
+        bgView.frame = targetView.bounds
         alertView.frame = CGRect(
             x: 40,
             y: -300,

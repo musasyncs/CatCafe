@@ -142,8 +142,7 @@ extension ChatController {
     }
     
     private func setupCustomTitle() {
-        leftBarButtonView.addSubview(titleLabel)
-        leftBarButtonView.addSubview(subTitleLabel)
+        leftBarButtonView.addSubviews(titleLabel, subTitleLabel)
         let leftBarButtonItem = UIBarButtonItem(customView: leftBarButtonView)
         navigationItem.leftBarButtonItems?.append(leftBarButtonItem)
         
@@ -188,6 +187,7 @@ extension ChatController {
             self.messagesCollectionView.scrollToLastItem(animated: true)
         }
     }
+    
     private func insertOldMessages() {
         maxMessageNumber = allLocalMessages.count - displayingMessagesCount
         minMessageNumber = maxMessageNumber - CCConstant.NUMBEROFMESSAGES

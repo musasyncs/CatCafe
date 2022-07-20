@@ -41,23 +41,22 @@ final class UserCell: UITableViewCell {
         return label
     }()
     
-    lazy var stack = UIStackView(arrangedSubviews: [usernameLabel, fullnameLabel])
+    lazy var vStack = UIStackView(arrangedSubviews: [usernameLabel, fullnameLabel])
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         backgroundColor = .clear
         selectionStyle = .none
         
-        stack.axis = .vertical
-        stack.spacing = 4
-        stack.alignment = .leading
+        vStack.axis = .vertical
+        vStack.spacing = 4
+        vStack.alignment = .leading
             
-        addSubview(profileImageView)
-        addSubview(stack)
+        addSubviews(profileImageView, vStack)
         
         profileImageView.setDimensions(height: 36, width: 36)
         profileImageView.centerY(inView: self, leftAnchor: leftAnchor, paddingLeft: 12)
-        stack.centerY(inView: profileImageView, leftAnchor: profileImageView.rightAnchor, paddingLeft: 8)
+        vStack.centerY(inView: profileImageView, leftAnchor: profileImageView.rightAnchor, paddingLeft: 8)
     }
     
     required init?(coder: NSCoder) {

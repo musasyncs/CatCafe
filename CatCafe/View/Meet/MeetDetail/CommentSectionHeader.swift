@@ -154,19 +154,8 @@ extension CommentSectionHeader {
     
     // swiftlint:disable all
     func layout() {
-        addSubview(hostProfileImageView)
-        addSubview(hostnameLabel)
-        addSubview(seeAllPeopleButton)
-        addSubview(titleLabel)
-        addSubview(descriptionLabel)
-        addSubview(timeStackView)
-        addSubview(placeStackView)
-        addSubview(infoLabel)
-        addSubview(likeButton)
-        addSubview(likesLabel)
-        addSubview(attendButton)
-        addSubview(publicCommentLabel)
-        
+        addSubviews(hostProfileImageView, hostnameLabel, seeAllPeopleButton, titleLabel, descriptionLabel, timeStackView, placeStackView, infoLabel, likeButton, likesLabel, attendButton, publicCommentLabel)
+
         hostProfileImageView.anchor(top: topAnchor, left: leftAnchor, paddingTop: 16, paddingLeft: 16)
         hostProfileImageView.setDimensions(height: 24, width: 24)
         hostnameLabel.centerY(inView: hostProfileImageView,

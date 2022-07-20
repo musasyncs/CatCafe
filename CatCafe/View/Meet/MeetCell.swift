@@ -133,17 +133,17 @@ extension MeetCell {
     }
     
     fileprivate func layout() {
-        [ meetImageView,
-          titleLabel,
-          timeStackView,
-          placeStackView,
-          hostProfileImageView,
-          hostnameLabel,
-          infoLabel,
-          likeButton,
-          likesLabel
-        ].forEach { addSubview($0) }
-        
+        addSubviews(
+            meetImageView,
+            titleLabel,
+            timeStackView,
+            placeStackView,
+            hostProfileImageView,
+            hostnameLabel,
+            infoLabel,
+            likeButton,
+            likesLabel
+        )
         meetImageView.centerY(inView: self, leftAnchor: leftAnchor, paddingLeft: 16)
         meetImageView.setDimensions(height: 112, width: 112)
         

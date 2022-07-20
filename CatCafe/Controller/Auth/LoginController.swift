@@ -106,7 +106,7 @@ class LoginController: UIViewController {
     @objc func handleLogin() {
         guard let email = emailTextField.text, !email.isEmpty,
               let password = passwordTextField.text, !password.isEmpty else {
-            AlertHelper.showMessage(title: "Validate Failed", message: "欄位不可留白", over: self)
+            AlertHelper.showMessage(title: "Validate Failed", message: "欄位不可留白", buttonTitle: "OK", over: self)
             return
         }
         
@@ -145,15 +145,11 @@ class LoginController: UIViewController {
     }
     
     @objc func openEulaWebView() {
-        let controller = WebView()
-        controller.url = "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/"
-        present(controller, animated: true)
+        presentWebVC(with: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")
     }
     
     @objc func openPrivacyWebView() {
-        let controller = WebView()
-        controller.url = "https://www.privacypolicies.com/live/8a57272b-85c4-4dc1-bf1e-f0953951def3"
-        present(controller, animated: true)
+        presentWebVC(with: "https://www.privacypolicies.com/live/8a57272b-85c4-4dc1-bf1e-f0953951def3")
     }
     
     @objc func textDidChange(sender: UITextField) {

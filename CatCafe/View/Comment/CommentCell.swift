@@ -37,8 +37,7 @@ final class CommentCell: UICollectionViewCell {
         
         backgroundColor = .white
         
-        addSubview(profileImageView)
-        addSubview(commentLabel)
+        addSubviews(profileImageView, commentLabel)
         profileImageView.anchor(top: topAnchor,
                                 left: leftAnchor,
                                 paddingTop: 8,

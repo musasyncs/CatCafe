@@ -83,11 +83,7 @@ final class NotificationCell: UITableViewCell {
         backgroundColor = .white
         selectionStyle = .none
         
-        contentView.addSubview(profileImageView)
-        contentView.addSubview(infoLabel)
-        contentView.addSubview(followButton)
-        contentView.addSubview(postImageView)
-        
+        contentView.addSubviews(profileImageView, infoLabel, followButton, postImageView)        
         profileImageView.setDimensions(height: 36, width: 36)
         profileImageView.centerY(inView: self, leftAnchor: leftAnchor, paddingLeft: 12)
         

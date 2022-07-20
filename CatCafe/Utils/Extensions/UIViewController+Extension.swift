@@ -144,4 +144,12 @@ extension UIViewController {
         view.removeFromSuperview()
         removeFromParent()
     }
+    
+    // MARK: - Present
+    func presentWebVC(with urlString: String) {
+        let controller = WebViewController()
+        controller.url = urlString
+        present(controller, animated: true)
+    }
+    
 }

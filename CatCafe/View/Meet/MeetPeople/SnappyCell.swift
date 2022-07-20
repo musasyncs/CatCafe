@@ -59,8 +59,7 @@ class SnappyCell: UICollectionViewCell {
         timeLabel.font = .systemFont(ofSize: 10, weight: .regular)
         
         // layout
-        contentView.addSubview(superImageView)
-        contentView.addSubview(timeLabel)
+        contentView.addSubviews(superImageView, timeLabel)
         
         superImageView.fillSuperView()
         timeLabel.anchor(

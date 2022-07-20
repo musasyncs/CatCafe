@@ -184,9 +184,8 @@ extension MeetController {
         didMove(toParent: allMeetsController)
         didMove(toParent: myArrangeController)
         didMove(toParent: myAttendController)
-        view.addSubview(allMeetsController.view)
-        view.addSubview(myArrangeController.view)
-        view.addSubview(myAttendController.view)
+        view.addSubviews(allMeetsController.view, myArrangeController.view, myAttendController.view)
+
         allMeetsController.view.anchor(
             top: buttonStackView.bottomAnchor,
             left: view.leftAnchor,

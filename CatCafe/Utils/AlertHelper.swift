@@ -7,33 +7,40 @@
 
 import UIKit
 
-extension UIAlertAction {
-    
-    static var okAction: UIAlertAction {
-        let okAction = UIAlertAction(title: "確定", style: .default, handler: nil)
-        okAction.setValue(UIColor.ccPrimary, forKey: "titleTextColor")
-        return okAction
-    }
-    
-}
-
 class AlertHelper {
     
-    static func showMessage(
-        title: String?,
-        message: String?,
-        over viewController: UIViewController
+    static func showMessage(title: String,
+                            message: String,
+                            buttonTitle: String,
+                            dismissAction: (() -> Void)? = nil,
+                            over viewController: UIViewController
     ) {
-        assert((title ?? message) != nil, "Title OR message must be passed in")
-        
-        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alert.addAction(.okAction)
-        viewController.present(alert, animated: true)
+        let alertVC = CCAlertVC(title: title,
+                                message: message,
+                                buttonTitle: buttonTitle,
+                                dismissAction: dismissAction)
+        alertVC.modalPresentationStyle = .overFullScreen
+        alertVC.modalTransitionStyle = .crossDissolve
+        viewController.present(alertVC, animated: true)
     }
     
+    static func showDefaultError(over viewController: UIViewController) {
+        let alertVC = CCAlertVC(title: "Something Went Wrong",
+                                message: "We were unable to complete your task at this time. Please try again.",
+                                buttonTitle: "Ok")
+        alertVC.modalPresentationStyle = .overFullScreen
+        alertVC.modalTransitionStyle = .crossDissolve
+        viewController.present(alertVC, animated: true)
+        
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2) {
+            alertVC.presentedViewController?.dismiss(animated: true, completion: nil)
+        }
+    }
+    
+    // For report
     static func showActionSheet(
         forPost post: Post,
-        showReportAlert: @escaping (Post) -> (),
+        showReportAlert: @escaping (Post) -> Void,
         over viewController: UIViewController
     ) {
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
@@ -42,13 +49,13 @@ class AlertHelper {
         let reportAction = UIAlertAction(title: "Report post", style: .default) { (_) in
             showReportAlert(post)
         }
-        reportAction.setValue(UIImage(systemName: "exclamationmark.shield"), forKey: "image")
+        reportAction.setValue(SFSymbols.shield, forKey: "image")
         reportAction.setValue(UIColor.ccPrimary, forKey: "titleTextColor")
         alert.addAction(reportAction)
         
         // Cancel
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { _ in }
-        cancelAction.setValue(UIImage(systemName: "arrow.turn.up.left"), forKey: "image")
+        cancelAction.setValue(SFSymbols.arrow_up_left, forKey: "image")
         cancelAction.setValue(UIColor.ccPrimary, forKey: "titleTextColor")
         alert.addAction(cancelAction)
         
@@ -114,24 +121,15 @@ class AlertHelper {
         ReportService.shared.sendReport(postId: postId, message: message) { result in
             switch result {
             case .success:
-                showMessage(
-                    title: "Thanks for reporting this post",
-                    message: "We will review this post and remove anything that doesn't follow our standards as quickly as possible",
-                    over: viewController)
-            case .failure(let error):
-                showErrorMessage(message: error.localizedDescription, over: viewController)
+                showMessage(title: "Thanks for reporting this post",
+                            message: "We will review this post and remove anything that doesn't follow our standards as quickly as possible",
+                            buttonTitle: "OK",
+                            over: viewController)
+            case .failure:
+                DispatchQueue.main.async {
+                    showDefaultError(over: viewController)
+                }
             }
-        }
-    }
-    
-    static func showErrorMessage(message: String?, over viewController: UIViewController) {
-        assert((message) != nil, "Title OR message must be passed in")
-        
-        let alert = UIAlertController(title: "網路異常", message: message, preferredStyle: .alert)
-        viewController.present(alert, animated: true, completion: nil)
-        
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2) {
-            alert.presentedViewController?.dismiss(animated: true, completion: nil)
         }
     }
     

@@ -108,19 +108,19 @@ class RegistrationController: UIViewController {
     // swiftlint:disable all
     @objc func handleSignUp() {
         guard let email = emailTextField.text else {
-            AlertHelper.showMessage(title: "Validate Failed", message: "欄位不可留白", over: self)
+            AlertHelper.showMessage(title: "Validate Failed", message: "欄位不可留白", buttonTitle: "OK", over: self)
             return
         }
         guard let password = passwordTextField.text else {
-            AlertHelper.showMessage(title: "Validate Failed", message: "欄位不可留白", over: self)
+            AlertHelper.showMessage(title: "Validate Failed", message: "欄位不可留白", buttonTitle: "OK", over: self)
             return
         }
         guard let fullname = fullnameTextField.text else {
-            AlertHelper.showMessage(title: "Validate Failed", message: "欄位不可留白", over: self)
+            AlertHelper.showMessage(title: "Validate Failed", message: "欄位不可留白", buttonTitle: "OK", over: self)
             return
         }
         guard let username = usernameTextField.text?.lowercased() else {
-            AlertHelper.showMessage(title: "Validate Failed", message: "欄位不可留白", over: self)
+            AlertHelper.showMessage(title: "Validate Failed", message: "欄位不可留白", buttonTitle: "OK", over: self)
             return
         }
             

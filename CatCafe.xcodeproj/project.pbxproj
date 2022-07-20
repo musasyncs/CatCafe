@@ -67,6 +67,12 @@
 		BA1385D3286892E8001B7FF1 /* NewMessageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA1385D2286892E8001B7FF1 /* NewMessageController.swift */; };
 		BA1385D52868B13B001B7FF1 /* ChatController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA1385D42868B13B001B7FF1 /* ChatController.swift */; };
 		BA3BC3242887A91C00D935FF /* RegTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA3BC3232887A91C00D935FF /* RegTextField.swift */; };
+		BA3BC3272887C04C00D935FF /* CCAlertVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA3BC3262887C04C00D935FF /* CCAlertVC.swift */; };
+		BA3BC32A2887C65100D935FF /* CCAlertContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA3BC3292887C65100D935FF /* CCAlertContainerView.swift */; };
+		BA3BC32F2887C69300D935FF /* CCTitleLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA3BC32E2887C69300D935FF /* CCTitleLabel.swift */; };
+		BA3BC3312887C6AC00D935FF /* CCBodyLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA3BC3302887C6AC00D935FF /* CCBodyLabel.swift */; };
+		BA3BC3342887C6D600D935FF /* CCButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA3BC3332887C6D600D935FF /* CCButton.swift */; };
+		BA3BC3362887E50400D935FF /* SFSymbols.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA3BC3352887E50400D935FF /* SFSymbols.swift */; };
 		BA44772E28587ED30045DDB8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA44772D28587ED30045DDB8 /* AppDelegate.swift */; };
 		BA44773028587ED30045DDB8 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA44772F28587ED30045DDB8 /* SceneDelegate.swift */; };
 		BA44773228587ED30045DDB8 /* SelectCafeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA44773128587ED30045DDB8 /* SelectCafeController.swift */; };
@@ -122,7 +128,6 @@
 		BA7BB712285A083D00465DEC /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA7BB6FE285A083D00465DEC /* UIView+Extension.swift */; };
 		BA7BB713285A083D00465DEC /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA7BB6FF285A083D00465DEC /* UIImage+Extension.swift */; };
 		BA7BB714285A083D00465DEC /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA7BB700285A083D00465DEC /* UIViewController+Extension.swift */; };
-		BA7BB715285A083D00465DEC /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA7BB701285A083D00465DEC /* String+Extension.swift */; };
 		BA7BB716285A083D00465DEC /* UIScreen+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA7BB702285A083D00465DEC /* UIScreen+Extension.swift */; };
 		BA7BB717285A083D00465DEC /* identifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA7BB703285A083D00465DEC /* identifiers.swift */; };
 		BA7BB719285A083D00465DEC /* NotoSansCJKtc-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = BA7BB706285A083D00465DEC /* NotoSansCJKtc-Medium.otf */; };
@@ -256,6 +261,12 @@
 		BA1385D2286892E8001B7FF1 /* NewMessageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewMessageController.swift; sourceTree = "<group>"; };
 		BA1385D42868B13B001B7FF1 /* ChatController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatController.swift; sourceTree = "<group>"; };
 		BA3BC3232887A91C00D935FF /* RegTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegTextField.swift; sourceTree = "<group>"; };
+		BA3BC3262887C04C00D935FF /* CCAlertVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CCAlertVC.swift; sourceTree = "<group>"; };
+		BA3BC3292887C65100D935FF /* CCAlertContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CCAlertContainerView.swift; sourceTree = "<group>"; };
+		BA3BC32E2887C69300D935FF /* CCTitleLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CCTitleLabel.swift; sourceTree = "<group>"; };
+		BA3BC3302887C6AC00D935FF /* CCBodyLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CCBodyLabel.swift; sourceTree = "<group>"; };
+		BA3BC3332887C6D600D935FF /* CCButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CCButton.swift; sourceTree = "<group>"; };
+		BA3BC3352887E50400D935FF /* SFSymbols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SFSymbols.swift; sourceTree = "<group>"; };
 		BA44772A28587ED30045DDB8 /* CatCafe.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CatCafe.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BA44772D28587ED30045DDB8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BA44772F28587ED30045DDB8 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -313,7 +324,6 @@
 		BA7BB6FE285A083D00465DEC /* UIView+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Extension.swift"; sourceTree = "<group>"; };
 		BA7BB6FF285A083D00465DEC /* UIImage+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
 		BA7BB700285A083D00465DEC /* UIViewController+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extension.swift"; sourceTree = "<group>"; };
-		BA7BB701285A083D00465DEC /* String+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
 		BA7BB702285A083D00465DEC /* UIScreen+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIScreen+Extension.swift"; sourceTree = "<group>"; };
 		BA7BB703285A083D00465DEC /* identifiers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = identifiers.swift; sourceTree = "<group>"; };
 		BA7BB706285A083D00465DEC /* NotoSansCJKtc-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NotoSansCJKtc-Medium.otf"; sourceTree = "<group>"; };
@@ -491,7 +501,11 @@
 		BA3BC3212887A8BF00D935FF /* Custom Views */ = {
 			isa = PBXGroup;
 			children = (
+				BA3BC3282887C64200D935FF /* Views */,
+				BA3BC3252887C03200D935FF /* ViewControllers */,
 				BA3BC3222887A8D400D935FF /* TextFields */,
+				BA3BC3322887C6C100D935FF /* Buttons */,
+				BA3BC32B2887C67600D935FF /* Labels */,
 			);
 			path = "Custom Views";
 			sourceTree = "<group>";
@@ -502,6 +516,39 @@
 				BA3BC3232887A91C00D935FF /* RegTextField.swift */,
 			);
 			path = TextFields;
+			sourceTree = "<group>";
+		};
+		BA3BC3252887C03200D935FF /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				BA3BC3262887C04C00D935FF /* CCAlertVC.swift */,
+			);
+			path = ViewControllers;
+			sourceTree = "<group>";
+		};
+		BA3BC3282887C64200D935FF /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				BA3BC3292887C65100D935FF /* CCAlertContainerView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		BA3BC32B2887C67600D935FF /* Labels */ = {
+			isa = PBXGroup;
+			children = (
+				BA3BC32E2887C69300D935FF /* CCTitleLabel.swift */,
+				BA3BC3302887C6AC00D935FF /* CCBodyLabel.swift */,
+			);
+			path = Labels;
+			sourceTree = "<group>";
+		};
+		BA3BC3322887C6C100D935FF /* Buttons */ = {
+			isa = PBXGroup;
+			children = (
+				BA3BC3332887C6D600D935FF /* CCButton.swift */,
+			);
+			path = Buttons;
 			sourceTree = "<group>";
 		};
 		BA44772128587ED30045DDB8 = {
@@ -807,6 +854,7 @@
 			children = (
 				BA7BB6F8285A083D00465DEC /* CCConstant.swift */,
 				BA76373F286B434700D4EDFB /* FCollectionReference.swift */,
+				BA3BC3352887E50400D935FF /* SFSymbols.swift */,
 			);
 			path = Constants;
 			sourceTree = "<group>";
@@ -818,13 +866,12 @@
 				BA7BB702285A083D00465DEC /* UIScreen+Extension.swift */,
 				BA7BB6FA285A083D00465DEC /* UIFont+Extension.swift */,
 				BA7BB6FB285A083D00465DEC /* UIColor+Extension.swift */,
-				BA7BB6FD285A083D00465DEC /* UIButton+Extension.swift */,
 				BA7BB6FE285A083D00465DEC /* UIView+Extension.swift */,
+				BA7BB6FD285A083D00465DEC /* UIButton+Extension.swift */,
 				BA7BB70B285A083D00465DEC /* UIImageView+extension.swift */,
 				BA7BB6FF285A083D00465DEC /* UIImage+Extension.swift */,
-				BA7BB701285A083D00465DEC /* String+Extension.swift */,
-				BA7BB703285A083D00465DEC /* identifiers.swift */,
 				BA76373B286B3C4A00D4EDFB /* Date+Extension.swift */,
+				BA7BB703285A083D00465DEC /* identifiers.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1157,7 +1204,6 @@
 				BADF1F68285C528C004CF329 /* PlaceCell.swift in Sources */,
 				BA558F1D286E23F700A38602 /* MessageService.swift in Sources */,
 				BA76373E286B3CD700D4EDFB /* startChat.swift in Sources */,
-				BA7BB715285A083D00465DEC /* String+Extension.swift in Sources */,
 				BAEBF61C286F2BA200DBA670 /* MapCell.swift in Sources */,
 				BA1385A02866F52B001B7FF1 /* MTRiseFilter.metal in Sources */,
 				BA44779128597ED00045DDB8 /* ProfileHeader.swift in Sources */,
@@ -1173,6 +1219,7 @@
 				BAD133B92865651800B8015A /* SnappyFlowLayout.swift in Sources */,
 				BA7BB70F285A083D00465DEC /* UIColor+Extension.swift in Sources */,
 				BA7BB713285A083D00465DEC /* UIImage+Extension.swift in Sources */,
+				BA3BC32A2887C65100D935FF /* CCAlertContainerView.swift in Sources */,
 				BA1385B22866F52B001B7FF1 /* MTXpro2Filter.swift in Sources */,
 				BA7BB723285AD90400465DEC /* DropDownCell.swift in Sources */,
 				BA7735912862CEDF0050E2A4 /* AttendMeetController.swift in Sources */,
@@ -1183,6 +1230,7 @@
 				BA763742286B519100D4EDFB /* RecentChatService.swift in Sources */,
 				BA1385CF28682BB4001B7FF1 /* CustomTextField.swift in Sources */,
 				BA13856B2866F52A001B7FF1 /* MTReyesFilter.swift in Sources */,
+				BA3BC3362887E50400D935FF /* SFSymbols.swift in Sources */,
 				BA4477A82859E0AD0045DDB8 /* AuthService.swift in Sources */,
 				BA1385AC2866F52B001B7FF1 /* MTClarendonVideoFilter.metal in Sources */,
 				BAD133B22864C7D200B8015A /* Person.swift in Sources */,
@@ -1228,6 +1276,7 @@
 				BA1385812866F52B001B7FF1 /* MTLudwigFilter.metal in Sources */,
 				BAF9BD2028608D72000F9EEA /* PreviewPhotoContainerView.swift in Sources */,
 				BA7BB70E285A083D00465DEC /* UIFont+Extension.swift in Sources */,
+				BA3BC32F2887C69300D935FF /* CCTitleLabel.swift in Sources */,
 				BA558F1F286E240C00A38602 /* TypingService.swift in Sources */,
 				BA763735286B222100D4EDFB /* RecentChat.swift in Sources */,
 				BA13858D2866F52B001B7FF1 /* MTSierraFilter.metal in Sources */,
@@ -1275,6 +1324,7 @@
 				BA7BB725285AE4D000465DEC /* PostSelectController.swift in Sources */,
 				BA4477972859D0280045DDB8 /* UserService.swift in Sources */,
 				BA558F08286E1C6300A38602 /* MessagesDisplayDelegate.swift in Sources */,
+				BA3BC3272887C04C00D935FF /* CCAlertVC.swift in Sources */,
 				BADBFF6F28614E1000146D6F /* SelectMeetPicController.swift in Sources */,
 				BA1385CD28682943001B7FF1 /* InputContainerView.swift in Sources */,
 				BA7BB72F285AEAEA00465DEC /* GridScrollView.swift in Sources */,
@@ -1282,6 +1332,7 @@
 				BA558F11286E236F00A38602 /* MKMessage.swift in Sources */,
 				BA1385B52866F52B001B7FF1 /* MTSlumberFilter.swift in Sources */,
 				BA656DB42886AD0000676B0A /* PresentaionManager.swift in Sources */,
+				BA3BC3342887C6D600D935FF /* CCButton.swift in Sources */,
 				BAD133AC2864A26F00B8015A /* MyAttendController.swift in Sources */,
 				BADBFF71286164B700146D6F /* ArrangeMeetController.swift in Sources */,
 				BA1385CA2867F8EF001B7FF1 /* ChatlistController.swift in Sources */,
@@ -1299,6 +1350,7 @@
 				BAEBF61A286F2B8600DBA670 /* MenuView.swift in Sources */,
 				BA13859C2866F52B001B7FF1 /* MTAdenFilter.swift in Sources */,
 				BADBFF7C28620C5D00146D6F /* MeetStretchyHeader.swift in Sources */,
+				BA3BC3312887C6AC00D935FF /* CCBodyLabel.swift in Sources */,
 				BAD133A02863132300B8015A /* MeetService.swift in Sources */,
 				BAEBF617286F2AA200DBA670 /* MapController.swift in Sources */,
 				BA656DAF2886A27800676B0A /* HorizontalSliderView.swift in Sources */,

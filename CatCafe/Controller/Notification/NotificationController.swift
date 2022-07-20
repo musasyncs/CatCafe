@@ -108,7 +108,7 @@ extension NotificationController {
         title = "動態"
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(
-            image: UIImage(systemName: "arrow.left")?
+            image: SFSymbols.arrow_left?
                 .withTintColor(.ccGrey)
                 .withRenderingMode(.alwaysOriginal),
             style: .plain,

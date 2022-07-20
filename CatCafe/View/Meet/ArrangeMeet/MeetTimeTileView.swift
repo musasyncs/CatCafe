@@ -54,14 +54,7 @@ class MeetTimeTileView: UIView {
     }
     
     fileprivate func layout() {
-        // For animation
-        
-        // layout
-        addSubview(titleLabel)
-        addSubview(openButton)
-        addSubview(noticeLabel)
-        addSubview(timeSelectorView)
-        addSubview(textField)
+        addSubviews(titleLabel, openButton, noticeLabel, timeSelectorView, textField)
         
         titleLabel.anchor(top: topAnchor, left: leftAnchor, paddingLeft: 8, height: 36)
         openButton.centerY(inView: titleLabel,
@@ -86,13 +79,12 @@ class MeetTimeTileView: UIView {
                          height: 36)
     }
     
-    // MARK: - Helpers
-    
+    // MARK: - Helper
     func makeOpenButton() {
         openButton.addTarget(self, action: #selector(openButtonTapped), for: .primaryActionTriggered)
         
         let configuration = UIImage.SymbolConfiguration(scale: .small)
-        let image = UIImage(systemName: "chevron.down", withConfiguration: configuration)
+        let image = SFSymbols.chevron_down?.withConfiguration(configuration)
         openButton.setImage(image, for: .normal)
         
         openButton.imageView?.tintColor = .ccGrey
@@ -101,18 +93,17 @@ class MeetTimeTileView: UIView {
     
     private func setChevronUp() {
         let configuration = UIImage.SymbolConfiguration(scale: .small)
-        let image = UIImage(systemName: "chevron.up", withConfiguration: configuration)
+        let image = SFSymbols.chevron_up?.withConfiguration(configuration)
         openButton.setImage(image, for: .normal)
     }
     
     private func setChevronDown() {
         let configuration = UIImage.SymbolConfiguration(scale: .small)
-        let image = UIImage(systemName: "chevron.down", withConfiguration: configuration)
+        let image = SFSymbols.chevron_down?.withConfiguration(configuration)
         openButton.setImage(image, for: .normal)
     }
 
-    // MARK: - Actions
-    
+    // MARK: - Action
     @objc func openButtonTapped() {
         if heightConstraint?.constant == 0 {
             self.setChevronUp()
@@ -194,7 +185,6 @@ final class TimeSelectorView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    // MARK: - Actions
     @objc func datePickerChanged(datePicker: UIDatePicker) {
         delegate?.didChooseDate(self, date: datePicker.date)
     }

@@ -40,9 +40,7 @@ class PreviewPhotoContainerView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        addSubview(previewImageView)
-        addSubview(cancelButton)
-        addSubview(saveButton)
+        addSubviews(previewImageView, cancelButton, saveButton)
         
         previewImageView.fillSuperView()
         

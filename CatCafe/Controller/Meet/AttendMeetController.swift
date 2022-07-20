@@ -131,7 +131,7 @@ class AttendMeetController: UIViewController {
         guard let contact = contactTextView.text, contact.isEmpty == false,
               let remarks = remarkTextView.text, remarks.isEmpty == false
         else {
-            AlertHelper.showMessage(title: "Validate Failed", message: "欄位不可留白", over: self)
+            AlertHelper.showMessage(title: "Validate Failed", message: "欄位不可留白", buttonTitle: "OK", over: self)
             return
         }
         

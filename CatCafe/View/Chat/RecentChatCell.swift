@@ -96,11 +96,7 @@ class RecentChatCell: UITableViewCell {
     }
     
     private func setupLayout() {
-        addSubview(avatarImageView)
-        addSubview(usernameLabel)
-        addSubview(lastMessageLabel)
-        addSubview(dateLabel)
-        addSubview(unreadCounterBackgroundView)
+        addSubviews(avatarImageView, usernameLabel, lastMessageLabel, dateLabel, unreadCounterBackgroundView)
         unreadCounterBackgroundView.addSubview(unreadCounterLabel)
         
         avatarImageView.centerY(inView: self, leftAnchor: leftAnchor, paddingLeft: 10)

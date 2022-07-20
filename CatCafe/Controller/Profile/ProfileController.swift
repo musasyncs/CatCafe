@@ -189,7 +189,7 @@ class ProfileController: UIViewController {
     @objc func handleLogout() {
         // 還沒登入要先登入
         if UserService.shared.currentUser == nil {
-            AlertHelper.showMessage(title: "Oops", message: "請先登入", over: self)
+            AlertHelper.showMessage(title: "Oops", message: "請先登入", buttonTitle: "OK", over: self)
             return
         }
         
@@ -367,7 +367,7 @@ extension ProfileController: ProfileHeaderDelegate {
     func header(_ profileHeader: ProfileHeader, didTapActionButtonFor user: User) {
         // 還沒登入要先登入
         if UserService.shared.currentUser == nil {
-            AlertHelper.showMessage(title: "Oops", message: "請先登入", over: self)
+            AlertHelper.showMessage(title: "Oops", message: "請先登入", buttonTitle: "OK", over: self)
             return
         }
         
@@ -417,13 +417,13 @@ extension ProfileController: ProfileHeaderDelegate {
     func header(_ profileHeader: ProfileHeader, wantToChatWith user: User) {
         // 還沒登入要先登入
         guard let currentUser = UserService.shared.currentUser else {
-            AlertHelper.showMessage(title: "Oops", message: "請先登入", over: self)
+            AlertHelper.showMessage(title: "Oops", message: "請先登入", buttonTitle: "OK", over: self)
             return
         }
         
         // 封鎖過不可聊天
         if currentUser.blockedUsers.contains(user.uid) {
-            AlertHelper.showMessage(title: "您已封鎖此使用者", message: "無法進行聊天", over: self)
+            AlertHelper.showMessage(title: "您已封鎖此使用者", message: "無法進行聊天", buttonTitle: "OK", over: self)
             return
         }
             
@@ -437,7 +437,7 @@ extension ProfileController: ProfileHeaderDelegate {
     func header(_ profileHeader: ProfileHeader, didTapBlock user: User) {
         // 還沒登入要先登入
         if UserService.shared.currentUser == nil {
-            AlertHelper.showMessage(title: "Oops", message: "請先登入", over: self)
+            AlertHelper.showMessage(title: "Oops", message: "請先登入", buttonTitle: "OK", over: self)
             return
         }
         
