@@ -26,7 +26,7 @@ class MapController: UIViewController {
     
     private let mapView = MKMapView()
     private let locationManager = CLLocationManager()
-    private let menuView = MenuView()
+    private let mapMenuView = MapMenuView()
     private let cafeInfoAlert = CafeInfoAlert()
     
     private lazy var centerMapButton: UIButton = {
@@ -71,7 +71,7 @@ class MapController: UIViewController {
                 )
                 self.mapView.addAnnotation(annotation)
             }
-            self.menuView.cafes = self.cafes
+            self.mapMenuView.cafes = self.cafes
         }
     }
     
@@ -116,11 +116,11 @@ extension MapController {
     }
     
     private func setupMenuView() {
-        menuView.delegate = self
-        menuView.mapController = self
-        view.addSubview(menuView)
-        menuView.anchor(left: view.leftAnchor, right: view.rightAnchor, height: height2)
-        menuViewBottomConstraint = menuView.bottomAnchor.constraint(
+        mapMenuView.delegate = self
+        mapMenuView.mapController = self
+        view.addSubview(mapMenuView)
+        mapMenuView.anchor(left: view.leftAnchor, right: view.rightAnchor, height: height2)
+        menuViewBottomConstraint = mapMenuView.bottomAnchor.constraint(
             equalTo: view.bottomAnchor,
             constant: (height2 - 108)
         )
@@ -129,7 +129,7 @@ extension MapController {
     
     private func setupCenterMapButton() {
         view.addSubview(centerMapButton)
-        centerMapButton.anchor(bottom: menuView.topAnchor,
+        centerMapButton.anchor(bottom: mapMenuView.topAnchor,
                                right: view.rightAnchor,
                                paddingBottom: 16, paddingRight: 16,
                                width: 50, height: 50)
@@ -258,7 +258,7 @@ extension MapController: MenuViewDelegate {
                 self.menuViewBottomConstraint?.constant = constant
                 self.view.layoutIfNeeded()
             } completion: { _ in
-                self.menuView.expansionState = goalState
+                self.mapMenuView.expansionState = goalState
             }
     }
     

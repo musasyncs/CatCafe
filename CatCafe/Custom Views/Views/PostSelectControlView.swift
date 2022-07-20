@@ -7,13 +7,13 @@
 
 import UIKit
 
-protocol ControlViewDelegate: AnyObject {
-    func didTapCamera(_ view: ControlView)
+protocol PostSelectControlViewDelegate: AnyObject {
+    func didTapCamera(_ view: PostSelectControlView)
 }
 
-final class ControlView: UIView {
+final class PostSelectControlView: UIView {
     
-    weak var delegate: ControlViewDelegate?
+    weak var delegate: PostSelectControlViewDelegate?
     
     lazy var galleryButton = makeTitleButton(
         withText: "圖庫",

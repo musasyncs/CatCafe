@@ -33,11 +33,11 @@ class LoginController: UIViewController {
     )
     private lazy var emailTextField = RegTextField(placeholder: "Email")
     private lazy var passwordTextField = RegTextField(placeholder: "Password")
-    private lazy var emailContainerView = InputContainerView(
+    private lazy var emailContainerView = RegInputContainerView(
         imageName: ImageAsset.mail.rawValue,
         textField: emailTextField
     )
-    private lazy var passwordContainerView = InputContainerView(
+    private lazy var passwordContainerView = RegInputContainerView(
         imageName: ImageAsset.lock.rawValue,
         textField: passwordTextField
     )

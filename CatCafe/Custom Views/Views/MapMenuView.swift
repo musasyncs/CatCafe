@@ -1,5 +1,5 @@
 //
-//  SearchInputView.swift
+//  MapMenuView.swift
 //  CatCafe
 //
 //  Created by Ewen on 2022/7/1.
@@ -23,7 +23,7 @@ protocol MenuViewDelegate: AnyObject {
     func selectedAnnotation(withCafe cafe: Cafe)
 }
 
-class MenuView: UIView {
+class MapMenuView: UIView {
     
     weak var delegate: MenuViewDelegate?
     var mapController: MapController?
@@ -112,7 +112,7 @@ class MenuView: UIView {
     
 }
 
-extension MenuView {
+extension MapMenuView {
     func setupIndicatorView() {
         addSubview(indicatorView)
         indicatorView.anchor(top: topAnchor, paddingTop: 16, width: 40, height: 8)
@@ -147,7 +147,7 @@ extension MenuView {
 }
 
 // MARK: - UITableViewDelegate, UITableViewDataSource
-extension MenuView: UITableViewDelegate, UITableViewDataSource {
+extension MapMenuView: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return cafes.count
     }

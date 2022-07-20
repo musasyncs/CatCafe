@@ -1,5 +1,5 @@
 //
-//  InputContainerView.swift
+//  RegInputContainerView.swift
 //  CatCafe
 //
 //  Created by Ewen on 2022/6/26.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class InputContainerView: UIView {
+class RegInputContainerView: UIView {
     
     init(imageName: String, textField: UITextField) {
         super.init(frame: .zero)

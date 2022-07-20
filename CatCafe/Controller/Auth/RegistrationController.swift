@@ -42,19 +42,19 @@ class RegistrationController: UIViewController {
     private let fullnameTextField = RegTextField(placeholder: "Full name")
     private let usernameTextField = RegTextField(placeholder: "User name")
     
-    lazy var emailContainerView = InputContainerView(
+    lazy var emailContainerView = RegInputContainerView(
         imageName: "mail",
         textField: emailTextField
     )
-    lazy var passwordContainerView = InputContainerView(
+    lazy var passwordContainerView = RegInputContainerView(
         imageName: "lock",
         textField: passwordTextField
     )
-    lazy var fullnameContainerView = InputContainerView(
+    lazy var fullnameContainerView = RegInputContainerView(
         imageName: "user",
         textField: fullnameTextField
     )
-    lazy var usernameContainerView = InputContainerView(
+    lazy var usernameContainerView = RegInputContainerView(
         imageName: "user",
         textField: usernameTextField
     )
