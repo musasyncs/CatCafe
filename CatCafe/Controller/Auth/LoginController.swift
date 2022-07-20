@@ -14,6 +14,7 @@ import WebKit
 
 class LoginController: UIViewController {
     
+    override var prefersStatusBarHidden: Bool { return true }
     weak var delegate: AuthenticationDelegate?
     private var viewModel = LoginViewModel()
     
@@ -101,25 +102,21 @@ class LoginController: UIViewController {
         playerLayer?.frame = view.bounds
     }
     
-    override var prefersStatusBarHidden: Bool {
-        return true
-    }
-    
     // MARK: - Action
     @objc func handleLogin() {
         guard let email = emailTextField.text, !email.isEmpty,
               let password = passwordTextField.text, !password.isEmpty else {
-            showMessage(withTitle: "Validate Failed", message: "欄位不可留白")
+            AlertHelper.showMessage(title: "Validate Failed", message: "欄位不可留白", over: self)
             return
         }
         
-        show()
+        showHud()
         AuthService.shared.loginUser(withEmail: email, password: password) { [weak self] result in
             guard let self = self else { return }
             
             switch result {
             case .success(let user):
-                self.dismiss()
+                self.dismissHud()
                 
                 // Save uid; hasLogedIn = true
                 LocalStorage.shared.saveUid(user.uid)
@@ -127,7 +124,7 @@ class LoginController: UIViewController {
                 
                 self.delegate?.authenticationDidComplete()
             case .failure:
-                self.dismiss()
+                self.dismissHud()
                 self.showFailure(text: "失敗")
             }
         }
@@ -344,7 +341,7 @@ extension LoginController: ASAuthorizationControllerDelegate, ASAuthorizationCon
         controller: ASAuthorizationController,
         didCompleteWithAuthorization authorization: ASAuthorization
     ) {
-        show()
+        showHud()
         AuthService.shared.authorizationController(
             controller: controller,
             didCompleteWithAuthorization: authorization
@@ -352,11 +349,11 @@ extension LoginController: ASAuthorizationControllerDelegate, ASAuthorizationCon
             guard let self = self else { return }
             
             guard let authDataResult = authDataResult else {
-                self.dismiss()
+                self.dismissHud()
                 self.showFailure(text: "失敗")
                 return
             }
-            self.dismiss() // 登入成功
+            self.dismissHud() // 登入成功
             
             // 拿 currentUid, userEmail, Apple givenName
             let currentUid = authDataResult.user.uid
@@ -375,7 +372,7 @@ extension LoginController: ASAuthorizationControllerDelegate, ASAuthorizationCon
                 case .success(let isExist):
                     // 已註冊過
                     if isExist {
-                        self.show()
+                        self.showHud()
                         
                         dispatchQueue.async {
                             var userEmail: String?
@@ -407,7 +404,7 @@ extension LoginController: ASAuthorizationControllerDelegate, ASAuthorizationCon
                             ) { [weak self] error in
                                 guard let self = self else { return }
                                 if error != nil {
-                                    self.dismiss()
+                                    self.dismissHud()
                                     self.showFailure(text: "失敗")
                                     return
                                 }
@@ -418,14 +415,14 @@ extension LoginController: ASAuthorizationControllerDelegate, ASAuthorizationCon
                             semaphore.wait()
                             
                             DispatchQueue.main.async {
-                                self.dismiss()
+                                self.dismissHud()
                                 self.delegate?.authenticationDidComplete()
                             }
                             
                         }
                     } else {
                         // 尚未註冊
-                        self.show()
+                        self.showHud()
                         
                         dispatchQueue.async {
                             UserService.shared.createUserProfile(
@@ -439,7 +436,7 @@ extension LoginController: ASAuthorizationControllerDelegate, ASAuthorizationCon
                             ) { [weak self] error in
                                 guard let self = self else { return }
                                 if error != nil {
-                                    self.dismiss()
+                                    self.dismissHud()
                                     self.showFailure(text: "失敗")
                                     return
                                 }
@@ -450,7 +447,7 @@ extension LoginController: ASAuthorizationControllerDelegate, ASAuthorizationCon
                             semaphore.wait()
                             
                             DispatchQueue.main.async {
-                                self.dismiss()
+                                self.dismissHud()
                                 self.delegate?.authenticationDidComplete()
                             }
                         }

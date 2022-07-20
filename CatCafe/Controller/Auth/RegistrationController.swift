@@ -108,23 +108,23 @@ class RegistrationController: UIViewController {
     // swiftlint:disable all
     @objc func handleSignUp() {
         guard let email = emailTextField.text else {
-            showMessage(withTitle: "Validate Failed", message: "欄位不可留白")
+            AlertHelper.showMessage(title: "Validate Failed", message: "欄位不可留白", over: self)
             return
         }
         guard let password = passwordTextField.text else {
-            showMessage(withTitle: "Validate Failed", message: "欄位不可留白")
+            AlertHelper.showMessage(title: "Validate Failed", message: "欄位不可留白", over: self)
             return
         }
         guard let fullname = fullnameTextField.text else {
-            showMessage(withTitle: "Validate Failed", message: "欄位不可留白")
+            AlertHelper.showMessage(title: "Validate Failed", message: "欄位不可留白", over: self)
             return
         }
         guard let username = usernameTextField.text?.lowercased() else {
-            showMessage(withTitle: "Validate Failed", message: "欄位不可留白")
+            AlertHelper.showMessage(title: "Validate Failed", message: "欄位不可留白", over: self)
             return
         }
             
-        show()
+        showHud()
         AuthService.shared.registerUser(
             withEmail: email,
             password: password
@@ -133,9 +133,9 @@ class RegistrationController: UIViewController {
             
             switch result {
             case .success(let authUser):
-                self.dismiss()
+                self.dismissHud()
                 
-                self.show()
+                self.showHud()
                 UserService.shared.createUserProfile(
                     uid: authUser.uid,
                     email: email,
@@ -148,7 +148,7 @@ class RegistrationController: UIViewController {
                     guard let self = self else { return }
                     
                     if error != nil {
-                        self.dismiss()
+                        self.dismissHud()
                         self.showFailure(text: "無法建立使用者")
                         return
                     }
@@ -159,7 +159,7 @@ class RegistrationController: UIViewController {
                     self.delegate?.authenticationDidComplete()
                 }
             case .failure:
-                self.dismiss()
+                self.dismissHud()
                 self.showFailure(text: "Failed to create auth user")
             }
         }

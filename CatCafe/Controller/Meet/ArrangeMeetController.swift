@@ -139,7 +139,7 @@ class ArrangeMeetController: UIViewController {
               let meetTitleText = meetTitleText, !meetTitleText.isEmpty,
               let meetDescription = meetDescription, !meetDescription.isEmpty
         else {
-            showMessage(withTitle: "Validate Failed", message: "欄位不可留白")
+            AlertHelper.showMessage(title: "Validate Failed", message: "欄位不可留白", over: self)
             return
         }
         

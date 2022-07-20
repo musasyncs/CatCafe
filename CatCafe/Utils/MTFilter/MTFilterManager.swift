@@ -5,21 +5,16 @@
 //  Created by Ewen on 2022/6/25.
 //
 
-import Foundation
 import UIKit
 import MetalPetal
 
-// swiftlint:disable all
 class MTFilterManager {
     
     static let shared = MTFilterManager()
     
     var allFilters: [MTFilter.Type] = []
-    
     private var resourceBundle: Bundle
-    
     private var context: MTIContext?
-    
     var device = MTLCreateSystemDefaultDevice()!
     
     init() {
@@ -38,32 +33,12 @@ class MTFilterManager {
         allFilters.append(MTAmaroFilter.self)
         allFilters.append(MTMayfairFilter.self)
         allFilters.append(MTRiseFilter.self)
-        allFilters.append(MTHudsonFilter.self)
         allFilters.append(MTValenciaFilter.self)
         allFilters.append(MTXpro2Filter.self)
         allFilters.append(MTSierraFilter.self)
         allFilters.append(MTWillowFilter.self)
         allFilters.append(MTLoFiFilter.self)
-        allFilters.append(MTEarlybirdFilter.self)
-        allFilters.append(MTBrannanFilter.self)
         allFilters.append(MTInkwellFilter.self)
-        allFilters.append(MTHefeFilter.self)
-        allFilters.append(MTNashvilleFilter.self)
-        allFilters.append(MTSutroFilter.self)
-        allFilters.append(MTToasterFilter.self)
-        allFilters.append(MTWaldenFilter.self)
-        allFilters.append(MT1977Filter.self)
-        allFilters.append(MTKelvinFilter.self)
-        allFilters.append(MTStinsonVideoFilter.self)
-        allFilters.append(MTVesperVideoFilter.self)
-        allFilters.append(MTMavenVideoFilter.self)
-        allFilters.append(MTGinzaVideoFilter.self)
-        allFilters.append(MTSkylineVideoFilter.self)
-        allFilters.append(MTDogpatchVideoFilter.self)
-        allFilters.append(MTBrooklynVideoFilter.self)
-        allFilters.append(MTHelenaVideoFilter.self)
-        allFilters.append(MTAshbyVideoFilter.self)
-        allFilters.append(MTCharmesVideoFilter.self)
         
         context = try? MTIContext(device: MTLCreateSystemDefaultDevice()!)
         
@@ -76,9 +51,12 @@ class MTFilterManager {
     }
     
     func generateThumbnailsForImage(_ image: UIImage, with type: MTFilter.Type) -> UIImage? {
-        let inputImage = MTIImage(cgImage: image.cgImage!, options: [.SRGB: false], isOpaque: true)
         let filter = type.init()
-        filter.inputImage = inputImage
+        
+        filter.inputImage = MTIImage(cgImage: image.cgImage!,
+                                     options: [.SRGB: false],
+                                     isOpaque: true)
+        
         if let cgImage = try? context?.makeCGImage(from: filter.outputImage!) {
             return UIImage(cgImage: cgImage)
         }
@@ -93,4 +71,3 @@ class MTFilterManager {
     }
     
 }
-// swiftlint:enable all

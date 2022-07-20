@@ -9,12 +9,6 @@ import UIKit
 
 extension UIImage {
     
-    var isPortrait: Bool { return size.height > size.width }
-    var isLandscape: Bool { return size.width > size.height }
-    var breadth: CGFloat { return min(size.width, size.height) }
-    var breadthSize: CGSize { return CGSize(width: breadth, height: breadth) }
-    var breadthRect: CGRect { return CGRect(origin: .zero, size: breadthSize) }
-    
     func resize(to goalSize: CGSize) -> UIImage? {
         let widthRatio = goalSize.width / size.width
         let heightRatio = goalSize.height / size.height

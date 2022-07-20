@@ -155,10 +155,10 @@ extension NotificationController: UITableViewDataSource, UITableViewDelegate {
                 guard let self = self else { return }
                 switch result {
                 case .success(let post):
-                    self.dismiss()
+                    self.dismissHud()
                     cell.viewModel?.mediaUrlString = post.mediaUrlString
                 case .failure:
-                    self.dismiss()
+                    self.dismissHud()
                 }
             }
         }

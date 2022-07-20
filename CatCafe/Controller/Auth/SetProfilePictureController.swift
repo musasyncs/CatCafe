@@ -35,7 +35,7 @@ class SetProfilePictureController: UIViewController {
     
     @objc func sendProfileImage() {
         guard let profileImage = profileImage else {
-            showMessage(withTitle: "Validate Failed", message: "請上傳大頭照")
+            AlertHelper.showMessage(title: "Validate Failed", message: "請上傳大頭照", over: self)
             return
         }
         

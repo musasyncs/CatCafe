@@ -139,11 +139,11 @@ class PostEditController: UIViewController {
     @objc private func handleImagePost() {
         guard let postImage = image else { return }
         guard let caption = captionTextView.text, !caption.isEmpty else {
-            showMessage(withTitle: "Validate Failed", message: "請撰寫貼文")
+            AlertHelper.showMessage(title: "Validate Failed", message: "請撰寫貼文", over: self)
             return
         }
         guard let selectedCafe = selectedCafe else {
-            showMessage(withTitle: "Validate Failed", message: "請選擇咖啡廳")
+            AlertHelper.showMessage(title: "Validate Failed", message: "請選擇咖啡廳", over: self)
             return
         }
         

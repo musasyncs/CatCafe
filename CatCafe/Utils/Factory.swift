@@ -130,15 +130,6 @@ func makeLabel(withTitle title: String, font: UIFont, textColor: UIColor) -> UIL
     return label
 }
 
-// MARK: - UIStackView
-func makeStackView(axis: NSLayoutConstraint.Axis) -> UIStackView {
-    let stack = UIStackView()
-    stack.translatesAutoresizingMaskIntoConstraints = false
-    stack.axis = axis
-    stack.spacing = 8.0
-    return stack
-}
-
 // MARK: - Buttons
 func makeBarButtonItem(target: Any?,
                        foregroundColor: UIColor,
@@ -227,19 +218,5 @@ func makeTabButton(imageName: String, unselectedImageName: String) -> UIButton {
     button.setImage(UIImage(named: imageName), for: .selected)
     button.setImage(UIImage(named: unselectedImageName), for: .normal)
     button.imageView?.contentMode = .scaleAspectFit
-    return button
-}
-
-func makeProfileEditButton() -> UIButton {
-    let button = UIButton(type: .system)
-    button.setImage(UIImage(systemName: "square.and.pencil")?.resize(to: .init(width: 20, height: 20)), for: .normal)
-    button.imageView?.contentMode = .scaleToFill
-    
-    button.layer.cornerRadius = 28/2
-    button.layer.borderWidth = 0.3
-    button.layer.borderColor = UIColor.darkGray.cgColor
-    
-    button.backgroundColor = .white
-    button.tintColor = .darkGray
     return button
 }

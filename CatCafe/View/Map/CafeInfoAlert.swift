@@ -176,7 +176,8 @@ class CafeInfoAlert {
     
     @objc func makePhoneCall() {
         guard let phoneNumber = phoneNumber, !phoneNumber.isEmpty else {
-            viewController?.showMessage(withTitle: "Oops", message: "無電話")
+            guard let viewController = viewController else { return }
+            AlertHelper.showMessage(title: "Oops", message: "無電話", over: viewController)
             return
         }
         
@@ -191,7 +192,8 @@ class CafeInfoAlert {
     
     @objc func gotoWebsite() {
         guard let website = website, !website.isEmpty else {
-            viewController?.showMessage(withTitle: "Oops", message: "無網站")
+            guard let viewController = viewController else { return }
+            AlertHelper.showMessage(title: "Oops", message: "無網站", over: viewController)
             return
         }
                 
