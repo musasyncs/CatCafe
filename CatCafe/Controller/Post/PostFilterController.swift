@@ -105,7 +105,7 @@ extension PostFilterController {
             action: #selector(cancelBarButtonTapped)
         )
         let rightBarButton = UIBarButtonItem(
-            image: UIImage(systemName: "arrow.right")?
+            image: SFSymbols.arrow_right?
                 .withTintColor(.ccGrey)
                 .withRenderingMode(.alwaysOriginal),
             style: .plain,

@@ -108,7 +108,7 @@ extension NotificationController {
         title = "動態"
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(
-            image: UIImage(systemName: "arrow.left")?
+            image: SFSymbols.arrow_left?
                 .withTintColor(.ccGrey)
                 .withRenderingMode(.alwaysOriginal),
             style: .plain,
@@ -155,10 +155,10 @@ extension NotificationController: UITableViewDataSource, UITableViewDelegate {
                 guard let self = self else { return }
                 switch result {
                 case .success(let post):
-                    self.dismiss()
+                    self.dismissHud()
                     cell.viewModel?.mediaUrlString = post.mediaUrlString
                 case .failure:
-                    self.dismiss()
+                    self.dismissHud()
                 }
             }
         }

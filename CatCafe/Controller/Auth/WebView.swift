@@ -8,7 +8,7 @@
 import UIKit
 import WebKit
 
-class WebView: UIViewController {
+class WebViewController: UIViewController {
     var webView = WKWebView()
     let reportButton = UIButton()
     var url = ""
@@ -23,7 +23,7 @@ class WebView: UIViewController {
     }
 }
 
-extension WebView {
+extension WebViewController {
     private func addDragFloatBtn() {
         reportButton.frame = CGRect(x: UIScreen.width - 70, y: 70, width: 60, height: 60)
 

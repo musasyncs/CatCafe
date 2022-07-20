@@ -68,14 +68,5 @@ extension UIColor {
             alpha: CGFloat(1.0)
         )
     }
-}
-
-extension UIColor {
-    static let bronze = CCColor(.bronze)
-    private static func CCColor(_ color: CCColor) -> UIColor? {
-        return UIColor(named: color.rawValue)
-    }
-}
-private enum CCColor: String {
-    case bronze
+    
 }

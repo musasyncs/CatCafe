@@ -83,10 +83,10 @@ extension UIViewController {
         }
     }
     
-    func show() {
+    func showHud() {
         if !Thread.isMainThread {
             DispatchQueue.main.async {
-                self.show()
+                self.showHud()
             }
             return
         }
@@ -95,10 +95,10 @@ extension UIViewController {
         UIViewController.hud.show(in: view)
     }
     
-    func dismiss() {
+    func dismissHud() {
         if !Thread.isMainThread {
             DispatchQueue.main.async {
-                self.dismiss()
+                self.dismissHud()
             }
             return
         }
@@ -130,16 +130,7 @@ extension UIViewController {
         UIViewController.hud.show(in: view)
         UIViewController.hud.dismiss(afterDelay: 1.5)
     }
-    
-    // MARK: - UIAlertController
-    func showMessage(withTitle title: String, message: String?) {
-        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        let okAction = UIAlertAction(title: "確定", style: .default) { _ in }
-        okAction.setValue(UIColor.ccPrimary, forKey: "titleTextColor")
-        alert.addAction(okAction)
-        present(alert, animated: true)
-    }
-    
+        
     // MARK: - Add / Remove child view controller
     func add(_ child: UIViewController) {
         addChild(child)
@@ -153,4 +144,12 @@ extension UIViewController {
         view.removeFromSuperview()
         removeFromParent()
     }
+    
+    // MARK: - Present
+    func presentWebVC(with urlString: String) {
+        let controller = WebViewController()
+        controller.url = urlString
+        present(controller, animated: true)
+    }
+    
 }

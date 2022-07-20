@@ -1,0 +1,66 @@
+//
+//  UserCell.swift
+//  CatCafe
+//
+//  Created by Ewen on 2022/6/15.
+//
+
+import UIKit
+
+final class UserCell: UITableViewCell {
+    
+    var viewModel: UserCellViewModel? {
+        didSet {
+            guard let viewModel = viewModel else { return }
+            profileImageView.loadImage(viewModel.profileImageUrl)
+            usernameLabel.text = viewModel.username
+            fullnameLabel.text = viewModel.fullname
+        }
+    }
+        
+    private let profileImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.layer.cornerRadius = 36 / 2
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
+        imageView.backgroundColor = .gray6
+        return imageView
+    }()
+    
+    private let usernameLabel: UILabel = {
+       let label = UILabel()
+        label.font = .systemFont(ofSize: 14, weight: .medium)
+        label.textColor = .ccGrey
+        return label
+    }()
+    
+    private let fullnameLabel: UILabel = {
+       let label = UILabel()
+        label.font = .systemFont(ofSize: 12, weight: .medium)
+        label.textColor = .lightGray
+        return label
+    }()
+    
+    lazy var vStack = UIStackView(arrangedSubviews: [usernameLabel, fullnameLabel])
+    
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        backgroundColor = .clear
+        selectionStyle = .none
+        
+        vStack.axis = .vertical
+        vStack.spacing = 4
+        vStack.alignment = .leading
+            
+        addSubviews(profileImageView, vStack)
+        
+        profileImageView.setDimensions(height: 36, width: 36)
+        profileImageView.centerY(inView: self, leftAnchor: leftAnchor, paddingLeft: 12)
+        vStack.centerY(inView: profileImageView, leftAnchor: profileImageView.rightAnchor, paddingLeft: 8)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+}

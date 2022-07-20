@@ -317,7 +317,7 @@ extension MeetDetailController: CommentInputAccessoryViewDelegate {
         UserService.shared.fetchUserBy(uid: currentUid, completion: { [weak self] currentUser in
             guard let self = self else { return }
             
-            self.show()
+            self.showHud()
             CommentService.shared.uploadMeetComment(
                 meetId: self.meet.meetId,
                 user: currentUser,
@@ -328,12 +328,12 @@ extension MeetDetailController: CommentInputAccessoryViewDelegate {
                 guard let self = self else { return }
                 
                 if error != nil {
-                    self.dismiss()
+                    self.dismissHud()
                     self.showFailure(text: "Failed to upload comment")
                     return
                 }
                 
-                self.dismiss()
+                self.dismissHud()
                 inputView.clearCommentTextView()
                 inputView.postButton.isEnabled = false
                 inputView.postButton.setTitleColor(UIColor.lightGray, for: .normal)

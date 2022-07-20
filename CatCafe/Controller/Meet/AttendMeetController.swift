@@ -131,23 +131,23 @@ class AttendMeetController: UIViewController {
         guard let contact = contactTextView.text, contact.isEmpty == false,
               let remarks = remarkTextView.text, remarks.isEmpty == false
         else {
-            showMessage(withTitle: "Validate Failed", message: "欄位不可留白")
+            AlertHelper.showMessage(title: "Validate Failed", message: "欄位不可留白", buttonTitle: "OK", over: self)
             return
         }
         
-        show()
+        showHud()
         MeetService.attendMeet(meet: meet,
                                contact: contact,
                                remarks: remarks) { [weak self] error in
             guard let self = self else { return }
             
             if error != nil {
-                self.dismiss()
+                self.dismissHud()
                 self.showFailure(text: "Failed to attend meet")
                 return
             }
             
-            self.dismiss()
+            self.dismissHud()
             
             // dismiss
             self.presentingViewController?.presentingViewController?.dismiss(animated: true, completion: nil)
