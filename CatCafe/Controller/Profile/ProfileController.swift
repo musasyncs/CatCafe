@@ -20,11 +20,8 @@ class ProfileController: CCDataLoadingController {
     // MARK: - View
     private let topImageView = TopImageView(frame: .zero)
     
-    private lazy var collectionView: UICollectionView = {
-        let flowLayout = UICollectionViewFlowLayout()
-        flowLayout.scrollDirection = .vertical
-        
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
+    private lazy var collectionView: UICollectionView = {        
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UIHelper.createProfileFlowLayout(in: view))
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.register(ProfileCell.self, forCellWithReuseIdentifier: ProfileCell.identifier)
@@ -321,51 +318,6 @@ extension ProfileController: UICollectionViewDelegate {
         controller.post = posts[indexPath.item]
         let navController = makeNavigationController(rootViewController: controller)
         present(navController, animated: true)
-    }
-}
-
-// MARK: - UICollectionViewFlowLayout
-extension ProfileController: UICollectionViewDelegateFlowLayout {
-    
-    func collectionView(
-        _ collectionView: UICollectionView,
-        layout collectionViewLayout: UICollectionViewLayout,
-        minimumInteritemSpacingForSectionAt section: Int
-    ) -> CGFloat {
-        return 5
-    }
-    
-    func collectionView(
-        _ collectionView: UICollectionView,
-        layout collectionViewLayout: UICollectionViewLayout,
-        minimumLineSpacingForSectionAt section: Int
-    ) -> CGFloat {
-        return 5
-    }
-    
-    func collectionView(
-        _ collectionView: UICollectionView,
-        layout collectionViewLayout: UICollectionViewLayout,
-        sizeForItemAt indexPath: IndexPath
-    ) -> CGSize {
-        let width = (view.frame.width - 36 - 5 * 2) / 3
-        return CGSize(width: width, height: width)
-    }
-    
-    func collectionView(
-        _ collectionView: UICollectionView,
-        layout collectionViewLayout: UICollectionViewLayout,
-        insetForSectionAt section: Int
-    ) -> UIEdgeInsets {
-        return .init(top: 8, left: 18, bottom: 0, right: 18)
-    }
-    
-    func collectionView(
-        _ collectionView: UICollectionView,
-        layout collectionViewLayout: UICollectionViewLayout,
-        referenceSizeForHeaderInSection section: Int
-    ) -> CGSize {
-        return CGSize(width: view.frame.width, height: 200)
     }
 }
 

@@ -39,8 +39,7 @@ class ExploreController: CCDataLoadingController {
     
     private let tableView = UITableView()
     private lazy var collectionView: UICollectionView = {
-        let layout = UICollectionViewFlowLayout()
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UIHelper.createExploreFlowLayout(in: view))
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.register(ProfileCell.self, forCellWithReuseIdentifier: ProfileCell.identifier)
@@ -244,42 +243,4 @@ extension ExploreController: UICollectionViewDataSource, UICollectionViewDelegat
         present(navController, animated: true)
     }
     
-}
-
-// MARK: - UICollectionViewFlowLayout
-extension ExploreController: UICollectionViewDelegateFlowLayout {
-    
-    func collectionView(
-        _ collectionView: UICollectionView,
-        layout collectionViewLayout: UICollectionViewLayout,
-        minimumInteritemSpacingForSectionAt section: Int
-    ) -> CGFloat {
-        return 5
-    }
-    
-    func collectionView(
-        _ collectionView: UICollectionView,
-        layout collectionViewLayout: UICollectionViewLayout,
-        minimumLineSpacingForSectionAt section: Int
-    ) -> CGFloat {
-        return 5
-    }
-    
-    func collectionView(
-        _ collectionView: UICollectionView,
-        layout collectionViewLayout: UICollectionViewLayout,
-        sizeForItemAt indexPath: IndexPath
-    ) -> CGSize {
-        let width = (view.frame.width - 36 - 5 * 2) / 3
-        return CGSize(width: width, height: width)
-    }
-    
-    func collectionView(
-        _ collectionView: UICollectionView,
-        layout collectionViewLayout: UICollectionViewLayout,
-        insetForSectionAt section: Int
-    ) -> UIEdgeInsets {
-        return .init(top: 0, left: 18, bottom: 0, right: 18)
-    }
-
 }

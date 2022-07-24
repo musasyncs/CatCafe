@@ -73,7 +73,10 @@ class NotificationController: UIViewController {
     
     @objc func handleRefresh() {
         fetchnotifications()
-        tableView.refreshControl?.endRefreshing()
+        
+        DispatchQueue.main.async {
+            tableView.refreshControl?.endRefreshing()
+        }
     }
 }
 

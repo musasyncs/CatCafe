@@ -147,6 +147,7 @@
 		BAB9DF04288CF41C0010FA80 /* CCDataLoadingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAB9DF03288CF41B0010FA80 /* CCDataLoadingController.swift */; };
 		BAB9DF06288CF4E90010FA80 /* CCEmptyStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAB9DF05288CF4E90010FA80 /* CCEmptyStateView.swift */; };
 		BAB9DF08288CF5740010FA80 /* DeviceTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAB9DF07288CF5740010FA80 /* DeviceTypes.swift */; };
+		BAB9DF0A288D2F4C0010FA80 /* UIHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAB9DF09288D2F4C0010FA80 /* UIHelper.swift */; };
 		BAD1339E2863124C00B8015A /* Meet.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAD1339D2863124C00B8015A /* Meet.swift */; };
 		BAD133A02863132300B8015A /* MeetService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAD1339F2863132300B8015A /* MeetService.swift */; };
 		BAD133A22863629B00B8015A /* MeetCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAD133A12863629B00B8015A /* MeetCell.swift */; };
@@ -348,6 +349,7 @@
 		BAB9DF03288CF41B0010FA80 /* CCDataLoadingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CCDataLoadingController.swift; sourceTree = "<group>"; };
 		BAB9DF05288CF4E90010FA80 /* CCEmptyStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CCEmptyStateView.swift; sourceTree = "<group>"; };
 		BAB9DF07288CF5740010FA80 /* DeviceTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceTypes.swift; sourceTree = "<group>"; };
+		BAB9DF09288D2F4C0010FA80 /* UIHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIHelper.swift; sourceTree = "<group>"; };
 		BAD1339D2863124C00B8015A /* Meet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Meet.swift; sourceTree = "<group>"; };
 		BAD1339F2863132300B8015A /* MeetService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetService.swift; sourceTree = "<group>"; };
 		BAD133A12863629B00B8015A /* MeetCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetCell.swift; sourceTree = "<group>"; };
@@ -838,6 +840,7 @@
 				BA76373F286B434700D4EDFB /* FCollectionReference.swift */,
 				BA3BC3352887E50400D935FF /* SFSymbols.swift */,
 				BAB9DF07288CF5740010FA80 /* DeviceTypes.swift */,
+				BAB9DF09288D2F4C0010FA80 /* UIHelper.swift */,
 			);
 			path = Constants;
 			sourceTree = "<group>";
@@ -1261,6 +1264,7 @@
 				BA7BB72F285AEAEA00465DEC /* GridScrollView.swift in Sources */,
 				BA13857E2866F52A001B7FF1 /* MTAmaroFilter.swift in Sources */,
 				BA558F11286E236F00A38602 /* MKMessage.swift in Sources */,
+				BAB9DF0A288D2F4C0010FA80 /* UIHelper.swift in Sources */,
 				BA1385B52866F52B001B7FF1 /* MTSlumberFilter.swift in Sources */,
 				BA656DB42886AD0000676B0A /* PresentaionManager.swift in Sources */,
 				BA3BC3342887C6D600D935FF /* CCButton.swift in Sources */,

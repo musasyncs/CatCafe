@@ -47,4 +47,13 @@ class CCDataLoadingController: UIViewController {
         emptyStateView.frame = view.bounds
         view.addSubview(emptyStateView)
     }
+    
+    func hideEmptyStateView(in view: UIView) {
+        DispatchQueue.main.async {
+            if let ccEmptyStateView = view.subviews.first(where: { $0 is CCEmptyStateView }) {
+                ccEmptyStateView.isHidden = true
+                return
+            }
+        }
+    }
 }
