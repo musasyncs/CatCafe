@@ -10,6 +10,16 @@ import Firebase
 
 class AllMeetsController: BaseMeetChildController {
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        if self.meets.isEmpty {
+            DispatchQueue.main.async {
+                self.showEmptyStateView(with: "目前無人發佈聚會，快去舉辦吧！😀", in: self.view)
+            }
+        }
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         fetchMeets()

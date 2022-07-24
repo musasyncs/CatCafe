@@ -8,7 +8,7 @@
 import UIKit
 import FirebaseAuth
 
-class ProfileController: UIViewController {
+class ProfileController: CCDataLoadingController {
     
     private var user: User {
         didSet {
@@ -91,7 +91,7 @@ class ProfileController: UIViewController {
             top: view.topAnchor,
             left: view.leftAnchor,
             right: view.rightAnchor,
-            height: UIScreen.height * 0.3
+            height: ScreenSize.height * 0.3
         )
     }
     
@@ -122,7 +122,7 @@ class ProfileController: UIViewController {
             left: view.leftAnchor,
             bottom: view.bottomAnchor,
             right: view.rightAnchor,
-            paddingTop: UIScreen.height * 0.2
+            paddingTop: ScreenSize.height * 0.2
         )
     }
     
@@ -152,7 +152,9 @@ class ProfileController: UIViewController {
         UserService.shared.fetchUserStats(uid: user.uid) { [weak self] stats in
             guard let self = self else { return }
             self.user.stats = stats
-            self.collectionView.refreshControl?.endRefreshing()
+            DispatchQueue.main.async {
+                self.collectionView.refreshControl?.endRefreshing()
+            }
             self.collectionView.reloadData()
         }
     }
@@ -163,10 +165,16 @@ class ProfileController: UIViewController {
             switch result {
             case .success(let posts):
                 self.posts = posts
-                self.collectionView.refreshControl?.endRefreshing()
+                
+                DispatchQueue.main.async {
+                    self.collectionView.refreshControl?.endRefreshing()
+                }
                 self.collectionView.reloadData()
+                
             case .failure:
-                self.collectionView.refreshControl?.endRefreshing()
+                DispatchQueue.main.async {
+                    self.collectionView.refreshControl?.endRefreshing()
+                }
                 self.showFailure(text: "網路異常")
             }
         }

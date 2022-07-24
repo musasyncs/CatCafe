@@ -7,7 +7,7 @@
 
 import UIKit
 
-class BaseMeetChildController: UIViewController {
+class BaseMeetChildController: CCDataLoadingController {
     
     var meets = [Meet]() {
         didSet {

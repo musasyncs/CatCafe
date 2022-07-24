@@ -9,6 +9,16 @@ import UIKit
 
 class MyAttendController: BaseMeetChildController {
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        if self.meets.isEmpty {
+            DispatchQueue.main.async {
+                self.showEmptyStateView(with: "您目前沒有報名聚會，快去報名吧！😀", in: self.view)
+            }
+        }
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         fetchCurrentUserAttendMeets()

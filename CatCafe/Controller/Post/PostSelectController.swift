@@ -13,7 +13,7 @@ class PostSelectController: UIViewController {
     var selectedAsset: PHAsset?
         
     // MARK: - View
-    private let topView = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.width, height: UIScreen.width))
+    private let topView = UIView(frame: CGRect(x: 0, y: 0, width: ScreenSize.width, height: ScreenSize.width))
     private var gridScrollView: GridScrollView!
     private let postSelectControlView = PostSelectControlView()
     private let albumView = UIView()
@@ -141,7 +141,7 @@ extension PostSelectController {
             top: view.safeAreaLayoutGuide.topAnchor,
             left: view.leftAnchor,
             right: view.rightAnchor,
-            height: UIScreen.width
+            height: ScreenSize.width
         )
         
         gridScrollView = GridScrollView(frame: topView.bounds)

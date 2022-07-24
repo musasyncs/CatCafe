@@ -56,7 +56,9 @@ class NewMessageController: UIViewController {
             let filteredUsers = users.filter { !currentUser.blockedUsers.contains($0.uid) }
             self.users = filteredUsers
             
-            self.tableView.refreshControl?.endRefreshing()
+            DispatchQueue.main.async {
+                self.tableView.refreshControl?.endRefreshing()
+            }
         })
     }
     

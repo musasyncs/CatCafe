@@ -8,8 +8,8 @@
 import UIKit
 import MapKit
 
-let height1: CGFloat = UIScreen.height * 0.3
-let height2: CGFloat = UIScreen.height * 0.7
+let height1: CGFloat = ScreenSize.height * 0.3
+let height2: CGFloat = ScreenSize.height * 0.7
 
 enum ExpansionState {
     case notExpanded

@@ -119,7 +119,9 @@ class PostEditController: UIViewController {
         guard let currentUid = LocalStorage.shared.getUid() else { return }
         UserService.shared.fetchUserBy(uid: currentUid, completion: { [weak self] user in
             guard let self = self else { return }
-            self.profileImageView.loadImage(user.profileImageUrlString)
+            DispatchQueue.main.async {
+                self.profileImageView.loadImage(user.profileImageUrlString)
+            }
         })
     }
     

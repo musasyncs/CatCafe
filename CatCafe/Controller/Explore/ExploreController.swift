@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ExploreController: UIViewController {
+class ExploreController: CCDataLoadingController {
     
     private var posts = [Post]() {
         didSet {
@@ -69,20 +69,34 @@ class ExploreController: UIViewController {
         UserService.shared.fetchUsers(exceptCurrentUser: true, completion: { [weak self] users in
             guard let self = self else { return }
             self.users = users
-            self.tableView.refreshControl?.endRefreshing()
+            
+            DispatchQueue.main.async {
+                self.tableView.refreshControl?.endRefreshing()
+            }
         })
     }
     
     private func fetchPosts() {
+        showLoadingView()
         PostService.shared.fetchPosts { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success(let posts):
                 self.posts = posts
-                self.collectionView.refreshControl?.endRefreshing()
+                self.dismissLoadingView()
+                
+                DispatchQueue.main.async {
+                    self.collectionView.refreshControl?.endRefreshing()
+                }
+                
                 self.collectionView.reloadData()
             case .failure:
-                self.collectionView.refreshControl?.endRefreshing()
+                self.dismissLoadingView()
+                
+                DispatchQueue.main.async {
+                    self.collectionView.refreshControl?.endRefreshing()
+                }
+                
                 self.showFailure(text: "網路異常")
             }
         }

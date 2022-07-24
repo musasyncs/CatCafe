@@ -74,10 +74,7 @@ class ChatlistController: UIViewController {
                 !currentUser.blockedUsers.contains($0.receiverId)
             }
             self.allRecents = filteredRecents
-            
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
-            }
+            self.tableView.reloadData()
         }
     }
 

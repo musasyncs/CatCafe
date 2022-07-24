@@ -25,7 +25,7 @@ class WebViewController: UIViewController {
 
 extension WebViewController {
     private func addDragFloatBtn() {
-        reportButton.frame = CGRect(x: UIScreen.width - 70, y: 70, width: 60, height: 60)
+        reportButton.frame = CGRect(x: ScreenSize.width - 70, y: 70, width: 60, height: 60)
 
         reportButton.layer.cornerRadius = 60 / 2
         view.addSubview(reportButton)

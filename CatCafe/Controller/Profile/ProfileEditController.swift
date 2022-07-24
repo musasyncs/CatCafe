@@ -219,14 +219,14 @@ extension ProfileEditController {
         stackView.anchor(
             top: nameLabel.bottomAnchor,
             paddingTop: 28,
-            width: UIScreen.width * 0.7
+            width: ScreenSize.width * 0.7
         )
         stackView.centerX(inView: view)
         
         bioStackView.anchor(
             top: stackView.bottomAnchor,
             paddingTop: 15,
-            width: UIScreen.width * 0.7
+            width: ScreenSize.width * 0.7
         )
         bioStackView.centerX(inView: view)
         bioTextView.setHeight(60)
