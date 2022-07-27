@@ -7,18 +7,21 @@
 
 import UIKit
 
-class BaseMeetChildController: UIViewController {
+class BaseMeetChildController: CCDataLoadingController {
     
     var meets = [Meet]() {
         didSet {
-            collectionView.reloadData()
+            DispatchQueue.main.async {
+                self.collectionView.reloadData()
+            }
         }
     }
-
+    
     lazy var collectionView: UICollectionView = {
-        let flowLayout = UICollectionViewFlowLayout()
-        flowLayout.scrollDirection = .vertical
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
+        let collectionView = UICollectionView(
+            frame: .zero,
+            collectionViewLayout: UIHelper.createBaseMeetChildFlowLayout(in: view)
+        )
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.register(MeetCell.self, forCellWithReuseIdentifier: MeetCell.identifier)
@@ -131,25 +134,4 @@ extension BaseMeetChildController: UICollectionViewDataSource, UICollectionViewD
         present(controller, animated: true)
     }
     
-}
-
-// MARK: - UICollectionViewDelegateFlowLayout
-extension BaseMeetChildController: UICollectionViewDelegateFlowLayout {
-    
-    func collectionView(
-        _ collectionView: UICollectionView,
-        layout collectionViewLayout: UICollectionViewLayout,
-        sizeForItemAt indexPath: IndexPath
-    ) -> CGSize {
-        let width = view.frame.width - 16
-        return CGSize(width: width, height: 170)
-    }
-    
-    func collectionView(
-        _ collectionView: UICollectionView,
-        layout collectionViewLayout: UICollectionViewLayout,
-        minimumInteritemSpacingForSectionAt section: Int
-    ) -> CGFloat {
-        return 16
-    }
 }

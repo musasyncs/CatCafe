@@ -47,7 +47,7 @@ class WebsiteController: UIViewController {
         navigationItem.leftBarButtonItem = leftBarButton
         
         activityIndicator = UIActivityIndicatorView(style: .medium)
-        activityIndicator.center = CGPoint(x: UIScreen.width * 0.5, y: UIScreen.height * 0.5)
+        activityIndicator.center = CGPoint(x: ScreenSize.width * 0.5, y: ScreenSize.height * 0.5)
         view.addSubview(activityIndicator)
         
         start()

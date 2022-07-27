@@ -9,7 +9,7 @@ import UIKit
 import Firebase
 
 class MyArrangeController: BaseMeetChildController {
-        
+       
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         fetchMyArrangedMeet()
@@ -27,9 +27,21 @@ class MyArrangeController: BaseMeetChildController {
             }
             
             self.meets = filteredMeets
+     
+            if filteredMeets.isEmpty {
+                DispatchQueue.main.async {
+                    self.showEmptyStateView(with: "您目前沒有發佈聚會，快去舉辦吧！😀", in: self.view)
+                }
+            } else {
+                self.hideEmptyStateView(in: self.view)
+            }
+            
             self.checkIfCurrentUserLikedMeets()
             self.fetchMeetsCommentCount()
-            self.collectionView.refreshControl?.endRefreshing()
+            
+            DispatchQueue.main.async {
+                self.collectionView.refreshControl?.endRefreshing()
+            }
         }
     }
 

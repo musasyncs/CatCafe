@@ -158,7 +158,7 @@ extension PostFilterController {
             top: view.safeAreaLayoutGuide.topAnchor,
             left: view.leftAnchor,
             right: view.rightAnchor,
-            height: UIScreen.width
+            height: ScreenSize.width
         )
         
         previewView.addSubview(mtImageView)
@@ -175,7 +175,7 @@ extension PostFilterController {
         
         filtersView.addSubview(collectionView)
         collectionView.centerY(inView: filtersView)
-        collectionView.setDimensions(height: 154, width: UIScreen.width)
+        collectionView.setDimensions(height: 154, width: ScreenSize.width)
     }
     
     private func generateFilterThumbnails() {
@@ -191,6 +191,7 @@ extension PostFilterController {
                 for filter in self.allFilters {
                     let image = MTFilterManager.shared.generateThumbnailsForImage(image, with: filter)
                     self.thumbnails[filter.name] = image
+                    
                     DispatchQueue.main.async {
                         self.collectionView.reloadData()
                     }

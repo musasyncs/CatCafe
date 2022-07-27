@@ -72,7 +72,9 @@ class FeedCommentController: UICollectionViewController {
             let filteredComments = comments.filter { !currentUser.blockedUsers.contains($0.user.uid) }
             self.comments = filteredComments
             
-            self.collectionView.reloadData()
+            DispatchQueue.main.async {
+                self.collectionView.reloadData()
+            }
         }
     }
     

@@ -89,7 +89,9 @@ class MainTabController: UITabBarController {
             if UserService.shared.currentUser?.profileImageUrlString == "" {
                 let controller = SetProfilePictureController()
                 controller.modalPresentationStyle = .fullScreen
-                self.present(controller, animated: true)
+                DispatchQueue.main.async {
+                    self.present(controller, animated: true)
+                }
             }
         }
         

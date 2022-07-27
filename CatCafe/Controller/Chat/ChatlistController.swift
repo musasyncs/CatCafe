@@ -232,7 +232,10 @@ extension ChatlistController: UISearchResultsUpdating {
         filteredRecents = allRecents.filter({
             $0.receiverName.lowercased().contains(searchText)
         })
-        tableView.reloadData()
+        
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
     }
     
 }

@@ -14,7 +14,9 @@ class MeetPeopleViewController: UIViewController {
         
     private var people = [Person]() {
         didSet {
-            collectionView.reloadData()
+            DispatchQueue.main.async {
+                self.collectionView.reloadData()
+            }
         }
     }
     
@@ -84,7 +86,7 @@ class MeetPeopleViewController: UIViewController {
         collectionView.showsHorizontalScrollIndicator = false
         view.addSubview(collectionView)
         collectionView.centerY(inView: view)
-        collectionView.setHeight(UIScreen.height * 0.6)
+        collectionView.setHeight(ScreenSize.height * 0.6)
         collectionView.anchor(left: view.leftAnchor, right: view.rightAnchor)
     }
     

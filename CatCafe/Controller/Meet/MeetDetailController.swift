@@ -11,12 +11,16 @@ class MeetDetailController: UIViewController {
     
     private var meet: Meet {
         didSet {
-            collectionView.reloadData()
+            DispatchQueue.main.async {
+                self.collectionView.reloadData()
+            }
         }
     }
     private var comments = [Comment]() {
         didSet {
-            collectionView.reloadData()
+            DispatchQueue.main.async {
+                self.collectionView.reloadData()
+            }
         }
     }
     
@@ -245,7 +249,7 @@ extension MeetDetailController: UICollectionViewDelegateFlowLayout {
         layout collectionViewLayout: UICollectionViewLayout,
         sizeForItemAt indexPath: IndexPath
     ) -> CGSize {
-        let approximateWidthOfTextArea = UIScreen.width - 8 - 24 - 8 - 8
+        let approximateWidthOfTextArea = ScreenSize.width - 8 - 24 - 8 - 8
         let approximateSize = CGSize(width: approximateWidthOfTextArea, height: 100)
         let attributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14, weight: .regular)]
         

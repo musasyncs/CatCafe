@@ -78,7 +78,7 @@ class AttendMeetController: UIViewController {
     )
     
     private var bottomConstraint: NSLayoutConstraint?
-    private var popupOffset: CGFloat = UIScreen.height *  0.7
+    private var popupOffset: CGFloat = ScreenSize.height *  0.7
 
     // MARK: - Initializer
     init(meet: Meet) {
@@ -309,7 +309,7 @@ extension AttendMeetController {
         view.addSubview(cancelButton)
         cancelButton.anchor(
             left: popupView.leftAnchor,
-            paddingLeft: UIScreen.width / 5
+            paddingLeft: ScreenSize.width / 5
         )
         cancelButton.centerY(inView: centerDivider)
     }
@@ -320,7 +320,7 @@ extension AttendMeetController {
         sendButton.anchor(
             bottom: popupView.bottomAnchor,
             right: popupView.rightAnchor,
-            paddingRight: UIScreen.width / 5
+            paddingRight: ScreenSize.width / 5
         )
         sendButton.centerY(inView: centerDivider)
     }

@@ -8,7 +8,7 @@
 import UIKit
 import FirebaseAuth
 
-class ProfileController: UIViewController {
+class ProfileController: CCDataLoadingController {
     
     private var user: User {
         didSet {
@@ -20,11 +20,8 @@ class ProfileController: UIViewController {
     // MARK: - View
     private let topImageView = TopImageView(frame: .zero)
     
-    private lazy var collectionView: UICollectionView = {
-        let flowLayout = UICollectionViewFlowLayout()
-        flowLayout.scrollDirection = .vertical
-        
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
+    private lazy var collectionView: UICollectionView = {        
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UIHelper.createProfileFlowLayout(in: view))
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.register(ProfileCell.self, forCellWithReuseIdentifier: ProfileCell.identifier)
@@ -91,7 +88,7 @@ class ProfileController: UIViewController {
             top: view.topAnchor,
             left: view.leftAnchor,
             right: view.rightAnchor,
-            height: UIScreen.height * 0.3
+            height: ScreenSize.height * 0.3
         )
     }
     
@@ -122,7 +119,7 @@ class ProfileController: UIViewController {
             left: view.leftAnchor,
             bottom: view.bottomAnchor,
             right: view.rightAnchor,
-            paddingTop: UIScreen.height * 0.2
+            paddingTop: ScreenSize.height * 0.2
         )
     }
     
@@ -144,7 +141,9 @@ class ProfileController: UIViewController {
     private func checkIfUserIsFollowed() {
         UserService.shared.checkIfUserIsFollowed(uid: user.uid) { isFollowed in
             self.user.isFollowed = isFollowed
-            self.collectionView.reloadData()
+            DispatchQueue.main.async {
+                self.collectionView.reloadData()
+            }
         }
     }
     
@@ -152,8 +151,10 @@ class ProfileController: UIViewController {
         UserService.shared.fetchUserStats(uid: user.uid) { [weak self] stats in
             guard let self = self else { return }
             self.user.stats = stats
-            self.collectionView.refreshControl?.endRefreshing()
-            self.collectionView.reloadData()
+            DispatchQueue.main.async {
+                self.collectionView.refreshControl?.endRefreshing()
+                self.collectionView.reloadData()
+            }
         }
     }
     
@@ -163,11 +164,16 @@ class ProfileController: UIViewController {
             switch result {
             case .success(let posts):
                 self.posts = posts
-                self.collectionView.refreshControl?.endRefreshing()
-                self.collectionView.reloadData()
+                
+                DispatchQueue.main.async {
+                    self.collectionView.refreshControl?.endRefreshing()
+                    self.collectionView.reloadData()
+                }
             case .failure:
-                self.collectionView.refreshControl?.endRefreshing()
-                self.showFailure(text: "網路異常")
+                DispatchQueue.main.async {
+                    self.collectionView.refreshControl?.endRefreshing()
+                    self.showFailure(text: "網路異常")
+                }
             }
         }
     }
@@ -316,51 +322,6 @@ extension ProfileController: UICollectionViewDelegate {
     }
 }
 
-// MARK: - UICollectionViewFlowLayout
-extension ProfileController: UICollectionViewDelegateFlowLayout {
-    
-    func collectionView(
-        _ collectionView: UICollectionView,
-        layout collectionViewLayout: UICollectionViewLayout,
-        minimumInteritemSpacingForSectionAt section: Int
-    ) -> CGFloat {
-        return 5
-    }
-    
-    func collectionView(
-        _ collectionView: UICollectionView,
-        layout collectionViewLayout: UICollectionViewLayout,
-        minimumLineSpacingForSectionAt section: Int
-    ) -> CGFloat {
-        return 5
-    }
-    
-    func collectionView(
-        _ collectionView: UICollectionView,
-        layout collectionViewLayout: UICollectionViewLayout,
-        sizeForItemAt indexPath: IndexPath
-    ) -> CGSize {
-        let width = (view.frame.width - 36 - 5 * 2) / 3
-        return CGSize(width: width, height: width)
-    }
-    
-    func collectionView(
-        _ collectionView: UICollectionView,
-        layout collectionViewLayout: UICollectionViewLayout,
-        insetForSectionAt section: Int
-    ) -> UIEdgeInsets {
-        return .init(top: 8, left: 18, bottom: 0, right: 18)
-    }
-    
-    func collectionView(
-        _ collectionView: UICollectionView,
-        layout collectionViewLayout: UICollectionViewLayout,
-        referenceSizeForHeaderInSection section: Int
-    ) -> CGSize {
-        return CGSize(width: view.frame.width, height: 200)
-    }
-}
-
 // MARK: - ProfileHeaderDelegate
 extension ProfileController: ProfileHeaderDelegate {
     
@@ -383,7 +344,10 @@ extension ProfileController: ProfileHeaderDelegate {
             UserService.shared.unfollow(uid: user.uid) { [weak self] _ in
                 guard let self = self else { return }
                 self.user.isFollowed = false
-                self.collectionView.reloadData()
+                
+                DispatchQueue.main.async {
+                    self.collectionView.reloadData()
+                }
             }
             
             PostService.shared.updateUserFeedAfterFollowing(user: user, didFollow: false)
@@ -393,7 +357,10 @@ extension ProfileController: ProfileHeaderDelegate {
             UserService.shared.follow(uid: user.uid) { [weak self] _ in
                 guard let self = self else { return }
                 self.user.isFollowed = true
-                self.collectionView.reloadData()
+                
+                DispatchQueue.main.async {
+                    self.collectionView.reloadData()
+                }
             }
             
             // 通知被follow的人
@@ -452,7 +419,9 @@ extension ProfileController: ProfileHeaderDelegate {
                 self.user.isBlocked = false
                 UserService.shared.fetchCurrentUser { _ in } // 更新 currentUser
                 
-                self.collectionView.reloadData()
+                DispatchQueue.main.async {
+                    self.collectionView.reloadData()
+                }
             }
         } else {
             UserService.shared.block(uid: user.uid) { [weak self] error in
@@ -465,7 +434,9 @@ extension ProfileController: ProfileHeaderDelegate {
                 self.user.isBlocked = true
                 UserService.shared.fetchCurrentUser { _ in } // 更新 currentUser
                 
-                self.collectionView.reloadData()
+                DispatchQueue.main.async {
+                    self.collectionView.reloadData()
+                }
             }
         }
     }

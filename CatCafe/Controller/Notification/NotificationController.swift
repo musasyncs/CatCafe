@@ -11,7 +11,9 @@ class NotificationController: UIViewController {
     
     private var notifications = [Notification]() {
         didSet {
-            tableView.reloadData()
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
         }
     }
     
@@ -73,7 +75,10 @@ class NotificationController: UIViewController {
     
     @objc func handleRefresh() {
         fetchnotifications()
-        tableView.refreshControl?.endRefreshing()
+        
+        DispatchQueue.main.async {
+            self.tableView.refreshControl?.endRefreshing()
+        }
     }
 }
 

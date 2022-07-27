@@ -43,7 +43,6 @@ struct CommentViewModel {
     }
 
     // MARK: - Helpers
-    
     func size(forWidth width: CGFloat) -> CGSize {
         let label = UILabel()
         label.numberOfLines = 0

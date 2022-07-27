@@ -7,17 +7,21 @@
 
 import UIKit
 
-class ExploreController: UIViewController {
+class ExploreController: CCDataLoadingController {
     
     private var posts = [Post]() {
         didSet {
-            collectionView.reloadData()
+            DispatchQueue.main.async {
+                self.collectionView.reloadData()
+            }
         }
     }
     
     private var users = [User]() {
         didSet {
-            tableView.reloadData()
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
         }
     }
     private var filteredUsers = [User]()
@@ -39,8 +43,10 @@ class ExploreController: UIViewController {
     
     private let tableView = UITableView()
     private lazy var collectionView: UICollectionView = {
-        let layout = UICollectionViewFlowLayout()
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        let collectionView = UICollectionView(
+            frame: .zero,
+            collectionViewLayout: UIHelper.createExploreFlowLayout(in: view)
+        )
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.register(ProfileCell.self, forCellWithReuseIdentifier: ProfileCell.identifier)
@@ -69,21 +75,33 @@ class ExploreController: UIViewController {
         UserService.shared.fetchUsers(exceptCurrentUser: true, completion: { [weak self] users in
             guard let self = self else { return }
             self.users = users
-            self.tableView.refreshControl?.endRefreshing()
+            
+            DispatchQueue.main.async {
+                self.tableView.refreshControl?.endRefreshing()
+            }
         })
     }
     
     private func fetchPosts() {
+        showLoadingView()
         PostService.shared.fetchPosts { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success(let posts):
                 self.posts = posts
-                self.collectionView.refreshControl?.endRefreshing()
-                self.collectionView.reloadData()
+                self.dismissLoadingView()
+                
+                DispatchQueue.main.async {
+                    self.collectionView.refreshControl?.endRefreshing()
+                    self.collectionView.reloadData()
+                }
             case .failure:
-                self.collectionView.refreshControl?.endRefreshing()
-                self.showFailure(text: "網路異常")
+                self.dismissLoadingView()
+                
+                DispatchQueue.main.async {
+                    self.collectionView.refreshControl?.endRefreshing()
+                    self.showFailure(text: "網路異常")
+                }
             }
         }
     }
@@ -184,7 +202,10 @@ extension ExploreController: UISearchResultsUpdating {
         filteredUsers = users.filter({
             $0.username.contains(searchText) || $0.fullname.contains(searchText)
         })
-        tableView.reloadData()
+        
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
     }
 }
 
@@ -230,42 +251,4 @@ extension ExploreController: UICollectionViewDataSource, UICollectionViewDelegat
         present(navController, animated: true)
     }
     
-}
-
-// MARK: - UICollectionViewFlowLayout
-extension ExploreController: UICollectionViewDelegateFlowLayout {
-    
-    func collectionView(
-        _ collectionView: UICollectionView,
-        layout collectionViewLayout: UICollectionViewLayout,
-        minimumInteritemSpacingForSectionAt section: Int
-    ) -> CGFloat {
-        return 5
-    }
-    
-    func collectionView(
-        _ collectionView: UICollectionView,
-        layout collectionViewLayout: UICollectionViewLayout,
-        minimumLineSpacingForSectionAt section: Int
-    ) -> CGFloat {
-        return 5
-    }
-    
-    func collectionView(
-        _ collectionView: UICollectionView,
-        layout collectionViewLayout: UICollectionViewLayout,
-        sizeForItemAt indexPath: IndexPath
-    ) -> CGSize {
-        let width = (view.frame.width - 36 - 5 * 2) / 3
-        return CGSize(width: width, height: width)
-    }
-    
-    func collectionView(
-        _ collectionView: UICollectionView,
-        layout collectionViewLayout: UICollectionViewLayout,
-        insetForSectionAt section: Int
-    ) -> UIEdgeInsets {
-        return .init(top: 0, left: 18, bottom: 0, right: 18)
-    }
-
 }
