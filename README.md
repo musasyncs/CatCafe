@@ -97,4 +97,4 @@ Chi-Wen Chen | rubato.cw@gmail.com
 ## License 
 Copyright © 2022 Ethan Chen
 
-CatCafe is released under the MIT license. See [License]() for detail.
+CatCafe is released under the MIT license. See [License](https://github.com/musasyncs/CatCafe/blob/main/LICENSE) for detail.
