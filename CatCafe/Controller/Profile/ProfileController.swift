@@ -141,7 +141,9 @@ class ProfileController: CCDataLoadingController {
     private func checkIfUserIsFollowed() {
         UserService.shared.checkIfUserIsFollowed(uid: user.uid) { isFollowed in
             self.user.isFollowed = isFollowed
-            self.collectionView.reloadData()
+            DispatchQueue.main.async {
+                self.collectionView.reloadData()
+            }
         }
     }
     
@@ -151,8 +153,8 @@ class ProfileController: CCDataLoadingController {
             self.user.stats = stats
             DispatchQueue.main.async {
                 self.collectionView.refreshControl?.endRefreshing()
+                self.collectionView.reloadData()
             }
-            self.collectionView.reloadData()
         }
     }
     
@@ -165,14 +167,13 @@ class ProfileController: CCDataLoadingController {
                 
                 DispatchQueue.main.async {
                     self.collectionView.refreshControl?.endRefreshing()
+                    self.collectionView.reloadData()
                 }
-                self.collectionView.reloadData()
-                
             case .failure:
                 DispatchQueue.main.async {
                     self.collectionView.refreshControl?.endRefreshing()
+                    self.showFailure(text: "網路異常")
                 }
-                self.showFailure(text: "網路異常")
             }
         }
     }
@@ -343,7 +344,10 @@ extension ProfileController: ProfileHeaderDelegate {
             UserService.shared.unfollow(uid: user.uid) { [weak self] _ in
                 guard let self = self else { return }
                 self.user.isFollowed = false
-                self.collectionView.reloadData()
+                
+                DispatchQueue.main.async {
+                    self.collectionView.reloadData()
+                }
             }
             
             PostService.shared.updateUserFeedAfterFollowing(user: user, didFollow: false)
@@ -353,7 +357,10 @@ extension ProfileController: ProfileHeaderDelegate {
             UserService.shared.follow(uid: user.uid) { [weak self] _ in
                 guard let self = self else { return }
                 self.user.isFollowed = true
-                self.collectionView.reloadData()
+                
+                DispatchQueue.main.async {
+                    self.collectionView.reloadData()
+                }
             }
             
             // 通知被follow的人
@@ -412,7 +419,9 @@ extension ProfileController: ProfileHeaderDelegate {
                 self.user.isBlocked = false
                 UserService.shared.fetchCurrentUser { _ in } // 更新 currentUser
                 
-                self.collectionView.reloadData()
+                DispatchQueue.main.async {
+                    self.collectionView.reloadData()
+                }
             }
         } else {
             UserService.shared.block(uid: user.uid) { [weak self] error in
@@ -425,7 +434,9 @@ extension ProfileController: ProfileHeaderDelegate {
                 self.user.isBlocked = true
                 UserService.shared.fetchCurrentUser { _ in } // 更新 currentUser
                 
-                self.collectionView.reloadData()
+                DispatchQueue.main.async {
+                    self.collectionView.reloadData()
+                }
             }
         }
     }

@@ -31,7 +31,9 @@ class MapMenuView: UIView {
         
     var cafes = [Cafe]() {
         didSet {
-            tableView.reloadData()
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
         }
     }
     

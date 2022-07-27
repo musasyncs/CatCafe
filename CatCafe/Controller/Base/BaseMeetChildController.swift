@@ -11,12 +11,17 @@ class BaseMeetChildController: CCDataLoadingController {
     
     var meets = [Meet]() {
         didSet {
-            collectionView.reloadData()
+            DispatchQueue.main.async {
+                self.collectionView.reloadData()
+            }
         }
     }
-
+    
     lazy var collectionView: UICollectionView = {
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UIHelper.createBaseMeetChildFlowLayout(in: view))
+        let collectionView = UICollectionView(
+            frame: .zero,
+            collectionViewLayout: UIHelper.createBaseMeetChildFlowLayout(in: view)
+        )
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.register(MeetCell.self, forCellWithReuseIdentifier: MeetCell.identifier)

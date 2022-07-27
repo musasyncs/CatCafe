@@ -28,7 +28,10 @@ class MessageCreator {
             FileStorage.downloadImage(imageUrl: localMessage.pictureUrl) { [weak self] image in
                 guard let self = self else { return }
                 mkMessage.photoItem?.image = image
-                self.messageCollectionView.messagesCollectionView.reloadData()
+                
+                DispatchQueue.main.async {
+                    self.messageCollectionView.messagesCollectionView.reloadData()
+                }
             }
         }
         
@@ -45,7 +48,10 @@ class MessageCreator {
                 }
                 
                 mkMessage.videoItem?.image = thumbNail
-                self.messageCollectionView.messagesCollectionView.reloadData()
+                
+                DispatchQueue.main.async {
+                    self.messageCollectionView.messagesCollectionView.reloadData()
+                }
             }
         }
         return mkMessage

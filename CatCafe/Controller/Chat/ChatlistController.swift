@@ -74,7 +74,10 @@ class ChatlistController: UIViewController {
                 !currentUser.blockedUsers.contains($0.receiverId)
             }
             self.allRecents = filteredRecents
-            self.tableView.reloadData()
+            
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
         }
     }
 
@@ -229,7 +232,10 @@ extension ChatlistController: UISearchResultsUpdating {
         filteredRecents = allRecents.filter({
             $0.receiverName.lowercased().contains(searchText)
         })
-        tableView.reloadData()
+        
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
     }
     
 }

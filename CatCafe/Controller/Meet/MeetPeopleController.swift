@@ -14,7 +14,9 @@ class MeetPeopleViewController: UIViewController {
         
     private var people = [Person]() {
         didSet {
-            collectionView.reloadData()
+            DispatchQueue.main.async {
+                self.collectionView.reloadData()
+            }
         }
     }
     

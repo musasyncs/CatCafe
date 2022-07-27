@@ -11,13 +11,17 @@ class ExploreController: CCDataLoadingController {
     
     private var posts = [Post]() {
         didSet {
-            collectionView.reloadData()
+            DispatchQueue.main.async {
+                self.collectionView.reloadData()
+            }
         }
     }
     
     private var users = [User]() {
         didSet {
-            tableView.reloadData()
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
         }
     }
     private var filteredUsers = [User]()
@@ -39,7 +43,10 @@ class ExploreController: CCDataLoadingController {
     
     private let tableView = UITableView()
     private lazy var collectionView: UICollectionView = {
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UIHelper.createExploreFlowLayout(in: view))
+        let collectionView = UICollectionView(
+            frame: .zero,
+            collectionViewLayout: UIHelper.createExploreFlowLayout(in: view)
+        )
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.register(ProfileCell.self, forCellWithReuseIdentifier: ProfileCell.identifier)
@@ -86,17 +93,15 @@ class ExploreController: CCDataLoadingController {
                 
                 DispatchQueue.main.async {
                     self.collectionView.refreshControl?.endRefreshing()
+                    self.collectionView.reloadData()
                 }
-                
-                self.collectionView.reloadData()
             case .failure:
                 self.dismissLoadingView()
                 
                 DispatchQueue.main.async {
                     self.collectionView.refreshControl?.endRefreshing()
+                    self.showFailure(text: "網路異常")
                 }
-                
-                self.showFailure(text: "網路異常")
             }
         }
     }
@@ -197,7 +202,10 @@ extension ExploreController: UISearchResultsUpdating {
         filteredUsers = users.filter({
             $0.username.contains(searchText) || $0.fullname.contains(searchText)
         })
-        tableView.reloadData()
+        
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
     }
 }
 

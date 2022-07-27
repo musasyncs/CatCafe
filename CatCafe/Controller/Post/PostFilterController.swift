@@ -191,7 +191,10 @@ extension PostFilterController {
                 for filter in self.allFilters {
                     let image = MTFilterManager.shared.generateThumbnailsForImage(image, with: filter)
                     self.thumbnails[filter.name] = image
-                    self.collectionView.reloadData()
+                    
+                    DispatchQueue.main.async {
+                        self.collectionView.reloadData()
+                    }
                 }
             }
         }

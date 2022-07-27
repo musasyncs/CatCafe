@@ -48,7 +48,10 @@ class SelectCafeController: UITableViewController {
         CafeService.fetchAllCafes { [weak self] cafes in
             guard let self = self else { return }
             self.cafes = cafes
-            self.tableView.reloadData()
+            
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
         }
     }
     
@@ -122,7 +125,10 @@ extension SelectCafeController: UISearchResultsUpdating {
         filteredCafes = cafes.filter({
             $0.title.contains(searchText) || $0.address.contains(searchText)
         })
-        tableView.reloadData()
+        
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
     }
     
 }
