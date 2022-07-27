@@ -11,12 +11,16 @@ class MeetDetailController: UIViewController {
     
     private var meet: Meet {
         didSet {
-            collectionView.reloadData()
+            DispatchQueue.main.async {
+                self.collectionView.reloadData()
+            }
         }
     }
     private var comments = [Comment]() {
         didSet {
-            collectionView.reloadData()
+            DispatchQueue.main.async {
+                self.collectionView.reloadData()
+            }
         }
     }
     
@@ -245,7 +249,7 @@ extension MeetDetailController: UICollectionViewDelegateFlowLayout {
         layout collectionViewLayout: UICollectionViewLayout,
         sizeForItemAt indexPath: IndexPath
     ) -> CGSize {
-        let approximateWidthOfTextArea = UIScreen.width - 8 - 24 - 8 - 8
+        let approximateWidthOfTextArea = ScreenSize.width - 8 - 24 - 8 - 8
         let approximateSize = CGSize(width: approximateWidthOfTextArea, height: 100)
         let attributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14, weight: .regular)]
         
@@ -317,7 +321,7 @@ extension MeetDetailController: CommentInputAccessoryViewDelegate {
         UserService.shared.fetchUserBy(uid: currentUid, completion: { [weak self] currentUser in
             guard let self = self else { return }
             
-            self.show()
+            self.showHud()
             CommentService.shared.uploadMeetComment(
                 meetId: self.meet.meetId,
                 user: currentUser,
@@ -328,12 +332,12 @@ extension MeetDetailController: CommentInputAccessoryViewDelegate {
                 guard let self = self else { return }
                 
                 if error != nil {
-                    self.dismiss()
+                    self.dismissHud()
                     self.showFailure(text: "Failed to upload comment")
                     return
                 }
                 
-                self.dismiss()
+                self.dismissHud()
                 inputView.clearCommentTextView()
                 inputView.postButton.isEnabled = false
                 inputView.postButton.setTitleColor(UIColor.lightGray, for: .normal)

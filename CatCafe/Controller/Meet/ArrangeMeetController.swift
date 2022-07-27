@@ -72,7 +72,7 @@ class ArrangeMeetController: UIViewController {
             action: #selector(handleCancel)
         )
         navigationItem.rightBarButtonItem = UIBarButtonItem(
-            image: UIImage(systemName: "arrow.right")?
+            image: SFSymbols.arrow_right?
                 .withTintColor(.ccGrey)
                 .withRenderingMode(.alwaysOriginal),
             style: .plain,
@@ -139,7 +139,7 @@ class ArrangeMeetController: UIViewController {
               let meetTitleText = meetTitleText, !meetTitleText.isEmpty,
               let meetDescription = meetDescription, !meetDescription.isEmpty
         else {
-            showMessage(withTitle: "Validate Failed", message: "欄位不可留白")
+            AlertHelper.showMessage(title: "Validate Failed", message: "欄位不可留白", buttonTitle: "OK", over: self)
             return
         }
         

@@ -119,7 +119,9 @@ class PostEditController: UIViewController {
         guard let currentUid = LocalStorage.shared.getUid() else { return }
         UserService.shared.fetchUserBy(uid: currentUid, completion: { [weak self] user in
             guard let self = self else { return }
-            self.profileImageView.loadImage(user.profileImageUrlString)
+            DispatchQueue.main.async {
+                self.profileImageView.loadImage(user.profileImageUrlString)
+            }
         })
     }
     
@@ -139,11 +141,11 @@ class PostEditController: UIViewController {
     @objc private func handleImagePost() {
         guard let postImage = image else { return }
         guard let caption = captionTextView.text, !caption.isEmpty else {
-            showMessage(withTitle: "Validate Failed", message: "請撰寫貼文")
+            AlertHelper.showMessage(title: "Validate Failed", message: "請撰寫貼文", buttonTitle: "OK", over: self)
             return
         }
         guard let selectedCafe = selectedCafe else {
-            showMessage(withTitle: "Validate Failed", message: "請選擇咖啡廳")
+            AlertHelper.showMessage(title: "Validate Failed", message: "請選擇咖啡廳", buttonTitle: "OK", over: self)
             return
         }
         
@@ -181,7 +183,7 @@ extension PostEditController {
     
     func setupBarButtonItem() {
         navigationItem.leftBarButtonItem = UIBarButtonItem(
-            image: UIImage(systemName: "arrow.left")?
+            image: SFSymbols.arrow_left?
                 .withTintColor(.ccGrey)
                 .withRenderingMode(.alwaysOriginal),
             style: .plain,
@@ -206,10 +208,7 @@ extension PostEditController {
         
         view.addSubview(containerView)
         view.addSubview(seperatorLine)
-        containerView.addSubview(profileImageView)
-        containerView.addSubview(captionTextView)
-        containerView.addSubview(postImageView)
-        containerView.addSubview(characterCountLabel)
+        containerView.addSubviews(profileImageView, captionTextView, postImageView, characterCountLabel)
         
         containerView.anchor(
             top: view.safeAreaLayoutGuide.topAnchor,

@@ -22,7 +22,7 @@ class ChatlistController: UIViewController {
     
     private lazy var newMessageButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setImage(UIImage(systemName: "plus"), for: .normal)
+        button.setImage(SFSymbols.plus, for: .normal)
         button.backgroundColor = .ccPrimary
         button.tintColor = .white
         button.imageView?.setDimensions(height: 24, width: 24)
@@ -32,7 +32,7 @@ class ChatlistController: UIViewController {
     }()
     
     private lazy var backBarButtonItem = UIBarButtonItem(
-        image: UIImage(systemName: "arrow.left")?
+        image: SFSymbols.arrow_left?
             .withTintColor(.ccGrey)
             .withRenderingMode(.alwaysOriginal),
         style: .plain,
@@ -232,7 +232,10 @@ extension ChatlistController: UISearchResultsUpdating {
         filteredRecents = allRecents.filter({
             $0.receiverName.lowercased().contains(searchText)
         })
-        tableView.reloadData()
+        
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
     }
     
 }

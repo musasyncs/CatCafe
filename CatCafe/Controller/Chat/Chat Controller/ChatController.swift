@@ -142,8 +142,7 @@ extension ChatController {
     }
     
     private func setupCustomTitle() {
-        leftBarButtonView.addSubview(titleLabel)
-        leftBarButtonView.addSubview(subTitleLabel)
+        leftBarButtonView.addSubviews(titleLabel, subTitleLabel)
         let leftBarButtonItem = UIBarButtonItem(customView: leftBarButtonView)
         navigationItem.leftBarButtonItems?.append(leftBarButtonItem)
         
@@ -179,15 +178,20 @@ extension ChatController {
 
     // 載入歷史訊息
     private func loadChats() {
-        MessageService.shared.checkForOldChats(LocalStorage.shared.getUid()!, collectionId: chatId) { [weak self] localMessages in
+        MessageService.shared.checkForOldChats(LocalStorage.shared.getUid()!,
+                                               collectionId: chatId
+        ) { [weak self] localMessages in
             guard let self = self else { return }
             self.allLocalMessages = localMessages
-            
             self.insertOldMessages()
-            self.messagesCollectionView.reloadData()
-            self.messagesCollectionView.scrollToLastItem(animated: true)
+            
+            DispatchQueue.main.async {
+                self.messagesCollectionView.reloadData()
+                self.messagesCollectionView.scrollToLastItem(animated: true)
+            }
         }
     }
+    
     private func insertOldMessages() {
         maxMessageNumber = allLocalMessages.count - displayingMessagesCount
         minMessageNumber = maxMessageNumber - CCConstant.NUMBEROFMESSAGES
@@ -229,9 +233,12 @@ extension ChatController {
         )
         displayingMessagesCount += 1
         
-        messagesCollectionView.reloadData()
-        messagesCollectionView.scrollToLastItem(animated: false)
+        DispatchQueue.main.async {
+            self.messagesCollectionView.reloadData()
+            self.messagesCollectionView.scrollToLastItem(animated: false)
+        }
     }
+    
     private func markMessageAsRead(_ localMessage: LocalMessage) {
         if localMessage.senderId != LocalStorage.shared.getUid()!
            && localMessage.status != CCConstant.READ {
@@ -263,7 +270,9 @@ extension ChatController {
                 mkMessages[index].readDate = localMessage.readDate
                 
                 if mkMessages[index].status == CCConstant.READ {
-                    messagesCollectionView.reloadData()
+                    DispatchQueue.main.async {
+                        self.messagesCollectionView.reloadData()
+                    }
                 }
             }
         }

@@ -78,7 +78,7 @@ class AttendMeetController: UIViewController {
     )
     
     private var bottomConstraint: NSLayoutConstraint?
-    private var popupOffset: CGFloat = UIScreen.height *  0.7
+    private var popupOffset: CGFloat = ScreenSize.height *  0.7
 
     // MARK: - Initializer
     init(meet: Meet) {
@@ -131,23 +131,23 @@ class AttendMeetController: UIViewController {
         guard let contact = contactTextView.text, contact.isEmpty == false,
               let remarks = remarkTextView.text, remarks.isEmpty == false
         else {
-            showMessage(withTitle: "Validate Failed", message: "欄位不可留白")
+            AlertHelper.showMessage(title: "Validate Failed", message: "欄位不可留白", buttonTitle: "OK", over: self)
             return
         }
         
-        show()
+        showHud()
         MeetService.attendMeet(meet: meet,
                                contact: contact,
                                remarks: remarks) { [weak self] error in
             guard let self = self else { return }
             
             if error != nil {
-                self.dismiss()
+                self.dismissHud()
                 self.showFailure(text: "Failed to attend meet")
                 return
             }
             
-            self.dismiss()
+            self.dismissHud()
             
             // dismiss
             self.presentingViewController?.presentingViewController?.dismiss(animated: true, completion: nil)
@@ -309,7 +309,7 @@ extension AttendMeetController {
         view.addSubview(cancelButton)
         cancelButton.anchor(
             left: popupView.leftAnchor,
-            paddingLeft: UIScreen.width / 5
+            paddingLeft: ScreenSize.width / 5
         )
         cancelButton.centerY(inView: centerDivider)
     }
@@ -320,7 +320,7 @@ extension AttendMeetController {
         sendButton.anchor(
             bottom: popupView.bottomAnchor,
             right: popupView.rightAnchor,
-            paddingRight: UIScreen.width / 5
+            paddingRight: ScreenSize.width / 5
         )
         sendButton.centerY(inView: centerDivider)
     }

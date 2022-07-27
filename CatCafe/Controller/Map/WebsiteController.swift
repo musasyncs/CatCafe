@@ -8,7 +8,7 @@
 import UIKit
 import WebKit
 
-class WebsiteController: UIViewController, WKNavigationDelegate, WKScriptMessageHandler, UITextFieldDelegate {
+class WebsiteController: UIViewController {
     
     var website: String?
     
@@ -47,16 +47,13 @@ class WebsiteController: UIViewController, WKNavigationDelegate, WKScriptMessage
         navigationItem.leftBarButtonItem = leftBarButton
         
         activityIndicator = UIActivityIndicatorView(style: .medium)
-        activityIndicator.center = CGPoint(x: UIScreen.width * 0.5, y: UIScreen.height * 0.5)
+        activityIndicator.center = CGPoint(x: ScreenSize.width * 0.5, y: ScreenSize.height * 0.5)
         view.addSubview(activityIndicator)
+        
         start()
     }
     
-    @objc func goBack() {
-        dismiss(animated: true)
-    }
-    
-    @objc func start() {
+    func start() {
         self.view.endEditing(true)
         guard let website = website, !website.isEmpty else { return }
         guard let url = URL(string: website) else { return }
@@ -64,17 +61,15 @@ class WebsiteController: UIViewController, WKNavigationDelegate, WKScriptMessage
         webView.load(urlRequest)
     }
     
-    @objc private func didTapClose() {
-        dismiss(animated: true, completion: nil)
+    @objc func goBack() {
+        dismiss(animated: true)
     }
     
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        self.start()
-        return true
-    }
+}
+
+extension WebsiteController: WKNavigationDelegate {
     
     func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
-        // Start loading...
         activityIndicator.startAnimating()
     }
     
@@ -90,5 +85,4 @@ class WebsiteController: UIViewController, WKNavigationDelegate, WKScriptMessage
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         print(message.body)
     }
-    
 }

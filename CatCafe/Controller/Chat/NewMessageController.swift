@@ -17,7 +17,9 @@ class NewMessageController: UIViewController {
     
     private var users = [User]() {
         didSet {
-            tableView.reloadData()
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
         }
     }
     private var filteredUsers = [User]()
@@ -56,7 +58,9 @@ class NewMessageController: UIViewController {
             let filteredUsers = users.filter { !currentUser.blockedUsers.contains($0.uid) }
             self.users = filteredUsers
             
-            self.tableView.refreshControl?.endRefreshing()
+            DispatchQueue.main.async {
+                self.tableView.refreshControl?.endRefreshing()
+            }
         })
     }
     
@@ -153,7 +157,10 @@ extension NewMessageController: UISearchResultsUpdating {
             $0.username.lowercased().contains(searchText) ||
             $0.fullname.lowercased().contains(searchText)
         })
-        tableView.reloadData()
+        
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
     }
 }
 

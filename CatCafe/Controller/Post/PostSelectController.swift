@@ -13,9 +13,9 @@ class PostSelectController: UIViewController {
     var selectedAsset: PHAsset?
         
     // MARK: - View
-    private let topView = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.width, height: UIScreen.width))
+    private let topView = UIView(frame: CGRect(x: 0, y: 0, width: ScreenSize.width, height: ScreenSize.width))
     private var gridScrollView: GridScrollView!
-    private let controlView = ControlView()
+    private let postSelectControlView = PostSelectControlView()
     private let albumView = UIView()
     private var albumPhotoViewController: AlbumPhotoViewController?
     
@@ -126,7 +126,7 @@ extension PostSelectController {
             action: #selector(handleCancel)
         )
         navigationItem.rightBarButtonItem = UIBarButtonItem(
-            image: UIImage(systemName: "arrow.right")?
+            image: SFSymbols.arrow_right?
                 .withTintColor(.ccGrey)
                 .withRenderingMode(.alwaysOriginal),
             style: .plain,
@@ -141,7 +141,7 @@ extension PostSelectController {
             top: view.safeAreaLayoutGuide.topAnchor,
             left: view.leftAnchor,
             right: view.rightAnchor,
-            height: UIScreen.width
+            height: ScreenSize.width
         )
         
         gridScrollView = GridScrollView(frame: topView.bounds)
@@ -149,9 +149,9 @@ extension PostSelectController {
     }
     
     private func setupControlView() {
-        controlView.delegate = self
-        view.addSubview(controlView)
-        controlView.anchor(
+        postSelectControlView.delegate = self
+        view.addSubview(postSelectControlView)
+        postSelectControlView.anchor(
             top: topView.bottomAnchor,
             left: view.leftAnchor,
             right: view.rightAnchor,
@@ -162,7 +162,7 @@ extension PostSelectController {
     private func setupAlbumView() {
         view.addSubview(albumView)
         albumView.anchor(
-            top: controlView.bottomAnchor,
+            top: postSelectControlView.bottomAnchor,
             left: view.leftAnchor,
             bottom: view.bottomAnchor,
             right: view.rightAnchor
@@ -180,9 +180,9 @@ extension PostSelectController: PHPhotoLibraryChangeObserver {
 }
 
 // MARK: - ControlViewDelegate
-extension PostSelectController: ControlViewDelegate {
+extension PostSelectController: PostSelectControlViewDelegate {
     
-    func didTapCamera(_ view: ControlView) {
+    func didTapCamera(_ view: PostSelectControlView) {
         let controller = PostCameraController()
         controller.modalPresentationStyle = .fullScreen
         present(controller, animated: false)
