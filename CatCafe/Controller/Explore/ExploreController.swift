@@ -140,12 +140,19 @@ extension ExploreController {
         tableView.isHidden = true
         
         view.addSubview(tableView)
-        tableView.fillSuperView()
+        tableView.anchor(top: view.safeAreaLayoutGuide.topAnchor,
+                         left: view.leftAnchor,
+                         bottom: view.bottomAnchor,
+                         right: view.rightAnchor
+        )
     }
     
     private func setupCollectionView() {
         view.addSubview(collectionView)
-        collectionView.fillSuperView()
+        collectionView.anchor(top: view.safeAreaLayoutGuide.topAnchor,
+                              left: view.leftAnchor,
+                              bottom: view.bottomAnchor,
+                              right: view.rightAnchor)
     }
     
     private func setupSearchController() {

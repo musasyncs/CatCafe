@@ -71,13 +71,10 @@ class DeleteAccountAlert {
       
         targetView.addSubviews(bgView, alertView)
         bgView.frame = targetView.bounds
-        alertView.frame = CGRect(
-            x: 40,
-            y: -300,
-            width: targetView.frame.width-100,
-            height: Constants.alertHeight
-        )
-        
+        alertView.frame = CGRect(x: 40,
+                                 y: -300,
+                                 width: targetView.frame.width-100,
+                                 height: Constants.alertHeight)
         // alertView
         titleLabel.text = "注意"
         titleLabel.textAlignment = .center
@@ -102,21 +99,17 @@ class DeleteAccountAlert {
         
         cancelButton.addTarget(viewController, action: #selector(dissmissAlert), for: .touchUpInside)
         alertView.addSubview(cancelButton)
-        cancelButton.anchor(
-            left: self.alertView.leftAnchor,
-            bottom: self.alertView.bottomAnchor,
-            paddingLeft: self.alertView.frame.width / 5,
-            paddingBottom: 16
-        )
+        cancelButton.anchor(left: self.alertView.leftAnchor,
+                            bottom: self.alertView.bottomAnchor,
+                            paddingLeft: self.alertView.frame.width / 5,
+                            paddingBottom: 16)
         
         okButton.addTarget(viewController, action: #selector(deleteAccount), for: .touchUpInside)
         alertView.addSubview(okButton)
-        okButton.anchor(
-            bottom: self.alertView.bottomAnchor,
-            right: self.alertView.rightAnchor,
-            paddingBottom: 16,
-            paddingRight: self.alertView.frame.width / 5
-        )
+        okButton.anchor(bottom: self.alertView.bottomAnchor,
+                        right: self.alertView.rightAnchor,
+                        paddingBottom: 16,
+                        paddingRight: self.alertView.frame.width / 5)
         
         // bgView
         UIView.animate(withDuration: 0.25, animations: {

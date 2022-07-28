@@ -27,6 +27,7 @@ class BriefInfoView: UIView {
         }
     }
     
+    // MARK: - View
     let topView = UIView()
     let titleLabel = UILabel()
     
@@ -45,6 +46,7 @@ class BriefInfoView: UIView {
         return button
     }()
 
+    // MARK: - Init
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = .white
@@ -98,18 +100,16 @@ class BriefInfoView: UIView {
                             paddingTop: 16, paddingLeft: 16, paddingRight: 16)
         
         addSubview(profileButton)
-        profileButton.anchor(
-            left: leftAnchor,
-            bottom: bottomAnchor,
-            right: rightAnchor,
-            paddingLeft: 16,
-            paddingBottom: 16,
-            paddingRight: 16,
-            height: 36)
+        profileButton.anchor(left: leftAnchor,
+                             bottom: bottomAnchor,
+                             right: rightAnchor,
+                             paddingLeft: 16,
+                             paddingBottom: 16,
+                             paddingRight: 16,
+                             height: 36)
     }
     
     // MARK: - Action
- 
     @objc func profileButtonTapped() {
         guard let person = self.person else { return }
         delegate?.dismissInfoView(withPerson: person)

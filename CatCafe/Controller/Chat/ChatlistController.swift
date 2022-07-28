@@ -44,6 +44,7 @@ class ChatlistController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        createGradientBackground()
         title = UserService.shared.currentUser?.username ?? ""
         
         setupCustomNavBar(
@@ -56,11 +57,6 @@ class ChatlistController: UIViewController {
         setupNewMessageButton()
         
         downloadRecentChats()
-    }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        createGradientBackground()
     }
     
     // MARK: - API
@@ -116,12 +112,10 @@ extension ChatlistController {
     
     private func setupNewMessageButton() {
         view.addSubview(newMessageButton)
-        newMessageButton.anchor(
-            bottom: view.safeAreaLayoutGuide.bottomAnchor,
-            right: view.rightAnchor,
-            paddingBottom: 16,
-            paddingRight: 16
-        )
+        newMessageButton.anchor(bottom: view.safeAreaLayoutGuide.bottomAnchor,
+                                right: view.rightAnchor,
+                                paddingBottom: 16,
+                                paddingRight: 16)
         newMessageButton.setDimensions(height: 56, width: 56)
     }
     

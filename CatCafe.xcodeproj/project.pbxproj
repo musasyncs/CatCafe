@@ -63,7 +63,7 @@
 		BA1385C72866FA8C001B7FF1 /* FilterControlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA1385C62866FA8C001B7FF1 /* FilterControlView.swift */; };
 		BA1385CA2867F8EF001B7FF1 /* ChatlistController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA1385C92867F8EF001B7FF1 /* ChatlistController.swift */; };
 		BA1385CD28682943001B7FF1 /* RegInputContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA1385CC28682943001B7FF1 /* RegInputContainerView.swift */; };
-		BA1385CF28682BB4001B7FF1 /* CustomTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA1385CE28682BB4001B7FF1 /* CustomTextField.swift */; };
+		BA1385CF28682BB4001B7FF1 /* UnderLineTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA1385CE28682BB4001B7FF1 /* UnderLineTextField.swift */; };
 		BA1385D3286892E8001B7FF1 /* NewMessageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA1385D2286892E8001B7FF1 /* NewMessageController.swift */; };
 		BA1385D52868B13B001B7FF1 /* ChatController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA1385D42868B13B001B7FF1 /* ChatController.swift */; };
 		BA3BC3242887A91C00D935FF /* RegTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA3BC3232887A91C00D935FF /* RegTextField.swift */; };
@@ -140,6 +140,9 @@
 		BA7BB725285AE4D000465DEC /* PostSelectController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA7BB724285AE4D000465DEC /* PostSelectController.swift */; };
 		BA7BB72F285AEAEA00465DEC /* GridScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA7BB72E285AEAEA00465DEC /* GridScrollView.swift */; };
 		BA7BB731285B0E6E00465DEC /* PostSelectControlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA7BB730285B0E6E00465DEC /* PostSelectControlView.swift */; };
+		BA871D4F28922FC100EA4753 /* AlbumPhotoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA871D4E28922FC100EA4753 /* AlbumPhotoCell.swift */; };
+		BA871D512892586F00EA4753 /* GridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA871D502892586F00EA4753 /* GridView.swift */; };
+		BA871D562892CE7000EA4753 /* BaseAuthController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA871D552892CE7000EA4753 /* BaseAuthController.swift */; };
 		BAB299202872FBE4008B9D3F /* BaseMeetChildController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAB2991F2872FBE4008B9D3F /* BaseMeetChildController.swift */; };
 		BAB29925287451CD008B9D3F /* MessageSectionHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAB29924287451CD008B9D3F /* MessageSectionHeader.swift */; };
 		BAB29927287569CA008B9D3F /* ChatInputAccessoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAB29926287569CA008B9D3F /* ChatInputAccessoryView.swift */; };
@@ -263,7 +266,7 @@
 		BA1385C62866FA8C001B7FF1 /* FilterControlView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterControlView.swift; sourceTree = "<group>"; };
 		BA1385C92867F8EF001B7FF1 /* ChatlistController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatlistController.swift; sourceTree = "<group>"; };
 		BA1385CC28682943001B7FF1 /* RegInputContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegInputContainerView.swift; sourceTree = "<group>"; };
-		BA1385CE28682BB4001B7FF1 /* CustomTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTextField.swift; sourceTree = "<group>"; };
+		BA1385CE28682BB4001B7FF1 /* UnderLineTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnderLineTextField.swift; sourceTree = "<group>"; };
 		BA1385D2286892E8001B7FF1 /* NewMessageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewMessageController.swift; sourceTree = "<group>"; };
 		BA1385D42868B13B001B7FF1 /* ChatController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatController.swift; sourceTree = "<group>"; };
 		BA3BC3232887A91C00D935FF /* RegTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegTextField.swift; sourceTree = "<group>"; };
@@ -342,6 +345,9 @@
 		BA7BB724285AE4D000465DEC /* PostSelectController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostSelectController.swift; sourceTree = "<group>"; };
 		BA7BB72E285AEAEA00465DEC /* GridScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridScrollView.swift; sourceTree = "<group>"; };
 		BA7BB730285B0E6E00465DEC /* PostSelectControlView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostSelectControlView.swift; sourceTree = "<group>"; };
+		BA871D4E28922FC100EA4753 /* AlbumPhotoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumPhotoCell.swift; sourceTree = "<group>"; };
+		BA871D502892586F00EA4753 /* GridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridView.swift; sourceTree = "<group>"; };
+		BA871D552892CE7000EA4753 /* BaseAuthController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseAuthController.swift; sourceTree = "<group>"; };
 		BAB2991F2872FBE4008B9D3F /* BaseMeetChildController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseMeetChildController.swift; sourceTree = "<group>"; };
 		BAB29924287451CD008B9D3F /* MessageSectionHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageSectionHeader.swift; sourceTree = "<group>"; };
 		BAB29926287569CA008B9D3F /* ChatInputAccessoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatInputAccessoryView.swift; sourceTree = "<group>"; };
@@ -467,7 +473,7 @@
 				BADBFF772861F06400146D6F /* ImageHeaderView.swift */,
 				BADBFF752861A86200146D6F /* MeetTimeTileView.swift */,
 				BADBFF732861A84A00146D6F /* TileView.swift */,
-				BA1385CE28682BB4001B7FF1 /* CustomTextField.swift */,
+				BA1385CE28682BB4001B7FF1 /* UnderLineTextField.swift */,
 			);
 			path = ArrangeMeet;
 			sourceTree = "<group>";
@@ -529,21 +535,17 @@
 		BA3BC3282887C64200D935FF /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				BA3BC3292887C65100D935FF /* CCAlertContainerView.swift */,
+				BAB9DF05288CF4E90010FA80 /* CCEmptyStateView.swift */,
 				BA1385CC28682943001B7FF1 /* RegInputContainerView.swift */,
 				BA44779028597ED00045DDB8 /* ProfileHeader.swift */,
-				BA3BC3292887C65100D935FF /* CCAlertContainerView.swift */,
 				BADF1F78285D8CDC004CF329 /* CommentInputAccessoryView.swift */,
-				BA7BB72E285AEAEA00465DEC /* GridScrollView.swift */,
-				BA7BB730285B0E6E00465DEC /* PostSelectControlView.swift */,
-				BAF9BD1F28608D72000F9EEA /* PreviewPhotoContainerView.swift */,
-				BA1385C62866FA8C001B7FF1 /* FilterControlView.swift */,
-				BA656DAE2886A27800676B0A /* HorizontalSliderView.swift */,
-				BAB29924287451CD008B9D3F /* MessageSectionHeader.swift */,
-				BAB29926287569CA008B9D3F /* ChatInputAccessoryView.swift */,
+				BA871D522892651B00EA4753 /* Post */,
+				BA871D53289265CF00EA4753 /* Filter */,
+				BA871D54289265F400EA4753 /* Chat */,
 				BAEBF619286F2B8600DBA670 /* MapMenuView.swift */,
 				BAEBF61F286FD9D300DBA670 /* CafeInfoAlert.swift */,
-				BADBFF722861A83200146D6F /* Meet Related Views */,
-				BAB9DF05288CF4E90010FA80 /* CCEmptyStateView.swift */,
+				BADBFF722861A83200146D6F /* Meet */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -580,15 +582,16 @@
 			children = (
 				BA44778B285961A50045DDB8 /* FeedCell.swift */,
 				BA7BB722285AD90400465DEC /* DropDownCell.swift */,
-				BA44778E28597DBA0045DDB8 /* ProfileCell.swift */,
+				BA871D4E28922FC100EA4753 /* AlbumPhotoCell.swift */,
 				BA1385C42866FA77001B7FF1 /* FilterPickerCell.swift */,
 				BADF1F76285D7D1A004CF329 /* CommentCell.swift */,
 				BAD133A12863629B00B8015A /* MeetCell.swift */,
 				BA763737286B250A00D4EDFB /* RecentChatCell.swift */,
 				BAEBF61B286F2BA200DBA670 /* MapCell.swift */,
 				BADF1F8F285ED0B6004CF329 /* NotificationCell.swift */,
-				BADF1F67285C528C004CF329 /* PlaceCell.swift */,
 				BA4477932859CE2F0045DDB8 /* UserCell.swift */,
+				BA44778E28597DBA0045DDB8 /* ProfileCell.swift */,
+				BADF1F67285C528C004CF329 /* PlaceCell.swift */,
 			);
 			path = Cell;
 			sourceTree = "<group>";
@@ -685,6 +688,7 @@
 		BA44774528588CA90045DDB8 /* Base */ = {
 			isa = PBXGroup;
 			children = (
+				BA871D552892CE7000EA4753 /* BaseAuthController.swift */,
 				BA44774628588D150045DDB8 /* MainTabController.swift */,
 				BAB2991F2872FBE4008B9D3F /* BaseMeetChildController.swift */,
 				BAB9DF03288CF41B0010FA80 /* CCDataLoadingController.swift */,
@@ -882,6 +886,35 @@
 			path = Post;
 			sourceTree = "<group>";
 		};
+		BA871D522892651B00EA4753 /* Post */ = {
+			isa = PBXGroup;
+			children = (
+				BA7BB72E285AEAEA00465DEC /* GridScrollView.swift */,
+				BA871D502892586F00EA4753 /* GridView.swift */,
+				BA7BB730285B0E6E00465DEC /* PostSelectControlView.swift */,
+				BAF9BD1F28608D72000F9EEA /* PreviewPhotoContainerView.swift */,
+			);
+			path = Post;
+			sourceTree = "<group>";
+		};
+		BA871D53289265CF00EA4753 /* Filter */ = {
+			isa = PBXGroup;
+			children = (
+				BA1385C62866FA8C001B7FF1 /* FilterControlView.swift */,
+				BA656DAE2886A27800676B0A /* HorizontalSliderView.swift */,
+			);
+			path = Filter;
+			sourceTree = "<group>";
+		};
+		BA871D54289265F400EA4753 /* Chat */ = {
+			isa = PBXGroup;
+			children = (
+				BAB29924287451CD008B9D3F /* MessageSectionHeader.swift */,
+				BAB29926287569CA008B9D3F /* ChatInputAccessoryView.swift */,
+			);
+			path = Chat;
+			sourceTree = "<group>";
+		};
 		BAB299212873061C008B9D3F /* Launch */ = {
 			isa = PBXGroup;
 			children = (
@@ -937,14 +970,14 @@
 			path = Meet;
 			sourceTree = "<group>";
 		};
-		BADBFF722861A83200146D6F /* Meet Related Views */ = {
+		BADBFF722861A83200146D6F /* Meet */ = {
 			isa = PBXGroup;
 			children = (
 				BA1385D028682BF6001B7FF1 /* ArrangeMeet */,
 				BA1385D128682C0A001B7FF1 /* MeetDetail */,
 				BAD133BA2865656100B8015A /* MeetPeople */,
 			);
-			path = "Meet Related Views";
+			path = Meet;
 			sourceTree = "<group>";
 		};
 		BADF1F74285D7C21004CF329 /* Feed */ = {
@@ -1151,6 +1184,7 @@
 				BA7BB70F285A083D00465DEC /* UIColor+Extension.swift in Sources */,
 				BA7BB713285A083D00465DEC /* UIImage+Extension.swift in Sources */,
 				BA3BC32A2887C65100D935FF /* CCAlertContainerView.swift in Sources */,
+				BA871D4F28922FC100EA4753 /* AlbumPhotoCell.swift in Sources */,
 				BA1385B22866F52B001B7FF1 /* MTXpro2Filter.swift in Sources */,
 				BA3BC33D28883BD200D935FF /* LabelFactory.swift in Sources */,
 				BA7BB723285AD90400465DEC /* DropDownCell.swift in Sources */,
@@ -1160,7 +1194,7 @@
 				BA656DB22886AB7B00676B0A /* UIViewControllerAnimatedTransitioning.swift in Sources */,
 				BADF1F65285C4F78004CF329 /* Cafe.swift in Sources */,
 				BA763742286B519100D4EDFB /* RecentChatService.swift in Sources */,
-				BA1385CF28682BB4001B7FF1 /* CustomTextField.swift in Sources */,
+				BA1385CF28682BB4001B7FF1 /* UnderLineTextField.swift in Sources */,
 				BA13856B2866F52A001B7FF1 /* MTReyesFilter.swift in Sources */,
 				BA3BC3362887E50400D935FF /* SFSymbols.swift in Sources */,
 				BA4477A82859E0AD0045DDB8 /* AuthService.swift in Sources */,
@@ -1268,6 +1302,7 @@
 				BA1385B52866F52B001B7FF1 /* MTSlumberFilter.swift in Sources */,
 				BA656DB42886AD0000676B0A /* PresentaionManager.swift in Sources */,
 				BA3BC3342887C6D600D935FF /* CCButton.swift in Sources */,
+				BA871D512892586F00EA4753 /* GridView.swift in Sources */,
 				BAD133AC2864A26F00B8015A /* MyAttendController.swift in Sources */,
 				BADBFF71286164B700146D6F /* ArrangeMeetController.swift in Sources */,
 				BA1385CA2867F8EF001B7FF1 /* ChatlistController.swift in Sources */,
@@ -1291,6 +1326,7 @@
 				BA656DAF2886A27800676B0A /* HorizontalSliderView.swift in Sources */,
 				BA3BC33928883B5500D935FF /* InputTextView.swift in Sources */,
 				BA1385852866F52B001B7FF1 /* MTMoonVideoFilter.metal in Sources */,
+				BA871D562892CE7000EA4753 /* BaseAuthController.swift in Sources */,
 				BA558F13286E238400A38602 /* LocalMessage.swift in Sources */,
 				BA1385722866F52A001B7FF1 /* MTLudwigFilter.swift in Sources */,
 				BAB29925287451CD008B9D3F /* MessageSectionHeader.swift in Sources */,

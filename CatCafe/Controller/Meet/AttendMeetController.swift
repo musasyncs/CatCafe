@@ -80,7 +80,7 @@ class AttendMeetController: UIViewController {
     private var bottomConstraint: NSLayoutConstraint?
     private var popupOffset: CGFloat = ScreenSize.height *  0.7
 
-    // MARK: - Initializer
+    // MARK: - Init
     init(meet: Meet) {
         self.meet = meet
         super.init(nibName: nil, bundle: nil)
@@ -189,11 +189,9 @@ extension AttendMeetController {
         popupView.layer.shadowOpacity = 0.7
         popupView.layer.shadowRadius = 10
         view.addSubview(popupView)
-        popupView.anchor(
-            left: view.leftAnchor,
-            right: view.rightAnchor,
-            height: popupOffset
-        )
+        popupView.anchor(left: view.leftAnchor,
+                         right: view.rightAnchor,
+                         height: popupOffset)
         bottomConstraint = popupView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: popupOffset)
         bottomConstraint?.isActive = true
     }
@@ -210,14 +208,12 @@ extension AttendMeetController {
     private func setupTopDivider() {
         topDivider.backgroundColor = .lightGray
         view.addSubview(topDivider)
-        topDivider.anchor(
-            top: titleLabel.bottomAnchor,
-            left: popupView.leftAnchor,
-            right: popupView.rightAnchor,
-            paddingTop: 24,
-            paddingLeft: 16,
-            paddingRight: 16
-        )
+        topDivider.anchor(top: titleLabel.bottomAnchor,
+                          left: popupView.leftAnchor,
+                          right: popupView.rightAnchor,
+                          paddingTop: 24,
+                          paddingLeft: 16,
+                          paddingRight: 16)
         topDivider.setHeight(1)
     }
     
@@ -226,24 +222,20 @@ extension AttendMeetController {
         contactLabel.textColor = .systemRed
         contactLabel.font = .systemFont(ofSize: 15, weight: .regular)
         view.addSubview(contactLabel)
-        contactLabel.anchor(
-            top: topDivider.bottomAnchor,
-            left: popupView.leftAnchor,
-            paddingTop: 16,
-            paddingLeft: 16
-        )
+        contactLabel.anchor(top: topDivider.bottomAnchor,
+                            left: popupView.leftAnchor,
+                            paddingTop: 16,
+                            paddingLeft: 16)
     }
     
     private func setupContactTextView() {
         view.addSubview(contactTextView)
-        contactTextView.anchor(
-            top: contactLabel.bottomAnchor,
-            left: popupView.leftAnchor,
-            right: popupView.rightAnchor,
-            paddingTop: 8,
-            paddingLeft: 16,
-            paddingRight: 16
-        )
+        contactTextView.anchor(top: contactLabel.bottomAnchor,
+                               left: popupView.leftAnchor,
+                               right: popupView.rightAnchor,
+                               paddingTop: 8,
+                               paddingLeft: 16,
+                               paddingRight: 16)
     }
     
     private func setupContactCountLabel() {
@@ -256,24 +248,20 @@ extension AttendMeetController {
         remarkLabel.textColor = .ccGrey
         remarkLabel.font = .systemFont(ofSize: 15, weight: .regular)
         view.addSubview(remarkLabel)
-        remarkLabel.anchor(
-            top: contactTextView.bottomAnchor,
-            left: popupView.leftAnchor,
-            paddingTop: 16,
-            paddingLeft: 16
-        )
+        remarkLabel.anchor(top: contactTextView.bottomAnchor,
+                           left: popupView.leftAnchor,
+                           paddingTop: 16,
+                           paddingLeft: 16)
     }
     
     private func setupRemarkTextView() {
         view.addSubview(remarkTextView)
-        remarkTextView.anchor(
-            top: remarkLabel.bottomAnchor,
-            left: popupView.leftAnchor,
-            right: popupView.rightAnchor,
-            paddingTop: 8,
-            paddingLeft: 16,
-            paddingRight: 16
-        )
+        remarkTextView.anchor(top: remarkLabel.bottomAnchor,
+                              left: popupView.leftAnchor,
+                              right: popupView.rightAnchor,
+                              paddingTop: 8,
+                              paddingLeft: 16,
+                              paddingRight: 16)
     }
     
     private func setupRemarkCountLabel() {
@@ -286,14 +274,12 @@ extension AttendMeetController {
         descriptionLabel.textColor = .lightGray
         descriptionLabel.font = .systemFont(ofSize: 11, weight: .regular)
         view.addSubview(descriptionLabel)
-        descriptionLabel.anchor(
-            top: remarkTextView.bottomAnchor,
-            left: popupView.leftAnchor,
-            right: popupView.rightAnchor,
-            paddingTop: 24,
-            paddingLeft: 16,
-            paddingRight: 16
-        )
+        descriptionLabel.anchor(top: remarkTextView.bottomAnchor,
+                                left: popupView.leftAnchor,
+                                right: popupView.rightAnchor,
+                                paddingTop: 24,
+                                paddingLeft: 16,
+                                paddingRight: 16)
     }
     
     private func setupCenterDivider() {
@@ -307,38 +293,32 @@ extension AttendMeetController {
     private func setupCancelButton() {
         cancelButton.addTarget(self, action: #selector(cancelTapped), for: .touchUpInside)
         view.addSubview(cancelButton)
-        cancelButton.anchor(
-            left: popupView.leftAnchor,
-            paddingLeft: ScreenSize.width / 5
-        )
+        cancelButton.anchor(left: popupView.leftAnchor,
+                            paddingLeft: ScreenSize.width / 5)
         cancelButton.centerY(inView: centerDivider)
     }
     
     private func setupSendButton() {
         sendButton.addTarget(self, action: #selector(sendTapped), for: .touchUpInside)
         view.addSubview(sendButton)
-        sendButton.anchor(
-            bottom: popupView.bottomAnchor,
-            right: popupView.rightAnchor,
-            paddingRight: ScreenSize.width / 5
-        )
+        sendButton.anchor(bottom: popupView.bottomAnchor,
+                          right: popupView.rightAnchor,
+                          paddingRight: ScreenSize.width / 5)
         sendButton.centerY(inView: centerDivider)
     }
     
     private func setupBottomDivider() {
         bottomDivider.backgroundColor = .lightGray
         view.addSubview(bottomDivider)
-        bottomDivider.anchor(
-            left: popupView.leftAnchor,
-            bottom: centerDivider.topAnchor,
-            right: popupView.rightAnchor,
-            paddingLeft: 16,
-            paddingBottom: 16,
-            paddingRight: 16
-        )
+        bottomDivider.anchor(left: popupView.leftAnchor,
+                             bottom: centerDivider.topAnchor,
+                             right: popupView.rightAnchor,
+                             paddingLeft: 16,
+                             paddingBottom: 16,
+                             paddingRight: 16)
         bottomDivider.setHeight(1)
     }
-
+    
     private func setupObservers() {
         NotificationCenter.default.addObserver(
             self,

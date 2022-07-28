@@ -14,7 +14,9 @@ protocol CommentInputAccessoryViewDelegate: AnyObject {
 class CommentInputAccessoryView: UIView {
     
     weak var delegate: CommentInputAccessoryViewDelegate?
+    override var intrinsicContentSize: CGSize { return .zero }
     
+    // MARK: - View
     lazy var commentTextView: InputTextView = {
         let textView = InputTextView()
         textView.delegate = self
@@ -34,6 +36,7 @@ class CommentInputAccessoryView: UIView {
         return button
     }()
     
+    // MARK: - Init
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = .white
@@ -42,34 +45,26 @@ class CommentInputAccessoryView: UIView {
         addSubviews(postButton, commentTextView)
         postButton.anchor(top: topAnchor, right: rightAnchor, paddingRight: 8)
         postButton.setDimensions(height: 50, width: 50)
-        commentTextView.anchor(
-            top: topAnchor,
-            left: leftAnchor,
-            bottom: safeAreaLayoutGuide.bottomAnchor,
-            right: postButton.leftAnchor,
-            paddingTop: 8, paddingLeft: 8,
-            paddingBottom: 8, paddingRight: 8
-        )
+        commentTextView.anchor(top: topAnchor,
+                               left: leftAnchor,
+                               bottom: safeAreaLayoutGuide.bottomAnchor,
+                               right: postButton.leftAnchor,
+                               paddingTop: 8, paddingLeft: 8,
+                               paddingBottom: 8, paddingRight: 8)
         
         let divider = UIView()
         divider.backgroundColor = .gray5
         addSubview(divider)
-        divider.anchor(
-            top: topAnchor,
-            left: leftAnchor,
-            right: rightAnchor,
-            height: 0.5
-        )
+        divider.anchor(top: topAnchor,
+                       left: leftAnchor,
+                       right: rightAnchor,
+                       height: 0.5)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    override var intrinsicContentSize: CGSize {
-        return .zero
-    }
-    
+        
     // MARK: - Helper
     func clearCommentTextView() {
         commentTextView.text = nil
@@ -83,6 +78,7 @@ class CommentInputAccessoryView: UIView {
     
 }
 
+// MARK: - UITextViewDelegate
 extension CommentInputAccessoryView: UITextViewDelegate {
     func textViewDidChange(_ textView: UITextView) {
         if textView.text.isEmpty {

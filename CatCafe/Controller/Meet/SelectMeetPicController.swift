@@ -102,7 +102,7 @@ class SelectMeetPicController: UIViewController {
 
     @objc private func handleNext() {
         guard let selectedImage = selectedImage else {
-            AlertHelper.showMessage(title: "", message: "請上傳聚會封面", buttonTitle: "OK", over: self)
+            AlertHelper.showMessage(title: "Oops", message: "請上傳聚會封面", buttonTitle: "OK", over: self)
             return
         }
         let controller = ArrangeMeetController()

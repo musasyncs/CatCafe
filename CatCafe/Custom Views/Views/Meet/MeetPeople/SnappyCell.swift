@@ -62,12 +62,10 @@ class SnappyCell: UICollectionViewCell {
         contentView.addSubviews(superImageView, timeLabel)
         
         superImageView.fillSuperView()
-        timeLabel.anchor(
-            left: contentView.leftAnchor,
-            bottom: contentView.bottomAnchor,
-            paddingLeft: 12,
-            paddingBottom: 12
-        )
+        timeLabel.anchor(left: contentView.leftAnchor,
+                         bottom: contentView.bottomAnchor,
+                         paddingLeft: 12,
+                         paddingBottom: 12)
     }
     
     @objc func handleLongPress(sender: UILongPressGestureRecognizer) {

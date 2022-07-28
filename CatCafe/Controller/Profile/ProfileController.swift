@@ -20,8 +20,11 @@ class ProfileController: CCDataLoadingController {
     // MARK: - View
     private let topImageView = TopImageView(frame: .zero)
     
-    private lazy var collectionView: UICollectionView = {        
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UIHelper.createProfileFlowLayout(in: view))
+    private lazy var collectionView: UICollectionView = {
+        let collectionView = UICollectionView(
+            frame: .zero,
+            collectionViewLayout: UIHelper.createProfileFlowLayout(in: view)
+        )
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.register(ProfileCell.self, forCellWithReuseIdentifier: ProfileCell.identifier)
@@ -50,7 +53,7 @@ class ProfileController: CCDataLoadingController {
     
     private let deleteAccountAlert = DeleteAccountAlert()
     
-    // MARK: - Initializer
+    // MARK: - Init
     init(user: User) {
         self.user = user
         super.init(nibName: nil, bundle: nil)
@@ -84,12 +87,10 @@ class ProfileController: CCDataLoadingController {
     // MARK: - Config
     private func setupImageView() {
         view.addSubview(topImageView)
-        topImageView.anchor(
-            top: view.topAnchor,
-            left: view.leftAnchor,
-            right: view.rightAnchor,
-            height: ScreenSize.height * 0.3
-        )
+        topImageView.anchor(top: view.topAnchor,
+                            left: view.leftAnchor,
+                            right: view.rightAnchor,
+                            height: ScreenSize.height * 0.3)
     }
     
     private func setupNavBar() {
@@ -114,20 +115,17 @@ class ProfileController: CCDataLoadingController {
     
     private func setupCollectionView() {
         view.addSubview(collectionView)
-        collectionView.anchor(
-            top: view.topAnchor,
-            left: view.leftAnchor,
-            bottom: view.bottomAnchor,
-            right: view.rightAnchor,
-            paddingTop: ScreenSize.height * 0.2
-        )
+        collectionView.anchor(top: view.topAnchor,
+                              left: view.leftAnchor,
+                              bottom: view.bottomAnchor,
+                              right: view.rightAnchor,
+                              paddingTop: ScreenSize.height * 0.2)
     }
     
     private func setupProfileImageView() {
         view.addSubview(profileImageView)
         profileImageView.centerX(inView: view)
-        profileImageView.anchor(top: collectionView.topAnchor,
-                                paddingTop: -55)
+        profileImageView.anchor(top: collectionView.topAnchor, paddingTop: -55)
         profileImageView.setDimensions(height: 100, width: 100)
     }
     

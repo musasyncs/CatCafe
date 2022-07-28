@@ -1,5 +1,5 @@
 //
-//  CustomTextField.swift
+//  UnderLineTextField.swift
 //  CatCafe
 //
 //  Created by Ewen on 2022/6/26.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class CustomTextField: UITextField {
+class UnderLineTextField: UITextField {
     
     override func textRect(forBounds bounds: CGRect) -> CGRect {
         return bounds.inset(by: UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8))
@@ -31,7 +31,6 @@ class CustomTextField: UITextField {
             ]
         )
         
-        // Add Under Line
         let underline = UIView()
         addSubview(underline)
         underline.anchor(left: leftAnchor, bottom: bottomAnchor, right: rightAnchor, height: 0.5)

@@ -20,7 +20,7 @@ class MeetTimeTileView: UIView {
     let noticeLabel = UILabel()
     
     let timeSelectorView = TimeSelectorView()
-    lazy var textField = CustomTextField(
+    lazy var textField = UnderLineTextField(
         placeholder: "目前暫無刪除聚會功能",
         textColor: .ccGrey,
         fgColor: .ccPrimary,
@@ -29,6 +29,7 @@ class MeetTimeTileView: UIView {
     
     var heightConstraint: NSLayoutConstraint?
     
+    // MARK: - Init
     override init(frame: CGRect) {
         super.init(frame: .zero)
         
@@ -53,7 +54,8 @@ class MeetTimeTileView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    fileprivate func layout() {
+    // MARK: - Config
+    private func layout() {
         addSubviews(titleLabel, openButton, noticeLabel, timeSelectorView, textField)
         
         titleLabel.anchor(top: topAnchor, left: leftAnchor, paddingLeft: 8, height: 36)
@@ -64,8 +66,10 @@ class MeetTimeTileView: UIView {
                             leftAnchor: openButton.rightAnchor,
                             paddingLeft: 4)
         
-        heightConstraint = timeSelectorView.heightAnchor.constraint(equalToConstant: 0)  // For animation
+        // For animation
+        heightConstraint = timeSelectorView.heightAnchor.constraint(equalToConstant: 0)
         heightConstraint!.isActive = true
+        
         timeSelectorView.anchor(top: titleLabel.bottomAnchor,
                                 left: leftAnchor,
                                 right: rightAnchor,

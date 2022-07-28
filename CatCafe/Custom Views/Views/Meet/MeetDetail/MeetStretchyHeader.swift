@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class MeetStretchyHeader: UICollectionReusableView {
+class MeetStretchyHeader: UICollectionReusableView {
     
     var imageUrlString: String? {
         didSet {
@@ -24,11 +24,9 @@ final class MeetStretchyHeader: UICollectionReusableView {
         return imageView
     }()
     
-    let gradientView = UIView()
-
     override init(frame: CGRect) {
         super.init(frame: frame)
-    
+        
         backgroundColor = .white
         addSubview(meetImageView)
         meetImageView.fillSuperView()        

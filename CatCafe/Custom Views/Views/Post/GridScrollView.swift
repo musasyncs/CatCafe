@@ -11,28 +11,27 @@ class GridScrollView: UIScrollView {
     
     var image: UIImage? {
         didSet {
-            imageView.image = image
             if let image = image {
-                zoomScale = 1.0
-                minimumZoomScale = 1.0
-                maximumZoomScale = 5.0
+                imageView.image = image
                 imageView.frame.size = actualSizeFor(image)
                 contentSize = imageView.bounds.size
-                let offset = CGPoint(x: (contentSize.width - bounds.width)/2, y: (contentSize.height - bounds.height)/2)
+                
+                let offset = CGPoint(
+                    x: (contentSize.width - bounds.width) / 2,
+                    y: (contentSize.height - bounds.height) / 2
+                )
                 setContentOffset(offset, animated: false)
             }
         }
     }
     
     var croppedImage: UIImage? {
-        
         guard let image = image else { return nil }
-        
-        var cropRect = CGRect.zero
         
         let scaleX = image.size.width / contentSize.width
         let scaleY = image.size.height / contentSize.height
         
+        var cropRect = CGRect.zero
         cropRect.origin.x = contentOffset.x * scaleX
         cropRect.origin.y = contentOffset.y * scaleY
         cropRect.size.width = image.size.width * bounds.width / contentSize.width
@@ -44,52 +43,40 @@ class GridScrollView: UIScrollView {
         return nil
     }
     
-    private lazy var imageView: UIImageView = {
-        let view = UIImageView()
-        return view
-    }()
+    // MARK: - View
+    private let imageView = UIImageView()
+    private lazy var gridView = GridView(frame: bounds)
     
-    private var gridView: GridView!
-    
+    // MARK: - Init
     override init(frame: CGRect) {
         super.init(frame: frame)
-        addSubview(imageView)
+        
         delegate = self
         contentInsetAdjustmentBehavior = .never
         showsHorizontalScrollIndicator = false
         showsVerticalScrollIndicator = false
         delaysContentTouches = false
+        zoomScale = 1.0
+        minimumZoomScale = 1.0
+        maximumZoomScale = 5.0
         
-        gridView = GridView(frame: bounds)
+        let recognizer = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress(_:)))
+        recognizer.delegate = self
+        recognizer.minimumPressDuration = 0
+        addGestureRecognizer(recognizer)
+        
         gridView.isUserInteractionEnabled = false
         gridView.alpha = 0.0
-        addSubview(gridView)
         
-        let press = UILongPressGestureRecognizer(target: self, action: #selector(handlePress(_:)))
-        press.delegate = self
-        press.minimumPressDuration = 0
-        addGestureRecognizer(press)
+        addSubview(imageView)
+        addSubview(gridView)
     }
-    
-    @objc func handlePress(_ gesture: UILongPressGestureRecognizer) {
-        switch gesture.state {
-        case .began:
-            UIView.animate(withDuration: 0.2) {
-                self.gridView.alpha = 1.0
-            }
-        case .ended:
-            UIView.animate(withDuration: 0.2) {
-                self.gridView.alpha = 0.0
-            }
-        default:
-            break
-        }
-    }
-    
+        
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - Helper
     func actualSizeFor(_ image: UIImage) -> CGSize {
         let viewSize = bounds.size
         
@@ -114,11 +101,29 @@ class GridScrollView: UIScrollView {
             actualWidth = viewSize.width
         }
         
-        return  CGSize(width: actualWidth, height: actualHeight)
+        return CGSize(width: actualWidth, height: actualHeight)
     }
+    
+    // MARK: - Action
+    @objc func handleLongPress(_ gesture: UILongPressGestureRecognizer) {
+        switch gesture.state {
+        case .began:
+            UIView.animate(withDuration: 0.2) {
+                self.gridView.alpha = 1.0
+            }
+        case .ended:
+            UIView.animate(withDuration: 0.2) {
+                self.gridView.alpha = 0.0
+            }
+        default:
+            break
+        }
+    }
+    
 }
 
 extension GridScrollView: UIScrollViewDelegate {
+    
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
         return imageView
     }
@@ -126,44 +131,16 @@ extension GridScrollView: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         gridView.frame = bounds
     }
+    
 }
 
 extension GridScrollView: UIGestureRecognizerDelegate {
+    
     func gestureRecognizer(
         _ gestureRecognizer: UIGestureRecognizer,
         shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer
     ) -> Bool {
         return true
-    }
-}
-
-class GridView: UIView {
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        
-        let width = frame.width/3.0
-        let height = frame.height/3.0
-        
-        let lineWidth = 1/UIScreen.main.scale
-        
-        for row in 0...1 {
-            let line = UIView()
-            line.backgroundColor = UIColor(white: 1, alpha: 0.8)
-            line.frame = CGRect(x: 0, y: CGFloat(row + 1) * height, width: frame.width, height: lineWidth)
-            addSubview(line)
-        }
-        
-        for col in 0...1 {
-            let line = UIView()
-            line.backgroundColor = UIColor(white: 1, alpha: 0.8)
-            line.frame = CGRect(x: CGFloat(col + 1) * width, y: 0, width: lineWidth, height: frame.height)
-            addSubview(line)
-        }
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
     
 }

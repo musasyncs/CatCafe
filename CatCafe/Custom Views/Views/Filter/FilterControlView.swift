@@ -17,7 +17,7 @@ class FilterControlView: UIView {
 
     weak var delegate: FilterControlViewDelegate?
     let buttonHeight: CGFloat = 52
-    let textColor = UIColor(red: 0.15, green: 0.15, blue: 0.15, alpha: 1)
+    let textColor = UIColor.ccGrey
     
     var value: Float = 0
 
@@ -25,73 +25,40 @@ class FilterControlView: UIView {
     private let filterTool: FilterToolItem
     private let cancelButton = UIButton(type: .system)
     private let doneButton = UIButton(type: .system)
-    private let titleLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 44, height: 44))
-    private lazy var sliderView = HorizontalSliderView(
-        frame: CGRect(
-            x: 30,
-            y: frame.height / 2 - 50,
-            width: frame.width - 60,
-            height: 70
-        )
-    )
+    private let titleLabel = UILabel()
+    private lazy var sliderView = HorizontalSliderView()
 
-    // MARK: - Initializer
+    // MARK: - Init
     init(frame: CGRect, filterTool: FilterToolItem, value: Float = 1.0) {
         self.filterTool = filterTool
-        
         super.init(frame: frame)
         
+        backgroundColor = .white
+        isUserInteractionEnabled = true
         setupCancelButton()
         setupDoneButton()
         setupTitleLabel()
         setupSliderView(value: value)
-        
-        backgroundColor = .white
-        isUserInteractionEnabled = true
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        
-        let buttonY = frame.height - cancelButton.frame.height - windowSafeAreaInsets.bottom
-        
-        cancelButton.frame.origin = CGPoint(x: 0, y: buttonY)
-        cancelButton.frame = CGRect(
-            x: 0,
-            y: frame.height - buttonHeight,
-            width: frame.width / 2,
-            height: buttonHeight
-        )
-        
-        doneButton.frame.origin = CGPoint(
-            x: frame.width / 2,
-            y: buttonY
-        )
-        doneButton.frame = CGRect(
-            x: frame.width / 2,
-            y: frame.height - buttonHeight,
-            width: frame.width / 2,
-            height: buttonHeight
-        )
-    }
-
-    // MARK: - Helper
+  
+    // MARK: - Public
     func setPosition(offScreen isOffScreen: Bool) {
         if isOffScreen {
-            frame.origin = CGPoint(x: frame.origin.x, y: frame.origin.y + 44)
+            frame.origin = CGPoint(x: frame.origin.x, y: frame.origin.y + 22)
             alpha = 0
         } else {
-            frame.origin = CGPoint(x: frame.origin.x, y: frame.origin.y - 44)
+            frame.origin = CGPoint(x: frame.origin.x, y: frame.origin.y - 22)
             alpha = 1
         }
     }
     
     // MARK: - Action
     @objc private func cancelButtonTapped() {
+        self.titleLabel.removeFromSuperview()
         delegate?.filterControlViewDidPressCancel()
     }
     
@@ -107,10 +74,9 @@ class FilterControlView: UIView {
                                          trackRect: trackRect,
                                          value: sender.value)
         let xPosition = thumbRect.origin.x + sender.frame.origin.x + 44
-        titleLabel.center = CGPoint(x: xPosition, y: frame.height/2 - 60)
-        delegate?.filterControlView(self,
-                                    didChangeValue: sender.value,
-                                    filterTool: filterTool)
+        titleLabel.center = CGPoint(x: xPosition, y: frame.height / 2 - 40)
+        
+        delegate?.filterControlView(self, didChangeValue: sender.value, filterTool: filterTool)
     }
     
 }
@@ -124,6 +90,10 @@ extension FilterControlView {
         cancelButton.setTitleColor(textColor, for: .normal)
         cancelButton.setTitle("Cancel", for: .normal)
         addSubview(cancelButton)
+        cancelButton.anchor(left: leftAnchor,
+                            bottom: safeAreaLayoutGuide.bottomAnchor,
+                            paddingBottom: 24)
+        cancelButton.setDimensions(height: buttonHeight, width: ScreenSize.width / 2)
     }
     
     private func setupDoneButton() {
@@ -133,13 +103,17 @@ extension FilterControlView {
         doneButton.setTitleColor(textColor, for: .normal)
         doneButton.setTitle("Done", for: .normal)
         addSubview(doneButton)
-        
+        doneButton.anchor(bottom: safeAreaLayoutGuide.bottomAnchor,
+                          right: rightAnchor,
+                          paddingBottom: 24)
+        doneButton.setDimensions(height: buttonHeight, width: ScreenSize.width / 2)
     }
     
     private func setupTitleLabel() {
-        addSubview(titleLabel)
-        titleLabel.textAlignment = .center
         titleLabel.textColor = textColor
+        titleLabel.textAlignment = .center
+        addSubview(titleLabel)
+        titleLabel.setDimensions(height: 44, width: 44)
     }
     
     private func setupSliderView(value: Float) {
@@ -149,6 +123,9 @@ extension FilterControlView {
         sliderView.slider.value = value
         sliderView.valueRange = filterTool.slider
         addSubview(sliderView)
+        sliderView.centerY(inView: self)
+        sliderView.setDimensions(height: 70, width: ScreenSize.width - 60)
+        sliderView.anchor(left: leftAnchor, right: rightAnchor, paddingLeft: 30, paddingRight: 30)
     }
     
 }

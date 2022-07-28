@@ -41,6 +41,7 @@ class CommentSectionHeader: UICollectionReusableView {
     
     weak var delegate: CommentSectionHeaderDelegate?
     
+    // MARK: - View
     private let hostProfileImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
@@ -90,7 +91,6 @@ class CommentSectionHeader: UICollectionReusableView {
     }
     
     // MARK: - Action
-    
     @objc func seeAllPeople() {
         delegate?.didTapSeeAllPeopleButton(self)
     }

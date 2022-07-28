@@ -37,6 +37,7 @@ class MapMenuView: UIView {
         }
     }
     
+    // MARK: - View
     var tableView = UITableView()
    
     let indicatorView: UIView = {
@@ -180,6 +181,7 @@ extension MapMenuView: UITableViewDelegate, UITableViewDataSource {
         cafes.remove(at: indexPath.row)
         cafes.insert(selectedCafe, at: 0)
         
-        tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
+        tableView.scrollToRow(at: IndexPath(row: 0, section: 0),
+                              at: .top, animated: true)
     }
 }

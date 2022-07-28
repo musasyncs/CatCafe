@@ -8,7 +8,6 @@
 import UIKit
 
 struct NotificationViewModel {
-    
     var notification: Notification
     
     var profileImageUrlString: String?
@@ -90,5 +89,4 @@ struct NotificationViewModel {
     init(notification: Notification) {
         self.notification = notification
     }
-    
 }

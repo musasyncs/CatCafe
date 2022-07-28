@@ -107,13 +107,11 @@ class MeetDetailController: UIViewController {
     
     private func setupCollectionView() {
         view.addSubview(collectionView)
-        collectionView.anchor(
-            top: view.topAnchor,
-            left: view.leftAnchor,
-            bottom: view.safeAreaLayoutGuide.bottomAnchor,
-            right: view.rightAnchor,
-            paddingBottom: 60
-        )
+        collectionView.anchor(top: view.topAnchor,
+                              left: view.leftAnchor,
+                              bottom: view.safeAreaLayoutGuide.bottomAnchor,
+                              right: view.rightAnchor,
+                              paddingBottom: 60)
     }
     
     private func setupBackButton() {
@@ -121,10 +119,9 @@ class MeetDetailController: UIViewController {
         backButton.layer.cornerRadius = 40 / 2
         backButton.clipsToBounds = true
         view.addSubview(backButton)
-        backButton.anchor(
-            top: view.safeAreaLayoutGuide.topAnchor,
-            left: view.leftAnchor,
-            paddingLeft: 24)
+        backButton.anchor(top: view.safeAreaLayoutGuide.topAnchor,
+                          left: view.leftAnchor,
+                          paddingLeft: 24)
         backButton.setDimensions(height: 40, width: 40)
     }
     

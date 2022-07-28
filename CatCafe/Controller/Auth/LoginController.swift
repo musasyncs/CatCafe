@@ -8,29 +8,15 @@
 import UIKit
 import FirebaseAuth
 import AuthenticationServices
-import AVFoundation
-import Combine
 import WebKit
+import AVFoundation
 
-class LoginController: UIViewController {
+class LoginController: BaseAuthController {
     
-    override var prefersStatusBarHidden: Bool { return true }
     weak var delegate: AuthenticationDelegate?
     private var viewModel = LoginViewModel()
     
-    private var player: AVPlayer?
-    private var playerLayer: AVPlayerLayer?
-    private let notificationCenter = NotificationCenter.default
-    private var appEventSubscribers = [AnyCancellable]()
-    
     // MARK: - View
-    private lazy var darkView = UIView()
-    private lazy var logoTextImageView = UIImageView()
-    private lazy var subtitleLabel = makeLabel(
-        withTitle: "雙北貓咪咖啡廳聚會＆社群",
-        font: .monospacedSystemFont(ofSize: 16, weight: .medium),
-        textColor: .ccGreyVariant
-    )
     private lazy var emailTextField = RegTextField(placeholder: "Email")
     private lazy var passwordTextField = RegTextField(placeholder: "Password")
     private lazy var emailContainerView = RegInputContainerView(
@@ -54,8 +40,7 @@ class LoginController: UIViewController {
             signInWithAppleButton
         ]
     )
-    
-    private lazy var logoImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
+
     private lazy var privacyButton = UIButton(type: .system)
     private lazy var eulaButton = UIButton(type: .system)
     private lazy var notMemberButton = UIButton(type: .system)
@@ -64,44 +49,28 @@ class LoginController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .black
-        setupDarkView()
         setupNavBar()
-        setupLogoText()
-        setupSubtitleLabel()
         setupSignInButton()
         setupSignInWithAppleButton()
         setupStackView()
         setupTextFields()
         
-        setupLogo()
         setupPrivacyButton()
         setupEulaButton()
         setupNotMemberButton()
         
-        updateForm()
+        updateForm()        
+    }
+    
+    override func buildPlayer() -> AVPlayer? {
+        guard let filePath = Bundle.main.path(forResource: "login_bg_video", ofType: "mp4") else { return nil }
+        let url = URL(fileURLWithPath: filePath)
+        let player = AVPlayer(url: url)
+        player.actionAtItemEnd = .none
+        player.isMuted = true
+        return player
+    }
         
-        setupNotificationObservers()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        observeAppEvents()
-        setupPlayerIfNeeded()
-        restartVideo()
-    }
-    
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        navigationController?.setNavigationBarHidden(false, animated: animated)
-        removeAppEventsSubscribers()
-        removePlayer()
-    }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        playerLayer?.frame = view.bounds
-    }
-    
     // MARK: - Action
     @objc func handleLogin() {
         guard let email = emailTextField.text, !email.isEmpty,
@@ -160,65 +129,16 @@ class LoginController: UIViewController {
         }
         updateForm()
     }
-    
-    @objc func keyboardWillShow(notification: NSNotification) {
-        let distance = CGFloat(50)
-        let transform = CGAffineTransform(translationX: 0, y: -distance)
         
-        UIView.animate(withDuration: 0.2, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: []) {
-            self.view.transform = transform
-        }
-    }
-    
-    @objc func keyboardWillHide() {
-        UIView.animate(withDuration: 0.2, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: []) {
-            self.view.transform = .identity
-        }
-    }
-    
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        view.endEditing(true)
-    }
-    
 }
 
 extension LoginController {
-    
-    private func setupDarkView() {
-        darkView.backgroundColor = .black.withAlphaComponent(0.5)
-        view.addSubview(darkView)
-        darkView.fillSuperView()
-    }
     
     private func setupNavBar() {
         navigationController?.navigationBar.isHidden = true
         navigationController?.navigationBar.barStyle = .black
     }
-    
-    private func setupLogoText() {
-        logoTextImageView.image = UIImage.asset(.logo_text)?.withTintColor(.white)
-        logoTextImageView.contentMode = .scaleAspectFit
-        view.addSubview(logoTextImageView)
-        logoTextImageView.anchor(
-            top: view.topAnchor,
-            left: view.leftAnchor,
-            right: view.rightAnchor,
-            paddingTop: 64, paddingLeft: 104, paddingRight: 104,
-            height: 84
-        )
-    }
-    
-    private func setupSubtitleLabel() {
-        view.addSubview(subtitleLabel)
-        subtitleLabel.anchor(
-            top: logoTextImageView.bottomAnchor,
-            left: view.leftAnchor,
-            right: view.rightAnchor,
-            paddingTop: 4, paddingLeft: 101, paddingRight: 101,
-            height: 20
-        )
-    }
-    
+
     private func setupSignInButton() {
         loginButton.addTarget(self, action: #selector(handleLogin), for: .touchUpInside)
         loginButton.setTitle("登入", for: .normal)
@@ -236,11 +156,9 @@ extension LoginController {
         stackView.axis = .vertical
         stackView.spacing = 20
         view.addSubview(stackView)
-        stackView.anchor(
-            left: view.leftAnchor,
-            right: view.rightAnchor,
-            paddingLeft: 48, paddingRight: 48
-        )
+        stackView.anchor(left: view.leftAnchor,
+                         right: view.rightAnchor,
+                         paddingLeft: 48, paddingRight: 48)
         stackView.centerY(inView: view)
     }
     
@@ -254,27 +172,13 @@ extension LoginController {
         passwordTextField.textContentType = .oneTimeCode
         passwordTextField.keyboardType = .asciiCapable
     }
-    
-    private func setupLogo() {
-        logoImageView.image = UIImage.asset(.logo)?
-            .resize(to: .init(width: 40, height: 40))?
-            .withRenderingMode(.alwaysOriginal)
-        view.addSubview(logoImageView)
-        logoImageView.centerX(inView: view)
-        logoImageView.anchor(
-            bottom: view.safeAreaLayoutGuide.bottomAnchor, paddingBottom: 32
-        )
-    }
-    
+
     private func setupPrivacyButton() {
         privacyButton.addTarget(self, action: #selector(openPrivacyWebView), for: .touchUpInside)
         privacyButton.attributedTitle2(firstPart: "並確認您已詳閱我們的 ", secondPart: "《隱私權政策》")
         view.addSubview(privacyButton)
         privacyButton.centerX(inView: view)
-        privacyButton.anchor(
-            bottom: logoImageView.topAnchor,
-            paddingBottom: 8
-        )
+        privacyButton.anchor(bottom: logoImageView.topAnchor, paddingBottom: 8)
     }
     
     private func setupEulaButton() {
@@ -283,36 +187,15 @@ extension LoginController {
         eulaButton.attributedTitle2(firstPart: "繼續使用代表您同意 CatCafe 的 ", secondPart: "《服務條款》")
         view.addSubview(eulaButton)
         eulaButton.centerX(inView: view)
-        eulaButton.anchor(
-            bottom: privacyButton.topAnchor,
-            paddingBottom: 0
-        )
+        eulaButton.anchor(bottom: privacyButton.topAnchor, paddingBottom: 0)
     }
-            
+    
     private func setupNotMemberButton() {
         notMemberButton.addTarget(self, action: #selector(handleShowSignUp), for: .touchUpInside)
         notMemberButton.attributedTitle1(firstPart: "尚未成為會員？ ", secondPart: "立即註冊")
         view.addSubview(notMemberButton)
         notMemberButton.centerX(inView: view)
-        notMemberButton.anchor(
-            bottom: eulaButton.topAnchor,
-            paddingBottom: 36
-        )
-    }
-        
-    private func setupNotificationObservers() {
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(keyboardWillShow),
-            name: UIResponder.keyboardDidShowNotification,
-            object: nil
-        )
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(keyboardWillHide),
-            name: UIResponder.keyboardWillHideNotification,
-            object: nil
-        )
+        notMemberButton.anchor(bottom: eulaButton.topAnchor, paddingBottom: 36)
     }
     
 }
@@ -452,7 +335,7 @@ extension LoginController: ASAuthorizationControllerDelegate, ASAuthorizationCon
                     print(error)
                 }
             }
-
+            
         }
     }
     // swiftlint:enable all
@@ -461,74 +344,3 @@ extension LoginController: ASAuthorizationControllerDelegate, ASAuthorizationCon
         return view.window!
     }
 }
-
-// MARK: - Player
-// swiftlint:disable all
-extension LoginController {
-    
-    private func buildPlayer() -> AVPlayer? {
-        guard let filePath = Bundle.main.path(forResource: "login_bg_video", ofType: "mp4") else { return nil }
-        let url = URL(fileURLWithPath: filePath)
-        let player = AVPlayer(url: url)
-        player.actionAtItemEnd = .none
-        player.isMuted = true
-        return player
-    }
-    
-    private func buildPlayerLayer() -> AVPlayerLayer? {
-        let layer = AVPlayerLayer(player: player)
-        layer.videoGravity = .resizeAspectFill
-        return layer
-    }
-    
-    private func playVideo() {
-        player?.play()
-    }
-    
-    private func restartVideo() {
-        player?.seek(to: .zero)
-        playVideo()
-    }
-    
-    private func pauseVideo() {
-        player?.pause()
-    }
-    
-    private func setupPlayerIfNeeded() {
-        player = buildPlayer()
-        playerLayer = buildPlayerLayer()
-        
-        if let layer = self.playerLayer,
-            view.layer.sublayers?.contains(layer) == false {
-            view.layer.insertSublayer(layer, at: 0)
-        }
-    }
-    
-    private func removePlayer() {
-        player?.pause()
-        player = nil
-        playerLayer?.removeFromSuperlayer()
-        playerLayer = nil
-    }
-    
-    private func observeAppEvents() {
-        notificationCenter.publisher(for: .AVPlayerItemDidPlayToEndTime).sink { [weak self] _ in
-            self?.restartVideo()
-        }.store(in: &appEventSubscribers)
-        
-        notificationCenter.publisher(for: UIApplication.willResignActiveNotification).sink { [weak self] _ in
-            self?.pauseVideo()
-        }.store(in: &appEventSubscribers)
-        
-        notificationCenter.publisher(for: UIApplication.didBecomeActiveNotification).sink { [weak self] _ in
-            self?.playVideo()
-        }.store(in: &appEventSubscribers)
-    }
-    
-    private func removeAppEventsSubscribers() {
-        appEventSubscribers.forEach { subscriber in
-            subscriber.cancel()
-        }
-    }
-}
-// swiftlint:enable all

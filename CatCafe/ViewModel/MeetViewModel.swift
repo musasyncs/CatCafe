@@ -9,7 +9,6 @@ import UIKit
 import Firebase
 
 struct MeetViewModel {
-    
     var meet: Meet
         
     var ownerImageUrlString: String? {
@@ -80,24 +79,18 @@ struct MeetViewModel {
         }
     }
     
-    // ===
-    
     var titleText: String? {
         return meet.title
     }
-    
     var descriptionLabel: String? {
         return meet.caption
     }
-    
     var peopleCount: Int {
         return meet.peopleCount
     }
-    
     var infoText: String? {
         return "\(peopleCount)人報名｜\(meet.commentCount)則留言"
     }
-    
     var shouldHidePeopleButton: Bool {
         guard let currentUid = LocalStorage.shared.getUid() else { return true }
         if meet.ownerUid == currentUid {
@@ -106,11 +99,8 @@ struct MeetViewModel {
             return true
         }
     }
-    
-    // ===
 
     init(meet: Meet) {
         self.meet = meet
     }
-    
 }

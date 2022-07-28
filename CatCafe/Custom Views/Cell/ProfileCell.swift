@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class ProfileCell: UICollectionViewCell {
+class ProfileCell: UICollectionViewCell {
     
     var viewModel: PostViewModel? {
         didSet {
@@ -27,7 +27,7 @@ final class ProfileCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        backgroundColor = UIColor.lightGray
+        backgroundColor = .lightGray
         addSubview(postImageView)
         postImageView.fillSuperView()
     }

@@ -35,17 +35,14 @@ class NewMessageController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        createGradientBackground()
+        
         title = "新訊息"
         setupTableView()
         setupSearchController()
         setupPullToRefresh()
         
         fetchUsers()
-    }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        createGradientBackground()
     }
     
     // MARK: - API
@@ -88,7 +85,10 @@ extension NewMessageController {
         tableView.bounces = false
         tableView.rowHeight = 72
         view.addSubview(tableView)
-        tableView.fillSuperView()
+        tableView.anchor(top: view.safeAreaLayoutGuide.topAnchor,
+                         left: view.leftAnchor,
+                         bottom: view.bottomAnchor,
+                         right: view.rightAnchor)
     }
     
     private func setupSearchController() {
@@ -169,14 +169,12 @@ extension NewMessageController: UISearchBarDelegate {
     
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
         searchBar.showsCancelButton = true
-        tableView.isHidden = false
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         searchBar.endEditing(true)
         searchBar.showsCancelButton = false
         searchBar.text = nil
-        tableView.isHidden = true
     }
     
 }

@@ -10,6 +10,7 @@ import Photos
 
 class PreviewPhotoContainerView: UIView {
 
+    // MARK: - View
     lazy var previewImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
@@ -38,16 +39,24 @@ class PreviewPhotoContainerView: UIView {
         return button
     }()
     
+    // MARK: - Init
     override init(frame: CGRect) {
         super.init(frame: frame)
+        
         addSubviews(previewImageView, cancelButton, saveButton)
         
         previewImageView.fillSuperView()
         
-        cancelButton.anchor(top: topAnchor, left: leftAnchor, paddingTop: 12, paddingLeft: 12)
+        cancelButton.anchor(top: topAnchor,
+                            left: leftAnchor,
+                            paddingTop: 12,
+                            paddingLeft: 12)
         cancelButton.setDimensions(height: 50, width: 50)
         
-        saveButton.anchor(left: leftAnchor, bottom: bottomAnchor, paddingLeft: 24, paddingBottom: 24)
+        saveButton.anchor(left: leftAnchor,
+                          bottom: bottomAnchor,
+                          paddingLeft: 24,
+                          paddingBottom: 24)
         saveButton.setDimensions(height: 50, width: 50)
     }
 
@@ -56,9 +65,7 @@ class PreviewPhotoContainerView: UIView {
     }
     
     // MARK: - Action
-    
     @objc func handleSave() {
-        print("Handling save...")
         guard let previewImage = previewImageView.image else { return }
         
         let library = PHPhotoLibrary.shared()
@@ -66,11 +73,11 @@ class PreviewPhotoContainerView: UIView {
         library.performChanges({
             PHAssetChangeRequest.creationRequestForAsset(from: previewImage)
         }, completionHandler: { _, error in
+            
             if let error = error {
                 print("Failed to save image to photo library:", error)
                 return
             }
-            print("Successfully saved image to library")
 
             DispatchQueue.main.async {
                 let savedLabel = UILabel()
@@ -80,12 +87,10 @@ class PreviewPhotoContainerView: UIView {
                 savedLabel.numberOfLines = 0
                 savedLabel.backgroundColor = UIColor(white: 0, alpha: 0.3)
                 savedLabel.textAlignment = .center
-
                 savedLabel.frame = CGRect(x: 0, y: 0, width: 150, height: 80)
-                savedLabel.center = self.center
-
-                self.addSubview(savedLabel)
                 savedLabel.layer.transform = CATransform3DMakeScale(0, 0, 0)
+                self.addSubview(savedLabel)
+                savedLabel.center = self.center
                 
                 UIView.animate(withDuration: 0.5,
                                delay: 0,
@@ -93,6 +98,7 @@ class PreviewPhotoContainerView: UIView {
                                initialSpringVelocity: 0.5,
                                options: .curveEaseOut,
                                animations: {
+                    
                     savedLabel.layer.transform = CATransform3DMakeScale(1, 1, 1)
                     
                 }, completion: { _ in
@@ -102,6 +108,7 @@ class PreviewPhotoContainerView: UIView {
                                    initialSpringVelocity: 0.5,
                                    options: .curveEaseOut,
                                    animations: {
+                        
                         savedLabel.layer.transform = CATransform3DMakeScale(0.1, 0.1, 0.1)
                         savedLabel.alpha = 0
                         

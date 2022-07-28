@@ -9,7 +9,7 @@ import UIKit
 import Photos
 
 class AlbumPhotoViewController: UIViewController {
-
+    
     var didSelectAssetHandler: ((PHAsset) -> Void)?
     
     fileprivate var collectionView: UICollectionView!
@@ -28,7 +28,7 @@ class AlbumPhotoViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         let columns = 4
         let itemWidth: CGFloat = (view.frame.width -  CGFloat(columns + 1))/CGFloat(columns)
         targetSize = CGSize(width: itemWidth * UIScreen.main.scale, height: itemWidth * UIScreen.main.scale)
@@ -52,7 +52,7 @@ class AlbumPhotoViewController: UIViewController {
             collectionView.selectItem(at: IndexPath(item: 0, section: 0), animated: false, scrollPosition: .left)
         }
     }
-
+    
     public func update(dataSource: PHFetchResult<PHAsset>) {
         DispatchQueue.main.async {
             self.dataSource = dataSource
@@ -77,7 +77,7 @@ extension AlbumPhotoViewController: UICollectionViewDataSource, UICollectionView
         cellForItemAt indexPath: IndexPath
     ) -> UICollectionViewCell {
         
-            let identifier = NSStringFromClass(AlbumPhotoCell.self)
+        let identifier = NSStringFromClass(AlbumPhotoCell.self)
         guard let cell = collectionView.dequeueReusableCell(
             withReuseIdentifier: identifier,
             for: indexPath
@@ -109,39 +109,5 @@ extension AlbumPhotoViewController: UICollectionViewDataSource, UICollectionView
         currentSelectIndex = indexPath
         let asset = dataSource.object(at: indexPath.item)
         didSelectAssetHandler?(asset)
-    }
-}
-
-class AlbumPhotoCell: UICollectionViewCell {
-    
-    let imageView: UIImageView
-    
-    var assetIdentifier: String = ""
-    
-    override var isSelected: Bool {
-        didSet {
-            contentView.backgroundColor = isSelected ? UIColor(white: 1, alpha: 0.7): .clear
-        }
-    }
-    
-    override init(frame: CGRect) {
-        
-        imageView = UIImageView(frame: CGRect(origin: .zero, size: frame.size))
-        imageView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        imageView.contentMode = .scaleAspectFill
-        
-        super.init(frame: frame)
-        
-        backgroundView = imageView
-        clipsToBounds = true
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        imageView.image = nil
     }
 }

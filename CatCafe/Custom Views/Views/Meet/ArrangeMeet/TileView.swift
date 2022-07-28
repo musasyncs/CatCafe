@@ -20,7 +20,7 @@ class TileView: UIView {
     var placeholder: String
     
     let titleLabel = UILabel()
-    lazy var textField = CustomTextField(
+    lazy var textField = UnderLineTextField(
         placeholder: placeholder,
         textColor: .ccGrey,
         fgColor: .ccPrimary,
@@ -44,13 +44,11 @@ class TileView: UIView {
         // layout
         addSubviews(titleLabel, textField)
         titleLabel.anchor(top: topAnchor, left: leftAnchor, paddingLeft: 8, height: 36)
-        textField.anchor(
-            top: titleLabel.bottomAnchor,
-            left: leftAnchor,
-            bottom: bottomAnchor,
-            right: rightAnchor,
-            height: 36
-        )
+        textField.anchor(top: titleLabel.bottomAnchor,
+                         left: leftAnchor,
+                         bottom: bottomAnchor,
+                         right: rightAnchor,
+                         height: 36)
     }
     
     required init?(coder: NSCoder) {

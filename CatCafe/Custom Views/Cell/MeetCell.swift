@@ -11,7 +11,7 @@ protocol MeetCellDelegate: AnyObject {
     func cell(_ cell: MeetCell, didLike meet: Meet)
 }
 
-final class MeetCell: UICollectionViewCell {
+class MeetCell: UICollectionViewCell {
     
     weak var delegate: MeetCellDelegate?
     
@@ -34,6 +34,7 @@ final class MeetCell: UICollectionViewCell {
         }
     }
     
+    // MARK: - View
     private let meetImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
@@ -43,15 +44,15 @@ final class MeetCell: UICollectionViewCell {
         return imageView
     }()
     
-    let titleLabel = UILabel()
+    private let titleLabel = UILabel()
     
-    let timeTitleLabel = UILabel()
-    let timeLabel = UILabel()
-    lazy var timeStackView = UIStackView(arrangedSubviews: [timeTitleLabel, timeLabel])
+    private let timeTitleLabel = UILabel()
+    private let timeLabel = UILabel()
+    private lazy var timeStackView = UIStackView(arrangedSubviews: [timeTitleLabel, timeLabel])
     
-    let placeTitleLabel = UILabel()
-    let placeLabel = UILabel()
-    lazy var placeStackView = UIStackView(arrangedSubviews: [placeTitleLabel, placeLabel])
+    private let placeTitleLabel = UILabel()
+    private let placeLabel = UILabel()
+    private lazy var placeStackView = UIStackView(arrangedSubviews: [placeTitleLabel, placeLabel])
     
     private let hostProfileImageView: UIImageView = {
         let imageView = UIImageView()
@@ -61,9 +62,9 @@ final class MeetCell: UICollectionViewCell {
         imageView.backgroundColor = .gray6
         return imageView
     }()
-    let hostnameLabel = UILabel()
-    let infoLabel = UILabel()
-    lazy var likeButton = UIButton(type: .system)
+    private let hostnameLabel = UILabel()
+    private let infoLabel = UILabel()
+    private let likeButton = UIButton(type: .system)
     private let likesLabel = UILabel()
         
     override init(frame: CGRect) {
@@ -78,7 +79,6 @@ final class MeetCell: UICollectionViewCell {
     }
     
     // MARK: - Action
-    
     @objc func didTapLike() {
         guard let viewModel = viewModel else { return }
         delegate?.cell(self, didLike: viewModel.meet)
@@ -88,13 +88,13 @@ final class MeetCell: UICollectionViewCell {
 
 extension MeetCell {
     
-    fileprivate func setup() {
+    private func setup() {
         timeTitleLabel.text = "時間"
         placeTitleLabel.text = "地點"
         likeButton.addTarget(self, action: #selector(didTapLike), for: .touchUpInside)
     }
     
-    fileprivate func style() {
+    private func style() {
         backgroundColor = .white
         layer.cornerRadius = 12
         layer.shadowColor = UIColor.ccGrey.cgColor
@@ -132,18 +132,11 @@ extension MeetCell {
         likesLabel.textColor = .ccGrey
     }
     
-    fileprivate func layout() {
-        addSubviews(
-            meetImageView,
-            titleLabel,
-            timeStackView,
-            placeStackView,
-            hostProfileImageView,
-            hostnameLabel,
-            infoLabel,
-            likeButton,
-            likesLabel
-        )
+    private func layout() {
+        addSubviews(meetImageView, titleLabel, timeStackView,
+                    placeStackView, hostProfileImageView,
+                    hostnameLabel, infoLabel, likeButton, likesLabel)
+        
         meetImageView.centerY(inView: self, leftAnchor: leftAnchor, paddingLeft: 16)
         meetImageView.setDimensions(height: 112, width: 112)
         
@@ -173,4 +166,5 @@ extension MeetCell {
         infoLabel.anchor(right: likeButton.leftAnchor, paddingRight: 8)
         infoLabel.centerY(inView: likeButton)
     }
+    
 }

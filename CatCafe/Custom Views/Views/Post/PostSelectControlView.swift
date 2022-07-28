@@ -11,7 +11,7 @@ protocol PostSelectControlViewDelegate: AnyObject {
     func didTapCamera(_ view: PostSelectControlView)
 }
 
-final class PostSelectControlView: UIView {
+class PostSelectControlView: UIView {
     
     weak var delegate: PostSelectControlViewDelegate?
     
@@ -32,6 +32,7 @@ final class PostSelectControlView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        
         cameraButton.addTarget(self, action: #selector(handleCamera), for: .touchUpInside)
         cameraButton.layer.cornerRadius = 30 / 2
 

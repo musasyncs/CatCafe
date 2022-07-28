@@ -61,7 +61,7 @@ class ChatController: MessagesViewController {
     override var inputAccessoryView: UIView? { return chatInputView }
     override var canBecomeFirstResponder: Bool { return true }
     
-    // MARK: - Initializer
+    // MARK: - Init
     init(chatId: String, recipientId: String, recipientName: String) {
         super.init(nibName: nil, bundle: nil)
         self.chatId = chatId

@@ -16,6 +16,7 @@ protocol ChatInputAccessoryViewDelegate: AnyObject {
 
 class ChatInputAccessoryView: UIView {
     
+    override var intrinsicContentSize: CGSize { return .zero }
     weak var delegate: ChatInputAccessoryViewDelegate?
     
     private let cameraButton = makeIconButton(
@@ -51,6 +52,7 @@ class ChatInputAccessoryView: UIView {
         textView.placeholderShouldCenter = true
         return textView
     }()
+    
     lazy var stackView = UIStackView(
         arrangedSubviews: [cameraButton, pictureButton, chatTextView, sendButton]
     )
@@ -59,7 +61,7 @@ class ChatInputAccessoryView: UIView {
         super.init(frame: .zero)
         
         backgroundColor = .white.withAlphaComponent(0.7)
-        autoresizingMask = .flexibleHeight // 讓 ChatInputView 可以自適應 text view
+        autoresizingMask = .flexibleHeight
         
         cameraButton.addTarget(self, action: #selector(tappedCameraButton), for: .touchUpInside)
         pictureButton.addTarget(self, action: #selector(tappedPictureButton), for: .touchUpInside)
@@ -73,31 +75,27 @@ class ChatInputAccessoryView: UIView {
         
         addSubview(stackView)
         stackView.backgroundColor = .clear
-        stackView.anchor(
-            top: topAnchor,
-            left: leftAnchor,
-            bottom: safeAreaLayoutGuide.bottomAnchor,
-            right: rightAnchor,
-            paddingTop: 8, paddingLeft: 16, paddingBottom: 8, paddingRight: 16
-        )
+        stackView.anchor(top: topAnchor,
+                         left: leftAnchor,
+                         bottom: safeAreaLayoutGuide.bottomAnchor,
+                         right: rightAnchor,
+                         paddingTop: 8,
+                         paddingLeft: 16,
+                         paddingBottom: 8,
+                         paddingRight: 16)
+        
         chatTextView.anchor(width: 220)
         chatTextView.setContentHuggingPriority(.defaultLow, for: .horizontal)
         
         let divider = UIView()
         divider.backgroundColor = .gray5
         addSubview(divider)
-        divider.anchor(
-            top: topAnchor,
-            left: leftAnchor,
-            right: rightAnchor,
-            height: 0.5
-        )
+        divider.anchor(top: topAnchor,
+                       left: leftAnchor,
+                       right: rightAnchor,
+                       height: 0.5)
     }
     required init?(coder: NSCoder) { fatalError() }
-    
-    override var intrinsicContentSize: CGSize {
-        return .zero
-    }
     
     // MARK: - Helper
     func clearChatTextView() {

@@ -15,17 +15,18 @@ protocol FeedCellDelegate: AnyObject {
     func cell(_ cell: FeedCell, showCommentsFor post: Post)
 }
 
-final class FeedCell: UICollectionViewCell {
+class FeedCell: UICollectionViewCell {
     
     weak var delegate: FeedCellDelegate?
     
     var viewModel: PostViewModel? {
         didSet {
             guard let viewModel = viewModel else { return }
+            
             profileImageView.loadImage(viewModel.ownerImageUrlString)
             usernameButton.setTitle(viewModel.ownerUsername, for: .normal)
             locationButton.setTitle(viewModel.locationText, for: .normal)
-            functionButton.isHidden = viewModel.shouldHideFunctionButton
+            reportButton.isHidden = viewModel.shouldHideFunctionButton
             
             postImageView.loadImage(viewModel.mediaUrlString)
             
@@ -55,13 +56,13 @@ final class FeedCell: UICollectionViewCell {
     private lazy var usernameButton = UIButton(type: .system)
     private lazy var locationButton = UIButton(type: .system)
     private lazy var infoStackView = UIStackView(arrangedSubviews: [usernameButton, locationButton])
-    private lazy var functionButton = UIButton(type: .system)
+    private lazy var reportButton = UIButton(type: .system)
       
     private lazy var postImageView = UIImageView()
     
     private lazy var blurControlView = UIVisualEffectView(effect: UIBlurEffect(style: .light))
-    private lazy var controlStackView = UIStackView(arrangedSubviews: [likeView, commentView])
-    private lazy var likeView = UIView()
+    private lazy var controlStackView = UIStackView(arrangedSubviews: [likeWhiteView, commentView])
+    private lazy var likeWhiteView = UIView()
     private lazy var likeStackView = UIStackView(arrangedSubviews: [likeButton, likesLabel])
     private lazy var likeButton = UIButton(type: .system)
     private lazy var likesLabel = UILabel()
@@ -76,7 +77,7 @@ final class FeedCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         setup()
-        setupUI()
+        setupStyle()
         layout()
     }
     
@@ -84,9 +85,9 @@ final class FeedCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    // MARK: - Helper
+    // MARK: - Config
     private func setup() {
-        functionButton.addTarget(self, action: #selector(showSheet), for: .touchUpInside)
+        reportButton.addTarget(self, action: #selector(showSheet), for: .touchUpInside)
         
         let doubleTap = UITapGestureRecognizer(target: self, action: #selector(didDoubleTap))
         doubleTap.numberOfTapsRequired = 2
@@ -98,7 +99,7 @@ final class FeedCell: UICollectionViewCell {
     }
     
     // swiftlint:disable all
-    private func setupUI() {
+    private func setupStyle() {
         backgroundColor = .white
         usernameButton.setTitleColor(.ccGrey, for: .normal)
         usernameButton.titleLabel?.font = .systemFont(ofSize: 14, weight: .medium)
@@ -108,8 +109,8 @@ final class FeedCell: UICollectionViewCell {
         infoStackView.distribution = .fillEqually
         infoStackView.spacing = 2
         infoStackView.alignment = .leading
-        functionButton.tintColor = .ccGrey
-        functionButton.setImage(SFSymbols.ellipsis, for: .normal)
+        reportButton.tintColor = .ccGrey
+        reportButton.setImage(SFSymbols.ellipsis, for: .normal)
         
         postImageView.contentMode = .scaleAspectFill
         postImageView.clipsToBounds = true
@@ -125,9 +126,9 @@ final class FeedCell: UICollectionViewCell {
         controlStackView.distribution = .fillEqually
         controlStackView.alignment = .center
         
-        likeView.backgroundColor = .white.withAlphaComponent(0.9)
-        likeView.layer.cornerRadius = 34 / 2
-        likeView.layer.masksToBounds = true
+        likeWhiteView.backgroundColor = .white.withAlphaComponent(0.9)
+        likeWhiteView.layer.cornerRadius = 34 / 2
+        likeWhiteView.layer.masksToBounds = true
         likeStackView.backgroundColor = .clear
         likeStackView.axis = .horizontal
         likeStackView.spacing = 5
@@ -161,15 +162,14 @@ final class FeedCell: UICollectionViewCell {
         commentLabel.textColor = .ccGrey
         commentLabel.textAlignment = .center
         commentLabel.numberOfLines = 1
-        commentLabel.text = "34"
         
         captionLabel.numberOfLines = 0
         postTimeLabel.font = .systemFont(ofSize: 12, weight: .medium)
-        postTimeLabel.textColor = .lightGray
+        postTimeLabel.textColor = .gray4
     }
     
     private func layout() {
-        addSubviews(profileImageView, infoStackView, functionButton, postImageView, blurControlView, controlStackView, likeStackView, commentStackView, captionLabel, postTimeLabel)
+        addSubviews(profileImageView, infoStackView, reportButton, postImageView, blurControlView, controlStackView, likeStackView, commentStackView, captionLabel, postTimeLabel)
   
         profileImageView.anchor(top: topAnchor, left: leftAnchor, paddingTop: 12, paddingLeft: 15)
         profileImageView.setDimensions(height: 40, width: 40)
@@ -179,14 +179,15 @@ final class FeedCell: UICollectionViewCell {
         infoStackView.centerY(inView: profileImageView)
         usernameButton.setHeight(16)
         locationButton.setHeight(16)
-        functionButton.anchor(
-            right: rightAnchor,
-            paddingRight: 8,
-            width: 40, height: 40
-        )
-        functionButton.centerY(inView: profileImageView)
+        reportButton.anchor(right: rightAnchor,
+                            paddingRight: 8,
+                            width: 40, height: 40)
+        reportButton.centerY(inView: profileImageView)
         
-        postImageView.anchor(top: profileImageView.bottomAnchor, left: leftAnchor, right: rightAnchor, paddingTop: 8)
+        postImageView.anchor(top: profileImageView.bottomAnchor,
+                             left: leftAnchor,
+                             right: rightAnchor,
+                             paddingTop: 8)
         postImageView.heightAnchor.constraint(equalTo: widthAnchor, multiplier: 1).isActive = true
         
         blurControlView.anchor(left: postImageView.leftAnchor,
@@ -197,13 +198,13 @@ final class FeedCell: UICollectionViewCell {
                                 left: blurControlView.leftAnchor,
                                 bottom: blurControlView.bottomAnchor,
                                 paddingTop: 8, paddingLeft: 8, paddingBottom: 8, width: 164)
-        likeView.setDimensions(height: 34, width: 82)
+        likeWhiteView.setDimensions(height: 34, width: 82)
         commentView.setDimensions(height: 34, width: 82)
         
-        likeStackView.anchor(top: likeView.topAnchor,
-                             left: likeView.leftAnchor,
-                             bottom: likeView.bottomAnchor,
-                             right: likeView.rightAnchor,
+        likeStackView.anchor(top: likeWhiteView.topAnchor,
+                             left: likeWhiteView.leftAnchor,
+                             bottom: likeWhiteView.bottomAnchor,
+                             right: likeWhiteView.rightAnchor,
                              paddingTop: 5, paddingLeft: 14, paddingBottom: 5, paddingRight: 14)
         commentStackView.anchor(top: commentView.topAnchor,
                                 left: commentView.leftAnchor,
