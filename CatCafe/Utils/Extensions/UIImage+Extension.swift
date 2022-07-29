@@ -67,7 +67,7 @@ enum ImageAsset: String {
     case map
     case pawprint
     case website
-    case Icons_24px_RegisterCellphone
+    case cellphone
     
     // chat
     case chat

@@ -18,16 +18,16 @@ extension UIViewController {
     
     // MARK: - Gradient Background
     func createGradientBackground() {
-        let gradientLayer = CAGradientLayer()
-        gradientLayer.frame = view.bounds
-        gradientLayer.colors = [
-            UIColor.rgb(hex: "8BB5FF").withAlphaComponent(0.05).cgColor,
+        let layer = CAGradientLayer()
+        layer.frame = view.bounds
+        layer.colors = [
+            UIColor.rgb(hex: "8BB5FF").withAlphaComponent(0.2).cgColor,
             UIColor.rgb(hex: "E1FBFF").withAlphaComponent(0.05).cgColor
         ]
-        gradientLayer.startPoint = CGPoint(x: 0.3, y: 0)
-        gradientLayer.endPoint = CGPoint(x: 0.7, y: 1)
-        gradientLayer.locations = [-0.2, 1.2]
-        view.layer.insertSublayer(gradientLayer, at: 0)
+        layer.startPoint = CGPoint(x: 0.3, y: 0)
+        layer.endPoint = CGPoint(x: 0.7, y: 1)
+        layer.locations = [-0.2, 1.2]
+        view.layer.insertSublayer(layer, at: 0)
     }
     
     // MARK: - NavigationBar

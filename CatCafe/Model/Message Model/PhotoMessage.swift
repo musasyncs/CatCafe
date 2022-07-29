@@ -5,7 +5,6 @@
 //  Created by Ewen on 2022/6/29.
 //
 
-import Foundation
 import MessageKit
 
 class PhotoMessage: NSObject, MediaItem {

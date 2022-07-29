@@ -5,8 +5,6 @@
 //  Created by Ewen on 2022/6/15.
 //
 
-import Foundation
-
 struct UserCellViewModel {
     var user: User
     

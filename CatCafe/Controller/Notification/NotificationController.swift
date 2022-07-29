@@ -26,6 +26,7 @@ class NotificationController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        createGradientBackground()
         setupTableView()
         fetchnotifications()
     }
@@ -33,11 +34,6 @@ class NotificationController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         setupNavBar()
-    }
-
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        createGradientBackground()
     }
     
     // MARK: - API

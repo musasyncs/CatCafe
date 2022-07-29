@@ -38,7 +38,7 @@ class CafeInfoAlert {
     lazy var titleLabel = UILabel()
     
     lazy var phoneButton = makeIconButton(
-        imagename: ImageAsset.Icons_24px_RegisterCellphone.rawValue,
+        imagename: ImageAsset.cellphone.rawValue,
         imageColor: .ccGrey,
         imageWidth: 15,
         imageHeight: 15,

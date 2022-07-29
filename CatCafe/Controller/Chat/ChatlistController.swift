@@ -5,7 +5,6 @@
 //  Created by Ewen on 2022/6/26.
 //
 
-import Foundation
 import UIKit
 
 class ChatlistController: UIViewController {
@@ -177,7 +176,10 @@ extension ChatlistController: UITableViewDataSource, UITableViewDelegate {
         forRowAt indexPath: IndexPath
     ) {
         if editingStyle == .delete {
-            let recent = searchController.isActive ? filteredRecents[indexPath.row] : allRecents[indexPath.row]
+            let recent = searchController.isActive
+            ? filteredRecents[indexPath.row]
+            : allRecents[indexPath.row]
+            
             RecentChatService.shared.deleteRecent(recent)
             
             if searchController.isActive {

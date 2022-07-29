@@ -7,29 +7,6 @@
 
 import UIKit
 
-func makeBarButtonItem(target: Any?,
-                       foregroundColor: UIColor,
-                       text: String,
-                       traits: UIFontDescriptor.SymbolicTraits,
-                       insets: UIEdgeInsets = .zero,
-                       selector: Selector
-) -> UIBarButtonItem {
-    let button = UIButton()
-    button.translatesAutoresizingMaskIntoConstraints = false
-    button.addTarget(target, action: selector, for: .primaryActionTriggered)
-    
-    let attributes = [
-        NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: .title1).withTraits(traits: traits),
-        NSAttributedString.Key.foregroundColor: foregroundColor
-    ]
-    let attributedText = NSMutableAttributedString(string: text, attributes: attributes)
-    button.setAttributedTitle(attributedText, for: .normal)
-    
-    button.contentEdgeInsets = insets
-    let barButtonItem = UIBarButtonItem(customView: button)
-    return barButtonItem
-}
-
 func makeIconButton(imagename: String,
                     imageColor: UIColor? = nil,
                     imageWidth: Int,
@@ -95,4 +72,28 @@ func makeTabButton(imageName: String, unselectedImageName: String) -> UIButton {
     button.setImage(UIImage(named: unselectedImageName), for: .normal)
     button.imageView?.contentMode = .scaleAspectFit
     return button
+}
+
+// Not used
+func makeBarButtonItem(target: Any?,
+                       foregroundColor: UIColor,
+                       text: String,
+                       traits: UIFontDescriptor.SymbolicTraits,
+                       insets: UIEdgeInsets = .zero,
+                       selector: Selector
+) -> UIBarButtonItem {
+    let button = UIButton()
+    button.translatesAutoresizingMaskIntoConstraints = false
+    button.addTarget(target, action: selector, for: .primaryActionTriggered)
+    
+    let attributes = [
+        NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: .title1).withTraits(traits: traits),
+        NSAttributedString.Key.foregroundColor: foregroundColor
+    ]
+    let attributedText = NSMutableAttributedString(string: text, attributes: attributes)
+    button.setAttributedTitle(attributedText, for: .normal)
+    
+    button.contentEdgeInsets = insets
+    let barButtonItem = UIBarButtonItem(customView: button)
+    return barButtonItem
 }

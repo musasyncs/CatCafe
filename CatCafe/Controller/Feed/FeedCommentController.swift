@@ -5,7 +5,6 @@
 //  Created by Ewen on 2022/6/18.
 //
 
-import Foundation
 import UIKit
 
 class FeedCommentController: UICollectionViewController {

@@ -2,7 +2,7 @@
 //  UIFont+Extension.swift
 //  CatCafe
 //
-//  Created by Ewen on 2022/6/14.
+//  Created by Ewen on 2022/7/29.
 //
 
 import UIKit
@@ -22,19 +22,4 @@ extension UIFont {
         return withTraits(traits: .traitItalic)
     }
 
-}
-
-extension UIFont {
-    static func notoRegular(size: CGFloat) -> UIFont {
-        return UIFont(name: CCFontName.regular.rawValue, size: size) ?? .systemFont(ofSize: size)
-    }
-    
-    static func notoMedium(size: CGFloat) -> UIFont {
-        return UIFont(name: CCFontName.medium.rawValue, size: size) ?? .systemFont(ofSize: size)
-    }
-    
-}
-private enum CCFontName: String {
-    case regular = "NotoSansCJKtc-Regular"
-    case medium = "NotoSansCJKtc-Medium"
 }
