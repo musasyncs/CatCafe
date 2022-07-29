@@ -51,12 +51,10 @@ class PostCameraController: UIViewController {
         capturePhotoButton.centerX(inView: view)
         
         view.addSubview(dismissButton)
-        dismissButton.anchor(
-            top: view.topAnchor,
-            right: view.rightAnchor,
-            paddingTop: 24,
-            paddingRight: 12
-        )
+        dismissButton.anchor(top: view.topAnchor,
+                             right: view.rightAnchor,
+                             paddingTop: 24,
+                             paddingRight: 12)
         dismissButton.setDimensions(height: 50, width: 50)
     }
     

@@ -210,27 +210,21 @@ extension PostEditController {
         view.addSubview(seperatorLine)
         containerView.addSubviews(profileImageView, captionTextView, postImageView, characterCountLabel)
         
-        containerView.anchor(
-            top: view.safeAreaLayoutGuide.topAnchor,
-            left: view.leftAnchor,
-            right: view.rightAnchor
-        )
+        containerView.anchor(top: view.safeAreaLayoutGuide.topAnchor,
+                             left: view.leftAnchor,
+                             right: view.rightAnchor)
         containerView.heightAnchor.constraint(greaterThanOrEqualToConstant: 96).isActive = true
         
-        profileImageView.centerY(
-            inView: containerView,
-            leftAnchor: containerView.leftAnchor,
-            paddingLeft: 8, constant: 0
-        )
+        profileImageView.centerY(inView: containerView,
+                                 leftAnchor: containerView.leftAnchor,
+                                 paddingLeft: 8, constant: 0)
         profileImageView.setDimensions(height: 36, width: 36)
         
-        captionTextView.anchor(
-            top: containerView.topAnchor,
-            left: profileImageView.rightAnchor,
-            bottom: containerView.bottomAnchor,
-            right: postImageView.leftAnchor,
-            paddingLeft: 8, paddingRight: 32
-        )
+        captionTextView.anchor(top: containerView.topAnchor,
+                               left: profileImageView.rightAnchor,
+                               bottom: containerView.bottomAnchor,
+                               right: postImageView.leftAnchor,
+                               paddingLeft: 8, paddingRight: 32)
         
         postImageView.anchor(right: containerView.rightAnchor, paddingRight: 16)
         postImageView.centerY(inView: containerView)
@@ -238,19 +232,19 @@ extension PostEditController {
         
         characterCountLabel.anchor(left: postImageView.leftAnchor, bottom: captionTextView.bottomAnchor)
         
-        seperatorLine.anchor(
-            top: containerView.bottomAnchor,
-            left: view.leftAnchor,
-            right: view.rightAnchor,
-            paddingTop: 8,
-            height: 0.5
-        )
+        seperatorLine.anchor(top: containerView.bottomAnchor,
+                             left: view.leftAnchor,
+                             right: view.rightAnchor,
+                             paddingTop: 8,
+                             height: 0.5)
     }
     
     func setupAddPlaceButton() {
         addPlaceButton.addTarget(self, action: #selector(showSelectCafePage), for: .touchUpInside)
         view.addSubview(addPlaceButton)
-        addPlaceButton.anchor(top: seperatorLine.bottomAnchor, left: view.leftAnchor, paddingTop: 8, paddingLeft: 8)
+        addPlaceButton.anchor(top: seperatorLine.bottomAnchor,
+                              left: view.leftAnchor,
+                              paddingTop: 8, paddingLeft: 8)
     }
     
     func setupStackView() {
@@ -265,7 +259,9 @@ extension PostEditController {
         cafeHoriStack.spacing = 8
         
         view.addSubview(cafeHoriStack)
-        cafeHoriStack.anchor(top: addPlaceButton.bottomAnchor, left: view.leftAnchor, paddingTop: 8, paddingLeft: 8)
+        cafeHoriStack.anchor(top: addPlaceButton.bottomAnchor,
+                             left: view.leftAnchor,
+                             paddingTop: 8, paddingLeft: 8)
         
         cafeHoriStack.isHidden = true
     }

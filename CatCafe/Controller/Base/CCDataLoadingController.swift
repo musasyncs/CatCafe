@@ -23,6 +23,7 @@ class CCDataLoadingController: UIViewController {
         }
         
         let indicator = UIActivityIndicatorView(style: .large)
+        indicator.color = .ccGrey
         containerView.addSubview(indicator)
         indicator.center(inView: containerView)
         indicator.startAnimating()

@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class UserCell: UITableViewCell {
+class UserCell: UITableViewCell {
     
     var viewModel: UserCellViewModel? {
         didSet {
@@ -17,7 +17,7 @@ final class UserCell: UITableViewCell {
             fullnameLabel.text = viewModel.fullname
         }
     }
-        
+    
     private let profileImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.layer.cornerRadius = 36 / 2
@@ -41,22 +41,22 @@ final class UserCell: UITableViewCell {
         return label
     }()
     
-    lazy var vStack = UIStackView(arrangedSubviews: [usernameLabel, fullnameLabel])
+    lazy var stack = UIStackView(arrangedSubviews: [usernameLabel, fullnameLabel])
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         backgroundColor = .clear
         selectionStyle = .none
         
-        vStack.axis = .vertical
-        vStack.spacing = 4
-        vStack.alignment = .leading
+        stack.axis = .vertical
+        stack.spacing = 4
+        stack.alignment = .leading
             
-        addSubviews(profileImageView, vStack)
+        addSubviews(profileImageView, stack)
         
         profileImageView.setDimensions(height: 36, width: 36)
         profileImageView.centerY(inView: self, leftAnchor: leftAnchor, paddingLeft: 12)
-        vStack.centerY(inView: profileImageView, leftAnchor: profileImageView.rightAnchor, paddingLeft: 8)
+        stack.centerY(inView: profileImageView, leftAnchor: profileImageView.rightAnchor, paddingLeft: 8)
     }
     
     required init?(coder: NSCoder) {

@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import MapKit
 
 protocol SearchCellDelegate: AnyObject {
     func focus(forCafe cafe: Cafe)
@@ -32,28 +31,29 @@ class MapCell: UITableViewCell {
         }
     }
     
-    lazy var goButton: UIButton = {
+    // MARK: - View
+    private lazy var goButton: UIButton = {
         let button = UIButton(type: .system)
-        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
         button.setTitle("Go", for: .normal)
-        button.backgroundColor = .ccPrimary
+        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
         button.setTitleColor(.white, for: .normal)
+        button.backgroundColor = .ccPrimary
         button.addTarget(self, action: #selector(handleZoomIn), for: .touchUpInside)
         button.layer.cornerRadius = 5
         button.alpha = 0
         return button
     }()
     
-    lazy var imageContainerView: UIView = {
+    private lazy var imageContainerView: UIView = {
         let view = UIView()
-        view.backgroundColor = .ccGreyVariant.withAlphaComponent(0.1)
+        view.backgroundColor = .ccGreyVariant.withAlphaComponent(0.4)
         view.addSubview(locationImageView)
         locationImageView.center(inView: view)
         locationImageView.setDimensions(height: 16, width: 16)
         return view
     }()
     
-    let locationImageView: UIImageView = {
+    private let locationImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.clipsToBounds = true
         imageView.contentMode = .scaleAspectFit
@@ -64,7 +64,7 @@ class MapCell: UITableViewCell {
         return imageView
     }()
     
-    let titleLabel: UILabel = {
+    private let titleLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 1
         label.font = UIFont.systemFont(ofSize: 14, weight: .semibold)
@@ -72,7 +72,7 @@ class MapCell: UITableViewCell {
         return label
     }()
     
-    let addressLabel: UILabel = {
+    private let addressLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 11, weight: .regular)
         label.textColor = .lightGray
@@ -117,27 +117,25 @@ class MapCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    // MARK: - Selectors
-    @objc func handleZoomIn() {
-        guard let cafe = cafe else { return }
-        delegate?.focus(forCafe: cafe)
-    }
-    
-    // MARK: - Helper Functions
+    // MARK: - Helper
     public func animateButtonIn() {
         goButton.transform = CGAffineTransform(scaleX: 0.25, y: 0.25)
         
-        UIView.animate(
-            withDuration: 0.6,
-            delay: 0,
-            usingSpringWithDamping: 1,
-            initialSpringVelocity: 0,
-            options: .curveEaseInOut) {
-                self.goButton.alpha = 1
-                self.goButton.transform = CGAffineTransform(scaleX: 1.1, y: 1.1)
-            } completion: { _ in
-                self.goButton.transform = .identity
-            }
+        UIView.animate(withDuration: 0.6,
+                       delay: 0,
+                       usingSpringWithDamping: 1,
+                       initialSpringVelocity: 0,
+                       options: .curveEaseInOut
+        ) {
+            self.goButton.alpha = 1
+            self.goButton.transform = .identity
+        }
+    }
+    
+    // MARK: - Action
+    @objc func handleZoomIn() {
+        guard let cafe = cafe else { return }
+        delegate?.focus(forCafe: cafe)
     }
     
 }

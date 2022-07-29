@@ -5,11 +5,8 @@
 //  Created by Ewen on 2022/6/15.
 //
 
-import Foundation
-
 struct UserCellViewModel {
-    
-    private let user: User
+    var user: User
     
     var profileImageUrl: String {
         return user.profileImageUrlString

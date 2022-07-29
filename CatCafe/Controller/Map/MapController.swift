@@ -106,13 +106,11 @@ extension MapController {
         mapView.showsUserLocation = true
         mapView.userTrackingMode = .follow
         view.addSubview(mapView)
-        mapView.anchor(
-            top: view.topAnchor,
-            left: view.leftAnchor,
-            bottom: view.bottomAnchor,
-            right: view.rightAnchor,
-            paddingBottom: 75
-        )
+        mapView.anchor(top: view.topAnchor,
+                       left: view.leftAnchor,
+                       bottom: view.bottomAnchor,
+                       right: view.rightAnchor,
+                       paddingBottom: 75)
     }
     
     private func setupMenuView() {

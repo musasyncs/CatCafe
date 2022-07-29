@@ -9,12 +9,6 @@ import UIKit
 
 class FilterPickerCell: UICollectionViewCell {
     
-    let titleNormalColor = UIColor(red: 0.6, green: 0.6, blue: 0.6, alpha: 1)
-    let titleSelectedColor = UIColor(red: 0.15, green: 0.15, blue: 0.15, alpha: 1)
-    
-    let thumbnailImageView: UIImageView
-    let titleLabel: UILabel
-    
     override var isSelected: Bool {
         didSet {
             titleLabel.textColor = isSelected ? titleSelectedColor: titleNormalColor
@@ -35,30 +29,29 @@ class FilterPickerCell: UICollectionViewCell {
         }
     }
     
-    override init(frame: CGRect) {
+    let titleNormalColor = UIColor.gray2
+    let titleSelectedColor = UIColor.ccGrey
+    
+    let titleLabel = UILabel()
+    let thumbnailImageView = UIImageView()
         
-        thumbnailImageView = UIImageView(frame: CGRect(origin: .zero, size: CGSize(width: 100, height: 100)))
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        titleLabel.font = UIFont.systemFont(ofSize: 13)
+        titleLabel.textAlignment = .center
+        titleLabel.textColor = titleNormalColor
+        thumbnailImageView.backgroundColor = .gray6
         thumbnailImageView.contentMode = .scaleAspectFill
         thumbnailImageView.clipsToBounds = true
         
-        let titleOffsetY = frame.height/2 - 50.0 - 30.0
-        titleLabel = UILabel()
-        titleLabel.font = UIFont.systemFont(ofSize: 13)
-        titleLabel.frame = CGRect(x: 0, y: titleOffsetY, width: frame.width, height: 30)
-        titleLabel.textAlignment = .center
-        
-        super.init(frame: frame)
-        
-        thumbnailImageView.center = contentView.center
         contentView.addSubviews(titleLabel, thumbnailImageView)
+        titleLabel.anchor(top: topAnchor, left: leftAnchor, right: rightAnchor, height: 30)
+        thumbnailImageView.anchor(top: titleLabel.bottomAnchor)
+        thumbnailImageView.setDimensions(height: 100, width: 100)
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-    
-    func update(_ filter: MTFilter.Type) {
-        titleLabel.text = filter.name
     }
     
 }

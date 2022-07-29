@@ -45,7 +45,6 @@ class FeedController: UIViewController {
     private lazy var collectionView: UICollectionView = {
         let flowLayout = UICollectionViewFlowLayout()
         flowLayout.scrollDirection = .vertical
-        
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
         collectionView.dataSource = self
         collectionView.delegate = self
@@ -226,12 +225,10 @@ extension FeedController {
     
     private func setupCollectionView() {
         view.addSubview(collectionView)
-        collectionView.anchor(
-            top: view.safeAreaLayoutGuide.topAnchor,
-            left: view.leftAnchor,
-            bottom: view.bottomAnchor,
-            right: view.rightAnchor
-        )
+        collectionView.anchor(top: view.safeAreaLayoutGuide.topAnchor,
+                              left: view.leftAnchor,
+                              bottom: view.bottomAnchor,
+                              right: view.rightAnchor)
     }
     
     private func setupDropDownMenu() {
@@ -252,11 +249,9 @@ extension FeedController {
         dropTableView.isHidden = true
         
         view.addSubview(dropTableView)
-        dropTableView.anchor(
-            top: view.safeAreaLayoutGuide.topAnchor,
-            right: view.rightAnchor, paddingRight: 20,
-            width: 110, height: 40
-        )
+        dropTableView.anchor(top: view.safeAreaLayoutGuide.topAnchor,
+                             right: view.rightAnchor, paddingRight: 20,
+                             width: 110, height: 40)
     }
     
     private func setupPullToRefresh() {
@@ -313,13 +308,19 @@ extension FeedController: FeedCellDelegate {
             cell.viewModel?.post.isLiked.toggle()
             
             if post.isLiked {
-                PostService.shared.unlikePost(post: post) { likeCount in
-                    cell.viewModel?.post.likes = likeCount
+                PostService.shared.unlikePost(post: post) { error in
+                    if error != nil { return }
+                    PostService.shared.fetchLikeCount(post: post) { count in
+                        cell.viewModel?.post.likes = count
+                    }
                 }
             } else {
-                PostService.shared.likePost(post: post) { likeCount in
-                    cell.viewModel?.post.likes = likeCount
-                    
+                PostService.shared.likePost(post: post) { error in
+                    if error != nil { return }
+                    PostService.shared.fetchLikeCount(post: post) { count in
+                        cell.viewModel?.post.likes = count
+                    }
+                                        
                     // 發like通知給對方
                     NotificationService.shared.uploadNotification(
                         toUid: post.ownerUid,
@@ -346,24 +347,30 @@ extension FeedController: FeedCellDelegate {
             cell.viewModel?.post.isLiked.toggle()
             
             if post.isLiked {
-                PostService.shared.unlikePost(post: post) { likeCount in
-                    cell.viewModel?.post.likes = likeCount
+                PostService.shared.unlikePost(post: post) { error in
+                    if error != nil { return }
+                    PostService.shared.fetchLikeCount(post: post) { count in
+                        cell.viewModel?.post.likes = count
+                    }
                 }
+            
             } else {
                 // 愛心動畫
                 self.heartAnimation(gestureView: gestureView)
                 
-                PostService.shared.likePost(post: post) { likeCount in
-                    cell.viewModel?.post.likes = likeCount
-                    
-                    // 發like通知給對方
-                    NotificationService.shared.uploadNotification(
-                        toUid: post.ownerUid,
-                        notiType: .like,
-                        fromUser: currentUser,
-                        post: post
-                    )
-                    
+                PostService.shared.likePost(post: post) { error in
+                    if error != nil { return }
+                    PostService.shared.fetchLikeCount(post: post) { count in
+                        cell.viewModel?.post.likes = count
+                        
+                        // 發like通知給對方
+                        NotificationService.shared.uploadNotification(
+                            toUid: post.ownerUid,
+                            notiType: .like,
+                            fromUser: currentUser,
+                            post: post
+                        )
+                    }
                 }
                 
             }
@@ -398,42 +405,37 @@ extension FeedController {
         heart.layer.shadowRadius = 2
         heart.layer.masksToBounds = false
         
-        heart.frame = CGRect(
-            x: (gestureView.frame.width - size) / 2,
-            y: (gestureView.frame.height - size) / 2,
-            width: size,
-            height: size
-        )
+        heart.frame = CGRect(x: (gestureView.frame.width - size) / 2,
+                             y: (gestureView.frame.height - size) / 2,
+                             width: size,
+                             height: size)
         gestureView.addSubview(heart)
         heart.transform = CGAffineTransform(scaleX: 0.1, y: 0.1)
         
         DispatchQueue.main.async {
-            UIView.animate(
-                withDuration: 0.3,
-                delay: 0,
-                usingSpringWithDamping: 1,
-                initialSpringVelocity: 0,
-                options: .curveEaseOut
+            UIView.animate(withDuration: 0.3,
+                           delay: 0,
+                           usingSpringWithDamping: 1,
+                           initialSpringVelocity: 0,
+                           options: .curveEaseOut
             ) {
                 heart.alpha = 1
                 heart.transform = CGAffineTransform(scaleX: 1.1, y: 1.1)
             } completion: { _ in
                 
-                UIView.animate(
-                    withDuration: 0.1,
-                    delay: 0,
-                    usingSpringWithDamping: 1,
-                    initialSpringVelocity: 0.5,
-                    options: .curveEaseOut
+                UIView.animate(withDuration: 0.1,
+                               delay: 0,
+                               usingSpringWithDamping: 1,
+                               initialSpringVelocity: 0.5,
+                               options: .curveEaseOut
                 ) {
                     heart.transform = .identity
                 } completion: { _ in
-                    UIView.animate(
-                        withDuration: 0.3,
-                        delay: 0.3,
-                        usingSpringWithDamping: 1,
-                        initialSpringVelocity: 0,
-                        options: .curveEaseOut
+                    UIView.animate(withDuration: 0.3,
+                                   delay: 0.3,
+                                   usingSpringWithDamping: 1,
+                                   initialSpringVelocity: 0,
+                                   options: .curveEaseOut
                     ) {
                         heart.alpha = 0
                         heart.transform = CGAffineTransform(scaleX: 0.1, y: 0.1)
@@ -506,20 +508,16 @@ extension FeedController: UICollectionViewDelegateFlowLayout {
                 options: .usesLineFragmentOrigin,
                 attributes: attributes,
                 context: nil)
-            return CGSize(
-                width: view.frame.width,
-                height: estimatedFrame.height + estimatedHeight
-            )
+            return CGSize(width: view.frame.width,
+                          height: estimatedFrame.height + estimatedHeight)
         } else {
             let estimatedFrame = String(describing: posts[indexPath.item].caption).boundingRect(
                 with: approximateSize,
                 options: .usesLineFragmentOrigin,
                 attributes: attributes,
                 context: nil)
-            return CGSize(
-                width: view.frame.width,
-                height: estimatedFrame.height + estimatedHeight
-            )
+            return CGSize(width: view.frame.width,
+                          height: estimatedFrame.height + estimatedHeight)
         }
     }
 }
@@ -537,6 +535,7 @@ extension FeedController: UIViewControllerTransitioningDelegate {
     func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         return dismissTransition
     }
+    
 }
 
 // MARK: - UITableViewDelegate, UITableViewDataSource - Drop down menu

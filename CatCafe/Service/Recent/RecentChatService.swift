@@ -67,9 +67,10 @@ class RecentChatService {
             .getDocuments { [weak self] snapshot, error in
                 guard let self = self else { return }
                 if error != nil { return }
+                
                 guard let documents = snapshot?.documents else { return }
                 
-                let allRecents = documents.compactMap { (snapshot) -> RecentChat? in
+                let allRecents = documents.compactMap { snapshot -> RecentChat? in
                     return try? snapshot.data(as: RecentChat.self)
                 }
                 
@@ -97,7 +98,7 @@ class RecentChatService {
         }
     }
     
-    // Private functions
+    // Private function
     private func updateRecentItemWithNewMessage(recent: RecentChat, lastMessage: String) {
         var recent = recent
         

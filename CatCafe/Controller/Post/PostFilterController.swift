@@ -121,7 +121,7 @@ extension PostFilterController {
         self.navigationItem.hidesBackButton = true
         self.navigationItem.rightBarButtonItem = nil
     }
-
+    
     private func setupCollectionView() {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
@@ -135,17 +135,18 @@ extension PostFilterController {
         collectionView.backgroundColor = .clear
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.showsVerticalScrollIndicator = false
-        filtersView.addSubview(collectionView)
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.register(FilterPickerCell.self, forCellWithReuseIdentifier: FilterPickerCell.identifier)
+        filtersView.addSubview(collectionView)
+        
         collectionView.reloadData()
     }
     
     private func setupMtImageView() {
         mtImageView = MTIImageView(frame: .zero)
         mtImageView.resizingMode = .aspectFill
-        mtImageView.backgroundColor = .lightGray
+        mtImageView.backgroundColor = .gray6
         let ciImage = CIImage(cgImage: croppedImage.cgImage!)
         let originImage = MTIImage(ciImage: ciImage, isOpaque: true)
         originInputImage = originImage
@@ -154,24 +155,20 @@ extension PostFilterController {
     
     private func setupLayout() {
         view.addSubview(previewView)
-        previewView.anchor(
-            top: view.safeAreaLayoutGuide.topAnchor,
-            left: view.leftAnchor,
-            right: view.rightAnchor,
-            height: ScreenSize.width
-        )
+        previewView.anchor(top: view.safeAreaLayoutGuide.topAnchor,
+                           left: view.leftAnchor,
+                           right: view.rightAnchor,
+                           height: ScreenSize.width)
         
         previewView.addSubview(mtImageView)
         mtImageView.fillSuperView()
         
         view.addSubview(filtersView)
-        filtersView.anchor(
-            top: previewView.bottomAnchor,
-            left: view.leftAnchor,
-            bottom: view.bottomAnchor,
-            right: view.rightAnchor,
-            paddingBottom: 44
-        )
+        filtersView.anchor(top: previewView.bottomAnchor,
+                           left: view.leftAnchor,
+                           bottom: view.bottomAnchor,
+                           right: view.rightAnchor,
+                           paddingBottom: 44)
         
         filtersView.addSubview(collectionView)
         collectionView.centerY(inView: filtersView)
@@ -199,7 +196,7 @@ extension PostFilterController {
             }
         }
     }
-
+    
 }
 
 // MARK: - FilterControlViewDelegate
@@ -252,14 +249,13 @@ extension PostFilterController: UICollectionViewDataSource, UICollectionViewDele
         ) as? FilterPickerCell else { return UICollectionViewCell() }
         
         let filter = allFilters[indexPath.item]
-        cell.update(filter)
+        cell.titleLabel.text = filter.name
         cell.thumbnailImageView.image = thumbnails[filter.name]
         
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        // double tap
         if currentSelectFilterIndex == indexPath.item {
             if indexPath.item != 0 {
                 let item = FilterToolItem(type: .adjustStrength, slider: .zeroToHundred)
@@ -274,5 +270,12 @@ extension PostFilterController: UICollectionViewDataSource, UICollectionViewDele
             currentSelectFilterIndex = indexPath.item
         }
     }
-
+    
+    func collectionView(_ collectionView: UICollectionView,
+                        willDisplay cell: UICollectionViewCell,
+                        forItemAt indexPath: IndexPath) {
+        let selectedIndexPath = IndexPath(item: 0, section: 0)
+        collectionView.selectItem(at: selectedIndexPath, animated: false, scrollPosition: [])
+    }
+    
 }

@@ -8,7 +8,6 @@
 import UIKit
 
 struct PostViewModel {
-    
     var post: Post
 
     var ownerImageUrlString: String? {
@@ -84,5 +83,4 @@ struct PostViewModel {
     init(post: Post) {
         self.post = post
     }
-    
 }

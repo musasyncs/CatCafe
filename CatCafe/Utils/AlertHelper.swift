@@ -122,7 +122,7 @@ class AlertHelper {
             switch result {
             case .success:
                 showMessage(title: "Thanks for reporting this post",
-                            message: "We will review this post and remove anything that doesn't follow our standards as quickly as possible",
+                            message: "We will review this post and remove anything that doesn't follow our standards",
                             buttonTitle: "OK",
                             over: viewController)
             case .failure:

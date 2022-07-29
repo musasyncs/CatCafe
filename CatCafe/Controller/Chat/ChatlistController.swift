@@ -5,7 +5,6 @@
 //  Created by Ewen on 2022/6/26.
 //
 
-import Foundation
 import UIKit
 
 class ChatlistController: UIViewController {
@@ -44,6 +43,7 @@ class ChatlistController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        createGradientBackground()
         title = UserService.shared.currentUser?.username ?? ""
         
         setupCustomNavBar(
@@ -56,11 +56,6 @@ class ChatlistController: UIViewController {
         setupNewMessageButton()
         
         downloadRecentChats()
-    }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        createGradientBackground()
     }
     
     // MARK: - API
@@ -116,12 +111,10 @@ extension ChatlistController {
     
     private func setupNewMessageButton() {
         view.addSubview(newMessageButton)
-        newMessageButton.anchor(
-            bottom: view.safeAreaLayoutGuide.bottomAnchor,
-            right: view.rightAnchor,
-            paddingBottom: 16,
-            paddingRight: 16
-        )
+        newMessageButton.anchor(bottom: view.safeAreaLayoutGuide.bottomAnchor,
+                                right: view.rightAnchor,
+                                paddingBottom: 16,
+                                paddingRight: 16)
         newMessageButton.setDimensions(height: 56, width: 56)
     }
     
@@ -183,7 +176,10 @@ extension ChatlistController: UITableViewDataSource, UITableViewDelegate {
         forRowAt indexPath: IndexPath
     ) {
         if editingStyle == .delete {
-            let recent = searchController.isActive ? filteredRecents[indexPath.row] : allRecents[indexPath.row]
+            let recent = searchController.isActive
+            ? filteredRecents[indexPath.row]
+            : allRecents[indexPath.row]
+            
             RecentChatService.shared.deleteRecent(recent)
             
             if searchController.isActive {

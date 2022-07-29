@@ -10,7 +10,7 @@ import UIKit
 class CCAlertVC: UIViewController {
     
     let containerView = CCAlertContainerView()
-    let titleLabel = CCTitleLabel(textAlignment: .center, fontSize: 20)
+    let titleLabel = CCTitleLabel(textAlignment: .center, fontSize: 17)
     let messageLabel = CCBodyLabel(textAlignment: .center)
     let actionButton = CCButton(color: .ccPrimary, title: "Ok", systemImageName: "checkmark.circle")
     var dismissAction: (() -> Void)?
@@ -46,47 +46,43 @@ class CCAlertVC: UIViewController {
     }
     
     func configureContainerView() {
-        NSLayoutConstraint.activate([
-            containerView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            containerView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            containerView.widthAnchor.constraint(equalToConstant: 280),
-            containerView.heightAnchor.constraint(equalToConstant: 220)
-        ])
+        containerView.center(inView: view)
+        containerView.setDimensions(height: 220, width: 280)
     }
     
     func configureTitleLabel() {
         titleLabel.text = alertTitle ?? "Something went wrong"
         
-        NSLayoutConstraint.activate([
-            titleLabel.topAnchor.constraint(equalTo: containerView.topAnchor, constant: padding),
-            titleLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: padding),
-            titleLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -padding),
-            titleLabel.heightAnchor.constraint(equalToConstant: 28)
-        ])
+        titleLabel.anchor(top: containerView.topAnchor,
+                          left: containerView.leftAnchor,
+                          right: containerView.rightAnchor,
+                          paddingTop: padding, paddingLeft: padding, paddingRight: padding,
+                          height: 28)
     }
     
     func configureActionButton() {
         actionButton.setTitle(buttonTitle ?? "Ok", for: .normal)
         actionButton.addTarget(self, action: #selector(dismissVC), for: .touchUpInside)
         
-        NSLayoutConstraint.activate([
-            actionButton.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -padding),
-            actionButton.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: padding),
-            actionButton.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -padding),
-            actionButton.heightAnchor.constraint(equalToConstant: 44)
-        ])
+        actionButton.anchor(left: containerView.leftAnchor,
+                            bottom: containerView.bottomAnchor,
+                            right: containerView.rightAnchor,
+                            paddingLeft: padding, paddingBottom: padding, paddingRight: padding,
+                            height: 44)
     }
     
     func configureMessageLabel() {
         messageLabel.text = message ?? "Unable to complete request"
         messageLabel.numberOfLines = 4
         
-        NSLayoutConstraint.activate([
-            messageLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 8),
-            messageLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: padding),
-            messageLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -padding),
-            messageLabel.bottomAnchor.constraint(equalTo: actionButton.topAnchor, constant: -12)
-        ])
+        messageLabel.anchor(top: titleLabel.bottomAnchor,
+                            left: containerView.leftAnchor,
+                            bottom: actionButton.topAnchor,
+                            right: containerView.rightAnchor,
+                            paddingTop: 8,
+                            paddingLeft: padding,
+                            paddingBottom: 12,
+                            paddingRight: padding)
     }
     
     @objc func dismissVC() {

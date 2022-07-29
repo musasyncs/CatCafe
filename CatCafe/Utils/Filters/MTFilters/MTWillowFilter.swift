@@ -5,7 +5,6 @@
 //  Created by alexiscn on 2018/6/8.
 //
 
-import Foundation
 import MetalPetal
 
 class MTWillowFilter: MTFilter {

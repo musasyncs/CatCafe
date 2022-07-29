@@ -61,7 +61,7 @@ class ChatController: MessagesViewController {
     override var inputAccessoryView: UIView? { return chatInputView }
     override var canBecomeFirstResponder: Bool { return true }
     
-    // MARK: - Initializer
+    // MARK: - Init
     init(chatId: String, recipientId: String, recipientName: String) {
         super.init(nibName: nil, bundle: nil)
         self.chatId = chatId
@@ -77,6 +77,7 @@ class ChatController: MessagesViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        createGradientBackground()
         setupLeftBarButton()
         setupCustomTitle()
         setupMessageCollectionView()
@@ -97,20 +98,15 @@ class ChatController: MessagesViewController {
         super.viewWillDisappear(animated)
         RecentChatService.shared.resetRecentCounter(chatRoomId: chatId)
     }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        createGradientBackground()
-    }
-        
+      
     // MARK: - Helper
     func messageSend(text: String?, photo: UIImage?, video: Video?) {
-        MessageSender.send(
-            chatId: chatId,
-            text: text,
-            photo: photo,
-            video: video,
-            memberIds: [LocalStorage.shared.getUid()!, recipientId]
+        MessageSender.send(chatId: chatId,
+                           text: text,
+                           photo: photo,
+                           video: video,
+                           memberIds: [LocalStorage.shared.getUid()!,
+                                       recipientId]
         ) { [weak self] newMessage in
             guard let self = self else { return }
             self.insertMessage(newMessage)

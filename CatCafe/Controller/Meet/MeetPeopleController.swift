@@ -42,7 +42,7 @@ class MeetPeopleViewController: UIViewController {
         borderColor: .white
     )
     
-    // MARK: - Initializer
+    // MARK: - Init
     init(meet: Meet) {
         self.meet = meet
         super.init(nibName: nil, bundle: nil)
@@ -101,12 +101,10 @@ class MeetPeopleViewController: UIViewController {
         visualEffectView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(dismissBriefView)))
         visualEffectView.alpha = 0
         view.addSubview(visualEffectView)
-        visualEffectView.anchor(
-            top: view.topAnchor,
-            left: view.leftAnchor,
-            bottom: view.bottomAnchor,
-            right: view.rightAnchor
-        )
+        visualEffectView.anchor(top: view.topAnchor,
+                                left: view.leftAnchor,
+                                bottom: view.bottomAnchor,
+                                right: view.rightAnchor)
     }
 
     // MARK: - Helper

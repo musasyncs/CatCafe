@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class CommentCell: UICollectionViewCell {
+class CommentCell: UICollectionViewCell {
     
     var viewModel: CommentViewModel? {
         didSet {
@@ -34,7 +34,6 @@ final class CommentCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
         backgroundColor = .white
         
         addSubviews(profileImageView, commentLabel)
@@ -43,14 +42,12 @@ final class CommentCell: UICollectionViewCell {
                                 paddingTop: 8,
                                 paddingLeft: 8)
         profileImageView.setDimensions(height: 24, width: 24)
-        commentLabel.anchor(
-            top: profileImageView.topAnchor,
-            left: profileImageView.rightAnchor,
-            bottom: bottomAnchor,
-            right: rightAnchor,
-            paddingLeft: 8, paddingRight: 8
-        )
-        commentLabel.anchor(right: rightAnchor, paddingRight: 8)
+        
+        commentLabel.anchor(top: profileImageView.topAnchor,
+                            left: profileImageView.rightAnchor,
+                            bottom: bottomAnchor,
+                            right: rightAnchor,
+                            paddingLeft: 8, paddingRight: 8)
     }
     
     required init?(coder: NSCoder) {

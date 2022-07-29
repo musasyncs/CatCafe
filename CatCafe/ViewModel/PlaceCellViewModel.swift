@@ -8,7 +8,6 @@
 import UIKit
 
 struct PlaceCellViewModel {
-    
     var cafe: Cafe
     
     var titleAttrString: NSAttributedString {

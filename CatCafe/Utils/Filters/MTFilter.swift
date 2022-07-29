@@ -5,7 +5,6 @@
 //  Created by Ewen on 2022/6/25.
 //
 
-import Foundation
 import MetalPetal
 
 class MTFilter: NSObject, MTIUnaryFilter {
@@ -39,7 +38,6 @@ class MTFilter: NSObject, MTIUnaryFilter {
     }
 
     // MARK: - MTIUnaryFilter
-    
     var inputImage: MTIImage?
     
     var outputPixelFormat: MTLPixelFormat = .invalid

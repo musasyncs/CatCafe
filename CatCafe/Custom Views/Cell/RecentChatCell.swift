@@ -12,14 +12,13 @@ class RecentChatCell: UITableViewCell {
     var recent: RecentChat? {
         didSet {
             guard let recent = recent else { return }
-            
             usernameLabel.text = recent.receiverName
             usernameLabel.adjustsFontSizeToFitWidth = true
             usernameLabel.minimumScaleFactor = 0.9
             
             lastMessageLabel.text = recent.lastMessage
-            lastMessageLabel.adjustsFontSizeToFitWidth = true
             lastMessageLabel.numberOfLines = 2
+            lastMessageLabel.adjustsFontSizeToFitWidth = true
             lastMessageLabel.minimumScaleFactor = 0.9
             
             if recent.unreadCounter != 0 {
@@ -39,7 +38,6 @@ class RecentChatCell: UITableViewCell {
     // MARK: - View
     private let avatarImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage.asset(.no_image)
         imageView.layer.cornerRadius = 50 / 2
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
@@ -83,61 +81,52 @@ class RecentChatCell: UITableViewCell {
         return label
     }()
     
-    // MARK: - Initializer
+    // MARK: - Init
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         backgroundColor = .clear
         selectionStyle = .none
-        setupLayout()
+        layout()
     }
     
     required init?(coder: NSCoder) {
         fatalError()
     }
     
-    private func setupLayout() {
+    // MARK: - Config
+    private func layout() {
         addSubviews(avatarImageView, usernameLabel, lastMessageLabel, dateLabel, unreadCounterBackgroundView)
         unreadCounterBackgroundView.addSubview(unreadCounterLabel)
         
         avatarImageView.centerY(inView: self, leftAnchor: leftAnchor, paddingLeft: 10)
         avatarImageView.setDimensions(height: 50, width: 50)
         
-        usernameLabel.anchor(
-            top: avatarImageView.topAnchor,
-            left: avatarImageView.rightAnchor,
-            paddingTop: 4,
-            paddingLeft: 10
-        )
+        usernameLabel.anchor(top: avatarImageView.topAnchor,
+                             left: avatarImageView.rightAnchor,
+                             paddingTop: 4,
+                             paddingLeft: 10)
         usernameLabel.setWidth(200)
         
-        lastMessageLabel.anchor(
-            top: usernameLabel.bottomAnchor,
-            left: avatarImageView.rightAnchor,
-            paddingTop: 4, paddingLeft: 10
-        )
+        lastMessageLabel.anchor(top: usernameLabel.bottomAnchor,
+                                left: avatarImageView.rightAnchor,
+                                paddingTop: 4, paddingLeft: 10)
         lastMessageLabel.setWidth(250)
         
-        dateLabel.anchor(
-            top: topAnchor,
-            right: rightAnchor,
-            paddingTop: 20,
-            paddingRight: 15
-        )
+        dateLabel.anchor(top: topAnchor,
+                         right: rightAnchor,
+                         paddingTop: 20,
+                         paddingRight: 15)
         
-        unreadCounterBackgroundView.anchor(
-            bottom: bottomAnchor,
-            right: rightAnchor,
-            paddingBottom: 8,
-            paddingRight: 16
-        )
-        unreadCounterBackgroundView.setDimensions(height: 28, width: 28)
-        unreadCounterBackgroundView.centerX(inView: unreadCounterBackgroundView)
-        
+        unreadCounterBackgroundView.anchor(bottom: bottomAnchor,
+                                           right: rightAnchor,
+                                           paddingBottom: 8,
+                                           paddingRight: 16)
+        unreadCounterBackgroundView.setDimensions(height: 28, width: 28)        
         unreadCounterLabel.center(inView: unreadCounterBackgroundView)
     }
     
     // MARK: - Helper
-    func timeElapsed(_ date: Date) -> String {
+    private func timeElapsed(_ date: Date) -> String {
         let seconds = Date().timeIntervalSince(date)
         var elapsed = ""
         

@@ -37,14 +37,15 @@ class CCEmptyStateView: UIView {
         messageLabel.numberOfLines = 3
         messageLabel.textColor = .gray2
         
-        let labelCenterYConstant: CGFloat = DeviceTypes.isiPhone8Standard || DeviceTypes.isiPhoneSE || DeviceTypes.isiPhone8Zoomed ? -170 : -150
-                
-        NSLayoutConstraint.activate([
-            messageLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor, constant: labelCenterYConstant),
-            messageLabel.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 40),
-            messageLabel.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -40),
-            messageLabel.heightAnchor.constraint(equalToConstant: 200)
-        ])
+        let labelCenterYConst: CGFloat = DeviceTypes.isiPhone8Standard
+        || DeviceTypes.isiPhoneSE
+        || DeviceTypes.isiPhone8Zoomed ? -170 : -150
+        
+        messageLabel.anchor(left: leftAnchor,
+                            right: rightAnchor,
+                            paddingLeft: 40, paddingRight: 40,
+                            height: 200)
+        messageLabel.centerY(inView: self, constant: labelCenterYConst)
     }
     
     private func setupLogoImageView() {

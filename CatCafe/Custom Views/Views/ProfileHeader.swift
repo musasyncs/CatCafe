@@ -15,7 +15,7 @@ protocol ProfileHeaderDelegate: AnyObject {
     func header(_ profileHeader: ProfileHeader, didTapBlock user: User)
 }
 
-final class ProfileHeader: UICollectionReusableView {
+class ProfileHeader: UICollectionReusableView {
     
     weak var delegate: ProfileHeaderDelegate?
     
@@ -28,7 +28,7 @@ final class ProfileHeader: UICollectionReusableView {
             
             nameLabel.text = viewModel.fullname
             bioLabel.text = viewModel.bioText
-        
+            
             editProfileFollowButton.setTitle(viewModel.followButtonText, for: .normal)
             editProfileFollowButton.backgroundColor = viewModel.followButtonBackgroundColor
             editProfileFollowButton.setTitleColor(viewModel.followButtonTextColor, for: .normal)
@@ -51,14 +51,15 @@ final class ProfileHeader: UICollectionReusableView {
         }
     }
     
-    private lazy var followersLabel: UILabel = {
+    // MARK: - View
+    private let followersLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
         label.textAlignment = .center
         return label
     }()
     
-    private lazy var followingLabel: UILabel = {
+    private let followingLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
         label.textAlignment = .center
@@ -84,7 +85,7 @@ final class ProfileHeader: UICollectionReusableView {
         return label
     }()
     
-    private lazy var editProfileFollowButton = makeTitleButton(
+    private let editProfileFollowButton = makeTitleButton(
         withText: "",
         font: .systemFont(ofSize: 14, weight: .medium),
         kern: 0,
@@ -95,7 +96,7 @@ final class ProfileHeader: UICollectionReusableView {
         borderWidth: 1, borderColor: .ccPrimary
     )
     
-    private lazy var goChatButton = makeTitleButton(
+    private let goChatButton = makeTitleButton(
         withText: "發訊息",
         font: .systemFont(ofSize: 14, weight: .medium),
         kern: 0,
@@ -106,7 +107,7 @@ final class ProfileHeader: UICollectionReusableView {
         borderWidth: 1, borderColor: .white
     )
     
-    private lazy var blockButton = makeTitleButton(
+    private let blockButton = makeTitleButton(
         withText: "",
         font: .systemFont(ofSize: 14, weight: .medium),
         kern: 0,
@@ -116,8 +117,8 @@ final class ProfileHeader: UICollectionReusableView {
         cornerRadius: 40 / 2,
         borderWidth: 1, borderColor: .ccSecondary
     )
-   
-    private lazy var deleteAccountButton = makeIconButton(
+    
+    private let deleteAccountButton = makeIconButton(
         imagename: ImageAsset.trash.rawValue,
         imageColor: .ccRed,
         imageWidth: 17, imageHeight: 17
@@ -125,6 +126,7 @@ final class ProfileHeader: UICollectionReusableView {
     
     private lazy var buttonStackView = UIStackView()
     
+    // MARK: - Init
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = .white
@@ -152,53 +154,47 @@ final class ProfileHeader: UICollectionReusableView {
         fatalError()
     }
     
+    // MARK: - Config
     // swiftlint:disable all
     private func layout() {
         addSubviews(followersLabel, followingLabel, nameLabel, deleteAccountButton, bioLabel, buttonStackView)
         
-        followersLabel.anchor(
-            top: topAnchor,
-            left: leftAnchor,
-            paddingTop: 18,
-            paddingLeft: 50
-        )
+        followersLabel.anchor(top: topAnchor,
+                              left: leftAnchor,
+                              paddingTop: 18,
+                              paddingLeft: 50)
         
-        followingLabel.anchor(
-            top: topAnchor,
-            right: rightAnchor,
-            paddingTop: 18,
-            paddingRight: 50
-        )
+        followingLabel.anchor(top: topAnchor,
+                              right: rightAnchor,
+                              paddingTop: 18,
+                              paddingRight: 50)
         
-        nameLabel.anchor(
-            top: topAnchor,
-            paddingTop: 78,
-            width: 120
-        )
+        nameLabel.anchor(top: topAnchor,
+                         paddingTop: 78,
+                         width: 120)
         nameLabel.centerX(inView: self)
         
-        deleteAccountButton.centerY(inView: nameLabel, leftAnchor: nameLabel.rightAnchor, paddingLeft: 8, constant: 0)
+        deleteAccountButton.centerY(inView: nameLabel,
+                                    leftAnchor: nameLabel.rightAnchor,
+                                    paddingLeft: 8,
+                                    constant: 0)
         
-        bioLabel.anchor(
-            top: nameLabel.bottomAnchor,
-            left: leftAnchor,
-            right: rightAnchor,
-            paddingTop: 4,
-            paddingLeft: 90,
-            paddingRight: 90
-        )
+        bioLabel.anchor(top: nameLabel.bottomAnchor,
+                        left: leftAnchor,
+                        right: rightAnchor,
+                        paddingTop: 4,
+                        paddingLeft: 90,
+                        paddingRight: 90)
         bioLabel.centerX(inView: self)
         
-        buttonStackView.anchor(
-            top: bioLabel.bottomAnchor,
-            left: leftAnchor,
-            bottom: bottomAnchor,
-            right: rightAnchor,
-            paddingTop: 17,
-            paddingLeft: 18,
-            paddingBottom: 8,
-            paddingRight: 18
-        )
+        buttonStackView.anchor(top: bioLabel.bottomAnchor,
+                               left: leftAnchor,
+                               bottom: bottomAnchor,
+                               right: rightAnchor,
+                               paddingTop: 17,
+                               paddingLeft: 18,
+                               paddingBottom: 8,
+                               paddingRight: 18)
         editProfileFollowButton.setDimensions(height: 40, width: 125)
         goChatButton.setDimensions(height: 40, width: 125)
         blockButton.setDimensions(height: 40, width: 80)
