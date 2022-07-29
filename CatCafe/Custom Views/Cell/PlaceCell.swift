@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class PlaceCell: UITableViewCell {
+class PlaceCell: UITableViewCell {
     
     var viewModel: PlaceCellViewModel? {
         didSet {

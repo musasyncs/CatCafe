@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class DropDownCell: UITableViewCell {
+class DropDownCell: UITableViewCell {
     
     let titleLabel = UILabel()
     
@@ -21,12 +21,10 @@ final class DropDownCell: UITableViewCell {
         titleLabel.textColor = .ccGrey
         
         addSubview(titleLabel)
-        titleLabel.anchor(
-            top: topAnchor,
-            left: leftAnchor,
-            bottom: bottomAnchor,
-            paddingTop: 8, paddingLeft: 8, paddingBottom: 8
-        )
+        titleLabel.anchor(top: topAnchor,
+                          left: leftAnchor,
+                          bottom: bottomAnchor,
+                          paddingTop: 8, paddingLeft: 8, paddingBottom: 8)
     }
     
     required init?(coder aDecoder: NSCoder) {

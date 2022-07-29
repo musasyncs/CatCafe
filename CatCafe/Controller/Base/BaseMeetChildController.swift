@@ -95,12 +95,20 @@ extension BaseMeetChildController: MeetCellDelegate {
         cell.viewModel?.meet.isLiked.toggle()
         
         if meet.isLiked {
-            MeetService.unlikeMeet(meet: meet) { likeCount in
-                cell.viewModel?.meet.likes = likeCount
+            MeetService.unlikeMeet(meet: meet) { error in
+                if error != nil { return }
+                
+                MeetService.fetchLikeCount(meet: meet) { count in
+                    cell.viewModel?.meet.likes = count
+                }
             }
         } else {
-            MeetService.likeMeet(meet: meet) { likeCount in
-                cell.viewModel?.meet.likes = likeCount
+            MeetService.likeMeet(meet: meet) { error in
+                if error != nil { return }
+                
+                MeetService.fetchLikeCount(meet: meet) { count in
+                    cell.viewModel?.meet.likes = count
+                }
             }
         }
         

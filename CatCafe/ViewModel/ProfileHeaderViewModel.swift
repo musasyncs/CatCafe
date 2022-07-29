@@ -91,5 +91,4 @@ struct ProfileHeaderViewModel {
             ]))
         return attributedText
     }
-    
 }

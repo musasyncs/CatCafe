@@ -5,7 +5,6 @@
 //  Created by Ewen on 2022/6/18.
 //
 
-import Foundation
 import UIKit
 
 class FeedCommentController: UICollectionViewController {
@@ -29,7 +28,7 @@ class FeedCommentController: UICollectionViewController {
         return true
     }
     
-    // MARK: - Initializer
+    // MARK: - Init
     init(post: Post) {
         self.post = post
         super.init(collectionViewLayout: UICollectionViewFlowLayout())

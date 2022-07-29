@@ -181,53 +181,41 @@ extension ProfileEditController {
     private func layout() {
         view.addSubviews(leaveButton, saveButton, nameLabel, profileImageView, profileEditButton, stackView, bioStackView)
         
-        leaveButton.anchor(
-            top: view.topAnchor,
-            left: view.leftAnchor,
-            paddingTop: 56, paddingLeft: 24
-        )
+        leaveButton.anchor(top: view.topAnchor,
+                           left: view.leftAnchor,
+                           paddingTop: 56, paddingLeft: 24)
         leaveButton.setDimensions(height: 36, width: 36)
         
-        saveButton.anchor(
-            top: view.topAnchor,
-            right: view.rightAnchor,
-            paddingTop: 56, paddingRight: 24
-        )
+        saveButton.anchor(top: view.topAnchor,
+                          right: view.rightAnchor,
+                          paddingTop: 56, paddingRight: 24)
         saveButton.setDimensions(height: 36, width: 36)
         
         profileImageView.anchor(top: view.topAnchor, paddingTop: 96)
         profileImageView.centerX(inView: view)
         profileImageView.setDimensions(height: 96, width: 96)
         
-        profileEditButton.anchor(
-            top: profileImageView.topAnchor,
-            right: profileImageView.rightAnchor,
-            paddingTop: -4, paddingRight: -4,
-            width: 28, height: 28
-        )
+        profileEditButton.anchor(top: profileImageView.topAnchor,
+                                 right: profileImageView.rightAnchor,
+                                 paddingTop: -4, paddingRight: -4,
+                                 width: 28, height: 28)
         
-        nameLabel.anchor(
-            top: profileImageView.bottomAnchor,
-            left: view.leftAnchor,
-            right: view.rightAnchor,
-            paddingTop: 20,
-            paddingLeft: 24,
-            paddingRight: 24
-        )
+        nameLabel.anchor(top: profileImageView.bottomAnchor,
+                         left: view.leftAnchor,
+                         right: view.rightAnchor,
+                         paddingTop: 20,
+                         paddingLeft: 24,
+                         paddingRight: 24)
         nameLabel.centerX(inView: view)
-    
-        stackView.anchor(
-            top: nameLabel.bottomAnchor,
-            paddingTop: 28,
-            width: ScreenSize.width * 0.7
-        )
+        
+        stackView.anchor(top: nameLabel.bottomAnchor,
+                         paddingTop: 28,
+                         width: ScreenSize.width * 0.7)
         stackView.centerX(inView: view)
         
-        bioStackView.anchor(
-            top: stackView.bottomAnchor,
-            paddingTop: 15,
-            width: ScreenSize.width * 0.7
-        )
+        bioStackView.anchor(top: stackView.bottomAnchor,
+                            paddingTop: 15,
+                            width: ScreenSize.width * 0.7)
         bioStackView.centerX(inView: view)
         bioTextView.setHeight(60)
     }
@@ -300,7 +288,7 @@ extension ProfileEditController {
         
             if self.hasChangedImage {
                 guard let profileImage = self.profileImageView.image else {
-                    AlertHelper.showMessage(title: "請上傳大頭照", message: "", buttonTitle: "OK", over: self)
+                    AlertHelper.showMessage(title: "Oops", message: "請上傳大頭照", buttonTitle: "OK", over: self)
                     return
                 }
                 

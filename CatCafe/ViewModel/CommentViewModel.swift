@@ -8,7 +8,6 @@
 import UIKit
 
 struct CommentViewModel {
-    
     private let comment: Comment
     
     var profileImageUrlString: String? {
@@ -42,7 +41,6 @@ struct CommentViewModel {
         self.comment = comment
     }
 
-    // MARK: - Helpers
     func size(forWidth width: CGFloat) -> CGSize {
         let label = UILabel()
         label.numberOfLines = 0

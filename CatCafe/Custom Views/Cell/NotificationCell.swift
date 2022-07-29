@@ -14,7 +14,7 @@ protocol NotificationCellDelegate: AnyObject {
     func cell(_ cell: NotificationCell, wantsToViewPost postId: String)
 }
 
-final class NotificationCell: UITableViewCell {
+class NotificationCell: UITableViewCell {
     
     weak var delegate: NotificationCellDelegate?
     
@@ -35,6 +35,7 @@ final class NotificationCell: UITableViewCell {
         }
     }
     
+    // MARK: - View
     lazy var profileImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.backgroundColor = .gray6
@@ -57,7 +58,7 @@ final class NotificationCell: UITableViewCell {
     
     lazy var postImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.backgroundColor = .lightGray
+        imageView.backgroundColor = .gray6
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         
@@ -77,6 +78,7 @@ final class NotificationCell: UITableViewCell {
         return button
     }()
     
+    // MARK: - Init
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
@@ -104,7 +106,6 @@ final class NotificationCell: UITableViewCell {
     }
     
     // MARK: - Action
-    
     @objc func profileImageTapped() {
         guard let viewModel = viewModel else { return }
         delegate?.cell(self, wantsToViewProfile: viewModel.notification.fromUid)

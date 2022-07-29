@@ -38,7 +38,7 @@ class CafeInfoAlert {
     lazy var titleLabel = UILabel()
     
     lazy var phoneButton = makeIconButton(
-        imagename: ImageAsset.Icons_24px_RegisterCellphone.rawValue,
+        imagename: ImageAsset.cellphone.rawValue,
         imageColor: .ccGrey,
         imageWidth: 15,
         imageHeight: 15,
@@ -79,11 +79,10 @@ class CafeInfoAlert {
     )
     
     // swiftlint:disable all
-    func showAlert(
-        with title: String?,
-        phoneNumber: String,
-        website: String,
-        on viewController: UIViewController
+    func showAlert(with title: String?,
+                   phoneNumber: String,
+                   website: String,
+                   on viewController: UIViewController
     ) {
         guard let targetView = viewController.view else { return }
         mytargetView = targetView
@@ -93,13 +92,11 @@ class CafeInfoAlert {
         
         targetView.addSubview(bgView)
         targetView.addSubview(alertView)
-        bgView.frame    = targetView.bounds
-        alertView.frame = CGRect(
-            x: 40,
-            y: -300,
-            width: targetView.frame.size.width-100,
-            height: Constants.alertHeight
-        )
+        bgView.frame = targetView.bounds
+        alertView.frame = CGRect(x: 40,
+                                 y: -300,
+                                 width: targetView.frame.size.width-100,
+                                 height: Constants.alertHeight)
         
         // alertView
         titleLabel.text = title

@@ -8,7 +8,7 @@
 import UIKit
 import Photos
 
-class PostSelectController: UIViewController {
+class PostSelectController: CCDataLoadingController {
     
     var selectedAsset: PHAsset?
         
@@ -36,18 +36,23 @@ class PostSelectController: UIViewController {
     
     // MARK: - Helper
     private func requestPhoto() {
+        
+        self.showLoadingView()
+        
         PHPhotoLibrary.requestAuthorization(for: .readWrite, handler: { [weak self] status in
             guard let self = self else { return }
+            
             switch status {
             case .authorized:
                 DispatchQueue.main.async {
                     PHPhotoLibrary.shared().register(self)
                     self.loadPhotos()
+                    self.dismissLoadingView()
                 }
             case .notDetermined:
-                break
+                self.dismissLoadingView()
             default:
-                break
+                self.dismissLoadingView()
             }
         })
     }
@@ -55,7 +60,10 @@ class PostSelectController: UIViewController {
     private func loadPhotos() {
         let options = PHFetchOptions()
         options.wantsIncrementalChangeDetails = false
-        options.sortDescriptors = [ NSSortDescriptor(key: "creationDate", ascending: false) ]
+        options.sortDescriptors = [
+            NSSortDescriptor(key: "creationDate", ascending: false)
+        ]
+        
         let result = PHAsset.fetchAssets(with: .image, options: options)
         if let firstAsset = result.firstObject {
             loadImageFor(firstAsset)
@@ -137,13 +145,10 @@ extension PostSelectController {
     
     private func setupTopView() {
         view.addSubview(topView)
-        topView.anchor(
-            top: view.safeAreaLayoutGuide.topAnchor,
-            left: view.leftAnchor,
-            right: view.rightAnchor,
-            height: ScreenSize.width
-        )
-        
+        topView.anchor(top: view.safeAreaLayoutGuide.topAnchor,
+                       left: view.leftAnchor,
+                       right: view.rightAnchor,
+                       height: ScreenSize.width)
         gridScrollView = GridScrollView(frame: topView.bounds)
         topView.addSubview(gridScrollView)
     }
@@ -151,22 +156,18 @@ extension PostSelectController {
     private func setupControlView() {
         postSelectControlView.delegate = self
         view.addSubview(postSelectControlView)
-        postSelectControlView.anchor(
-            top: topView.bottomAnchor,
-            left: view.leftAnchor,
-            right: view.rightAnchor,
-            height: 50
-        )
+        postSelectControlView.anchor(top: topView.bottomAnchor,
+                                     left: view.leftAnchor,
+                                     right: view.rightAnchor,
+                                     height: 50)
     }
     
     private func setupAlbumView() {
         view.addSubview(albumView)
-        albumView.anchor(
-            top: postSelectControlView.bottomAnchor,
-            left: view.leftAnchor,
-            bottom: view.bottomAnchor,
-            right: view.rightAnchor
-        )
+        albumView.anchor(top: postSelectControlView.bottomAnchor,
+                         left: view.leftAnchor,
+                         bottom: view.bottomAnchor,
+                         right: view.rightAnchor)
     }
 }
 

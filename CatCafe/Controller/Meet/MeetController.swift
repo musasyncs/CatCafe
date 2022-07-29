@@ -169,12 +169,10 @@ extension MeetController {
         buttonStackView.spacing = 8
         buttonStackView.distribution = .fillProportionally
         view.addSubview(buttonStackView)
-        buttonStackView.anchor(
-            top: view.safeAreaLayoutGuide.topAnchor,
-            left: view.leftAnchor,
-            paddingTop: 8,
-            paddingLeft: 16
-        )
+        buttonStackView.anchor(top: view.safeAreaLayoutGuide.topAnchor,
+                               left: view.leftAnchor,
+                               paddingTop: 8,
+                               paddingLeft: 16)
     }
     
     private func setupChildController() {
@@ -185,28 +183,22 @@ extension MeetController {
         didMove(toParent: myArrangeController)
         didMove(toParent: myAttendController)
         view.addSubviews(allMeetsController.view, myArrangeController.view, myAttendController.view)
-
-        allMeetsController.view.anchor(
-            top: buttonStackView.bottomAnchor,
-            left: view.leftAnchor,
-            bottom: view.safeAreaLayoutGuide.bottomAnchor,
-            right: view.rightAnchor,
-            paddingTop: 8
-        )
-        myArrangeController.view.anchor(
-            top: buttonStackView.bottomAnchor,
-            left: view.leftAnchor,
-            bottom: view.safeAreaLayoutGuide.bottomAnchor,
-            right: view.rightAnchor,
-            paddingTop: 8
-        )
-        myAttendController.view.anchor(
-            top: buttonStackView.bottomAnchor,
-            left: view.leftAnchor,
-            bottom: view.safeAreaLayoutGuide.bottomAnchor,
-            right: view.rightAnchor,
-            paddingTop: 8
-        )
+        
+        allMeetsController.view.anchor(top: buttonStackView.bottomAnchor,
+                                       left: view.leftAnchor,
+                                       bottom: view.safeAreaLayoutGuide.bottomAnchor,
+                                       right: view.rightAnchor,
+                                       paddingTop: 8)
+        myArrangeController.view.anchor(top: buttonStackView.bottomAnchor,
+                                        left: view.leftAnchor,
+                                        bottom: view.safeAreaLayoutGuide.bottomAnchor,
+                                        right: view.rightAnchor,
+                                        paddingTop: 8)
+        myAttendController.view.anchor(top: buttonStackView.bottomAnchor,
+                                       left: view.leftAnchor,
+                                       bottom: view.safeAreaLayoutGuide.bottomAnchor,
+                                       right: view.rightAnchor,
+                                       paddingTop: 8)
     }
-
+    
 }

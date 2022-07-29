@@ -128,7 +128,7 @@ class MeetService {
         }
     }
     
-    static func likeMeet(meet: Meet, completion: @escaping ((Int) -> Void)) {
+    static func likeMeet(meet: Meet, completion: @escaping (FirestoreCompletion)) {
         guard let currentUid = LocalStorage.shared.getUid() else { return }
         
         MeetService.fetchLikeCount(meet: meet) { likeCount in
@@ -140,11 +140,7 @@ class MeetService {
                     .collection("meet-likes").document(currentUid).setData([:]) { _ in
                         
                         firebaseReference(.users).document(currentUid)
-                            .collection("user-meet-likes").document(meet.meetId).setData([:]) { error in
-                                if error != nil { return }
-                                
-                                completion(likeCount + 1)
-                            }
+                            .collection("user-meet-likes").document(meet.meetId).setData([:], completion: completion)
                     }
             }
             
@@ -152,7 +148,7 @@ class MeetService {
         
     }
     
-    static func unlikeMeet(meet: Meet, completion: @escaping ((Int) -> Void)) {
+    static func unlikeMeet(meet: Meet, completion: @escaping (FirestoreCompletion)) {
         guard let currentUid = LocalStorage.shared.getUid() else { return }
         guard meet.likes > 0 else { return }
         
@@ -165,11 +161,7 @@ class MeetService {
                     .collection("meet-likes").document(currentUid).delete { _ in
                         
                         firebaseReference(.users).document(currentUid)
-                            .collection("user-meet-likes").document(meet.meetId).delete { error in
-                                if error != nil { return }
-
-                                completion(likeCount - 1)
-                            }
+                            .collection("user-meet-likes").document(meet.meetId).delete(completion: completion)
                     }
             }
             

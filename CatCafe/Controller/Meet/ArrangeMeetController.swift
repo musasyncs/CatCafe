@@ -84,13 +84,11 @@ class ArrangeMeetController: UIViewController {
     private func setupScrollView() {
         scrollView.showsVerticalScrollIndicator = false
         view.addSubview(scrollView)
-        scrollView.anchor(
-            top: view.safeAreaLayoutGuide.topAnchor,
-            left: view.leftAnchor,
-            bottom: view.bottomAnchor,
-            right: view.rightAnchor,
-            paddingTop: 8, paddingLeft: 8, paddingBottom: 16, paddingRight: 8
-        )
+        scrollView.anchor(top: view.safeAreaLayoutGuide.topAnchor,
+                          left: view.leftAnchor,
+                          bottom: view.bottomAnchor,
+                          right: view.rightAnchor,
+                          paddingTop: 8, paddingLeft: 8, paddingBottom: 16, paddingRight: 8)
     }
     
     private func setupStackView() {

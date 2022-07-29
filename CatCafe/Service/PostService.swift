@@ -18,7 +18,7 @@ class PostService {
                          postImage: UIImage,
                          cafeId: String,
                          cafeName: String,
-                         completion: @escaping(FirestoreCompletion)
+                         completion: @escaping (FirestoreCompletion)
     ) {
         guard let uid = LocalStorage.shared.getUid() else { return }
         
@@ -157,7 +157,7 @@ class PostService {
         }
     }
     
-    func likePost(post: Post, completion: @escaping ((Int) -> Void)) {
+    func likePost(post: Post, completion: @escaping (FirestoreCompletion)) {
         guard let uid = LocalStorage.shared.getUid() else { return }
         
         PostService.shared.fetchLikeCount(post: post) { likeCount in
@@ -170,11 +170,7 @@ class PostService {
                         if error != nil { return }
                         
                         firebaseReference(.users).document(uid)
-                            .collection("user-post-likes").document(post.postId).setData([:]) { error in
-                                if error != nil { return }
-        
-                                completion(likeCount + 1)
-                            }
+                            .collection("user-post-likes").document(post.postId).setData([:], completion: completion)
                     }
             }
 
@@ -182,7 +178,7 @@ class PostService {
                 
     }
     
-    func unlikePost(post: Post, completion: @escaping ((Int) -> Void)) {
+    func unlikePost(post: Post, completion: @escaping (FirestoreCompletion)) {
         guard let currentUid = LocalStorage.shared.getUid() else { return }
         guard post.likes > 0 else { return }
         
@@ -196,11 +192,7 @@ class PostService {
                         if error != nil { return }
                         
                         firebaseReference(.users).document(currentUid)
-                            .collection("user-post-likes").document(post.postId).delete { error in
-                                if error != nil { return }
-                                
-                                completion(likeCount - 1)
-                            }
+                            .collection("user-post-likes").document(post.postId).delete(completion: completion)
                     }
             }
             
