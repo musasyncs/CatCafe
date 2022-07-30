@@ -80,12 +80,13 @@ A community for cat lovers to search for cat cafés in Taipei, share photos, or 
 
 ## Version
 
-1.0.2
+1.0.3
 
 ## Release Notes
 
 | Version | Date | Notes |
 |:-------------:|:-------------:|:-------------:|
+| 1.0.3 | 2022.07.30 | Like count issue fixed |
 | 1.0.2 | 2022.07.19 | Crash issue fixed |
 | 1.0.1 | 2022.07.17 | Bug fixed |
 | 1.0.0 | 2022.07.16 | Released on App Store |
